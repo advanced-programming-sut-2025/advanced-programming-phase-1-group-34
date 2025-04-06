@@ -1,0 +1,191 @@
+@startuml
+
+' ---------------------------------------
+' تعریف کلاس‌ها
+' ---------------------------------------
+
+class Entity {
+    - id: int
+    - name: String
+    + update(): void
+}
+
+class Player {
+    - inventory: Inventory
+    - energy: Energy
+    + performAction(action: String): void
+}
+
+class NPC {
+    - dialogues: List<String>
+    + interact(): void
+}
+
+class Animal {
+    - type: String
+    - happiness: int
+    + feed(): void
+    + produce(): Item
+}
+
+class Item {
+    - id: int
+    - name: String
+    - value: int
+}
+
+class Tool {
+    - durability: int
+    + use(): void
+}
+
+class Crop {
+    - growthStage: int
+    - waterLevel: int
+    + grow(): void
+    + harvest(): Item
+}
+
+class Building {
+    - type: String
+    - level: int
+    + upgrade(): void
+}
+
+class Weather {
+    - condition: String
+    - temperature: int
+    + changeWeather(): void
+}
+
+class Time {
+    - currentDay: int
+    - currentTime: String
+    + advanceTime(): void
+}
+
+class Quest {
+    - description: String
+    - isCompleted: boolean
+    + completeQuest(): void
+}
+
+class Inventory {
+    - items: List<Item>
+    + addItem(item: Item): void
+    + removeItem(item: Item): void
+}
+
+class Farm {
+    - crops: List<Crop>
+    - animals: List<Animal>
+    + plantCrop(crop: Crop): void
+    + feedAnimals(): void
+}
+
+class FishingSpot {
+    - location: String
+    + fish(): Item
+}
+
+class Recipe {
+    - ingredients: List<Item>
+    - result: Item
+    + craft(): Item
+}
+
+class Store {
+    - availableItems: List<Item>
+    + buy(item: Item): void
+    + sell(item: Item): void
+}
+
+class Energy {
+    - level: int
+    + consume(amount: int): void
+    + restore(amount: int): void
+}
+
+class World {
+    - farms: List<Farm>
+    - npcs: List<NPC>
+    - stores: List<Store>
+    + updateWorld(): void
+}
+
+' ---------------------------------------
+' تعریف سرویس‌ها
+' ---------------------------------------
+
+class GameState {
+    - currentPlayer: Player
+    - world: World
+    + save(): void
+    + load(): void
+}
+
+class EnergyConsumptionCalculator {
+    + calculate(action: String): int
+}
+
+class FarmingService {
+    + plantCrop(crop: Crop): void
+    + waterCrop(crop: Crop): void
+}
+
+class FishingService {
+    + fishAt(spot: FishingSpot): Item
+}
+
+class CookingService {
+    + cook(recipe: Recipe): Item
+}
+
+class TradingService {
+    + trade(player: Player, item: Item): void
+}
+
+class SaveLoadService {
+    + saveGame(gameState: GameState): void
+    + loadGame(): GameState
+}
+
+class WeatherService {
+    + updateWeather(): void
+}
+
+' ---------------------------------------
+' ترکیب (Composition) و ارتباطات (Associations)
+' ---------------------------------------
+
+' ترکیب
+Player --> Inventory : has
+Farm --> Crop : contains
+Farm --> Animal : contains
+GameState --> World : contains
+GameState --> Player : contains
+World --> Farm : contains
+World --> NPC : contains
+World --> Store : contains
+Recipe --> Item : has
+FarmingService --> Farm : interacts with
+FishingService --> FishingSpot : interacts with
+
+' ارتباطات
+GameState --|> GameController : manages
+ConsoleView --|> Controller : interacts with
+
+' ---------------------------------------
+' ارث‌بری و پیاده‌سازی
+' ---------------------------------------
+
+Player -|> Entity
+NPC -|> Entity
+Animal -|> Entity
+Building -|> Entity
+
+' ---------------------------------------
+' نمایش دیاگرام
+' ---------------------------------------
+
+@enduml
