@@ -1,0 +1,250 @@
+@startuml
+
+' Entity class
+class Entity {
+  - id: int
+  - name: String
+  + update(): void
+}
+
+' Inheritance Hierarchy
+Entity <|-- Player
+Entity <|-- NPC
+Entity <|-- Animal
+Entity <|-- Building
+
+' Player class
+class Player {
+  - inventory: Inventory
+  - energy: Energy
+  + performAction(action: String): void
+}
+
+' NPC class
+class NPC {
+  - dialogues: List<String>
+  + interact(): void
+}
+
+' Animal class
+class Animal {
+  - type: String
+  - happiness: int
+  + feed(): void
+  + produce(): Item
+}
+
+' Item class
+class Item {
+  - id: int
+  - name: String
+  - value: int
+}
+
+' Tool and Crop inherit from Item
+Item <|-- Tool
+Item <|-- Crop
+
+' Tool class
+class Tool {
+  - durability: int
+  + use(): void
+}
+
+' Crop class
+class Crop {
+  - growthStage: int
+  - waterLevel: int
+  + grow(): void
+  + harvest(): Item
+}
+
+' Building class
+class Building {
+  - type: String
+  - level: int
+  + upgrade(): void
+}
+
+' Weather class
+class Weather {
+  - condition: String
+  - temperature: int
+  + changeWeather(): void
+}
+
+' Time class
+class Time {
+  - currentDay: int
+  - currentTime: String
+  + advanceTime(): void
+}
+
+' Quest class
+class Quest {
+  - description: String
+  - isCompleted: boolean
+  + completeQuest(): void
+}
+
+' Inventory class
+class Inventory {
+  - items: List<Item>
+  + addItem(item: Item): void
+  + removeItem(item: Item): void
+}
+
+' Farm class
+class Farm {
+  - crops: List<Crop>
+  - animals: List<Animal>
+  + plantCrop(crop: Crop): void
+  + feedAnimals(): void
+}
+
+' FishingSpot class
+class FishingSpot {
+  - location: String
+  + fish(): Item
+}
+
+' Recipe class
+class Recipe {
+  - ingredients: List<Item>
+  - result: Item
+  + craft(): Item
+}
+
+' Store class
+class Store {
+  - availableItems: List<Item>
+  + buy(item: Item): void
+  + sell(item: Item): void
+}
+
+' Energy class
+class Energy {
+  - level: int
+  + consume(amount: int): void
+  + restore(amount: int): void
+}
+
+' World class
+class World {
+  - farms: List<Farm>
+  - npcs: List<NPC>
+  - stores: List<Store>
+  + updateWorld(): void
+}
+
+' GameState class
+class GameState {
+  - currentPlayer: Player
+  - world: World
+  + save(): void
+  + load(): void
+}
+
+' EnergyConsumptionCalculator class
+class EnergyConsumptionCalculator {
+  + calculate(action: String): int
+}
+
+' FarmingService class
+class FarmingService {
+  + plantCrop(crop: Crop): void
+  + waterCrop(crop: Crop): void
+}
+
+' FishingService class
+class FishingService {
+  + fishAt(spot: FishingSpot): Item
+}
+
+' CookingService class
+class CookingService {
+  + cook(recipe: Recipe): Item
+}
+
+' TradingService class
+class TradingService {
+  + trade(player: Player, item: Item): void
+}
+
+' SaveLoadService class
+class SaveLoadService {
+  + saveGame(gameState: GameState): void
+  + loadGame(): GameState
+}
+
+' WeatherService class
+class WeatherService {
+  + updateWeather(): void
+}
+
+' GameController class
+class GameController {
+  - gameState: GameState
+  + startGame(): void
+  + endGame(): void
+}
+
+' EnergyController class
+class EnergyController {
+  - calculator: EnergyConsumptionCalculator
+  + manageEnergy(): void
+}
+
+' FarmingController class
+class FarmingController {
+  - farmingService: FarmingService
+  + handlePlanting(): void
+  + handleHarvesting(): void
+}
+
+' FishingController class
+class FishingController {
+  - fishingService: FishingService
+  + handleFishing(): void
+}
+
+' CookingController class
+class CookingController {
+  - cookingService: CookingService
+  + handleCooking(): void
+}
+
+' TradingController class
+class TradingController {
+  - tradingService: TradingService
+  + handleTrading(): void
+}
+
+' ConsoleView class
+class ConsoleView {
+  + displayMenu(): void
+  + showGameStatus(): void
+  + promptUserInput(): String
+}
+
+' Associations (Composition / Aggregation / Associations)
+Player --> Inventory
+Farm --> "1..*" Crop
+Farm --> "1..*" Animal
+GameState --> World
+GameState --> Player
+World --> "1..*" Farm
+World --> "1..*" NPC
+World --> "1..*" Store
+Recipe --> "1..*" Item
+FarmingService <--> Farm
+FishingService <--> FishingSpot
+GameController --> GameState
+ConsoleView --> GameController
+ConsoleView --> EnergyController
+ConsoleView --> FarmingController
+ConsoleView --> FishingController
+ConsoleView --> CookingController
+ConsoleView --> TradingController
+
+@enduml
