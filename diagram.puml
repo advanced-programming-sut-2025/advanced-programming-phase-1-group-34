@@ -1,13 +1,13 @@
 @startuml
 
-' Location class
+' Some Classes have location on map
 class Location {
   - x: int
   - y: int
   + getLocation(): int[]
 }
 
-' Size class
+' Some other have size too
 class Size {
   - width: int
   - hieght: int
