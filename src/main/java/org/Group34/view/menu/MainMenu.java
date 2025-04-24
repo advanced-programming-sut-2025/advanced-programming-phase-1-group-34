@@ -32,6 +32,9 @@ public class MainMenu extends AppMenu{
             else if (command.matches(MainMenuCommand.SHOW_MENU.getRegex())) {
                 showMessage("You are currently in Main Menu.");
             }
+            else {
+                showMessage("Invalid command.");
+            }
         }
     }
 }
