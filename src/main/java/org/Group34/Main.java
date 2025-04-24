@@ -1,4 +1,4 @@
-package org.Group34;
+package main.java.org.Group34;
 
 public class Main {
     public static void main(String[] args) {
