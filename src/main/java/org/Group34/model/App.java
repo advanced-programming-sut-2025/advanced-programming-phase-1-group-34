@@ -10,17 +10,13 @@ import java.util.List;
  */
 
 public class App {
-    private List<User> users;
+    private static List<User> users = new ArrayList<>();
 
-    public App() {
-        users = new ArrayList<>();
+    public void addUsers(List<User> users) {
+        App.users = users;
     }
 
     public List<User> getUsers() {
         return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 }
