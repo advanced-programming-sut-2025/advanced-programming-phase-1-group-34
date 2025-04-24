@@ -2,6 +2,8 @@ package main.java.org.Group34.view.menu;
 
 import main.java.org.Group34.model.enums.Menu;
 
+import java.util.Scanner;
+
 /**
  * This abstract class should be extended by all menu classes in the game.
  * It defines the common structure and behavior shared across all menus,
@@ -15,7 +17,7 @@ public abstract class AppMenu {
      * Starts the logic of the current menu
      * Should be implemented for each menu separately
      */
-    public abstract void run();
+    public abstract void run(Scanner scanner);
 
     /**
      * Sets the current menu
