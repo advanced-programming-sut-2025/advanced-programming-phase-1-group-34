@@ -1,4 +1,4 @@
-package main.java.org.Group34.model;
+package org.Group34.model;
 
 import java.util.ArrayList;
 import java.util.List;

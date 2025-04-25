@@ -1,4 +1,4 @@
-package main.java.org.Group34.model.entity;
+package org.Group34.model.entity;
 
 public class Health {
 }

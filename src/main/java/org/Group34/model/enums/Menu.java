@@ -1,4 +1,4 @@
-package main.java.org.Group34.model.enums;
+package org.Group34.model.enums;
 
 /**
  * Represents the menus used in the game's navigation system

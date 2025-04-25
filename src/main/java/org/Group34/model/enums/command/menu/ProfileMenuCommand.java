@@ -1,6 +1,6 @@
-package main.java.org.Group34.model.enums.command.menu;
+package org.Group34.model.enums.command.menu;
 
-import main.java.org.Group34.model.enums.command.Command;
+import org.Group34.model.enums.command.Command;
 
 /**
  * Profile menu specified commands regex

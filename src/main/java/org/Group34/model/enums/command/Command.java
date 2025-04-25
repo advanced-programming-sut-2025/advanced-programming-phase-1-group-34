@@ -1,4 +1,4 @@
-package main.java.org.Group34.model.enums.command;
+package org.Group34.model.enums.command;
 
 /**
  * Each command defines a regular expression pattern used to match user input

@@ -1,4 +1,4 @@
-package main.java.org.Group34.controller;
+package org.Group34.controller;
 
 public class FarmingController {
 }

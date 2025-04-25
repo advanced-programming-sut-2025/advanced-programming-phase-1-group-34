@@ -1,6 +1,6 @@
-package main.java.org.Group34.view.menu;
+package org.Group34.view.menu;
 
-import main.java.org.Group34.model.enums.Menu;
+import org.Group34.model.enums.Menu;
 
 import java.util.Scanner;
 

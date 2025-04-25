@@ -1,8 +1,8 @@
-package main.java.org.Group34.controller.menu;
+package org.Group34.controller.menu;
 
-import main.java.org.Group34.model.App;
-import main.java.org.Group34.model.Result;
-import main.java.org.Group34.model.User;
+import org.Group34.model.App;
+import org.Group34.model.Result;
+import org.Group34.model.User;
 
 public class ProfileMenuController {
     // change username: ---------- START ----------

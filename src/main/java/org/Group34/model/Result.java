@@ -1,4 +1,4 @@
-package main.java.org.Group34.model;
+package org.Group34.model;
 
 /**
  * Represents the result of an operation with a success flag and a message

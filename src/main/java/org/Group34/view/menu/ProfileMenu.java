@@ -1,10 +1,10 @@
-package main.java.org.Group34.view.menu;
+package org.Group34.view.menu;
 
-import main.java.org.Group34.controller.menu.ProfileMenuController;
-import main.java.org.Group34.model.App;
-import main.java.org.Group34.model.Result;
-import main.java.org.Group34.model.enums.Menu;
-import main.java.org.Group34.model.enums.command.menu.ProfileMenuCommand;
+import org.Group34.controller.menu.ProfileMenuController;
+import org.Group34.model.App;
+import org.Group34.model.Result;
+import org.Group34.model.enums.Menu;
+import org.Group34.model.enums.command.menu.ProfileMenuCommand;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;

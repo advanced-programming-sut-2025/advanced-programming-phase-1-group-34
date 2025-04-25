@@ -1,4 +1,4 @@
-package main.java.org.Group34.model;
+package org.Group34.model;
 
 /**
  * Represents a user in the game system
