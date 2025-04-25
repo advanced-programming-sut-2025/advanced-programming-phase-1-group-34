@@ -7,7 +7,7 @@ import org.Group34.model.User;
 public class ProfileMenuController {
     // change username: ---------- START ----------
     public Result changeUsername(String newUsername, User user) {
-        if (isUsernameFormatValid(newUsername)) {
+        if (!isUsernameFormatValid(newUsername)) {
             return new Result(false, "Username format is invalid.");
         }
         else if (newUsername.equalsIgnoreCase(user.getUsername())) {
