@@ -12,6 +12,10 @@ public class User {
     private String email;
     private String nickname;
 
+    private int highestMoney;
+
+    private int playedGamesCount;
+
     public String getUsername() {
         return username;
     }
@@ -42,5 +46,21 @@ public class User {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public int getHighestMoney() {
+        return highestMoney;
+    }
+
+    public void setHighestMoney(int highestMoney) {
+        this.highestMoney = highestMoney;
+    }
+
+    public int getPlayedGamesCount() {
+        return playedGamesCount;
+    }
+
+    public void setPlayedGamesCount(int playedGamesCount) {
+        this.playedGamesCount = playedGamesCount;
     }
 }
