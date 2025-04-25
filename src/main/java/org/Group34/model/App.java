@@ -7,16 +7,28 @@ import java.util.List;
  * Holds the game data
  * Only essential fields for Main menu and Profile menu are added
  * Make sure to complete it
+ *
+ * Make everything static so they can be accessed easier
  */
 
 public class App {
     private static List<User> users = new ArrayList<>();
 
-    public void addUsers(List<User> users) {
+    private static User currentUser;
+
+    public static void addUsers(List<User> users) {
         App.users = users;
     }
 
-    public List<User> getUsers() {
+    public static List<User> getUsers() {
         return users;
+    }
+
+    public static void setCurrentUser(User user) {
+        currentUser = user;
+    }
+
+    public static User getCurrentUser() {
+        return currentUser;
     }
 }
