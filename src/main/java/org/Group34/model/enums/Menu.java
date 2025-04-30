@@ -6,7 +6,7 @@ package org.Group34.model.enums;
  */
 
 public enum Menu {
-    SIGNUP_MENU,
+    REGISTER_MENU,
     LOGIN_MENU,
     MAIN_MENU,
     PROFILE_MENU,

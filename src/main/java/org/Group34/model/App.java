@@ -1,5 +1,7 @@
 package org.Group34.model;
 
+import org.Group34.model.enums.Menu;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +14,26 @@ import java.util.List;
  */
 
 public class App {
-    private static List<User> users = new ArrayList<>();
+    private static ArrayList<User> users = new ArrayList<>();
 
     private static User currentUser;
 
-    public static void addUsers(List<User> users) {
-        App.users = users;
+    private static Menu currentMenu = Menu.REGISTER_MENU;
+
+    private static ArrayList<String> securityQuestions = new ArrayList<>();
+
+    static {
+        securityQuestions.add("What was the name of your elementary school?");
+        securityQuestions.add("What is the name of the city where you were born?");
+        securityQuestions.add("What was the name of your first teacher?");
+        securityQuestions.add("What is the name of your first pet?");
+        securityQuestions.add("What is your favorite movie?");
+        securityQuestions.add("In what city did your parents meet?");
+        securityQuestions.add("What was the name of the hospital where you were born?");
+    }
+
+    public static void addUser(User user) {
+        users.add(user);
     }
 
     public static List<User> getUsers() {
@@ -30,5 +46,23 @@ public class App {
 
     public static User getCurrentUser() {
         return currentUser;
+    }
+
+    public static User getUserByUsername(String username) {
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public static String getSecurityQuestionByNumber(int number) {
+        number--;
+        return securityQuestions.get(number);
+    }
+
+    public static User getLastUser() {
+        return users.get(users.size() - 1);
     }
 }

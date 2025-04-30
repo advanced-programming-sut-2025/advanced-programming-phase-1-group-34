@@ -11,10 +11,19 @@ public class User {
     private String password;
     private String email;
     private String nickname;
+    private String gender;
 
     private int highestMoney;
 
     private int playedGamesCount;
+
+    public User(String username, String password, String nickname, String email, String gender) {
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.email = email;
+        this.gender = gender;
+    }
 
     public String getUsername() {
         return username;
@@ -62,5 +71,13 @@ public class User {
 
     public void setPlayedGamesCount(int playedGamesCount) {
         this.playedGamesCount = playedGamesCount;
+    }
+
+    private String getGender() {
+        return gender;
+    }
+
+    private void setGender(String gender) {
+        this.gender = gender;
     }
 }
