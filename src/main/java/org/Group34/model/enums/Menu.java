@@ -10,5 +10,7 @@ public enum Menu {
     LOGIN_MENU,
     MAIN_MENU,
     PROFILE_MENU,
-    GAME_MENU
+    GAME_MENU,
+    GAME,
+    EXIT_MENU
 }

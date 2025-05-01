@@ -1,6 +1,8 @@
 package org.Group34.model;
 
 import org.Group34.model.enums.Menu;
+import org.Group34.view.menu.AppMenu;
+import org.Group34.view.menu.GameMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ public class App {
     private static User currentUser;
 
     private static Menu currentMenu = Menu.REGISTER_MENU;
+    private static AppMenu appMenu = new GameMenu();  //TODO first menu should be register menu
 
     private static ArrayList<String> securityQuestions = new ArrayList<>();
 
@@ -66,7 +69,19 @@ public class App {
         return users.get(users.size() - 1);
     }
 
-    public static ArrayList<String> getSecurityQuestions() {
-        return securityQuestions;
+    public static Menu getCurrentMenu() {
+        return currentMenu;
+    }
+
+    public static void setCurrentMenu(Menu currentMenu) {
+        App.currentMenu = currentMenu;
+    }
+
+    public static AppMenu getAppMenu() {
+        return appMenu;
+    }
+
+    public static void setAppMenu(AppMenu appMenu) {
+        App.appMenu = appMenu;
     }
 }
