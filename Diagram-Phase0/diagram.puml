@@ -153,7 +153,7 @@ class Energy {
 
 ' World class
 class World {
-  - farms: List<Farm>
+  - farmTypes: List<Farm>
   - npcs: List<NPC>
   - stores: List<Store>
   + updateWorld(): void

@@ -1,3 +1,4 @@
+
 package org.Group34.model;
 
 /**
@@ -11,9 +12,20 @@ public class User {
     private String password;
     private String email;
     private String nickname;
+    private String gender;
+    private Game game = null;
+
     private int highestMoney;
+
     private int playedGamesCount;
-    private Game playingGame;
+
+    public User(String username, String password, String nickname, String email, String gender) {
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.email = email;
+        this.gender = gender;
+    }
 
     public String getUsername() {
         return username;
@@ -63,11 +75,19 @@ public class User {
         this.playedGamesCount = playedGamesCount;
     }
 
-    public Game getPlayingGame() {
-        return playingGame;
+    private String getGender() {
+        return gender;
     }
 
-    public void setPlayingGame(Game playingGame) {
-        this.playingGame = playingGame;
+    private void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 }

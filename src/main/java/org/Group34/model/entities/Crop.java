@@ -1,11 +1,13 @@
-package org.Group34.model.entity;
+package org.Group34.model.entities;
+
+import org.Group34.model.features.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class Crop {
+public class Crop { //TODO crop can be an entity
     private String name;
     private String source;
     public ArrayList<Integer> stage;
@@ -16,7 +18,7 @@ public class Crop {
     private boolean isEdible;
     private Energy baseEnergy;
     private Health baseHealth;
-    private Season Season;
+    private org.Group34.model.features.Season Season;
     private boolean canBecomeGiant;
 
     private int regrowthLevel = 1;
