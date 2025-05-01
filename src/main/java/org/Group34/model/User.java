@@ -12,6 +12,8 @@ public class User {
     private String email;
     private String nickname;
     private String gender;
+    private String securityQuestion;
+    private String securityAnswer;
 
     private int highestMoney;
 
@@ -73,11 +75,27 @@ public class User {
         this.playedGamesCount = playedGamesCount;
     }
 
-    private String getGender() {
+    public String getGender() {
         return gender;
     }
 
-    private void setGender(String gender) {
+    public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getSecurityQuestion() {
+        return securityQuestion;
+    }
+
+    public void setSecurityQuestion(String securityQuestion) {
+        this.securityQuestion = securityQuestion;
+    }
+
+    public String getSecurityAnswer() {
+        return securityAnswer;
+    }
+
+    public void setSecurityAnswer(String securityAnswer) {
+        this.securityAnswer = securityAnswer;
     }
 }
