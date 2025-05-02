@@ -45,6 +45,7 @@ public class MapBuilder {
         for (int idx = 0; idx < players.length; idx++) {
             Space farmSpace = generateFarm(farmTypes[idx], players[idx]);
             playerFarms.put(players[idx], farmSpace);
+            players[idx].setCurrentSpace(farmSpace);
         }
         Space npcVillage = generateNpcVillage();
         return new Map(playerFarms, npcVillage);
@@ -87,12 +88,9 @@ public class MapBuilder {
         int startX = location[0], startY = location[1];
 
         for (int y = startY; y <= startY + height; y++)
-            for (int x = startX; x <= startX + width; x++) {
-                if (y == startY + height)
-                    spaceGrid[y][x] = building;
-                else
-                    spaceGrid[y][x] = WALL;
-            }
+            for (int x = startX; x <= startX + width; x++)
+                spaceGrid[y][x] = building;
+
     }
 
     /**

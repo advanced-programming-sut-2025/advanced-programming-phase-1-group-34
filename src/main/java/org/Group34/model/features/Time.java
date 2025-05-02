@@ -92,4 +92,9 @@ public class Time {
     public Season getSeason() {
         return season;
     }
+
+    @Override
+    public String toString(){
+        return season.getName() + " " + date + " " + dayOfWeek.getName() + " " + hour + ":00";
+    }
 }

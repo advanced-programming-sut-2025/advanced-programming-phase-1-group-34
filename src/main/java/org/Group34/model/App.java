@@ -1,6 +1,7 @@
 package org.Group34.model;
 
 import org.Group34.model.enums.Menu;
+import org.Group34.model.enums.command.menu.GameCommands;
 import org.Group34.view.menu.AppMenu;
 import org.Group34.view.menu.GameMenu;
 import org.Group34.view.menu.RegisterMenu;
@@ -22,7 +23,8 @@ public class App {
     private static User currentUser;
 
     private static Menu currentMenu = Menu.REGISTER_MENU;
-    private static AppMenu appMenu = new RegisterMenu();  //TODO first menu should be register menu
+    private static AppMenu appMenu = new RegisterMenu();
+    private static Game currentGame = null;
 
     private static ArrayList<String> securityQuestions = new ArrayList<>();
 
@@ -88,5 +90,13 @@ public class App {
 
     public static void setAppMenu(AppMenu appMenu) {
         App.appMenu = appMenu;
+    }
+
+    public static Game getCurrentGame() {
+        return currentGame;
+    }
+
+    public static void setCurrentGame(Game currentGame) {
+        App.currentGame = currentGame;
     }
 }

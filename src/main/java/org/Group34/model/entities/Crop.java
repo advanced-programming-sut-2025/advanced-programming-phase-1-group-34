@@ -4,25 +4,48 @@ import org.Group34.model.enums.Season;
 import org.Group34.model.features.*;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class Crop { //TODO crop can be an entity
     private String name;
     private String source;
-    public ArrayList<Integer> stage;
-    private Time totalHarvestTime;
+    public int[] stage;
+    private int totalHarvestTime;
     private boolean isOneTime;
-    private Time regrowthTime;
+    private int regrowthTime;
     private Price baseSellPrice;
     private boolean isEdible;
     private Energy baseEnergy;
     private Health baseHealth;
-    private Season Season;
+    private ArrayList<Season> seasons;
     private boolean canBecomeGiant;
 
     private int regrowthLevel = 1;
+
+    public Crop(String name, String source, int[] stage, int totalHarvestTime, boolean isOneTime,
+                int regrowthTime, int price, boolean isEdible, int baseEnergy, int baseHealth, String[] seasons, boolean canBecomeGiant) {
+        this.name = name;
+        this.source = source;
+        this.stage = stage;
+        this.totalHarvestTime = totalHarvestTime;
+        this.isOneTime = isOneTime;
+        this.regrowthTime = regrowthTime;
+        this.baseSellPrice = new Price(price);
+        this.isEdible = isEdible;
+        this.baseEnergy = new Energy(baseEnergy);
+        this.baseHealth = new Health(baseHealth);
+        this.canBecomeGiant = canBecomeGiant;
+        for (String season : seasons) {
+            if (season.equals("Spring")) {
+                this.seasons.add(Season.SPRING);
+            } else if (season.equals("Summer")) {
+                this.seasons.add(Season.SUMMER);
+            } else if (season.equals("Autumn")) {
+                this.seasons.add(Season.AUTUMN);
+            } else if (season.equals("Winter")) {
+                this.seasons.add(Season.WINTER);
+            }
+        }
+    }
 
     public String getName() {
         return name;
@@ -38,10 +61,10 @@ public class Crop { //TODO crop can be an entity
         this.source = source;
     }
 
-    public Time getTotalHarvestTime() {
+    public int getTotalHarvestTime() {
         return totalHarvestTime;
     }
-    public void setTotalHarvestTime(Time totalHarvestTime) {
+    public void setTotalHarvestTime(int totalHarvestTime) {
         this.totalHarvestTime = totalHarvestTime;
     }
 
@@ -52,10 +75,10 @@ public class Crop { //TODO crop can be an entity
         isOneTime = oneTime;
     }
 
-    public Time getRegrowthTime() {
+    public int getRegrowthTime() {
         return regrowthTime;
     }
-    public void setRegrowthTime(Time regrowthTime) {
+    public void setRegrowthTime(int regrowthTime) {
         this.regrowthTime = regrowthTime;
     }
 
@@ -87,11 +110,11 @@ public class Crop { //TODO crop can be an entity
         this.baseHealth = baseHealth;
     }
 
-    public Season getSeason() {
-        return Season;
+    public ArrayList<Season> getSeasons() {
+        return seasons;
     }
-    public void setSeason(Season season) {
-        Season = season;
+    public void setSeasons(ArrayList<Season> seasons) {
+        this.seasons = seasons;
     }
 
     public boolean isCanBecomeGiant() {
@@ -99,49 +122,5 @@ public class Crop { //TODO crop can be an entity
     }
     public void setCanBecomeGiant(boolean canBecomeGiant) {
         this.canBecomeGiant = canBecomeGiant;
-    }
-
-    public void growing () {
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        ArrayList<Integer> delays = new ArrayList<>(stage);
-
-        Runnable growing = new Runnable() {
-            private int index = 1;
-
-            @Override
-            public void run() {
-                if (index < delays.size()) {
-                    regrowthLevel++;
-
-                    scheduler.schedule(this, delays.get(index), TimeUnit.SECONDS);
-
-                    index++;
-                }
-            }
-        };
-
-        scheduler.schedule(growing, delays.get(0), TimeUnit.SECONDS);
-    }
-    public void increaseRegrowthLevel() {
-        regrowthLevel++;
-    }
-    public void resetRegrowthLevel() {
-        regrowthLevel = 1;
-    }
-    public void Harvest() {
-        if (isOneTime) {
-            // delete from the floor
-        } else {
-            resetRegrowthLevel();
-        }
-    }
-    public void calculatePrice() {
-
-    }
-    public void eat() {
-        if (isEdible) {
-            // increase energy
-            // delete it
-        }
     }
 }
