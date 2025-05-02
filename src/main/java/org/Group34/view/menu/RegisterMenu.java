@@ -1,25 +1,76 @@
 package org.Group34.view.menu;
 
 import org.Group34.controller.menu.RegisterMenuController;
+import org.Group34.model.Result;
+import org.Group34.model.enums.Menu;
 import org.Group34.model.enums.command.menu.RegisterMenuCommand;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class RegisterMenu {
-    private RegisterMenuController controller = new RegisterMenuController();
+public class RegisterMenu extends AppMenu {
+    private final RegisterMenuController controller;
 
-    public void check(Scanner scanner) {
-        String command = scanner.nextLine();
-        Matcher matcher;
-        if ((matcher = RegisterMenuCommand.Register.getMatcher(command)) != null) {
-            System.out.print(controller.register(scanner, matcher.group("username").trim(), matcher.group("password").trim(), matcher.group("passwordConfirm").trim(), matcher.group("nickname").trim(), matcher.group("email").trim(), matcher.group("gender").trim()));
-        } else if ((matcher = RegisterMenuCommand.RegisterWithRandomPassword.getMatcher(command)) != null) {
-            System.out.print(controller.registerWithRandomPassword(scanner, matcher.group("username").trim(), matcher.group("nickname").trim(), matcher.group("email").trim(), matcher.group("gender").trim()));
-        } else if ((matcher = RegisterMenuCommand.PickQuestion.getMatcher(command)) != null) {
-            System.out.print(controller.pickQuestion(Integer.parseInt(matcher.group("questionNumber").trim()), matcher.group("answer").trim(), matcher.group("answerConfirm").trim()));
-        } else {
-            System.out.println("invalid command");
+    public RegisterMenu() {
+        currentMenu = Menu.REGISTER_MENU;
+        controller = new RegisterMenuController();
+    }
+
+    @Override
+    public void run(Scanner scanner) {
+        while (currentMenu == Menu.REGISTER_MENU) {
+            String command = scanner.nextLine().trim();
+
+            if (command.matches(RegisterMenuCommand.Register.getRegex())) {
+                Pattern pattern = Pattern.compile(RegisterMenuCommand.Register.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String username = matcher.group("username").trim();
+                    String password = matcher.group("password").trim();
+                    String passwordConfirm = matcher.group("passwordConfirm").trim();
+                    String nickname = matcher.group("nickname").trim();
+                    String email = matcher.group("email").trim();
+                    String gender = matcher.group("gender").trim();
+
+                    Result result = controller.register(scanner, username, password, passwordConfirm, nickname, email, gender);
+                    showMessage(result.message());
+                }
+            }
+
+            else if (command.matches(RegisterMenuCommand.RegisterWithRandomPassword.getRegex())) {
+                Pattern pattern = Pattern.compile(RegisterMenuCommand.RegisterWithRandomPassword.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String username = matcher.group("username").trim();
+                    String nickname = matcher.group("nickname").trim();
+                    String email = matcher.group("email").trim();
+                    String gender = matcher.group("gender").trim();
+
+                    Result result = controller.registerWithRandomPassword(scanner, username, nickname, email, gender);
+                    showMessage(result.message());
+                }
+            }
+
+            else if (command.matches(RegisterMenuCommand.PickQuestion.getRegex())) {
+                Pattern pattern = Pattern.compile(RegisterMenuCommand.PickQuestion.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    int questionNumber = Integer.parseInt(matcher.group("questionNumber").trim());
+                    String answer = matcher.group("answer").trim();
+                    String answerConfirm = matcher.group("answerConfirm").trim();
+
+                    Result result = controller.pickQuestion(questionNumber, answer, answerConfirm);
+                    showMessage(result.message());
+                }
+            }
+
+            else {
+                showMessage("Invalid command.");
+            }
         }
     }
 }

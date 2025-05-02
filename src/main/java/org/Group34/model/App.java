@@ -65,6 +65,10 @@ public class App {
         return securityQuestions.get(number);
     }
 
+    public static ArrayList<String> getSecurityQuestions() {
+        return securityQuestions;
+    }
+
     public static User getLastUser() {
         return users.get(users.size() - 1);
     }
