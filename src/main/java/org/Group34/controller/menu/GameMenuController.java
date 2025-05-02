@@ -1,6 +1,7 @@
 package org.Group34.controller.menu;
 
 import org.Group34.model.*;
+import org.Group34.model.features.Time;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.MapBuilder;
 import org.Group34.model.entities.Player;
@@ -87,6 +88,7 @@ public class GameMenuController {
 
         Game game = App.getCurrentUser().getGame();
         App.setCurrentMenu(Menu.GAME);
+        App.setCurrentGame(game);
         App.setAppMenu(new GameView(game));
 
         return new Result(true, "Game loaded successfully.");
@@ -111,7 +113,7 @@ public class GameMenuController {
         for (User user: users)
             players.put(user, new Player(PLAYER_INITIAL_LOCATION));
 
-        return new Game(App.getCurrentUser(), players, generateMap(players.values()));
+        return new Game(App.getCurrentUser(), players, generateMap(players.values()), new Time());
     }
 
     private Map generateMap(Collection<Player> players){
