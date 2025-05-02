@@ -11,29 +11,12 @@ import java.util.Scanner;
  */
 
 public abstract class AppMenu {
-    protected Menu currentMenu;
-
     /**
      * Starts the logic of the current menu
      * Should be implemented for each menu separately
      */
     public abstract void run(Scanner scanner);
 
-    /**
-     * Sets the current menu
-     *
-     * @param currentMenu The new menu to set
-     */
-    public void setMenu(Menu currentMenu) {
-        this.currentMenu = currentMenu;
-    }
-
-    /**
-     * Returns the current menu
-     */
-    public Menu getMenu() {
-        return currentMenu;
-    }
 
     /**
      * Displays a message to the user

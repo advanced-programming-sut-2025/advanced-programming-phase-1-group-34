@@ -1,5 +1,6 @@
 package org.Group34.view.menu;
 
+import org.Group34.model.App;
 import org.Group34.model.enums.Menu;
 import org.Group34.model.enums.command.menu.MainMenuCommand;
 
@@ -11,23 +12,19 @@ import java.util.Scanner;
  */
 
 public class MainMenu extends AppMenu{
-    public MainMenu() {
-        currentMenu = Menu.MAIN_MENU;
-    }
-
     @Override
     public void run(Scanner scanner) {
-        while (currentMenu == Menu.MAIN_MENU) {
+        while (App.getCurrentMenu() == Menu.MAIN_MENU) {
             String command = scanner.nextLine().trim();
 
             if(command.matches(MainMenuCommand.ENTER_PROFILE_MENU.getRegex())) {
-                setMenu(Menu.PROFILE_MENU);
+                App.setCurrentMenu(Menu.PROFILE_MENU);
             }
             else if (command.matches(MainMenuCommand.ENTER_GAME_MENU.getRegex())) {
-                setMenu(Menu.GAME_MENU);
+                App.setCurrentMenu(Menu.GAME_MENU);
             }
             else if (command.matches(MainMenuCommand.LOGOUT.getRegex())) {
-                setMenu(Menu.LOGIN_MENU);
+                App.setCurrentMenu(Menu.LOGIN_MENU);
             }
             else if (command.matches(MainMenuCommand.SHOW_MENU.getRegex())) {
                 showMessage("You are currently in Main Menu.");

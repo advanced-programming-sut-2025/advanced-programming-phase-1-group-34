@@ -32,7 +32,7 @@ public class ProfileMenuController {
     }
 
     private boolean isUsernameFormatValid(String username) {
-        return username.matches("^[a-zA-Z0-9-]+$");
+        return username.matches("[a-zA-Z0-9-]+");
     }
     // change username: ---------- END ------------
 

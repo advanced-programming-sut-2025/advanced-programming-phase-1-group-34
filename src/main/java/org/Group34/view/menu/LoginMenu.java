@@ -1,6 +1,7 @@
 package org.Group34.view.menu;
 
 import org.Group34.controller.menu.LoginMenuController;
+import org.Group34.model.App;
 import org.Group34.model.Result;
 import org.Group34.model.enums.Menu;
 import org.Group34.model.enums.command.menu.LoginMenuCommand;
@@ -13,13 +14,12 @@ public class LoginMenu extends AppMenu {
     private final LoginMenuController controller;
 
     public LoginMenu() {
-        currentMenu = Menu.LOGIN_MENU;
         controller = new LoginMenuController();
     }
 
     @Override
     public void run(Scanner scanner) {
-        while (currentMenu == Menu.LOGIN_MENU) {
+        while (App.getCurrentMenu() == Menu.LOGIN_MENU) {
             String command = scanner.nextLine().trim();
 
             if (command.matches(LoginMenuCommand.Login.getRegex())) {
@@ -32,6 +32,9 @@ public class LoginMenu extends AppMenu {
 
                     Result result = controller.login(username, password);
                     showMessage(result.message());
+                    if (result.success()) {
+                        App.setCurrentMenu(Menu.MAIN_MENU);
+                    }
                 }
             }
 
@@ -45,6 +48,9 @@ public class LoginMenu extends AppMenu {
 
                     Result result = controller.loginWithSave(username, password);
                     showMessage(result.message());
+                    if (result.success()) {
+                        App.setCurrentMenu(Menu.MAIN_MENU);
+                    }
                 }
             }
 

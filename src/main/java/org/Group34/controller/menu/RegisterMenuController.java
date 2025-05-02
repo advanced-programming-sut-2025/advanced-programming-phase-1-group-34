@@ -11,7 +11,9 @@ import org.Group34.model.User;
 
 
 public class RegisterMenuController {
-    public Result register(Scanner scanner, String username, String password, String passwordConfirm, String nickname, String email, String gender) {
+    public Result register(Scanner scanner, String username,
+                           String password, String passwordConfirm,
+                           String nickname, String email, String gender) {
         if (App.getUserByUsername(username) != null) {
             System.out.println("this username is already taken!");
             String suggestion = generateNewUsername(username);
@@ -20,26 +22,34 @@ public class RegisterMenuController {
             String choice = scanner.nextLine().trim().toLowerCase();
             if (choice.equals("yes")) {
                 username = suggestion;
-            } else {
+            }
+            else {
                 return new Result(false, "Redirecting to the Register menu ...\n");
             }
         }
         if (!isUsernameValid(username)) {
             return new Result(false, "username format is invalid!\n");
-        } else if (!isEmailValid(email)) {
+        }
+        else if (!isEmailValid(email)) {
             return new Result(false, "email format is invalid!\n");
-        } else if (!isPasswordValid(password)) {
+        }
+        else if (!isPasswordValid(password)) {
             return new Result(false, "password format is invalid!\n");
-        } else if (password.length() < 8) {
-            return new Result(false, "The password is weak,\n" + "The password must consist of at least 8 characters\n");
-        } else if (!password.matches("(?=.*[a-z]).+")) {
-            return new Result(false, "The password is weak,\n" + "The password must consist of lowercase characters\n");
-        } else if (!password.matches("(?=.*[A-Z]).+")) {
-            return new Result(false, "The password is weak,\n" + "The password must consist of uppercase characters\n");
-        } else if (!password.matches("(?=.*\\d).+")) {
-            return new Result(false, "The password is weak,\n" + "The password must consist of numbers\n");
-        } else if (!password.matches("(?=.*[!@#$%^&*()_\\-+=\\[\\]{};:'\",.<>/?\\\\|`~]).+")) {
-            return new Result(false, "The password is weak,\n" + "The password must consist of special characters\n");
+        }
+        else if (password.length() < 8) {
+            return new Result(false, "The password is weak,\nThe password must consist of at least 8 characters\n");
+        }
+        else if (!password.matches("(?=.*[a-z]).+")) {
+            return new Result(false, "The password is weak,\nThe password must consist of lowercase characters\n");
+        }
+        else if (!password.matches("(?=.*[A-Z]).+")) {
+            return new Result(false, "The password is weak,\nThe password must consist of uppercase characters\n");
+        }
+        else if (!password.matches("(?=.*\\d).+")) {
+            return new Result(false, "The password is weak,\nThe password must consist of numbers\n");
+        }
+        else if (!password.matches("(?=.*[!@#$%^&*()_\\-+=\\[\\]{};:'\",.<>/?\\\\|`~]).+")) {
+            return new Result(false, "The password is weak,\nThe password must consist of special characters\n");
         }
         else if (!password.equals(passwordConfirm)) {
             System.out.println("Re-entered password is incorrect.");
@@ -48,18 +58,23 @@ public class RegisterMenuController {
                 passwordConfirm = scanner.nextLine();
                 if (passwordConfirm.equals(password)) {
                     break;
-                } else if (passwordConfirm.equals("back")) {
+                }
+                else if (passwordConfirm.equals("back")) {
                     return new Result(false, "Redirecting to the Register menu ...\n");
-                } else {
+                }
+                else {
                     System.out.println("Re-entered password is incorrect.");
                     System.out.println("Please enter the password again or back to the Register menu");
                 }
             }
         }
         showSecurityQuestions();
-        App.addUser(new User(username, password, nickname, email, gender));
+        User newUser = new User(username, password, nickname, email, gender);
+        App.addUser(newUser);
+        App.setCurrentUser(newUser);
         return new Result(true, "");
     }
+
     public Result registerWithRandomPassword(Scanner scanner, String username, String nickname, String email, String gender) {
         if (App.getUserByUsername(username) != null) {
             System.out.println("this username is already taken!");
@@ -69,13 +84,15 @@ public class RegisterMenuController {
             String choice = scanner.nextLine().trim().toLowerCase();
             if (choice.equals("yes")) {
                 username = suggestion;
-            } else {
+            }
+            else {
                 return new Result(false, "Redirecting to the Register menu ...\n");
             }
         }
         if (!isUsernameValid(username)) {
             return new Result(false, "username format is invalid!\n");
-        } else if (!isEmailValid(email)) {
+        }
+        else if (!isEmailValid(email)) {
             return new Result(false, "email format is invalid!\n");
         }
 
@@ -87,15 +104,19 @@ public class RegisterMenuController {
             if (choice.equals("yes")) {
                 password = suggestion;
                 break;
-            } else if (choice.equals("back")) {
+            }
+            else if (choice.equals("back")) {
                 return new Result(false, "Redirecting to the Register menu ...\n");
             }
         }
 
         showSecurityQuestions();
-        App.addUser(new User(username, password, nickname, email, gender));
+        User newUser = new User(username, password, nickname, email, gender);
+        App.addUser(newUser);
+        App.setCurrentUser(newUser);
         return new Result(true, "");
     }
+
     public Result pickQuestion(int questionNumber, String answer, String answerConfirm) {
         if (!answer.equals(answerConfirm)) {
             return new Result(false, "Please try again.\n");
@@ -106,7 +127,6 @@ public class RegisterMenuController {
         return new Result(true, "user registered successfully.\n");
     }
 
-
     private String generateNewUsername(String username) {
         Random rand = new Random();
         String newUsername;
@@ -116,15 +136,19 @@ public class RegisterMenuController {
         } while (App.getUserByUsername(newUsername) != null);
         return newUsername;
     }
+
     private boolean isUsernameValid(String username) {
         return username.matches("[a-zA-Z0-9-]+");
     }
+
     private boolean isEmailValid(String email) {
         return email.matches("(?!.*\\.\\.)([a-zA-Z0-9](?:[a-zA-Z0-9._-]*[a-zA-Z0-9])?)@([a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9-]{2,})+)");
     }
+
     private boolean isPasswordValid(String password) {
         return password.matches("[a-zA-Z0-9!@#$%^&*()_\\-+=\\[\\]{};:'\",.<>/?\\\\|]+");
     }
+
     private void showSecurityQuestions() {
         ArrayList<String> securityQuestions = new ArrayList<>(App.getSecurityQuestions());
         System.out.println("Please pick a question");
@@ -133,6 +157,7 @@ public class RegisterMenuController {
             System.out.println((i+1) + ". " + securityQuestions.get(i));
         }
     }
+
     private String generateRandomPassword() {
         StringBuilder password = new StringBuilder();
         Random rand = new Random();
