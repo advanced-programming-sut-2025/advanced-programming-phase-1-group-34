@@ -87,6 +87,10 @@ public class ProfileMenu extends AppMenu {
                 showMessage("You are currently in Profile Menu.");
             }
 
+            else if (command.matches(ProfileMenuCommand.ENTER_MAIN_MENU.getRegex())) {
+                setMenu(Menu.MAIN_MENU);
+            }
+
             else {
                 showMessage("Invalid command.");
             }
