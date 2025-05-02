@@ -1,6 +1,7 @@
 package org.Group34.view.menu;
 
 import org.Group34.controller.menu.GameMenuController;
+import org.Group34.model.App;
 import org.Group34.model.Result;
 import org.Group34.model.enums.Menu;
 import org.Group34.model.enums.command.menu.GameMenuCommands;
@@ -14,13 +15,12 @@ public class GameMenu extends AppMenu{
     private final GameMenuController controller;
 
     public GameMenu() {
-        currentMenu = Menu.GAME_MENU;
         controller = new GameMenuController();
     }
 
     @Override
     public void run(Scanner scanner) {
-        while (currentMenu == Menu.GAME_MENU){
+        while (App.getCurrentMenu() == Menu.GAME_MENU){
             String command = scanner.nextLine().trim();
 
             if (command.matches(GameMenuCommands.GAME_NEW.getRegex())) {

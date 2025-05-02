@@ -1,6 +1,7 @@
 package org.Group34.view.menu;
 
 import org.Group34.controller.menu.RegisterMenuController;
+import org.Group34.model.App;
 import org.Group34.model.Result;
 import org.Group34.model.enums.Menu;
 import org.Group34.model.enums.command.menu.RegisterMenuCommand;
@@ -13,13 +14,12 @@ public class RegisterMenu extends AppMenu {
     private final RegisterMenuController controller;
 
     public RegisterMenu() {
-        currentMenu = Menu.REGISTER_MENU;
         controller = new RegisterMenuController();
     }
 
     @Override
     public void run(Scanner scanner) {
-        while (currentMenu == Menu.REGISTER_MENU) {
+        while (App.getCurrentMenu() == Menu.REGISTER_MENU) {
             String command = scanner.nextLine().trim();
 
             if (command.matches(RegisterMenuCommand.Register.getRegex())) {
@@ -36,6 +36,9 @@ public class RegisterMenu extends AppMenu {
 
                     Result result = controller.register(scanner, username, password, passwordConfirm, nickname, email, gender);
                     showMessage(result.message());
+                    if (result.success()) {
+                        App.setCurrentMenu(Menu.MAIN_MENU);
+                    }
                 }
             }
 
@@ -51,6 +54,9 @@ public class RegisterMenu extends AppMenu {
 
                     Result result = controller.registerWithRandomPassword(scanner, username, nickname, email, gender);
                     showMessage(result.message());
+                    if (result.success()) {
+                        App.setCurrentMenu(Menu.MAIN_MENU);
+                    }
                 }
             }
 
@@ -65,6 +71,9 @@ public class RegisterMenu extends AppMenu {
 
                     Result result = controller.pickQuestion(questionNumber, answer, answerConfirm);
                     showMessage(result.message());
+                    if (result.success()) {
+                        App.setCurrentMenu(Menu.MAIN_MENU);
+                    }
                 }
             }
 

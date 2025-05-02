@@ -8,10 +8,10 @@ import org.Group34.model.enums.command.Command;
 
 public enum ProfileMenuCommand implements Command {
     // Regex: ---------- START -----------
-    CHANGE_USERNAME("change\\s+username\\s+-u\\s+(?<username>.*?)"),
-    CHANGE_NICKNAME("change\\s+nickname\\s+-u\\s+(?<nickname>.*?)"),
-    CHANGE_EMAIL("change\\s+email\\s+-e\\s+(?<email>.*?)"),
-    CHANGE_PASSWORD("change\\s+password\\s+-p\\s+(?<newPassword>.*?)\\s+-o\\s+(?<oldPassword>.*?)"),
+    CHANGE_USERNAME("change\\s+username\\s+-u\\s+(?<username>\\S+)"),
+    CHANGE_NICKNAME("change\\s+nickname\\s+-u\\s+(?<nickname>\\S+)"),
+    CHANGE_EMAIL("change\\s+email\\s+-e\\s+(?<email>\\S+)"),
+    CHANGE_PASSWORD("change\\s+password\\s+-p\\s+(?<newPassword>\\S+)\\s+-o\\s+(?<oldPassword>\\S+)"),
 
     ENTER_MAIN_MENU("menu\\s+enter\\s+main\\s+menu"),
 
