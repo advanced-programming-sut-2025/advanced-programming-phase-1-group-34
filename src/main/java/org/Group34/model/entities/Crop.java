@@ -1,5 +1,6 @@
 package org.Group34.model.entities;
 
+import org.Group34.model.enums.Season;
 import org.Group34.model.features.*;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class Crop { //TODO crop can be an entity
     private boolean isEdible;
     private Energy baseEnergy;
     private Health baseHealth;
-    private org.Group34.model.features.Season Season;
+    private Season Season;
     private boolean canBecomeGiant;
 
     private int regrowthLevel = 1;
