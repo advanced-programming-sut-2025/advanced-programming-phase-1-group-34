@@ -3,7 +3,6 @@ package org.Group34.view.menu;
 import org.Group34.controller.menu.RegisterMenuController;
 import org.Group34.model.Result;
 import org.Group34.model.enums.Menu;
-import org.Group34.model.enums.command.menu.MainMenuCommand;
 import org.Group34.model.enums.command.menu.RegisterMenuCommand;
 
 import java.util.Scanner;

@@ -4,8 +4,6 @@ import org.Group34.controller.menu.LoginMenuController;
 import org.Group34.model.Result;
 import org.Group34.model.enums.Menu;
 import org.Group34.model.enums.command.menu.LoginMenuCommand;
-import org.Group34.model.enums.command.menu.MainMenuCommand;
-import org.Group34.model.enums.command.menu.RegisterMenuCommand;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
