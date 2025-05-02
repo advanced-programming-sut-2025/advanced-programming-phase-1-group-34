@@ -4,6 +4,8 @@ import org.Group34.controller.menu.LoginMenuController;
 import org.Group34.model.Result;
 import org.Group34.model.enums.Menu;
 import org.Group34.model.enums.command.menu.LoginMenuCommand;
+import org.Group34.model.enums.command.menu.MainMenuCommand;
+import org.Group34.model.enums.command.menu.RegisterMenuCommand;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -58,6 +60,13 @@ public class LoginMenu extends AppMenu {
                     Result result = controller.forgetPassword(scanner, username);
                     showMessage(result.message());
                 }
+            }
+            else if (command.matches(LoginMenuCommand.SHOW_MENU.getRegex())) {
+                showMessage("You are currently in Login Menu.");
+            }
+
+            else if(command.matches(LoginMenuCommand.EXIT.getRegex())) {
+                System.exit(0);
             }
 
             else {

@@ -3,6 +3,7 @@ package org.Group34.view.menu;
 import org.Group34.controller.menu.RegisterMenuController;
 import org.Group34.model.Result;
 import org.Group34.model.enums.Menu;
+import org.Group34.model.enums.command.menu.MainMenuCommand;
 import org.Group34.model.enums.command.menu.RegisterMenuCommand;
 
 import java.util.Scanner;
@@ -66,6 +67,14 @@ public class RegisterMenu extends AppMenu {
                     Result result = controller.pickQuestion(questionNumber, answer, answerConfirm);
                     showMessage(result.message());
                 }
+            }
+
+            else if (command.matches(RegisterMenuCommand.SHOW_MENU.getRegex())) {
+                showMessage("You are currently in Register Menu.");
+            }
+
+            else if(command.matches(RegisterMenuCommand.EXIT.getRegex())) {
+                System.exit(0);
             }
 
             else {
