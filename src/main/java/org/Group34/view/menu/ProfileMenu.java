@@ -19,13 +19,12 @@ public class ProfileMenu extends AppMenu {
     private final ProfileMenuController controller;
 
     public ProfileMenu() {
-        currentMenu = Menu.PROFILE_MENU;
         controller = new ProfileMenuController();
     }
 
     @Override
     public void run(Scanner scanner) {
-        while (currentMenu == Menu.PROFILE_MENU) {
+        while (App.getCurrentMenu() == Menu.PROFILE_MENU) {
             String command = scanner.nextLine().trim();
 
             if (command.matches(ProfileMenuCommand.CHANGE_USERNAME.getRegex())) {
@@ -88,7 +87,7 @@ public class ProfileMenu extends AppMenu {
             }
 
             else if (command.matches(ProfileMenuCommand.ENTER_MAIN_MENU.getRegex())) {
-                setMenu(Menu.MAIN_MENU);
+                App.setCurrentMenu(Menu.MAIN_MENU);
             }
 
             else {
