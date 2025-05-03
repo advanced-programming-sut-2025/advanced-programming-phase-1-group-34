@@ -5,7 +5,7 @@ import org.Group34.model.features.*;
 
 import java.util.ArrayList;
 
-public class Crop { //TODO crop can be an entity
+public class Crop implements Entity { //TODO crop can be an entity
     private String name;
     private String source;
     public int[] stage;
