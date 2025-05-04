@@ -1,22 +1,21 @@
 package org.Group34.model.features.TimeSystem;
 
 /**
- * A timer that tracks a fixed period starting from a given time
- * It can check if the given duration has passed
- *
- * You can use it for plants, trees, animals etc.
+ * Timer represents a duration-based tracker that checks
+ * whether a specified amount of in-game hours has passed
+ * since the timer started.
  */
 public class Timer {
     private final TimeSnapshot startTime;
     private final int durationHours;
 
-    public Timer(Time startTime, int durationHours) {
-        this.startTime = startTime.snapshot();
+    public Timer(Time currentTime, int durationHours) {
+        this.startTime = new TimeSnapshot(currentTime);
         this.durationHours = durationHours;
     }
 
-    public boolean isFinished(Time currentTime) {
-        int passed = TimeSnapshot.hoursBetween(startTime, currentTime.snapshot());
-        return passed >= durationHours;
+    public boolean isCompleted(Time currentTime) {
+        int hoursPassed = TimeSnapshot.hoursBetween(startTime, new TimeSnapshot(currentTime));
+        return hoursPassed >= durationHours;
     }
 }
