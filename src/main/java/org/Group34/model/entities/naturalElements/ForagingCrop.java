@@ -1,21 +1,20 @@
-package org.Group34.model.entities;
+package org.Group34.model.entities.naturalElements;
 
+import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Season;
-import org.Group34.model.features.Energy;
-import org.Group34.model.features.Price;
 
 import java.util.ArrayList;
 
-public class ForagingCrop {
+public class ForagingCrop implements Entity, Foraging {
     private String name;
     private ArrayList<Season> seasons;
-    private Price baseSellPrice;
-    private Energy energy;
+    private int baseSellPrice;
+    private int energy;
 
     public ForagingCrop(String name, String[] seasons, int price, int energy) {
         this.name = name;
-        this.baseSellPrice = new Price(price);
-        this.energy = new Energy(energy);
+        this.baseSellPrice = price;
+        this.energy = energy;
         for (String season : seasons) {
             if (season.equals("Spring")) {
                 this.seasons.add(Season.SPRING);
@@ -43,17 +42,17 @@ public class ForagingCrop {
         this.seasons = seasons;
     }
 
-    public Price getBaseSellPrice() {
+    public int getBaseSellPrice() {
         return baseSellPrice;
     }
-    public void setBaseSellPrice(Price price) {
+    public void setBaseSellPrice(int price) {
         this.baseSellPrice = price;
     }
 
-    public Energy getEnergy() {
+    public int getEnergy() {
         return energy;
     }
-    public void setEnergy(Energy energy) {
+    public void setEnergy(int energy) {
         this.energy = energy;
     }
 }

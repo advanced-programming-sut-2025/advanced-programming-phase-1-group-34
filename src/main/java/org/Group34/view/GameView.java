@@ -23,7 +23,7 @@ public class GameView extends AppMenu {
 
     @Override
     public void run(Scanner scanner) {
-        while (currentMenu == Menu.GAME) {
+        while (App.getCurrentMenu() == Menu.GAME) {
             String command = scanner.nextLine().trim();
 
             if (command.matches(GameCommands.EXIT_GAME.getRegex())) {

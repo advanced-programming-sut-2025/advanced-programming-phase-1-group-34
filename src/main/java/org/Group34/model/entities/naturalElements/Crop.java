@@ -1,38 +1,34 @@
-package org.Group34.model.entities;
+package org.Group34.model.entities.naturalElements;
 
+import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Season;
-import org.Group34.model.features.*;
+import org.Group34.model.items.Fruit;
+import org.Group34.model.items.PlantingSource;
 
 import java.util.ArrayList;
 
-public class Crop implements Entity { //TODO crop can be an entity
+public class Crop implements Entity, PlantAble {
     private String name;
-    private String source;
+    private PlantingSource source;
     public int[] stage;
     private int totalHarvestTime;
     private boolean isOneTime;
     private int regrowthTime;
-    private Price baseSellPrice;
-    private boolean isEdible;
-    private Energy baseEnergy;
-    private Health baseHealth;
+    private Fruit fruit;
     private ArrayList<Season> seasons;
     private boolean canBecomeGiant;
 
     private int regrowthLevel = 1;
 
-    public Crop(String name, String source, int[] stage, int totalHarvestTime, boolean isOneTime,
-                int regrowthTime, int price, boolean isEdible, int baseEnergy, int baseHealth, String[] seasons, boolean canBecomeGiant) {
+    public Crop(String name, PlantingSource source, int[] stage, int totalHarvestTime, boolean isOneTime,
+                int regrowthTime, Fruit fruit, String[] seasons, boolean canBecomeGiant) {
         this.name = name;
         this.source = source;
         this.stage = stage;
         this.totalHarvestTime = totalHarvestTime;
         this.isOneTime = isOneTime;
         this.regrowthTime = regrowthTime;
-        this.baseSellPrice = new Price(price);
-        this.isEdible = isEdible;
-        this.baseEnergy = new Energy(baseEnergy);
-        this.baseHealth = new Health(baseHealth);
+        this.fruit = fruit;
         this.canBecomeGiant = canBecomeGiant;
         for (String season : seasons) {
             if (season.equals("Spring")) {
@@ -54,10 +50,10 @@ public class Crop implements Entity { //TODO crop can be an entity
         this.name = name;
     }
 
-    public String getSource() {
+    public PlantingSource getSource() {
         return source;
     }
-    public void setSource(String source) {
+    public void setSource(PlantingSource source) {
         this.source = source;
     }
 
@@ -82,33 +78,7 @@ public class Crop implements Entity { //TODO crop can be an entity
         this.regrowthTime = regrowthTime;
     }
 
-    public Price getBaseSellPrice() {
-        return baseSellPrice;
-    }
-    public void setBaseSellPrice(Price baseSellPrice) {
-        this.baseSellPrice = baseSellPrice;
-    }
-
-    public boolean isEdible() {
-        return isEdible;
-    }
-    public void setEdible(boolean edible) {
-        isEdible = edible;
-    }
-
-    public Energy getBaseEnergy() {
-        return baseEnergy;
-    }
-    public void setBaseEnergy(Energy baseEnergy) {
-        this.baseEnergy = baseEnergy;
-    }
-
-    public Health getBaseHealth() {
-        return baseHealth;
-    }
-    public void setBaseHealth(Health baseHealth) {
-        this.baseHealth = baseHealth;
-    }
+    public Fruit getFruit(){return fruit;}
 
     public ArrayList<Season> getSeasons() {
         return seasons;

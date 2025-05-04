@@ -13,7 +13,9 @@ public enum GameCommands implements Command {
     DISPLAY_TIME("^\\s*(?<type>time|date|datetime|day of week)\\s*$"),
     WALK("\\s*walk\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s*"),
     PRINT_MAP("\\s*print\\s+map\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s+-s\\s+(?<size>\\d+)\\s*"),
-    HELP_READING_MAP("\\s*help\\s+reading\\s+map\\s*");
+    HELP_READING_MAP("\\s*help\\s+reading\\s+map\\s*"),
+    INVENTORY_SHOW("\\s*inventory\\s+show\\s*"),
+    INVENTORY_TRASH("\\s*inventory\\s+trash\\s+-i\\s+(?<itemName>.+)\\s+-n\\s+(?<number>\\d+)\\s*");
     ;
     // Regex: ---------- END -------------
 
