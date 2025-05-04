@@ -39,7 +39,7 @@ public class WeatherSystem {
      *
      * @param time the new game time (used to determine season for tomorrow's weather)
      */
-    public void advanceDay(Time time) {
+    public void advanceWeather(Time time) {
         this.todayCondition = this.tomorrowCondition;
         this.tomorrowCondition = WeatherCondition.random(time.getSeason());
         lightningStrikeMap.clear();
