@@ -1,4 +1,4 @@
-package org.Group34.controller.TimeSystem;
+package org.Group34.model.time;
 
 import org.Group34.model.enums.DayOfWeek;
 import org.Group34.model.enums.Season;

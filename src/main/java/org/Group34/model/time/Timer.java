@@ -1,4 +1,4 @@
-package org.Group34.controller.TimeSystem;
+package org.Group34.model.time;
 
 /**
  * Timer represents a duration-based tracker that checks
