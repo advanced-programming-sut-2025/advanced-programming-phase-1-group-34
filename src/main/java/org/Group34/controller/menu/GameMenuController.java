@@ -1,7 +1,7 @@
 package org.Group34.controller.menu;
 
 import org.Group34.model.*;
-import org.Group34.controller.TimeSystem.Time;
+import org.Group34.model.time.Time;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.MapBuilder;
 import org.Group34.model.entities.Player;
