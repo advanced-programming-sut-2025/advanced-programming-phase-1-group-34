@@ -135,7 +135,7 @@ public class GameController {
             case "date": message = game.time().getSeason().getName() + " " + game.time().getDate();
             case "datetime": message = game.time().getSeason().getName() + " " + game.time().getDate() + " "
                     + game.time().getHour() + ":00";
-            case "day of week": message = game.time().getDayOfTheWeek().getName();
+            case "day of week": message = game.time().getDayOfWeek().getName();
         }
         return new Result(true, message);
     }
@@ -159,7 +159,7 @@ public class GameController {
             player.passOut();
             passedOutUsers.add(orderOfPlay.get(currentUser)); //TODO reset passOutUsers at start of new day
             if (passedOutUsers.size() >= orderOfPlay.size())
-                game.time().nextDay(); //TODO if all players pass out we go to next day
+                game.time().addDays(1);
             return new Result(false, "Your character have been passed out.");
         }
         else{
