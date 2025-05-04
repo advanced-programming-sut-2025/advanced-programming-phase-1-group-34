@@ -1,4 +1,4 @@
-package org.Group34.model.features;
+package org.Group34.model.features.TimeSystem;
 
 import org.Group34.model.enums.DayOfWeek;
 import org.Group34.model.enums.Season;
@@ -28,18 +28,16 @@ public class Time {
 
     /**
      * Adds the specified number of hours to the current time
-     * If the total exceeds 24, the extra hours roll over to the next day(s)
-     *
-     * This method also updates the day of the week and the season if necessary
+     * If the total exceeds 12 (9AM to 9PM), the extra hours roll over to the next day(s)
      *
      * @param hours Number of hours to add (must be non-negative)
      */
     public void addHour(int hours) {
         if (hours < 0) throw new IllegalArgumentException("Cannot add negative hours");
 
-        int totalHours = this.hour + hours;
-        int daysToAdd = totalHours / 24;
-        this.hour = totalHours % 24;
+        int totalHours = this.hour - 9 + hours;
+        int daysToAdd = totalHours / 12;
+        this.hour = 9 + (totalHours % 12);
 
         if (daysToAdd > 0) {
             addDays(daysToAdd);
@@ -65,36 +63,28 @@ public class Time {
         season = season.next(seasonsToAdd);
     }
 
-    /**
-     * Returns the current hour of the day (0-23)
-     */
     public int getHour() {
         return hour;
     }
 
-    /**
-     * Returns the current date within the season (1-28)
-     */
     public int getDate() {
         return date;
     }
 
-    /**
-     * Returns the current day of the week
-     */
     public DayOfWeek getDayOfTheWeek() {
         return dayOfWeek;
     }
 
-    /**
-     * Returns the current season
-     */
     public Season getSeason() {
         return season;
     }
 
+    public TimeSnapshot snapshot() {
+        return new TimeSnapshot(this);
+    }
+
     @Override
-    public String toString(){
+    public String toString() {
         return season.getName() + " " + date + " " + dayOfWeek.getName() + " " + hour + ":00";
     }
 }
