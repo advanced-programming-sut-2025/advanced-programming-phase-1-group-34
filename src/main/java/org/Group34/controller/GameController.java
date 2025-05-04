@@ -7,6 +7,7 @@ import org.Group34.model.User;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.enums.Color;
+import org.Group34.model.map.MapBuilder;
 import org.Group34.view.menu.GameMenu;
 
 import java.util.ArrayList;
@@ -87,8 +88,11 @@ public class GameController {
     }
 
     public Result nextTurn() {
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
+
         nextUser();
-        game.time().addHour(1);
+        if (currentUser == 0) game.time().addHour(1);
 
         while (passedOutUsers.contains(orderOfPlay.get(currentUser)))
             nextUser();
@@ -104,6 +108,9 @@ public class GameController {
     }
 
     public Result cheatAdvanceTime(String hours) {
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
+
         try {
             Integer h = getInt(hours);
             if (h == null) return new Result(false, "Error: you should give a number as hours argument");
@@ -117,6 +124,9 @@ public class GameController {
     }
 
     public Result cheatAdvanceDate(String days) {
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
+
         try {
             Integer d = getInt(days);
             if (d == null) return new Result(false, "Error: you should give a number as days argument");
@@ -129,6 +139,9 @@ public class GameController {
     }
 
     public Result displayTime(String type){
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
+
         String message = "";
         switch (type){
             case "time": message = game.time().getHour() + ":00" ;
@@ -141,6 +154,9 @@ public class GameController {
     }
 
     public Result walk(String x, String y) {
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
+
         Integer targetX = getInt(x);
         Integer targetY = getInt(y);
         Player player = getPlayer();
@@ -174,17 +190,23 @@ public class GameController {
     }
 
     public Result printMap(String x, String y, String sz) {
-        Integer centerX = getInt(x);
-        Integer centerY = getInt(y);
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
+
+        Integer beginX = getInt(x);
+        Integer beginY = getInt(y);
         Integer size = getInt(sz);
         Entity[][] entities = getPlayer().getCurrentSpace().entities();
         StringBuilder message = new StringBuilder();
 
-        if (centerX == null || centerY == null || size == null)
+        if (beginX == null || beginY == null || size == null)
             return new Result(false, "Error: size or center location should be number format");
 
-        for (int i = centerX; i<centerX + size; i++) {
-            for (int j = centerY; j < centerY + size; j++) {
+        int endX = Math.min(MapBuilder.SPACE_WIDTH - 1, beginX + size);
+        int endY = Math.max(MapBuilder.SPACE_HEIGHT - 1, beginY + size);
+
+        for (int i = beginX; i < endX; i++) {
+            for (int j = beginY; j < endY; j++) {
                 message.append(entities[i][j]).append(" ");
             }
             message.append("\n");
@@ -194,14 +216,17 @@ public class GameController {
     }
 
     public Result helpReadingMap() {
-        return new Result(true, "player: P" +
-                        "house: " + Color.BROWN + "H" + Color.RESET +
-                        "green house: " + Color.YELLOW + "G" + Color.RESET +
-                        "lake: " + Color.CYAN + "L" + Color.RESET +
-                        "quarry: " + Color.GRAY + "Q" + Color.RESET +
-                        "foraging: " + Color.RED + "F" + Color.RESET +
-                        "stone: " + Color.GRAY + "T" + Color.RESET +
-                        "tree: " + Color.GREEN + "T" + Color.RESET);
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
+
+        return new Result(true, "player:      P\n" +
+                        "house: " + Color.BROWN + "       H" + Color.RESET + "\n" +
+                        "green house: " + Color.YELLOW + "G" + Color.RESET + "\n" +
+                        "lake: " + Color.CYAN + "        L" + Color.RESET + "\n" +
+                        "quarry: " + Color.GRAY + "      Q" + Color.RESET + "\n" +
+                        "foraging: " + Color.RED + "    F" + Color.RESET + "\n" +
+                        "stone: " + Color.GRAY + "       S" + Color.RESET + "\n" +
+                        "tree: " + Color.GREEN + "        T" + Color.RESET);
     }
 
     private static Integer getInt(String string) {

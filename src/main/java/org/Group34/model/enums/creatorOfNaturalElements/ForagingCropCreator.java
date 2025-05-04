@@ -1,7 +1,6 @@
 package org.Group34.model.enums.creatorOfNaturalElements;
 
-import org.Group34.model.entities.ForagingCrop;
-import org.Group34.model.entities.Tree;
+import org.Group34.model.entities.naturalElements.ForagingCrop;
 
 public enum ForagingCropCreator {
     COMMON_MUSHROOM("Common Mushroom", new String[]{"Spring", "Summer", "Autumn", "Winter"}, 40, 38),

@@ -1,6 +1,6 @@
 package org.Group34.model.enums.creatorOfNaturalElements;
 
-import org.Group34.model.entities.ForagingTree;
+import org.Group34.model.entities.naturalElements.ForagingTree;
 
 public enum ForagingTreeCreator {
     ACORNS("Acorns", new String[]{"Spring", "Summer", "Autumn", "Winter"}),

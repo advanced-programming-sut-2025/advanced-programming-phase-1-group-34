@@ -1,21 +1,21 @@
-package org.Group34.model.entities;
+package org.Group34.model.entities.naturalElements;
 
+import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Color;
 import org.Group34.model.enums.Season;
+import org.Group34.model.items.Fruit;
+import org.Group34.model.items.PlantingSource;
 
 import java.util.ArrayList;
 
-public class Tree implements Entity {
-    public static final String RESET  = "\u001B[0m";
-    public static final String GREEN  = "\u001B[32m";
-
+public class Tree implements Entity, PlantAble {
     @Override
     public String toString() {
         return Color.GREEN + "T" + Color.RESET;
     }
 
     private String name;
-    private String source;
+    private PlantingSource source;
     private int[] stages;
     private int totalHarvestTime;
     private Fruit fruit;
@@ -23,13 +23,11 @@ public class Tree implements Entity {
     private ArrayList<Season> seasons;
 
 
-    public Tree(String name, String source, int[] stages, int totalHarvestTime, String fruitName, int fruitHarvestCycle,
-                int fruitBaseSellPrice, boolean isFruitEdible, int fruitEnergy, int fruitHealth, String[] seasons) {
+    public Tree(String name, PlantingSource source, int[] stages, int totalHarvestTime, Fruit fruit, String[] seasons) {
         this.name = name;
         this.source = source;
         this.stages = stages;
         this.totalHarvestTime = totalHarvestTime;
-        this.fruitHarvestCycle = fruitHarvestCycle;
 
         for (String season : seasons) {
             if (season.equals("Spring")) {
@@ -43,7 +41,7 @@ public class Tree implements Entity {
             }
         }
 
-        this.fruit = new Fruit(fruitName, fruitBaseSellPrice, isFruitEdible, fruitEnergy, fruitHealth);
+        this.fruit = fruit;
     }
 
     public String getName() {
@@ -53,10 +51,10 @@ public class Tree implements Entity {
         this.name = name;
     }
 
-    public String getSource() {
+    public PlantingSource getSource() {
         return source;
     }
-    public void setSource(String source) {
+    public void setSource(PlantingSource source) {
         this.source = source;
     }
 

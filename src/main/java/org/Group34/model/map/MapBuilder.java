@@ -2,6 +2,8 @@ package org.Group34.model.map;
 
 import org.Group34.model.entities.*;
 import org.Group34.model.entities.buildings.*;
+import org.Group34.model.entities.naturalElements.Foraging;
+import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.model.enums.FarmType;
 
 import java.util.HashMap;
@@ -11,8 +13,8 @@ import java.util.HashMap;
  * Then adds NPC Village to map
  */
 public class MapBuilder {
-    private static final int SPACE_WIDTH           = 100;
-    private static final int SPACE_HEIGHT          = 100;
+    public static final int SPACE_WIDTH           = 100;
+    public static final int SPACE_HEIGHT          = 100;
     private static final int HOUSE_WIDTH           =   4;
     private static final int HOUSE_HEIGHT          =   4;
     private static final int GREEN_HOUSE_WIDTH     =   6;
@@ -24,7 +26,7 @@ public class MapBuilder {
     private static final int PLAYER_INITIAL_X      =  72;
     private static final int PLAYER_INITIAL_Y      =  10;
 
-    private static final Building WALL = new Building(new int[]{0, 0});
+//    private static final Building WALL = new Building();
 
     private FarmType[] farmTypes;
     private Player[]  players;
@@ -68,10 +70,10 @@ public class MapBuilder {
 
         farmGrid[PLAYER_INITIAL_X][PLAYER_INITIAL_Y] = player;
 
-        addBuilding(farmGrid, new House(farmType.getHouseLocation()), HOUSE_WIDTH, HOUSE_HEIGHT);
-        addBuilding(farmGrid, new Lake(farmType.getLakeLocation()), LAKE_WIDTH, LAKE_HEIGHT);
-        addBuilding(farmGrid, new GreenHouse(farmType.getGreenHouseLocation()), GREEN_HOUSE_WIDTH, GREEN_HOUSE_HEIGHT);
-        addBuilding(farmGrid, new Quarry(farmType.getQuarryLocation()), QUARRY_WIDTH, QUARRY_HEIGHT);
+        addBuilding(farmGrid, new House(), HOUSE_WIDTH, HOUSE_HEIGHT, farmType.getHouseLocation());
+        addBuilding(farmGrid, new Lake(), LAKE_WIDTH, LAKE_HEIGHT, farmType.getLakeLocation());
+        addBuilding(farmGrid, new GreenHouse(), GREEN_HOUSE_WIDTH, GREEN_HOUSE_HEIGHT, farmType.getGreenHouseLocation());
+        addBuilding(farmGrid, new Quarry(), QUARRY_WIDTH, QUARRY_HEIGHT, farmType.getQuarryLocation());
         addRandomItems(farmGrid, farmType);
 
         return new Space(SPACE_WIDTH, SPACE_HEIGHT, farmGrid);
@@ -83,8 +85,7 @@ public class MapBuilder {
      * Only bottom of building is considered as Building and player can do things with it
      * to make a door-like functionality; tiles that Building took are just placeholders
      */
-    private void addBuilding(Entity[][] spaceGrid, Building building, int width, int height) {
-        int[] location = building.getLocation();
+    private void addBuilding(Entity[][] spaceGrid, Building building, int width, int height, int[] location) {
         int startX = location[0], startY = location[1];
 
         for (int y = startY; y <= startY + height; y++)
@@ -104,11 +105,11 @@ public class MapBuilder {
                     float  chance    = farmType.getTreeSpawnChance();
 
                     if (randomNum < chance)
-                        spaceGrid[x][y] = new Tree(new int[]{x, y});
+                        spaceGrid[x][y] = new Tree();
                     else if (randomNum < (chance += farmType.getStoneSpawnChance()))
-                        spaceGrid[x][y] = new Stone(new int[]{x, y});
+                        spaceGrid[x][y] = new Stone();
                     else if (randomNum < chance + farmType.getForagingSpawnChance())
-                        spaceGrid[x][y] = new Foraging(new int[]{x, y});
+                        spaceGrid[x][y] = new Foraging();
                 }
     }
 }

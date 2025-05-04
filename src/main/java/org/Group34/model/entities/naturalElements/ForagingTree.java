@@ -1,10 +1,11 @@
-package org.Group34.model.entities;
+package org.Group34.model.entities.naturalElements;
 
+import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Season;
 
 import java.util.ArrayList;
 
-public class ForagingTree {
+public class ForagingTree implements Entity, Foraging {
     private String name;
     private ArrayList<Season> seasons;
 
