@@ -9,22 +9,23 @@ import java.util.Map;
 import java.util.Random;
 
 /**
- * This class simulates the daily weather in the game world
- * It includes today's weather condition, randomly selected based on the season,
- * and simulates possible lightning strikes during stormy weather
+ * Simulates weather in the game world, maintaining both today's and tomorrow's weather condition
+ * Supports lightning strikes during storms and allows querying weather-related game effects
  */
 public class WeatherSystem {
     private WeatherCondition todayCondition;
+    private WeatherCondition tomorrowCondition;
     private final Map<String, Boolean> lightningStrikeMap = new HashMap<>();
 
     /**
-     * Generates the weather condition for the current day based on the current season
-     * Also initializes lightning strikes if the weather supports it (e.g., STORM)
+     * Initializes the weather system by generating today's and tomorrow's weather based on current time
+     * Should be called at the start of the game
      *
-     * @param time the current game time which provides the season
+     * @param time the current game time
      */
-    public void generateDailyWeather(Time time) {
+    public void initializeWeather(Time time) {
         this.todayCondition = WeatherCondition.random(time.getSeason());
+        this.tomorrowCondition = WeatherCondition.random(time.getSeason());
         lightningStrikeMap.clear();
 
         if (todayCondition.canHaveLightning()) {
@@ -33,9 +34,25 @@ public class WeatherSystem {
     }
 
     /**
-     * Randomly selects 3 coordinates to simulate lightning strikes during a storm
-     * The coordinates are saved in a map for later lookup
-     * NOTE: The bounds (0-99) are placeholders and should be adjusted based on the map and its entities
+     * Advances the weather system to the next day: sets tomorrow as today, and generates a new tomorrow
+     * Also generates new lightning strikes if needed
+     *
+     * @param time the new game time (used to determine season for tomorrow's weather)
+     */
+    public void advanceDay(Time time) {
+        this.todayCondition = this.tomorrowCondition;
+        this.tomorrowCondition = WeatherCondition.random(time.getSeason());
+        lightningStrikeMap.clear();
+
+        if (todayCondition.canHaveLightning()) {
+            generateLightningStrikes();
+        }
+    }
+
+    /**
+     * Randomly selects 3 coordinates to simulate lightning strikes during a storm.
+     * Coordinates are saved in a map for lookup.
+     * NOTE: The bounds (0-99) are placeholders and should match the map dimensions.
      */
     private void generateLightningStrikes() {
         Random random = new Random();
@@ -48,39 +65,42 @@ public class WeatherSystem {
     }
 
     /**
-     * Checks if the given coordinates were struck by lightning today
+     * Checks if a specific coordinate has been struck by lightning today.
      *
-     * @param x the x-coordinate
-     * @param y the y-coordinate
-     * @return true if the location was hit by lightning; false otherwise
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @return true if struck by lightning; false otherwise
      */
     public boolean isStruckByLightning(int x, int y) {
         return lightningStrikeMap.containsKey(x + "," + y);
     }
 
     /**
-     * Returns today's weather condition.
-     *
-     * @return today's WeatherCondition
+     * @return today's weather condition
      */
     public WeatherCondition getTodayCondition() {
         return todayCondition;
     }
 
     /**
-     * Checks if today's weather allows free irrigation (e.g., rain or storm)
-     *
-     * @return true if irrigation is free; false otherwise
+     * @return tomorrow's predicted weather condition
+     */
+    public WeatherCondition getTomorrowCondition() {
+        return tomorrowCondition;
+    }
+
+    /**
+     * @return true if today's weather provides free irrigation (RAIN or STORM)
      */
     public boolean isIrrigationFree() {
         return todayCondition.isIrrigationFree();
     }
 
     /**
-     * Gets the energy multiplier for today based on the current season
+     * Returns the energy multiplier based on today's weather and season.
      *
-     * @param season the current season
-     * @return a multiplier value (e.g., 1.5x in storm, 2.0x in winter snow, etc.)
+     * @param season current season
+     * @return multiplier value (e.g., 1.0, 1.5, 2.0)
      */
     public double getEnergyMultiplier(Season season) {
         return todayCondition.getEnergyMultiplier(season);
