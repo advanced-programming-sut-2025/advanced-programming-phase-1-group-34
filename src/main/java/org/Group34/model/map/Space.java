@@ -13,7 +13,11 @@ import org.Group34.model.entities.Entity;
 
 public record Space(int width, int height, Entity[][] entities) {
 
-    public Entity getLocation(int x, int y){
+    public Entity getEntityByLocation(int x, int y){
         return entities[x][y];
+    }
+
+    public void placingEntity(int x, int y, Entity entity) {
+        entities[x][y] = entity;
     }
 }

@@ -163,7 +163,7 @@ public class GameController {
 
         if (targetX == null || targetY == null)
             return new Result(false, "Error: target location should be number format");
-        if (player.getCurrentSpace().getLocation(targetX, targetY) != null)
+        if (player.getCurrentSpace().getEntityByLocation(targetX, targetY) != null)
             return new Result(false, "Error: only can go to empty tiles of map");
 
         int distance = game.map().findPath(player, targetX, targetY);
