@@ -80,7 +80,7 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
         return 0;
     }
 
-
+    // TODO how player enters the house menu
     public void movePlayer(Player player, Integer targetX, Integer targetY) {
         int playerX = player.getLocation()[0];
         int playerY = player.getLocation()[1];
