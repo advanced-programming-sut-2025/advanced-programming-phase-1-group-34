@@ -22,12 +22,15 @@ public class Tree implements Entity, PlantAble {
     private int fruitHarvestCycle;
     private ArrayList<Season> seasons;
 
+    private boolean needWater;
+
 
     public Tree(String name, PlantingSource source, int[] stages, int totalHarvestTime, Fruit fruit, String[] seasons) {
         this.name = name;
         this.source = source;
         this.stages = stages;
         this.totalHarvestTime = totalHarvestTime;
+        this.needWater = true;
 
         for (String season : seasons) {
             if (season.equals("Spring")) {
@@ -91,5 +94,12 @@ public class Tree implements Entity, PlantAble {
     }
     public void setSeason(ArrayList<Season> season) {
         this.seasons = season;
+    }
+
+    public boolean getNeedWater() {
+        return needWater;
+    }
+    public void setNeedWater(boolean needWater) {
+        this.needWater = needWater;
     }
 }

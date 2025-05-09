@@ -19,6 +19,7 @@ public class Crop implements Entity, PlantAble {
     private boolean canBecomeGiant;
 
     private int regrowthLevel = 1;
+    private boolean needWater;
 
     public Crop(String name, PlantingSource source, int[] stage, int totalHarvestTime, boolean isOneTime,
                 int regrowthTime, Fruit fruit, String[] seasons, boolean canBecomeGiant) {
@@ -30,6 +31,7 @@ public class Crop implements Entity, PlantAble {
         this.regrowthTime = regrowthTime;
         this.fruit = fruit;
         this.canBecomeGiant = canBecomeGiant;
+        this.needWater = true;
         for (String season : seasons) {
             if (season.equals("Spring")) {
                 this.seasons.add(Season.SPRING);
@@ -92,5 +94,12 @@ public class Crop implements Entity, PlantAble {
     }
     public void setCanBecomeGiant(boolean canBecomeGiant) {
         this.canBecomeGiant = canBecomeGiant;
+    }
+
+    public boolean getNeedWater() {
+        return needWater;
+    }
+    public void setNeedWater(boolean needWater) {
+        this.needWater = needWater;
     }
 }

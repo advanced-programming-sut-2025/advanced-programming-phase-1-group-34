@@ -1,6 +1,4 @@
-package org.Group34.model.enums.command.menu;
-
-import org.Group34.model.enums.command.Command;
+package org.Group34.model.enums.command;
 
 public enum GameCommands implements Command {
     // Regex: ---------- START -----------
@@ -15,8 +13,14 @@ public enum GameCommands implements Command {
     PRINT_MAP("\\s*print\\s+map\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s+-s\\s+(?<size>\\d+)\\s*"),
     HELP_READING_MAP("\\s*help\\s+reading\\s+map\\s*"),
     INVENTORY_SHOW("\\s*inventory\\s+show\\s*"),
-    INVENTORY_TRASH("\\s*inventory\\s+trash\\s+-i\\s+(?<itemName>.+)\\s+-n\\s+(?<number>\\d+)\\s*");
-    ;
+    INVENTORY_TRASH("\\s*inventory\\s+trash\\s+-i\\s+(?<itemName>.+)\\s+-n\\s+(?<number>\\d+)\\s*"),
+
+    // ----- Farming Commands -----
+    PLANT("\\s*plant\\s+-s\\s+(?<seed>.+)\\s+-d\\s+(?<direction>.+)\\s*"),
+    SHOW_PLANT("\\s*showplant\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s*"),
+    FERTILIZE("\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(?<direction>.+)\\s*"),
+    HOW_MUCH_WATER("\\S*howmuch\\S+water\\S*");
+
     // Regex: ---------- END -------------
 
     private final String regex;

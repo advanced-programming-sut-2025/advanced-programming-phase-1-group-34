@@ -10,12 +10,15 @@ import org.Group34.model.items.Fruit;
 public enum TreeCreator {
     APRICOT_TREE("Apricot Tree", PlantingSource.APRICOT_SAPLING, new int[]{7,7,7,7}, 28, Fruit.APRICOT, new String[]{"Spring"}),
     CHERRY_TREE("Cherry Tree", PlantingSource.CHERRY_SAPLING, new int[]{7,7,7,7}, 28, Fruit.CHERRY, new String[]{"Spring"}),
+
     BANANA_TREE("Banana Tree", PlantingSource.BANANA_SAPLING, new int[]{7,7,7,7}, 28, Fruit.BANANA, new String[]{"Summer"}),
     MANGO_TREE("Mango Tree", PlantingSource.MANGO_SAPLING, new int[]{7,7,7,7}, 28, Fruit.MANGO, new String[]{"Summer"}),
     ORANGE_TREE("Orange Tree", PlantingSource.ORANGE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.ORANGE, new String[]{"Summer"}),
     PEACH_TREE("Peach Tree", PlantingSource.PEACH_SAPLING, new int[]{7,7,7,7}, 28, Fruit.PEACH, new String[]{"Summer"}),
+
     APPLE_TREE("Apple Tree", PlantingSource.APPLE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.APPLE, new String[]{"Autumn"}),
     POMEGRANATE_TREE("Pomegranate Tree", PlantingSource.POMEGRANATE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.POMEGRANATE, new String[]{"Autumn"}),
+
     OAK_TREE("Oak Tree", PlantingSource.OAK_SAPLING, new int[]{7,7,7,7}, 28, Fruit.OAK_RESIN, new String[]{"Spring","Summer","Autumn","Winter"}),
     MAPLE_TREE("Maple Tree", PlantingSource.MAPLE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.MAPLE_SYRUP, new String[]{"Spring","Summer","Autumn","Winter"}),
     PINE_TREE("Pine Tree", PlantingSource.PINE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.PINE_TAR, new String[]{"Spring","Summer","Autumn","Winter"}),

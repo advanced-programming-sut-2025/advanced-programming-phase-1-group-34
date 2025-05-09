@@ -1,9 +1,7 @@
 package org.Group34.model;
 
 import org.Group34.model.enums.Menu;
-import org.Group34.model.enums.command.menu.GameCommands;
 import org.Group34.view.menu.AppMenu;
-import org.Group34.view.menu.GameMenu;
 import org.Group34.view.menu.RegisterMenu;
 
 import java.util.ArrayList;

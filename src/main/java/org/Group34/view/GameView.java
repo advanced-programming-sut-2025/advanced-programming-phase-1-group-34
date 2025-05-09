@@ -1,15 +1,14 @@
 package org.Group34.view;
 
+import org.Group34.controller.FarmingController;
 import org.Group34.controller.GameController;
 import org.Group34.model.App;
 import org.Group34.model.Game;
 import org.Group34.model.Result;
-import org.Group34.model.User;
 import org.Group34.model.enums.Menu;
-import org.Group34.model.enums.command.menu.GameCommands;
+import org.Group34.model.enums.command.GameCommands;
 import org.Group34.view.menu.AppMenu;
 
-import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -111,6 +110,58 @@ public class GameView extends AppMenu {
                 Result result = controller.helpReadingMap();
                 showMessage(result.message());
             }
+
+            // ----- Farming View -----
+            else if (command.matches(GameCommands.PLANT.getRegex())) {
+                FarmingController controller = new FarmingController(); // TODO It will fix in GameController
+
+                Pattern pattern = Pattern.compile(GameCommands.PLANT.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String seed = matcher.group("seed").trim();
+                    String direction = matcher.group("direction").trim();
+
+                    Result result = controller.plant(seed, direction);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.SHOW_PLANT.getRegex())) {
+                FarmingController controller = new FarmingController(); // TODO It will fix in GameController
+
+                Pattern pattern = Pattern.compile(GameCommands.SHOW_PLANT.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    int x = Integer.parseInt(matcher.group("x").trim());
+                    int y = Integer.parseInt(matcher.group("y").trim());
+
+                    Result result = controller.showPlant(x, y);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.FERTILIZE.getRegex())) {
+                FarmingController controller = new FarmingController(); // TODO It will fix in GameController
+
+                Pattern pattern = Pattern.compile(GameCommands.FERTILIZE.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String fertilizer = matcher.group("fertilizer").trim();
+                    String direction = matcher.group("direction").trim();
+
+                    Result result = controller.fertilize(fertilizer, direction);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.HOW_MUCH_WATER.getRegex())) {
+                FarmingController controller = new FarmingController(); // TODO It will fix in GameController
+
+                Result result = controller.showAmountOfWater();
+                showMessage(result.message());
+            }
+            // ----- End Of Farming View -----
+
             else {
                 showMessage("Invalid command!");
             }
