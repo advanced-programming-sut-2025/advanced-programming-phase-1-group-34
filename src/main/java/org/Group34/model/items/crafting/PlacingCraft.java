@@ -1,36 +1,43 @@
 package org.Group34.model.items.crafting;
 
+import org.Group34.model.entities.Entity;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.srategies.PlacingStrategy;
+import org.Group34.model.items.crafting.srategies.ProcessingStrategy;
 import org.Group34.model.map.Space;
 import java.util.Map;
 
-public enum PlacingCraft implements Item {
+public enum PlacingCraft implements Item, Entity {
     SPRINKLER(
             "Sprinkler", Recipe.SPRINKLER,
             "Waters 4 adjacent tiles.",
             Map.of(Ingredient.COPPER_BAR, 1, Ingredient.IRON_BAR, 1),
-            "Farming Level 1", 0, PlacingStrategy.BASIC_SPRINKLER),
+            "Farming Level 1", 0, PlacingStrategy.PLACE),
     QUALITY_SPRINKLER(
             "Quality Sprinkler", Recipe.QUALITY_SPRINKLER,
             "Waters 8 adjacent tiles.",
             Map.of(Ingredient.IRON_BAR, 1, Ingredient.GOLD_BAR, 1),
-            "Farming Level 2", 0, PlacingStrategy.QUALITY_SPRINKLER),
+            "Farming Level 2", 0, PlacingStrategy.PLACE),
     IRIDIUM_SPRINKLER(
             "Iridium Sprinkler", Recipe.IRIDIUM_SPRINKLER,
             "Waters 24 adjacent tiles.",
             Map.of(Ingredient.GOLD_BAR, 1, Ingredient.IRIDIUM_BAR, 1),
-            "Farming Level 3", 0, PlacingStrategy.IRIDIUM_SPRINKLER),
+            "Farming Level 3", 0, PlacingStrategy.PLACE),
     SCARECROW(
             "Scarecrow", Recipe.SCARECROW,
             "Protects an 8-tile radius from crows.",
             Map.of(Ingredient.WOOD, 50, Ingredient.COAL, 1, Ingredient.FIBER, 20),
-            "-", 0, PlacingStrategy.BASIC_SCARECROW),
+            "-", 0, PlacingStrategy.PLACE),
     DELUXE_SCARECROW(
             "Deluxe Scarecrow", Recipe.DELUXE_SCARECROW,
             "Protects a 12-tile radius from crows.",
             Map.of(Ingredient.WOOD, 50, Ingredient.COAL, 1, Ingredient.FIBER, 20, Ingredient.IRIDIUM_ORE, 1),
-            "Farming Level 2", 0, PlacingStrategy.DELUXE_SCARECROW),
+            "Farming Level 2", 0, PlacingStrategy.PLACE),
+    BEE_HOUSE(
+            "Bee House", Recipe.BEE_HOUSE,
+            "Produces honey when placed outside.",
+            Map.of(Ingredient.WOOD, 40, Ingredient.COAL, 8, Ingredient.IRON_BAR, 1),
+            "Farming Level 1", 0, PlacingStrategy.PLACE),
     CHERRY_BOMB(
             "Cherry Bomb", Recipe.CHERRY_BOMB,
             "Destroys everything in a 3-tile radius.",
@@ -80,8 +87,8 @@ public enum PlacingCraft implements Item {
     @Override
     public String getName() { return name; }
 
-    public void place(Space space, int x, int y) {
-        placingStrategy.place(space, x, y);
+    public boolean place(Space space, int x, int y) {
+        return placingStrategy.place(space, this, x, y);
     }
 
     public Map<Item, Integer> getIngredients() { return ingredients; }
