@@ -47,4 +47,8 @@ public class ForagingTree implements Entity, Foraging {
     public void setNeedWater(boolean needWater) {
         this.needWater = needWater;
     }
+
+    public String getInformation() {
+        return "";
+    }
 }

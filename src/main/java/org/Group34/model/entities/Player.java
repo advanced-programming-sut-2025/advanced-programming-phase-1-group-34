@@ -5,7 +5,7 @@ import org.Group34.model.map.Space;
 
 import java.util.HashMap;
 
-public class Player implements Entity {
+public class     Player implements Entity {
     private int[] location;
     private Space currentSpace;
     private int energy = 200;
@@ -66,6 +66,20 @@ public class Player implements Entity {
             return inventory.remove(item);
         }
         return 0;
+    }
+
+    public int getAmountOfItem(Item item) {
+        return inventory.get(item);
+    }
+
+    public boolean isExistInInventory(Item item) {
+        if (!inventory.containsKey(item)) {
+            return false;
+        } else if (getAmountOfItem(item) <= 0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override

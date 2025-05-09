@@ -3,6 +3,7 @@ package org.Group34.model.entities.naturalElements;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Color;
 import org.Group34.model.enums.Season;
+import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.Fruit;
 import org.Group34.model.items.PlantingSource;
 
@@ -101,5 +102,13 @@ public class Tree implements Entity, PlantAble {
     }
     public void setNeedWater(boolean needWater) {
         this.needWater = needWater;
+    }
+
+    public String getInformation() {
+        return "";
+    }
+
+    public void useFertilizer(Fertilizer fertilizer) {
+
     }
 }
