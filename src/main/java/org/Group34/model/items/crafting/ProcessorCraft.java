@@ -15,11 +15,6 @@ public enum ProcessorCraft implements Item {
             "Smelts ores and coal into bars.",
             Map.of(Ingredient.COPPER_ORE, 20, Ingredient.COAL, 1, Ingredient.STONE, 25),
             "-", 0, ProcessingStrategy.FURNACE),
-    BEE_HOUSE(
-            "Bee House", Recipe.BEE_HOUSE,
-            "Produces honey when placed outside.",
-            Map.of(Ingredient.WOOD, 40, Ingredient.COAL, 8, Ingredient.IRON_BAR, 1),
-            "Farming Level 1", 0, ProcessingStrategy.BEE_HOUSE),
     CHEESE_PRESS(
             "Cheese Press", Recipe.CHEESE_PRESS,
             "Turns milk into cheese.",

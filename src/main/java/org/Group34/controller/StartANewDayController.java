@@ -1,15 +1,17 @@
 package org.Group34.controller;
 
 import org.Group34.model.entities.Entity;
+import org.Group34.model.entities.naturalElements.Crop;
+import org.Group34.model.entities.naturalElements.PlantAble;
 import org.Group34.model.entities.naturalElements.PloughedLand;
+import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.creatorOfNaturalElements.*;
+import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.map.Space;
 import org.Group34.model.time.Time;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * This class handles the tasks that need to be done at the beginning of the day
@@ -23,38 +25,135 @@ public class StartANewDayController {
 
     /**
      * This function calls all the functions necessary
-     * to perform tasks to start a new day
+      to perform tasks to start a new day
      * */
     public void ManageAllTasks() {
-        randomPlacementOfForagingCropsAndSeeds();
+        iterateWholeMap();
         randomPlacementOfForagingMinerals();
     }
 
 
+    /**
+     * Some functionalities need to iterate throw map
+      and if there is a specific Entity do a certain function
+     * */
+    private void iterateWholeMap() {
+        HashSet<int[]> plantsOnFarm = new HashSet<>();
+        HashSet<int[]> scareCrowPlants = new HashSet<>();
+
+        for (Space space : spaces) {
+            for (int i = 0; i < space.width(); i++)
+                for (int j = 0; j < space.height(); j++) {
+                    randomPlacementOfForagingCropsAndSeeds(space, i, j);
+                    sprinklerWatering(space, i, j);
+                    addPlant(plantsOnFarm, space, i, j);
+                    scareCrow(scareCrowPlants, space, i, j);
+                }
+
+            crowInvasion(space, plantsOnFarm, scareCrowPlants);
+        }
+    }
+
+    private void crowInvasion(Space space, HashSet<int[]> plantsOnFarm, HashSet<int[]> scareCrowPlants) {
+        int countOfInvasion = plantsOnFarm.size() / 16;
+        Entity[][] entities = space.entities();
+        Random rand = new Random();
+
+        plantsOnFarm.remove(scareCrowPlants);
+        List<int[]> plantList = new ArrayList<>(plantsOnFarm);
+
+        for (int i = 0; i<countOfInvasion; i++)
+            if (rand.nextInt(100) < 25) {
+                int index = rand.nextInt(plantList.size());
+                int[] randomPlant = plantList.get(index);
+
+                if (entities[randomPlant[0]][randomPlant[1]] instanceof Crop) {
+                    entities[randomPlant[0]][randomPlant[1]] = null;
+                }if (entities[randomPlant[0]][randomPlant[1]] instanceof Tree){
+                    // TODO when crow invade a Tree it can not produce fruit in other day
+                }
+            }
+
+        plantsOnFarm.clear();
+        scareCrowPlants.clear();
+    }
+
+    private static void scareCrow(HashSet<int[]> scareCrowPlants, Space space, int x, int y) {
+        Entity entity = space.getEntityByLocation(x, y);
+        if (entity.equals(PlacingCraft.SCARECROW))
+            scareSurrounding(scareCrowPlants, space, x, y, 8);
+        if (entity.equals(PlacingCraft.DELUXE_SCARECROW))
+            scareSurrounding(scareCrowPlants, space, x, y, 12);
+    }
+
+    private static void scareSurrounding(HashSet<int[]> scareCrowPlants, Space space, int x, int y, int r) {
+        Entity[][] entities = space.entities();
+        int xBegin = x - r;
+        int xEnd = x + r;
+        int yBegin = y - r;
+        int yEnd = y + r;
+
+        for (int i = xBegin; i <= xEnd; i++)
+            for (int j = yBegin; j <= yEnd; j++) {
+                Entity entity = entities[i][j];
+
+                if (entity instanceof PlantAble)
+                    scareCrowPlants.add(new int[]{i, j});
+            }
+    }
+
+    private static void addPlant(HashSet<int[]> plantsOnFarm, Space space, int i, int j) {
+        if (space.getEntityByLocation(i, j) instanceof PlantAble){
+            plantsOnFarm.add(new int[]{i, j});
+        }
+    }
+
+
+    private void sprinklerWatering(Space space, int x, int y) {
+        Entity entity = space.getEntityByLocation(x, y);
+        if (entity.equals(PlacingCraft.SPRINKLER))
+            waterSurrounding(space, x, y, 4);
+        if (entity.equals(PlacingCraft.QUALITY_SPRINKLER))
+            waterSurrounding(space, x, y, 8);
+        if (entity.equals(PlacingCraft.IRIDIUM_SPRINKLER))
+            waterSurrounding(space, x, y, 24);
+    }
+
+    private void waterSurrounding(Space space, int x, int y, int r) {
+        Entity[][] entities = space.entities();
+        int xBegin = x - r;
+        int xEnd = x + r;
+        int yBegin = y - r;
+        int yEnd = y + r;
+
+        for (int i = xBegin; i <= xEnd; i++)
+            for (int j = yBegin; j <= yEnd; j++) {
+                Entity entity = entities[i][j];
+
+                if (entity instanceof PlantAble)
+                    ((PlantAble) entity).setNeedWater(false);
+            }
+    }
+
 
     // ----- Random Placement Of Foraging Crops And Seeds -----
-    private void randomPlacementOfForagingCropsAndSeeds() {
+    private void randomPlacementOfForagingCropsAndSeeds(Space space, int i, int j) {
         Random rand = new Random();
-        for (Space space : spaces) {
-            for (int i = 0; i < space.width(); i++) {
-                for (int j = 0; j < space.height(); j++) {
-                    if (space.getEntityByLocation(i, j) instanceof PloughedLand && rand.nextInt(100) == 0) {
+        if (space.getEntityByLocation(i, j) instanceof PloughedLand && rand.nextInt(100) == 0) {
 
-                        ArrayList<Entity> plants = getPlantsOfCurrentSeason();
-                        int randInt = rand.nextInt(plants.size());
+            ArrayList<Entity> plants = getPlantsOfCurrentSeason();
+            int randInt = rand.nextInt(plants.size());
 
-                        for (int z = 0; z < plants.size(); z++) {
-                            if (randInt == z) {
-                                space.placingEntity(i, j, plants.get(z));
-                                break;
-                            }
-                        }
-
-                    }
+            for (int z = 0; z < plants.size(); z++) {
+                if (randInt == z) {
+                    space.placingEntity(i, j, plants.get(z));
+                    break;
                 }
             }
         }
     }
+
+
     private ArrayList<Entity> getPlantsOfCurrentSeason() {
         ArrayList<Entity> plants = new ArrayList<>();
 

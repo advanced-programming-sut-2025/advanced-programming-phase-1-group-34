@@ -4,7 +4,8 @@ public enum Season {
     SPRING("Spring"),
     SUMMER("Summer"),
     AUTUMN("Autumn"),
-    WINTER("Winter");
+    WINTER("Winter"),
+    ALL("all");
 
     private final String name;
 

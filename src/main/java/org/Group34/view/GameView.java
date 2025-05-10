@@ -112,6 +112,19 @@ public class GameView extends AppMenu {
             }
 
             // ----- Farming View -----
+            else if (command.matches(GameCommands.CRAFT_INFO.getRegex())) {
+                FarmingController controller = new FarmingController(); // TODO It will fix in GameController
+
+                Pattern pattern = Pattern.compile(GameCommands.CRAFT_INFO.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String craftName = matcher.group("craftName").trim();
+
+                    Result result = controller.showCraftInfo(craftName);
+                    showMessage(result.message());
+                }
+            }
             else if (command.matches(GameCommands.PLANT.getRegex())) {
                 FarmingController controller = new FarmingController(); // TODO It will fix in GameController
 
