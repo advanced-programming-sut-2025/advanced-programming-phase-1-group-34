@@ -1,12 +1,8 @@
 package org.Group34.model.entities.buildings;
 
-public class Coop extends AnimalsBuilding {
-    public enum CoopType {
-        BASIC(4), BIG(8), DELUXE(12);
-        public final int capacity;
-        CoopType(int cap) { this.capacity = cap; }
-    }
+import org.Group34.model.enums.animals.CoopType;
 
+public class Coop extends AnimalsBuilding {
     public Coop(CoopType type) {
         this.type = type.name();
         this.capacity = type.capacity;

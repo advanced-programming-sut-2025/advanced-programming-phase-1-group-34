@@ -1,7 +1,7 @@
 package org.Group34.model.entities.buildings;
 
 import org.Group34.model.entities.Entity;
-import org.Group34.model.entities.animals.Animal;
+import org.Group34.model.entities.Animal;
 
 import java.util.ArrayList;
 import java.util.List;
