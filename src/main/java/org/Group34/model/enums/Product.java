@@ -1,6 +1,8 @@
 package org.Group34.model.enums;
 
-public enum Product {
+import org.Group34.model.items.Item;
+
+public enum Product implements Item {
     // Chicken
     EGG("Egg", 50, 0, AnimalType.CHICKEN),
     LARGE_EGG("Large Egg", 95, 200, AnimalType.CHICKEN),
