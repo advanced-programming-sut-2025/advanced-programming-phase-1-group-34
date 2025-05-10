@@ -1,4 +1,4 @@
-package org.Group34.model.enums;
+package org.Group34.model.enums.animals;
 
 public enum CoopType {
     BASIC(4),

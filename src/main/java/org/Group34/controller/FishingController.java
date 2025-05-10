@@ -1,6 +1,9 @@
 package org.Group34.controller;
 
 import org.Group34.model.enums.*;
+import org.Group34.model.enums.fishing.FishType;
+import org.Group34.model.enums.fishing.FishingRodType;
+
 import java.util.*;
 
 public class FishingController {

@@ -2,9 +2,9 @@ package org.Group34.controller;
 
 import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.buildings.*;
-import org.Group34.model.enums.AnimalType;
-import org.Group34.model.enums.BarnType;
-import org.Group34.model.enums.CoopType;
+import org.Group34.model.enums.animals.AnimalType;
+import org.Group34.model.enums.animals.BarnType;
+import org.Group34.model.enums.animals.CoopType;
 
 import java.util.ArrayList;
 import java.util.List;

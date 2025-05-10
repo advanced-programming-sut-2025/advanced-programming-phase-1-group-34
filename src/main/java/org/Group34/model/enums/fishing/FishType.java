@@ -1,4 +1,6 @@
-package org.Group34.model.enums;
+package org.Group34.model.enums.fishing;
+
+import org.Group34.model.enums.Season;
 
 public enum FishType {
     // Regular fish

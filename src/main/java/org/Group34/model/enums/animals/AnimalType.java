@@ -1,4 +1,4 @@
-package org.Group34.model.enums;
+package org.Group34.model.enums.animals;
 
 public enum AnimalType {
     CHICKEN(800, "Coop", 4),

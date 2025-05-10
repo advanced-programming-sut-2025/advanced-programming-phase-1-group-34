@@ -1,6 +1,6 @@
 package org.Group34.model.entities.buildings;
 
-import org.Group34.model.enums.BarnType;
+import org.Group34.model.enums.animals.BarnType;
 
 public class Barn extends AnimalsBuilding {
 

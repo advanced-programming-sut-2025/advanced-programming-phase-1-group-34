@@ -1,4 +1,4 @@
-package org.Group34.model.enums;
+package org.Group34.model.enums.fishing;
 
 public enum FishingRodType {
     TRAINING("Training Rod", 0.1),

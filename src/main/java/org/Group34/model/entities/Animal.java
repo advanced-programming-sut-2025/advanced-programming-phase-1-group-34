@@ -1,7 +1,7 @@
 package org.Group34.model.entities;
 
-import org.Group34.model.enums.AnimalType;
-import org.Group34.model.enums.Product;
+import org.Group34.model.enums.animals.AnimalType;
+import org.Group34.model.enums.animals.Product;
 
 import java.util.*;
 

@@ -1,6 +1,6 @@
 package org.Group34.model.entities.buildings;
 
-import org.Group34.model.enums.CoopType;
+import org.Group34.model.enums.animals.CoopType;
 
 public class Coop extends AnimalsBuilding {
     public Coop(CoopType type) {
