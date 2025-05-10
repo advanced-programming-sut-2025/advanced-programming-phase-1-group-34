@@ -18,7 +18,9 @@ public enum Ingredient implements Item {
     MAPLE_SEED("Maple Seed", 0),
     PINE_CONE("Pine Cone", 0),
     MAHOGANY_SEED("Mahogany Seed", 0),
-    STONE("Stone", 0);
+    STONE("Stone", 0),
+    SHEEP_FABRIC("Sheep Fabric", 0),
+    RABBIT_FABRIC("Rabbit Fabric", 0);
 
     private final String name;
     private final int price;

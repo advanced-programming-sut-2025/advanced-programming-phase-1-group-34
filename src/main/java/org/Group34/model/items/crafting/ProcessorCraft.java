@@ -1,6 +1,7 @@
 package org.Group34.model.items.crafting;
 
 import org.Group34.model.items.Item;
+import org.Group34.model.items.Recipe;
 import org.Group34.model.items.crafting.srategies.ProcessingStrategy;
 import java.util.Map;
 
