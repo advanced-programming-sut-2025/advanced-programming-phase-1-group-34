@@ -1,0 +1,26 @@
+package org.Group34.model.entities.buildings;
+
+public class Coop extends AnimalsBuilding {
+    public enum CoopType {
+        BASIC(4), BIG(8), DELUXE(12);
+        public final int capacity;
+        CoopType(int cap) { this.capacity = cap; }
+    }
+
+    public Coop(CoopType type) {
+        this.type = type.name();
+        this.capacity = type.capacity;
+    }
+
+    @Override
+    public boolean canUpgrade() {
+        return CoopType.valueOf(type).ordinal() < CoopType.values().length - 1;
+    }
+
+    @Override
+    public void upgrade() {
+        CoopType current = CoopType.valueOf(type);
+        this.type = CoopType.values()[current.ordinal() + 1].name();
+        this.capacity = CoopType.valueOf(type).capacity;
+    }
+}
