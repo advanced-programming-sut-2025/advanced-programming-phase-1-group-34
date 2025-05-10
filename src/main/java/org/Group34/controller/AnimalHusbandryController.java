@@ -1,9 +1,10 @@
 package org.Group34.controller;
 
-import org.Group34.model.entities.animals.Animal;
+import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.buildings.*;
 import org.Group34.model.enums.AnimalType;
 import org.Group34.model.enums.BarnType;
+import org.Group34.model.enums.CoopType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class AnimalHusbandryController {
         if (!validateLocation(x, y)) return "Invalid location";
 
         switch (type.toUpperCase()) {
-            case "COOP" -> coops.add(new Coop(Coop.CoopType.BASIC));
+            case "COOP" -> coops.add(new Coop(CoopType.BASIC));
             case "BARN" -> barns.add(new Barn(BarnType.BASIC));
             default -> { return "Invalid building type"; }
         }
