@@ -1,15 +1,11 @@
 package org.Group34.controller;
 
 import org.Group34.model.Result;
-import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.Lake;
 import org.Group34.model.entities.naturalElements.*;
-import org.Group34.model.enums.LevelType;
 import org.Group34.model.enums.Season;
-import org.Group34.model.enums.WeatherCondition;
-import org.Group34.model.enums.animals.Product;
 import org.Group34.model.enums.creatorOfNaturalElements.CropCreator;
 import org.Group34.model.enums.creatorOfNaturalElements.TreeCreator;
 import org.Group34.model.items.Fertilizer;
@@ -142,7 +138,7 @@ public class FarmingController {
         int y = getLocationOfDirectionY(direction);
 
         currentSpace.placingEntity(x, y, null);
-        currentPLayer.setEnergy(currentPLayer.getEnergy() - pickaxe.getEnergy());
+//        currentPLayer.decreaseEnergy(pickaxe.getEnergy());
 
         return new Result(true, "The plowed land has disappeared.");
     }
@@ -152,7 +148,7 @@ public class FarmingController {
         int y = getLocationOfDirectionY(direction);
         Entity desiredTile = currentSpace.getEntityByLocation(x, y);
 
-        currentPLayer.setEnergy(currentPLayer.getEnergy() - axe.getEnergy());
+//        currentPLayer.decreaseEnergy(axe.getEnergy());
 
         if (!(desiredTile instanceof Tree) && !(desiredTile instanceof ForagingTree)) {
             return new Result(false, "Error: You can only use Axe on Trees");
@@ -169,7 +165,7 @@ public class FarmingController {
         int y = getLocationOfDirectionY(direction);
         Entity desiredTile = currentSpace.getEntityByLocation(x, y);
 
-        currentPLayer.setEnergy(currentPLayer.getEnergy() - wateringCan.getEnergy());
+//        currentPLayer.decreaseEnergy(wateringCan.getEnergy());
 
         if (desiredTile instanceof Lake) {
             wateringCan.fillIt();
@@ -190,7 +186,7 @@ public class FarmingController {
         int y = getLocationOfDirectionY(direction);
         Entity desiredTile = currentSpace.getEntityByLocation(x, y);
 
-        currentPLayer.setEnergy(currentPLayer.getEnergy() - scythe.getEnergy());
+//        currentPLayer.decreaseEnergy(scythe.getEnergy());
 
         if (desiredTile instanceof Crop crop) {
             return harvestTheCrop(crop, x, y);
