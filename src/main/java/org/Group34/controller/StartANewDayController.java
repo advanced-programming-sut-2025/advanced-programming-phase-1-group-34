@@ -10,6 +10,8 @@ import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.creatorOfNaturalElements.*;
+import org.Group34.model.items.Item;
+import org.Group34.model.items.Mineral;
 import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.map.Space;
 import org.Group34.model.time.Time;
@@ -34,6 +36,7 @@ public class StartANewDayController {
       to perform tasks to start a new day
      * */
     public void ManageAllTasks() {
+        randomPlacementOfForagingMinerals();
         iterateWholeMap();
         resetPlayersEnergy();
     }
@@ -64,7 +67,6 @@ public class StartANewDayController {
             for (int i = 0; i < space.width(); i++)
                 for (int j = 0; j < space.height(); j++) {
                     randomPlacementOfForagingCropsAndSeeds(space, i, j);
-                    randomPlacementOfForagingMinerals();
                     sprinklerWatering(space, i, j);
                     addPlant(plantsOnFarm, space, i, j);
                     startANewDayForPlants(space, i, j);
@@ -308,7 +310,50 @@ public class StartANewDayController {
 
     // ----- Random Placement Of Foraging Minerals -----
     private void randomPlacementOfForagingMinerals() {
-        // TODO
+        for (int i = 0; i < 5; i++) {
+            Mineral randomMineral = getRandomMineral();
+            // TODO Placing this random mineral in Quarry
+        }
+    }
+    private Mineral getRandomMineral() {
+        Random rand = new Random();
+        int randInt = rand.nextInt(17);
+
+        if (randInt == 0) {
+            return Mineral.QUARTZ;
+        } else if (randInt == 1) {
+            return Mineral.EARTH_CRYSTAL;
+        } else if (randInt == 2) {
+            return Mineral.FROZEN_TEAR;
+        } else if (randInt == 3) {
+            return Mineral.FIRE_QUARTZ;
+        } else if (randInt == 4) {
+            return Mineral.EMERALD;
+        } else if (randInt == 5) {
+            return Mineral.AQUAMARINE;
+        } else if (randInt == 6) {
+            return Mineral.RUBY;
+        } else if (randInt == 7) {
+            return Mineral.AMETHYST;
+        } else if (randInt == 8) {
+            return Mineral.TOPAZ;
+        } else if (randInt == 9) {
+            return Mineral.JADE;
+        } else if (randInt == 10) {
+            return Mineral.DIAMOND;
+        } else if (randInt == 11) {
+            return Mineral.PRISMATIC_SHARD;
+        } else if (randInt == 12) {
+            return Mineral.COPPER;
+        } else if (randInt == 13) {
+            return Mineral.IRON;
+        } else if (randInt == 14) {
+            return Mineral.GOLD;
+        } else if (randInt == 15) {
+            return Mineral.IRIDIUM;
+        } else {
+            return Mineral.COAL;
+        }
     }
 
     // ----- Start A New Day For Plants -----
