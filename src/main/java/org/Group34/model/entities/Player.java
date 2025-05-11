@@ -119,8 +119,8 @@ public class  Player implements Entity {
         }
     }
 
-    public HashMap<LevelType, Integer> getLevel() {
-        return level;
+    public int getLevel(LevelType levelType) {
+        return level.get(levelType);
     }
 
     public void levelUp(LevelType levelType){
