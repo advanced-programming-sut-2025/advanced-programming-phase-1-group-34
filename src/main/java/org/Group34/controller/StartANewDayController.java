@@ -8,6 +8,7 @@ import org.Group34.model.entities.naturalElements.PlantAble;
 import org.Group34.model.entities.naturalElements.PloughedLand;
 import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.model.enums.Season;
+import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.creatorOfNaturalElements.*;
 import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.map.Space;
@@ -25,6 +26,7 @@ public class StartANewDayController {
     private Game currentGame; //TODO It will fix in GameController
     private ArrayList<Space> spaces; //TODO It will fix in GameController
     private Time time; //TODO It will fix in GameController
+    private WeatherSystem weatherSystem; // TODO It will fix in GameController
 
 
     /**
@@ -65,6 +67,9 @@ public class StartANewDayController {
                     randomPlacementOfForagingMinerals();
                     sprinklerWatering(space, i, j);
                     addPlant(plantsOnFarm, space, i, j);
+                    startANewDayForPlants(space, i, j);
+                    checkWeatherAndWateringThePlant(space, i, j);
+                    removeDriedPlants(space, i, j);
                     scareCrow(scareCrowPlants, space, i, j);
                 }
 
@@ -170,8 +175,6 @@ public class StartANewDayController {
             }
         }
     }
-
-
     private ArrayList<Entity> getPlantsOfCurrentSeason() {
         ArrayList<Entity> plants = new ArrayList<>();
 
@@ -306,5 +309,35 @@ public class StartANewDayController {
     // ----- Random Placement Of Foraging Minerals -----
     private void randomPlacementOfForagingMinerals() {
         // TODO
+    }
+
+    // ----- Start A New Day For Plants -----
+    private void startANewDayForPlants(Space space, int i, int j) {
+        if (space.getEntityByLocation(i, j) instanceof Crop crop) {
+            crop.startANewDay();
+        } else if (space.getEntityByLocation(i, j) instanceof Tree tree) {
+            tree.startANewDay();
+        }
+    }
+
+    // ----- Watering The Plants -----
+    private void checkWeatherAndWateringThePlant(Space space, int i, int j) {
+        if (weatherSystem.getTodayCondition() == WeatherCondition.RAIN ||
+            weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
+            if (space.getEntityByLocation(i, j) instanceof Crop crop) {
+                crop.setNeedWater(false);
+            } else if (space.getEntityByLocation(i, j) instanceof Tree tree) {
+                tree.setNeedWater(false);
+            }
+        }
+    }
+
+    // ----- Remove Dried Plants -----
+    private void removeDriedPlants(Space space, int i, int j) {
+        if (space.getEntityByLocation(i, j) instanceof Crop crop && crop.getNumberOfDaysNeedWater() > 2) {
+            space.placingEntity(i, j, null);
+        } else if (space.getEntityByLocation(i, j) instanceof Tree tree && tree.getNumberOfDaysNeedWater() > 2) {
+            space.placingEntity(i, j, null);
+        }
     }
 }

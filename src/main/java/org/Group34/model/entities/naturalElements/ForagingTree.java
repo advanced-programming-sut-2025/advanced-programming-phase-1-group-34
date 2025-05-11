@@ -39,6 +39,20 @@ public class ForagingTree implements Entity, Foraging {
     }
 
     public String getInformation() {
-        return "";
+        StringBuilder result = new StringBuilder();
+
+        result
+                .append("Name: " + name + "\n")
+                .append("Type: " + "Foraging Tree" + "\n")
+                .append("Season: ");
+
+        for (Season season : seasons) {
+            result.append(season.getName() + ", ");
+        }
+        result.deleteCharAt(result.length() - 1);
+        result.deleteCharAt(result.length() - 1);
+        result.append("\n");
+
+        return result.toString();
     }
 }

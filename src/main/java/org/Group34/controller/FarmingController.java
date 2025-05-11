@@ -12,6 +12,7 @@ import org.Group34.model.enums.creatorOfNaturalElements.TreeCreator;
 import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.Mineral;
 import org.Group34.model.items.PlantingSource;
+import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
 import org.Group34.model.time.Time;
@@ -23,6 +24,7 @@ public class FarmingController {
     private Player currentPLayer; // TODO It will fix in GameController
     private Time time; // TODO It will fix in GameController
     private LevelUpController levelUpController; // TODO It will fix in GameController
+    private WateringCan playerWateringCan; // TODO It will fix in PLayer class
 
 
     public Result showCraftInfo(String craftName) {
@@ -108,8 +110,7 @@ public class FarmingController {
 
 
     public Result showAmountOfWater() {
-        // TODO
-        return new Result(true, "");
+        return new Result(true, "The amount of water in the Watering Can: " + playerWateringCan.getAmountOfWater());
     }
 
     // ----- Use Tools -----
@@ -147,8 +148,12 @@ public class FarmingController {
         if (!(desiredTile instanceof Tree) && !(desiredTile instanceof ForagingTree)) {
             return new Result(false, "Error: You can only use Axe on Trees.");
         } else {
+            if (desiredTile instanceof Tree tree) {
+                currentPLayer.addToInventory(tree.getSource(), 2);
+            }
+            currentPLayer.addToInventory(Ingredient.WOOD, 5);
             currentSpace.placingEntity(x, y, null);
-            // TODO Obtaining items resulting from tree cutting
+            levelUpController.foragingLevelUp(currentPLayer, LevelType.FORAGING_LEVEL);
         }
 
         return new Result(true, "The specified tree has been successfully cut down.");
@@ -703,6 +708,10 @@ public class FarmingController {
     private Result harvestTheCrop(Crop crop, int x, int y) {
         if (crop.isGiant()) {
             if (crop.getGrowthLevel() == crop.getMaxLevel()) {
+                if (!crop.getSeasons().contains(time.getSeason())) {
+                    return new Result(false, "Error: This product is not for this season.");
+                }
+
                 currentPLayer.addToInventory(crop.getFarmingProduct(), 50);
 
                 if (crop.isOneTime()) {
@@ -720,6 +729,11 @@ public class FarmingController {
         }
         else {
             if (crop.getGrowthLevel() == crop.getMaxLevel()) {
+                if (!crop.getSeasons().contains(time.getSeason())) {
+                    return new Result(false, "Error: This product is not for this season.");
+
+                }
+
                 currentPLayer.addToInventory(crop.getFarmingProduct(), 5);
 
                 if (crop.isOneTime()) {
@@ -745,6 +759,10 @@ public class FarmingController {
             return new Result(true, "The tree in question was burned due to being struck by lightning and coal was harvested.");
         }
         else if (tree.getGrowthLevel() == tree.getMaxLevel()) {
+            if (!tree.getSeason().contains(time.getSeason())) {
+                return new Result(false, "Error: This product is not for this season.");
+            }
+
             currentPLayer.addToInventory(tree.getFruit(), 5);
 
             tree.harvest();

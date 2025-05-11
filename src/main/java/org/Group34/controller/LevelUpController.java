@@ -35,7 +35,7 @@ public class LevelUpController {
 
     private boolean levelUp(Player player, LevelType levelType, int amount){
         int currentLevelUnit = player.getLevelUnit().get(levelType) + amount;
-        int nextLevel = player.getLevel().get(levelType);
+        int nextLevel = player.getLevel(levelType);
         int nextLevelUnit = 100 * (nextLevel + 1) + 50;
 
         if (currentLevelUnit >= nextLevel){
