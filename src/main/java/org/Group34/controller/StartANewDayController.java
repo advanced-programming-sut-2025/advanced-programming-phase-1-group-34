@@ -3,6 +3,7 @@ package org.Group34.controller;
 import org.Group34.model.Game;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.buildings.Quarry;
 import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.entities.naturalElements.PlantAble;
 import org.Group34.model.entities.naturalElements.PloughedLand;
@@ -29,6 +30,7 @@ public class StartANewDayController {
     private ArrayList<Space> spaces; //TODO It will fix in GameController
     private Time time; //TODO It will fix in GameController
     private WeatherSystem weatherSystem; // TODO It will fix in GameController
+    private Quarry quarry; // TODO It will fix in GameController
 
 
     /**
@@ -312,7 +314,7 @@ public class StartANewDayController {
     private void randomPlacementOfForagingMinerals() {
         for (int i = 0; i < 5; i++) {
             Mineral randomMineral = getRandomMineral();
-            // TODO Placing this random mineral in Quarry
+            quarry.addItem(randomMineral, 1);
         }
     }
     private Mineral getRandomMineral() {
