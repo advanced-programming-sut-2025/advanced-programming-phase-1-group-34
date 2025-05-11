@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class  Player implements Entity {
-    private String name;
     private int[] location;
     private Space currentSpace;
     private int energy = 200;
@@ -24,13 +23,6 @@ public class  Player implements Entity {
 
     private Item currentTool;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Player(int[] initialLocation) {
         this.location = initialLocation;
