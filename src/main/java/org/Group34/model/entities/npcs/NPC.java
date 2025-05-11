@@ -1,9 +1,11 @@
 package org.Group34.model.entities.npcs;
 
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.npcs.quests.Quest;
 import org.Group34.model.items.Item;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class NPC {
     private String name;
@@ -23,6 +25,20 @@ public class NPC {
         this.schedule = schedule;
         this.lovedGifts = new HashSet<>(lovedGifts);
         this.hatedGifts = new HashSet<>(hatedGifts);
+    }
+
+    public List<Quest> getActiveQuests() {
+        return quests.stream()
+                .filter(q -> q.isActive() && !q.isCompleted())
+                .collect(Collectors.toList());
+    }
+
+    public void updateQuests(Player player) {
+        for (Quest quest : quests) {
+            if (!quest.isActive() && !quest.isCompleted() && quest.canBeActivated(player)) {
+                quest.setActive(true);
+            }
+        }
     }
 
     // Getters
