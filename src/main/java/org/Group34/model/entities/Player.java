@@ -65,8 +65,8 @@ public class  Player implements Entity {
         return true;
     }
 
-    public void increaseEnergy(int amount){
-        energy += amount;
+    public void setEnergy(int amount){
+        energy = amount;
     }
 
     public int[] getLocation() {
