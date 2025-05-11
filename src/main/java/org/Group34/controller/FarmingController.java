@@ -24,12 +24,6 @@ public class FarmingController {
     private Time time; // TODO It will fix in GameController
     private LevelUpController levelUpController; // TODO It will fix in GameController
 
-    private Hoe hoe;
-    private Pickaxe pickaxe;
-    private Axe axe;
-    private WateringCan wateringCan;
-    private Scythe scythe;
-
 
     public Result showCraftInfo(String craftName) {
         Entity plant = getPlantByCraftName(craftName);
@@ -119,41 +113,39 @@ public class FarmingController {
     }
 
     // ----- Use Tools -----
-    public Result useHoe(String direction) {
+    public Result useHoe(String direction, int enoughEnergy) {
         int locationX = getLocationOfDirectionX(direction);
         int locationY = getLocationOfDirectionY(direction);
         Entity desiredTile = currentSpace.getEntityByLocation(locationX, locationY);
 
-//        currentPLayer.setEnergy(currentPLayer.getEnergy() - hoe.getEnergy()); TODO set it with special function
-
+        currentPLayer.decreaseEnergy(enoughEnergy);
         if (desiredTile != null) {
             return new Result(false, "Error: You can't plow here.");
         }
 
         currentSpace.placingEntity(locationX, locationY, new PloughedLand());
-
         return new Result(true, "The desired tile has been plowed.");
     }
 
-    public Result usePickaxe(String direction) {
+    public Result usePickaxe(String direction, int enoughEnergy) {
         int x = getLocationOfDirectionX(direction);
         int y = getLocationOfDirectionY(direction);
 
+        currentPLayer.decreaseEnergy(enoughEnergy);
         currentSpace.placingEntity(x, y, null);
-//        currentPLayer.decreaseEnergy(pickaxe.getEnergy());
 
         return new Result(true, "The plowed land has disappeared.");
     }
 
-    public Result useAxe(String direction) {
+    public Result useAxe(String direction, int enoughEnergy) {
         int x = getLocationOfDirectionX(direction);
         int y = getLocationOfDirectionY(direction);
         Entity desiredTile = currentSpace.getEntityByLocation(x, y);
 
-//        currentPLayer.decreaseEnergy(axe.getEnergy());
+        currentPLayer.decreaseEnergy(enoughEnergy);
 
         if (!(desiredTile instanceof Tree) && !(desiredTile instanceof ForagingTree)) {
-            return new Result(false, "Error: You can only use Axe on Trees");
+            return new Result(false, "Error: You can only use Axe on Trees.");
         } else {
             currentSpace.placingEntity(x, y, null);
             // TODO Obtaining items resulting from tree cutting
@@ -162,45 +154,52 @@ public class FarmingController {
         return new Result(true, "The specified tree has been successfully cut down.");
     }
 
-    public Result useWateringCan(String direction) {
+    public Result useWateringCan(String direction, int enoughEnergy, WateringCan playerWateringCan) {
         int x = getLocationOfDirectionX(direction);
         int y = getLocationOfDirectionY(direction);
         Entity desiredTile = currentSpace.getEntityByLocation(x, y);
 
-//        currentPLayer.decreaseEnergy(wateringCan.getEnergy());
+        currentPLayer.decreaseEnergy(enoughEnergy);
 
         if (desiredTile instanceof Lake) {
-            wateringCan.fillIt();
+            playerWateringCan.fillIt();
             return new Result(true, "The watering can is filled.");
-        } else if (desiredTile instanceof Crop crop) {
+        }
+        else if (desiredTile instanceof Crop crop) {
+            if (!crop.getNeedWater()) {
+                return new Result(false, "Error: This plant does not need watering.");
+            }
             crop.setNeedWater(false);
+            playerWateringCan.setAmountOfWater(playerWateringCan.getAmountOfWater() - 1);
             return new Result(true, "The desired plant was irrigated.");
-        } else if (desiredTile instanceof Tree tree) {
+        }
+        else if (desiredTile instanceof Tree tree) {
+            if (!tree.getNeedWater()) {
+                return new Result(false, "This plant does not need watering.");
+            }
             tree.setNeedWater(false);
+            playerWateringCan.setAmountOfWater(playerWateringCan.getAmountOfWater() - 1);
             return new Result(true, "The desired plant was irrigated.");
         }
 
-        return new Result(false, "You can not use Watering Can here");
+        return new Result(false, "You can not use Watering Can here.");
     }
 
-    public Result useScythe(String direction) {
+    public Result useScythe(String direction, int enoughEnergy) {
         int x = getLocationOfDirectionX(direction);
         int y = getLocationOfDirectionY(direction);
         Entity desiredTile = currentSpace.getEntityByLocation(x, y);
 
-//        currentPLayer.decreaseEnergy(scythe.getEnergy());
+        currentPLayer.decreaseEnergy(enoughEnergy);
 
         if (desiredTile instanceof Crop crop) {
             return harvestTheCrop(crop, x, y);
         } else if (desiredTile instanceof Tree tree) {
-            return harvestTheTree(tree);
+            return harvestTheTree(tree, x, y);
         }
 
-        return new Result(false, "You can not use Scythe here");
+        return new Result(false, "You can not use Scythe here.");
     }
-
-
-
     // ---------------------
 
 
@@ -428,7 +427,6 @@ public class FarmingController {
             case "Mystic Syrup" -> TreeCreator.MYSTIC_TREE.createInstance();
             default -> null;
         };
-
     }
     private void placingPlantInSpace(int x, int y, Entity plant) {
         if (!(plant instanceof Tree)) {
@@ -705,7 +703,7 @@ public class FarmingController {
     private Result harvestTheCrop(Crop crop, int x, int y) {
         if (crop.isGiant()) {
             if (crop.getGrowthLevel() == crop.getMaxLevel()) {
-                currentPLayer.addToInventory(crop.getFarmingProduct(), 10);
+                currentPLayer.addToInventory(crop.getFarmingProduct(), 50);
 
                 if (crop.isOneTime()) {
                     removeGiantCrops(crop, x, y);
@@ -717,12 +715,12 @@ public class FarmingController {
                 return new Result(true, "The desired plant has been harvested.");
             }
             else {
-                return new Result(false, "The plant in question has not yet reached the harvesting stage.");
+                return new Result(false, "Error: The plant in question has not yet reached the harvesting stage.");
             }
         }
         else {
             if (crop.getGrowthLevel() == crop.getMaxLevel()) {
-                currentPLayer.addToInventory(crop.getFarmingProduct(), 1);
+                currentPLayer.addToInventory(crop.getFarmingProduct(), 5);
 
                 if (crop.isOneTime()) {
                     currentSpace.placingEntity(x, y, null);
@@ -738,13 +736,16 @@ public class FarmingController {
             }
         }
     }
-    private Result harvestTheTree(Tree tree) {
+    private Result harvestTheTree(Tree tree, int x, int y) {
         if (tree.isBurned()) {
-            currentPLayer.addToInventory(Mineral.COAL, 1);
+            currentPLayer.addToInventory(Mineral.COAL, 5);
+            currentSpace.placingEntity(x, y, null);
+
+            levelUpController.farmingLevelUp(currentPLayer, LevelType.FARMING_LEVEL);
             return new Result(true, "The tree in question was burned due to being struck by lightning and coal was harvested.");
         }
         else if (tree.getGrowthLevel() == tree.getMaxLevel()) {
-            currentPLayer.addToInventory(tree.getFruit(), 1);
+            currentPLayer.addToInventory(tree.getFruit(), 5);
 
             tree.harvest();
 
@@ -757,7 +758,7 @@ public class FarmingController {
         for (int i = x - 1; i <= x + 1; i++) {
             for (int j = y - 1; j <= y + 1; j++) {
                 if (i >= 0 && i < 100 && j >= 0 && j < 100) {
-                    if (currentSpace.getEntityByLocation(i, j) == crop) {
+                    if (currentSpace.getEntityByLocation(i, j).equals(crop)) {
                         currentSpace.placingEntity(i, j, null);
                     }
                 }

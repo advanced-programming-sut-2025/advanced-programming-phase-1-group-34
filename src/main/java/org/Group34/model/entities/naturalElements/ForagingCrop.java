@@ -11,13 +11,10 @@ public class ForagingCrop implements Entity, Foraging {
     private int baseSellPrice;
     private int energy;
 
-    private boolean needWater;
-
     public ForagingCrop(String name, String[] seasons, int price, int energy) {
         this.name = name;
         this.baseSellPrice = price;
         this.energy = energy;
-        this.needWater = true;
         for (String season : seasons) {
             if (season.equals("Spring")) {
                 this.seasons.add(Season.SPRING);
@@ -57,13 +54,6 @@ public class ForagingCrop implements Entity, Foraging {
     }
     public void setEnergy(int energy) {
         this.energy = energy;
-    }
-
-    public boolean getNeedWater() {
-        return needWater;
-    }
-    public void setNeedWater(boolean needWater) {
-        this.needWater = needWater;
     }
 
     public String getInformation() {
