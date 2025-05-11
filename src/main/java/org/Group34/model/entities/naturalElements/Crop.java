@@ -4,7 +4,6 @@ import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Season;
 import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.foods.FarmingProduct;
-import org.Group34.model.items.foods.Fruit;
 import org.Group34.model.items.PlantingSource;
 
 import java.util.ArrayList;
@@ -165,6 +164,10 @@ public class Crop implements Entity, PlantAble {
     public void setFertilizer(Fertilizer fertilizer) {
         this.fertilizer = fertilizer;
     }
+
+    public int getMaxLevel() {
+        return maxLevel;
+    }
     // -----------------------------
 
     public String getStructuralInformation() {
@@ -287,5 +290,16 @@ public class Crop implements Entity, PlantAble {
     public void useFertilizer(Fertilizer fertilizer) {
         isGivenFertilizer = true;
         this.fertilizer = fertilizer;
+    }
+
+    public void harvest() {
+        if (harvested) {
+            age = 0;
+            growthLevel = maxLevel - 1;
+        } else {
+            harvested = true;
+            age = 0;
+            growthLevel = maxLevel - 1;
+        }
     }
 }
