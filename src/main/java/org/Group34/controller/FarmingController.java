@@ -142,33 +142,7 @@ public class FarmingController {
         return new Result(true, "");
     }
 
-    public Result useMilkPail(Player player, String direction) {
-        int x = getLocationOfDirectionX(direction);
-        int y = getLocationOfDirectionY(direction);
-        Entity entity = player.getCurrentSpace().getEntityByLocation(x, y);
 
-        Animal animal = (Animal) entity;
-        MilkPail milkPail = (MilkPail) player.getCurrentTool();
-
-        Product product = animal.collectProduct();
-        if (product != null) {
-            player.addToInventory(product, 1);
-            return new Result(true, "You milked the " + animal.getName() + " and got " + product.getName() + ".");
-        }
-        else {
-            return new Result(false, "This animal has no product to collect now.");
-        }
-    }
-
-    public Result useFishingPole(Player player, Season currentSeason, WeatherCondition weather) {
-        if (!(player.getCurrentTool() instanceof FishingPole fishingPole)) {
-            return new Result(false, "You don't have a fishing pole equipped.");
-        }
-
-        int playerSkill = player.getLevel().get(LevelType.FISHING_LEVEL);
-        FishingController fishingController = new FishingController();
-        return fishingController.startFishing(playerSkill, currentSeason, weather, fishingPole);
-    }
 
     // ---------------------
 
