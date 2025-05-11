@@ -1,6 +1,5 @@
-package org.Group34.model.enums.fishing;
+package org.Group34.model.enums;
 
-import org.Group34.model.enums.Season;
 import org.Group34.model.items.Item;
 
 public enum FishType implements Item {

@@ -2,8 +2,7 @@ package org.Group34.controller;
 
 import org.Group34.model.Result;
 import org.Group34.model.enums.*;
-import org.Group34.model.enums.fishing.FishType;
-import org.Group34.model.enums.fishing.FishingRodType;
+import org.Group34.model.items.tools.FishingPole;
 
 import java.util.*;
 
@@ -13,7 +12,7 @@ public class FishingController {
 
     public Result startFishing(int playerSkill, Season currentSeason,
                                WeatherCondition weather,
-                               FishingRodType rod) {
+                               FishingPole rod) {
         if (!hasFishingRod(rod)) {
             return new Result(false, "You don't have a fishing rod.");
         }
@@ -79,8 +78,8 @@ public class FishingController {
         return availableFish.get(random.nextInt(availableFish.size()));
     }
 
-    private Quality calculateQuality(int skill, FishingRodType rod) {
-        double qualityScore = random.nextDouble() * (skill + 2) * rod.qualityModifier;
+    private Quality calculateQuality(int skill, FishingPole rod) {
+        double qualityScore = random.nextDouble() * (skill + 2) * rod.getQualityModifier();
 
         if (qualityScore > 9.0) return Quality.IRIDIUM;
         if (qualityScore > 7.0) return Quality.GOLD;
@@ -88,8 +87,8 @@ public class FishingController {
         return Quality.REGULAR;
     }
 
-    private boolean hasFishingRod(FishingRodType rod) {
-        return true; // Placeholder
+    private boolean hasFishingRod(FishingPole rod) {
+        return rod != null;
     }
 
     public record FishResult(FishType fish, Quality quality) {

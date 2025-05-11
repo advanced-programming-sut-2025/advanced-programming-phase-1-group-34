@@ -1,8 +1,7 @@
 package org.Group34.model.items.crafting.srategies;
 
-import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.enums.animals.Product;
-import org.Group34.model.enums.fishing.FishType;
+import org.Group34.model.enums.FishType;
 import org.Group34.model.items.foods.*;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.Ingredient;
