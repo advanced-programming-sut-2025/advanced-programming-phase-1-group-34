@@ -730,6 +730,7 @@ public class FarmingController {
                     crop.harvest();
                 }
 
+                levelUpController.farmingLevelUp(currentPLayer, LevelType.FARMING_LEVEL);
                 return new Result(true, "The desired plant has been harvested.");
             }
             else {
@@ -747,6 +748,7 @@ public class FarmingController {
 
             tree.harvest();
 
+            levelUpController.farmingLevelUp(currentPLayer, LevelType.FARMING_LEVEL);
             return new Result(true, "The desired plant has been harvested.");
         }
         return new Result(true, "The plant in question has not yet reached the harvesting stage.");
