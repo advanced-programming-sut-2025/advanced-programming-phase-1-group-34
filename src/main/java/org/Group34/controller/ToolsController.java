@@ -4,10 +4,10 @@ import org.Group34.model.Result;
 import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.buildings.Lake;
 import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.entities.naturalElements.PloughedLand;
 import org.Group34.model.entities.naturalElements.Tree;
-import org.Group34.model.enums.animals.Product;
 import org.Group34.model.items.tools.*;
 
 public class ToolsController { // TODO This class must be filled.
@@ -27,6 +27,8 @@ public class ToolsController { // TODO This class must be filled.
     }
     public Result toolUse(String direction) {
         FarmingController farmingController = new FarmingController();
+        FishingController fishingController = new FishingController();
+        AnimalHusbandryController animalHusbandryController = new AnimalHusbandryController();
 
         int locationX = getLocationOfDirectionX(direction);
         int locationY = getLocationOfDirectionY(direction);
@@ -60,7 +62,9 @@ public class ToolsController { // TODO This class must be filled.
             if (desiredTile instanceof Animal animal) {
                 MilkPail milkPail = (MilkPail) player.getCurrentTool();
                 if (milkPail.canMilk(animal.getAnimalType())) {
-                    return farmingController.useMilkPail(player, direction);
+                    int x = getLocationOfDirectionX(direction);
+                    int y = getLocationOfDirectionY(direction);
+                    return animalHusbandryController.useMilkPail(player, x, y);
                 }
                 else {
                     return new Result(false, "This tool cannot be used on this type of animal.");
@@ -72,13 +76,13 @@ public class ToolsController { // TODO This class must be filled.
         }
 
         else if (player.getCurrentTool() instanceof FishingPole) {
-//            if (desiredTile instanceof WaterTile) {
-//                return farmingController.useFishingPole(player, currentSeason, weather);
-//            }
-//            else {
-//                return new Result(false, "You can only fish in water.");
-//            }
-            //TODO add current season and weather and waterTile to game, then activate this part
+            if (desiredTile instanceof Lake) {
+    //          return fishingController.useFishingPole(player, currentSeason, weather);
+            }
+            else {
+                return new Result(false, "You can only fish in water.");
+            }
+            //TODO add current season and weather and to game, then activate this part
         }
 
 
