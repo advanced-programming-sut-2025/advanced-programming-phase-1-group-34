@@ -27,7 +27,6 @@ public class ToolsController { // TODO This class must be filled.
     }
     public Result toolUse(String direction) {
         FarmingController farmingController = new FarmingController();
-        FishingController fishingController = new FishingController();
 
         int locationX = getLocationOfDirectionX(direction);
         int locationY = getLocationOfDirectionY(direction);
@@ -58,12 +57,30 @@ public class ToolsController { // TODO This class must be filled.
         }
 
         else if (player.getCurrentTool() instanceof MilkPail) {
-            return farmingController.useMilkPail(player, direction);
+            if (desiredTile instanceof Animal animal) {
+                MilkPail milkPail = (MilkPail) player.getCurrentTool();
+                if (milkPail.canMilk(animal.getAnimalType())) {
+                    return farmingController.useMilkPail(player, direction);
+                }
+                else {
+                    return new Result(false, "This tool cannot be used on this type of animal.");
+                }
+            }
+            else {
+                return new Result(false, "You can only use Milk Pail on cows or goats.");
+            }
         }
 
         else if (player.getCurrentTool() instanceof FishingPole) {
-            return farmingController.useFishingPole(player, direction);
+//            if (desiredTile instanceof WaterTile) {
+//                return farmingController.useFishingPole(player, currentSeason, weather);
+//            }
+//            else {
+//                return new Result(false, "You can only fish in water.");
+//            }
+            //TODO add current season and weather to game, then activate this part
         }
+
 
         return new Result(true, "");
     }

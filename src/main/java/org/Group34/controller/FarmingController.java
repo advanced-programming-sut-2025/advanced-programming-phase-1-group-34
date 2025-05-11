@@ -5,12 +5,15 @@ import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.naturalElements.*;
+import org.Group34.model.enums.LevelType;
 import org.Group34.model.enums.Season;
+import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.animals.Product;
 import org.Group34.model.enums.creatorOfNaturalElements.CropCreator;
 import org.Group34.model.enums.creatorOfNaturalElements.TreeCreator;
 import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.PlantingSource;
+import org.Group34.model.items.tools.FishingPole;
 import org.Group34.model.items.tools.MilkPail;
 import org.Group34.model.map.Space;
 import org.Group34.model.time.Time;
@@ -139,38 +142,34 @@ public class FarmingController {
         return new Result(true, "");
     }
 
-    public Result useMilkPail(Player player,String direction) {
-        int[] location = player.getLocation();
-        Entity entity = player.getCurrentSpace().getEntityByLocation(location[0], location[1]);
-
-        if (entity instanceof Animal animal) {
-            MilkPail milkPail = (MilkPail) player.getCurrentTool();
-            if (milkPail.canMilk(animal.getAnimalType())) {
-                Product product = animal.collectProduct();
-                if (product != null) {
-                    player.addToInventory(product, 1);
-                    return new Result(true, "You milked the " + animal.getName() + " and got " + product.getName() + ".");
-                } else {
-                    return new Result(false, "This animal has no product to collect now.");
-                }
-            }
-        }
-        return new Result(false, "You can only use Milk Pail on cows or goats.");
-    }
-
-    public Result useFishingPole(Player player, String direction) {
+    public Result useMilkPail(Player player, String direction) {
         int x = getLocationOfDirectionX(direction);
         int y = getLocationOfDirectionY(direction);
-        Entity tile = player.getCurrentSpace().getEntityByLocation(x, y);
+        Entity entity = player.getCurrentSpace().getEntityByLocation(x, y);
 
-//        if (tile instanceof WaterTile waterTile) {
-//            if (waterTile.getName().equalsIgnoreCase("Water")) {
-//                return new Result(true, "You cast your fishing line.");
-//            }
-//        }
-        //TODO add waterTile class
-        return new Result(false, "You can only fish in water.");
+        Animal animal = (Animal) entity;
+        MilkPail milkPail = (MilkPail) player.getCurrentTool();
+
+        Product product = animal.collectProduct();
+        if (product != null) {
+            player.addToInventory(product, 1);
+            return new Result(true, "You milked the " + animal.getName() + " and got " + product.getName() + ".");
+        }
+        else {
+            return new Result(false, "This animal has no product to collect now.");
+        }
     }
+
+    public Result useFishingPole(Player player, Season currentSeason, WeatherCondition weather) {
+        if (!(player.getCurrentTool() instanceof FishingPole fishingPole)) {
+            return new Result(false, "You don't have a fishing pole equipped.");
+        }
+
+        int playerSkill = player.getLevel().get(LevelType.FISHING_LEVEL);
+        FishingController fishingController = new FishingController();
+        return fishingController.startFishing(playerSkill, currentSeason, weather, fishingPole);
+    }
+
     // ---------------------
 
 
