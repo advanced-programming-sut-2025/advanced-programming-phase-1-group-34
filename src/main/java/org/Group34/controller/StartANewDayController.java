@@ -3,12 +3,10 @@ package org.Group34.controller;
 import org.Group34.model.Game;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
-import org.Group34.model.entities.naturalElements.Crop;
-import org.Group34.model.entities.naturalElements.PlantAble;
-import org.Group34.model.entities.naturalElements.PloughedLand;
-import org.Group34.model.entities.naturalElements.Tree;
+import org.Group34.model.entities.naturalElements.*;
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.creatorOfNaturalElements.*;
+import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.map.Space;
 import org.Group34.model.time.Time;
@@ -32,10 +30,10 @@ public class StartANewDayController {
       to perform tasks to start a new day
      * */
     public void ManageAllTasks() {
+        currentGame.weatherSystem().advanceWeather(currentGame.time());
         iterateWholeMap();
         resetPlayersEnergy();
     }
-
 
 
     private void resetPlayersEnergy() {
@@ -59,6 +57,8 @@ public class StartANewDayController {
         HashSet<int[]> scareCrowPlants = new HashSet<>();
 
         for (Space space : spaces) {
+            lightningStrike(space);
+
             for (int i = 0; i < space.width(); i++)
                 for (int j = 0; j < space.height(); j++) {
                     randomPlacementOfForagingCropsAndSeeds(space, i, j);
@@ -69,6 +69,21 @@ public class StartANewDayController {
                 }
 
             crowInvasion(space, plantsOnFarm, scareCrowPlants);
+        }
+    }
+
+    private void lightningStrike(Space space) {
+        WeatherSystem weather = currentGame.weatherSystem();
+        Entity[][] entities = space.entities();
+
+        for (int[] coordinate: weather.generateLightningStrikes()){
+            int x = coordinate[0];
+            int y = coordinate[1];
+
+            if (entities[x][y] instanceof Tree || entities[x][y] instanceof ForagingTree)
+                entities[x][y] = Ingredient.COAL;
+            if (entities[x][y] instanceof Crop)
+                entities[x][y] = null;
         }
     }
 

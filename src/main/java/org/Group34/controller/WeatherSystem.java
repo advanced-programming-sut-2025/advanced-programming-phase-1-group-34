@@ -4,6 +4,7 @@ import org.Group34.model.enums.Season;
 import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.time.Time;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -15,7 +16,7 @@ import java.util.Random;
 public class WeatherSystem {
     private WeatherCondition todayCondition;
     private WeatherCondition tomorrowCondition;
-    private final Map<String, Boolean> lightningStrikeMap = new HashMap<>();
+    private final ArrayList<int[]> lightningStrikeMap = new ArrayList<>();
 
     /**
      * Initializes the weather system by generating today's and tomorrow's weather based on current time
@@ -54,14 +55,14 @@ public class WeatherSystem {
      * Coordinates are saved in a map for lookup.
      * NOTE: The bounds (0-99) are placeholders and should match the map dimensions.
      */
-    private void generateLightningStrikes() {
+    public ArrayList<int[]> generateLightningStrikes() {
         Random random = new Random();
         for (int i = 0; i < 3; i++) {
-            int x = random.nextInt(100); // TODO: Adjust according to the map and its entities
+            int x = random.nextInt(100);
             int y = random.nextInt(100);
-            String key = x + "," + y;
-            lightningStrikeMap.put(key, true);
+            lightningStrikeMap.add(new int[]{x, y});
         }
+        return lightningStrikeMap;
     }
 
     /**
@@ -72,7 +73,7 @@ public class WeatherSystem {
      * @return true if struck by lightning; false otherwise
      */
     public boolean isStruckByLightning(int x, int y) {
-        return lightningStrikeMap.containsKey(x + "," + y);
+        return lightningStrikeMap.contains(new int[]{x, y});
     }
 
     /**
