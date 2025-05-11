@@ -287,4 +287,15 @@ public class Tree implements Entity, PlantAble {
         isGivenFertilizer = true;
         this.fertilizer = fertilizer;
     }
+
+    public void harvest() {
+        if (harvested) {
+            age = 0;
+            growthLevel = maxLevel - 1;
+        } else {
+            harvested = true;
+            age = 0;
+            growthLevel = maxLevel - 1;
+        }
+    }
 }
