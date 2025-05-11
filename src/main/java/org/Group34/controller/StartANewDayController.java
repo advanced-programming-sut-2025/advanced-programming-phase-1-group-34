@@ -1,6 +1,8 @@
 package org.Group34.controller;
 
+import org.Group34.model.Game;
 import org.Group34.model.entities.Entity;
+import org.Group34.model.entities.Player;
 import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.entities.naturalElements.PlantAble;
 import org.Group34.model.entities.naturalElements.PloughedLand;
@@ -18,7 +20,9 @@ import java.util.*;
  */
 
 public class StartANewDayController {
-    private Map currentMap; //TODO It will fix in GameController
+
+    private final static int MAX_ENERGY = 200;
+    private Game currentGame; //TODO It will fix in GameController
     private ArrayList<Space> spaces; //TODO It will fix in GameController
     private Time time; //TODO It will fix in GameController
 
@@ -29,7 +33,20 @@ public class StartANewDayController {
      * */
     public void ManageAllTasks() {
         iterateWholeMap();
-        randomPlacementOfForagingMinerals();
+        resetPlayersEnergy();
+    }
+
+
+
+    private void resetPlayersEnergy() {
+        for (Player player: currentGame.players().values()){
+            if (player.isPassedOut()){
+                player.setEnergy(MAX_ENERGY * 3 /4);
+                player.setPassedOut(false);
+            }
+
+            player.setEnergy(MAX_ENERGY);
+        }
     }
 
 
@@ -45,6 +62,7 @@ public class StartANewDayController {
             for (int i = 0; i < space.width(); i++)
                 for (int j = 0; j < space.height(); j++) {
                     randomPlacementOfForagingCropsAndSeeds(space, i, j);
+                    randomPlacementOfForagingMinerals();
                     sprinklerWatering(space, i, j);
                     addPlant(plantsOnFarm, space, i, j);
                     scareCrow(scareCrowPlants, space, i, j);
