@@ -87,8 +87,8 @@ public class StartANewDayController {
 
                 if (entities[randomPlant[0]][randomPlant[1]] instanceof Crop) {
                     entities[randomPlant[0]][randomPlant[1]] = null;
-                }if (entities[randomPlant[0]][randomPlant[1]] instanceof Tree){
-                    // TODO when crow invade a Tree it can not produce fruit in other day
+                }if (entities[randomPlant[0]][randomPlant[1]] instanceof Tree tree){
+                    tree.crowInvasion();
                 }
             }
 

@@ -5,6 +5,7 @@ import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.Lake;
 import org.Group34.model.entities.naturalElements.*;
+import org.Group34.model.enums.LevelType;
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.creatorOfNaturalElements.CropCreator;
 import org.Group34.model.enums.creatorOfNaturalElements.TreeCreator;
@@ -21,6 +22,7 @@ public class FarmingController {
     private Space currentSpace; // TODO It will fix in GameController
     private Player currentPLayer; // TODO It will fix in GameController
     private Time time; // TODO It will fix in GameController
+    private LevelUpController levelUpController; // TODO It will fix in GameController
 
     private Hoe hoe;
     private Pickaxe pickaxe;
@@ -711,6 +713,7 @@ public class FarmingController {
                     crop.harvest();
                 }
 
+                levelUpController.farmingLevelUp(currentPLayer, LevelType.FARMING_LEVEL);
                 return new Result(true, "The desired plant has been harvested.");
             }
             else {
@@ -727,6 +730,7 @@ public class FarmingController {
                     crop.harvest();
                 }
 
+                levelUpController.farmingLevelUp(currentPLayer, LevelType.FARMING_LEVEL);
                 return new Result(true, "The desired plant has been harvested.");
             }
             else {
@@ -744,6 +748,7 @@ public class FarmingController {
 
             tree.harvest();
 
+            levelUpController.farmingLevelUp(currentPLayer, LevelType.FARMING_LEVEL);
             return new Result(true, "The desired plant has been harvested.");
         }
         return new Result(true, "The plant in question has not yet reached the harvesting stage.");
