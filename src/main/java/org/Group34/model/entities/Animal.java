@@ -43,7 +43,7 @@ public class Animal {
         return name;
     }
 
-    public AnimalType getType() {
+    public AnimalType getAnimalType() {
         return type;
     }
 

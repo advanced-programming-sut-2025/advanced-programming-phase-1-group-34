@@ -1,11 +1,13 @@
 package org.Group34.controller;
 
 import org.Group34.model.Result;
+import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.entities.naturalElements.PloughedLand;
 import org.Group34.model.entities.naturalElements.Tree;
+import org.Group34.model.enums.animals.Product;
 import org.Group34.model.items.tools.*;
 
 public class ToolsController { // TODO This class must be filled.
@@ -25,6 +27,7 @@ public class ToolsController { // TODO This class must be filled.
     }
     public Result toolUse(String direction) {
         FarmingController farmingController = new FarmingController();
+        FishingController fishingController = new FishingController();
 
         int locationX = getLocationOfDirectionX(direction);
         int locationY = getLocationOfDirectionY(direction);
@@ -54,10 +57,16 @@ public class ToolsController { // TODO This class must be filled.
             }
         }
 
+        else if (player.getCurrentTool() instanceof MilkPail) {
+            return farmingController.useMilkPail(player, direction);
+        }
+
+        else if (player.getCurrentTool() instanceof FishingPole) {
+            return farmingController.useFishingPole(player, direction);
+        }
+
         return new Result(true, "");
     }
-
-
 
     private int getLocationOfDirectionX(String direction) {
         int playerLocation = player.getLocation()[0];

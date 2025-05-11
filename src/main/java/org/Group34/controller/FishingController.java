@@ -1,6 +1,7 @@
 package org.Group34.controller;
 
 import org.Group34.model.Result;
+import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.*;
 import org.Group34.model.items.tools.FishingPole;
 

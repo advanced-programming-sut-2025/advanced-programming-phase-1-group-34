@@ -115,10 +115,10 @@ public class AnimalHusbandryController {
     private List<String> createAnimalsList() {
         List<String> result = new ArrayList<>();
         coops.forEach(coop -> coop.getAnimals().forEach(animal ->
-                result.add(animal.getName() + " (" + animal.getType().name() + ") - Friendship: " + animal.getFriendship())
+                result.add(animal.getName() + " (" + animal.getAnimalType().name() + ") - Friendship: " + animal.getFriendship())
         ));
         barns.forEach(barn -> barn.getAnimals().forEach(animal ->
-                result.add(animal.getName() + " (" + animal.getType().name() + ") - Friendship: " + animal.getFriendship())
+                result.add(animal.getName() + " (" + animal.getAnimalType().name() + ") - Friendship: " + animal.getFriendship())
         ));
         return result;
     }
