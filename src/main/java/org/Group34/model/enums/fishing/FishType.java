@@ -1,8 +1,9 @@
 package org.Group34.model.enums.fishing;
 
 import org.Group34.model.enums.Season;
+import org.Group34.model.items.Item;
 
-public enum FishType {
+public enum FishType implements Item {
     // Regular fish
     SALMON("Salmon", 75, Season.AUTUMN, false),
     SARDINE("Sardine", 40, Season.AUTUMN, false),
@@ -43,4 +44,8 @@ public enum FishType {
         return isLegendary;
     }
 
+    @Override
+    public String getName() {
+        return this.name;
+    }
 }

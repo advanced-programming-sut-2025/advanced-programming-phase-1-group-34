@@ -2,7 +2,7 @@ package org.Group34.model.enums.creatorOfNaturalElements;
 
 import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.model.items.PlantingSource;
-import org.Group34.model.items.Fruit;
+import org.Group34.model.items.foods.*;
 
 /**
  * Enum for creating trees, now using PlantingSource instead of raw source strings.
@@ -19,31 +19,31 @@ public enum TreeCreator {
     APPLE_TREE("Apple Tree", PlantingSource.APPLE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.APPLE, new String[]{"Autumn"}),
     POMEGRANATE_TREE("Pomegranate Tree", PlantingSource.POMEGRANATE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.POMEGRANATE, new String[]{"Autumn"}),
 
-    OAK_TREE("Oak Tree", PlantingSource.OAK_SAPLING, new int[]{7,7,7,7}, 28, Fruit.OAK_RESIN, new String[]{"Spring","Summer","Autumn","Winter"}),
-    MAPLE_TREE("Maple Tree", PlantingSource.MAPLE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.MAPLE_SYRUP, new String[]{"Spring","Summer","Autumn","Winter"}),
-    PINE_TREE("Pine Tree", PlantingSource.PINE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.PINE_TAR, new String[]{"Spring","Summer","Autumn","Winter"}),
-    MAHOGANY_TREE("Mahogany Tree", PlantingSource.MAHOGANY_SAPLING, new int[]{7,7,7,7}, 28, Fruit.SAP, new String[]{"Spring","Summer","Autumn","Winter"}),
-    MUSHROOM_TREE("Mushroom Tree", PlantingSource.MUSHROOM_SAPLING, new int[]{7,7,7,7}, 28, Fruit.COMMON_MUSHROOM, new String[]{"Spring","Summer","Autumn","Winter"}),
-    MYSTIC_TREE("Mystic Tree", PlantingSource.MYSTIC_SAPLING, new int[]{7,7,7,7}, 28, Fruit.MYSTIC_SYRUP, new String[]{"Spring","Summer","Autumn","Winter"});
+    OAK_TREE("Oak Tree", PlantingSource.OAK_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.OAK_RESIN, new String[]{"Spring","Summer","Autumn","Winter"}),
+    MAPLE_TREE("Maple Tree", PlantingSource.MAPLE_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.MAPLE_SYRUP, new String[]{"Spring","Summer","Autumn","Winter"}),
+    PINE_TREE("Pine Tree", PlantingSource.PINE_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.PINE_TAR, new String[]{"Spring","Summer","Autumn","Winter"}),
+    MAHOGANY_TREE("Mahogany Tree", PlantingSource.MAHOGANY_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.SAP, new String[]{"Spring","Summer","Autumn","Winter"}),
+    MUSHROOM_TREE("Mushroom Tree", PlantingSource.MUSHROOM_SAPLING, new int[]{7,7,7,7}, 28, Fungi.COMMON_MUSHROOM, new String[]{"Spring","Summer","Autumn","Winter"}),
+    MYSTIC_TREE("Mystic Tree", PlantingSource.MYSTIC_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.MYSTIC_SYRUP, new String[]{"Spring","Summer","Autumn","Winter"});
 
     private final String name;
     private final PlantingSource source;
     private final int[] stages;
     private final int totalHarvestTime;
-    private final Fruit fruit;
+    private final FarmingProduct farmingProduct;
     private final String[] seasons;
 
     TreeCreator(String name,
                 PlantingSource source,
                 int[] stages,
                 int totalHarvestTime,
-                Fruit fruit,
+                FarmingProduct farmingProduct,
                 String[] seasons) {
         this.name = name;
         this.source = source;
         this.stages = stages;
         this.totalHarvestTime = totalHarvestTime;
-        this.fruit = fruit;
+        this.farmingProduct = farmingProduct;
         this.seasons = seasons;
     }
 
@@ -56,7 +56,7 @@ public enum TreeCreator {
                 source,
                 stages,
                 totalHarvestTime,
-                fruit,
+                farmingProduct,
                 seasons
         );
     }
