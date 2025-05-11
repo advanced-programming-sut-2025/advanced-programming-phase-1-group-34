@@ -2,6 +2,7 @@ package org.Group34.controller;
 
 import org.Group34.model.Result;
 import org.Group34.model.entities.Entity;
+import org.Group34.model.entities.Player;
 import org.Group34.model.enums.*;
 import org.Group34.model.items.tools.FishingPole;
 
@@ -41,6 +42,16 @@ public class FishingController {
         }
 
         return new Result(true, resultMessage.toString().trim());
+    }
+
+    public Result useFishingPole(Player player, Season currentSeason, WeatherCondition weather) {
+        if (!(player.getCurrentTool() instanceof FishingPole fishingPole)) {
+            return new Result(false, "You don't have a fishing pole equipped.");
+        }
+
+        int playerSkill = player.getLevel().get(LevelType.FISHING_LEVEL);
+        FishingController fishingController = new FishingController();
+        return fishingController.startFishing(playerSkill, currentSeason, weather, fishingPole);
     }
 
     // ---------- Helper Methods ----------

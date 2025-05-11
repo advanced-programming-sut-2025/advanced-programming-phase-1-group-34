@@ -78,7 +78,7 @@ public class ToolsController { // TODO This class must be filled.
 //            else {
 //                return new Result(false, "You can only fish in water.");
 //            }
-            //TODO add current season and weather and waterTile to game, then activate this part
+            //TODO add current season and weather to game, then activate this part
         }
 
 

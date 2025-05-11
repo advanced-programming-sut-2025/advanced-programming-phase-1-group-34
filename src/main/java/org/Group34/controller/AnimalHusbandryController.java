@@ -2,10 +2,14 @@ package org.Group34.controller;
 
 import org.Group34.model.Result;
 import org.Group34.model.entities.Animal;
+import org.Group34.model.entities.Entity;
+import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.*;
 import org.Group34.model.enums.animals.AnimalType;
 import org.Group34.model.enums.animals.BarnType;
 import org.Group34.model.enums.animals.CoopType;
+import org.Group34.model.enums.animals.Product;
+import org.Group34.model.items.tools.MilkPail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +79,22 @@ public class AnimalHusbandryController {
         if (result.isEmpty())
             return new Result(false, "No animals found");
         return new Result(true, String.join("\n", result));
+    }
+
+    public Result useMilkPail(Player player, int directionX, int directionY) {
+        Entity entity = player.getCurrentSpace().getEntityByLocation(directionX, directionY);
+
+        Animal animal = (Animal) entity;
+        MilkPail milkPail = (MilkPail) player.getCurrentTool();
+
+        Product product = animal.collectProduct();
+        if (product != null) {
+            player.addToInventory(product, 1);
+            return new Result(true, "You milked the " + animal.getName() + " and got " + product.getName() + ".");
+        }
+        else {
+            return new Result(false, "This animal has no product to collect now.");
+        }
     }
 
     // ---------- Helper Methods ----------

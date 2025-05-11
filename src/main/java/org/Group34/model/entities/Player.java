@@ -9,11 +9,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class  Player implements Entity {
+
+    private static int passedOutUsers = 0;
+
     private int[] location;
     private Space currentSpace;
     private int energy = 200;
+    private boolean passedOut = false;
     private HashMap<Item, Integer> inventory = new HashMap<>();
     private ArrayList<Recipe> learnedRecipes = new ArrayList<>();
+    private HashMap<LevelType, Integer> levelUnit = new HashMap<>(){{
+        level.put(LevelType.FARMING_LEVEL, 0);
+        level.put(LevelType.MINING_LEVEL, 0);
+        level.put(LevelType.FORAGING_LEVEL, 0);
+        level.put(LevelType.FISHING_LEVEL, 0);
+    }};
     private HashMap<LevelType, Integer> level = new HashMap<>(){{
         level.put(LevelType.FARMING_LEVEL, 0);
         level.put(LevelType.MINING_LEVEL, 0);
@@ -22,6 +32,11 @@ public class  Player implements Entity {
     }};
 
     private Item currentTool;
+
+
+    public static int passedOutUsers(){
+        return Player.passedOutUsers;
+    }
 
 
     public Player(int[] initialLocation) {
@@ -40,8 +55,18 @@ public class  Player implements Entity {
         return energy;
     }
 
-    public void setEnergy(int energy) {
-        this.energy = energy;
+    public boolean decreaseEnergy(int amount) {
+        if (energy <= amount){
+            energy = 0;
+            this.setPassedOut(true);
+            return false;
+        }
+        energy -= amount;
+        return true;
+    }
+
+    public void increaseEnergy(int amount){
+        energy += amount;
     }
 
     public int[] getLocation() {
@@ -99,7 +124,15 @@ public class  Player implements Entity {
     }
 
     public void levelUp(LevelType levelType){
-        level.put(levelType, level.get(levelType));
+        level.put(levelType, level.get(levelType)+1);
+    }
+
+    public HashMap<LevelType, Integer> getLevelUnit() {
+        return levelUnit;
+    }
+
+    public void setLevelUnit(LevelType levelType, int amount) {
+        levelUnit.put(levelType, amount);
     }
 
     public ArrayList<Recipe> getLearnedRecipes() {
@@ -115,6 +148,15 @@ public class  Player implements Entity {
     }
     public void setCurrentTool(Item tool) {
         this.currentTool = tool;
+    }
+
+    public boolean isPassedOut() {
+        return passedOut;
+    }
+
+    public void setPassedOut(boolean passedOut) {
+        Player.passedOutUsers++;
+        this.passedOut = passedOut;
     }
 
     @Override
