@@ -212,8 +212,8 @@ public class Tree implements Entity, PlantAble {
         Random rand = new Random();
 
         age++;
-        checkAgeAndGrow();
         isAttackedByCrow = false;
+        checkAgeAndGrow();
 
         if (fertilizer == null) {
             needWater = true;
@@ -225,7 +225,7 @@ public class Tree implements Entity, PlantAble {
     }
     private void checkAgeAndGrow() {
         if (harvested) {
-            if (age == fruitHarvestCycle) {
+            if (age == fruitHarvestCycle && !isAttackedByCrow) {
                 growthLevel = maxLevel;
             }
         }
@@ -238,7 +238,7 @@ public class Tree implements Entity, PlantAble {
                         levelUpTime += stages[j];
                     }
 
-                    if (age == levelUpTime) {
+                    if (age == levelUpTime && !isAttackedByCrow()) {
                         growthLevel++;
                     }
                 }

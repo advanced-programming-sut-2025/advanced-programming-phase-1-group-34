@@ -25,7 +25,6 @@ public class Crop implements Entity, PlantAble {
     private int growthLevel = 0;
     private boolean harvested = false;
     private int maxLevel;
-    private boolean isAttackedByCrow = false;
     private boolean isGivenFertilizer = false;
     private Fertilizer fertilizer = null;
 
@@ -144,13 +143,6 @@ public class Crop implements Entity, PlantAble {
         this.harvested = harvested;
     }
 
-    public boolean isAttackedByCrow() {
-        return isAttackedByCrow;
-    }
-    public void setAttackedByCrow(boolean isAttackedByCrow) {
-        this.isAttackedByCrow = isAttackedByCrow;
-    }
-
     public boolean isGivenFertilizer() {
         return isGivenFertilizer;
     }
@@ -220,7 +212,6 @@ public class Crop implements Entity, PlantAble {
 
         age++;
         checkAgeAndGrow();
-        isAttackedByCrow = false;
 
         if (fertilizer == null) {
             needWater = true;
@@ -251,10 +242,6 @@ public class Crop implements Entity, PlantAble {
                 }
             }
         }
-    }
-
-    public void crowInvasion() {
-        isAttackedByCrow = true;
     }
 
     public String getInformation() {
