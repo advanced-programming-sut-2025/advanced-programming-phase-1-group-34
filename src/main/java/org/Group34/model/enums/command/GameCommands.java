@@ -20,7 +20,16 @@ public enum GameCommands implements Command {
     PLANT("\\s*plant\\s+-s\\s+(?<seed>.+)\\s+-d\\s+(?<direction>.+)\\s*"),
     SHOW_PLANT("\\s*showplant\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s*"),
     FERTILIZE("\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(?<direction>.+)\\s*"),
-    HOW_MUCH_WATER("\\S*howmuch\\S+water\\S*");
+    HOW_MUCH_WATER("\\S*howmuch\\S+water\\S*"),
+    // ----------------------------
+
+    // ----- Tools Commands -----
+    TOOLS_EQUIP("\\s*tools\\s+equip\\s+(?<toolName>.+)\\s*"),
+    SHOW_CURRENT_TOOLS("\\s*tools\\s+show\\s+current\\s*"),
+    SHOW_AVAILABLE_TOOLS("\\s*tools\\s+show\\s+available\\s*"),
+    TOOLS_UPGRADE("\\s*tools\\s+upgrade\\s+(?<toolName>.+)\\s*"),
+    TOOLS_USE("\\s*tools\\s+use\\s+-d\\s+(?<direction>.+)\\s*");
+    // -------------------------
 
     // Regex: ---------- END -------------
 

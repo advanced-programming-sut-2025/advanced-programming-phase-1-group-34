@@ -2,6 +2,7 @@ package org.Group34.view;
 
 import org.Group34.controller.FarmingController;
 import org.Group34.controller.GameController;
+import org.Group34.controller.ToolsController;
 import org.Group34.model.App;
 import org.Group34.model.Game;
 import org.Group34.model.Result;
@@ -173,7 +174,62 @@ public class GameView extends AppMenu {
                 Result result = controller.showAmountOfWater();
                 showMessage(result.message());
             }
-            // ----- End Of Farming View -----
+            // ------------------------
+
+            // ----- Tools View -----
+            else if (command.matches(GameCommands.TOOLS_EQUIP.getRegex())) {
+                ToolsController controller = new ToolsController(); // TODO It will fix in GameController
+
+                Pattern pattern = Pattern.compile(GameCommands.TOOLS_EQUIP.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String toolName = matcher.group("toolName").trim();
+
+                    Result result = controller.toolsEquip(toolName);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.SHOW_CURRENT_TOOLS.getRegex())) {
+                ToolsController controller = new ToolsController(); // TODO It will fix in GameController
+
+                Result result = controller.showCurrentTools();
+                showMessage(result.message());
+            }
+            else if (command.matches(GameCommands.SHOW_AVAILABLE_TOOLS.getRegex())) {
+                ToolsController controller = new ToolsController(); // TODO It will fix in GameController
+
+                Result result = controller.showAvailableTools();
+                showMessage(result.message());
+            }
+            else if (command.matches(GameCommands.TOOLS_UPGRADE.getRegex())) {
+                ToolsController controller = new ToolsController(); // TODO It will fix in GameController
+
+                Pattern pattern = Pattern.compile(GameCommands.TOOLS_UPGRADE.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String toolName = matcher.group("toolName").trim();
+
+                    Result result = controller.toolsUpgrade(toolName);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.TOOLS_USE.getRegex())) {
+                ToolsController controller = new ToolsController(); // TODO It will fix in GameController
+
+                Pattern pattern = Pattern.compile(GameCommands.TOOLS_USE.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String direction = matcher.group("direction").trim();
+
+                    Result result = controller.toolUse(direction);
+                    showMessage(result.message());
+                }
+            }
+            // ----------------------
+
 
             else {
                 showMessage("Invalid command!");

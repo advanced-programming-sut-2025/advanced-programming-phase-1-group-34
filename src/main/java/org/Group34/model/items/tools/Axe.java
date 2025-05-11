@@ -4,9 +4,8 @@ import org.Group34.model.items.Item;
 
 import java.util.HashMap;
 
-public class WateringCan implements Item {
+public class Axe implements Item {
     private static HashMap<Integer, String> material;
-    private static HashMap<Integer, Integer> capacity;
     private static HashMap<Integer, Integer> energy;
     static {
         material.put(0, "Plastic");
@@ -14,12 +13,6 @@ public class WateringCan implements Item {
         material.put(2, "Iron");
         material.put(3, "Gold");
         material.put(4, "Iridium");
-
-        capacity.put(0, 40);
-        capacity.put(1, 55);
-        capacity.put(2, 70);
-        capacity.put(3, 85);
-        capacity.put(4, 100);
 
         energy.put(0, 5);
         energy.put(1, 4);
@@ -30,15 +23,14 @@ public class WateringCan implements Item {
 
 
     private int level;
-    private int amountOfWater = 0;
 
-    public WateringCan(int level) {
+    public Axe(int level) {
         this.level = level;
     }
 
     // ----- getter & setter -----
     public String getName() {
-        return "Watering Can";
+        return "Axe";
     }
 
     public int getLevel() {
@@ -52,19 +44,8 @@ public class WateringCan implements Item {
         return material.get(level);
     }
 
-    public int getCapacity() {
-        return capacity.get(level);
-    }
-
     public int getEnergy() {
         return energy.get(level);
-    }
-
-    public int getAmountOfWater() {
-        return amountOfWater;
-    }
-    public void setAmountOfWater(int amount) {
-        this.amountOfWater = amount;
     }
     // ---------------------------
 

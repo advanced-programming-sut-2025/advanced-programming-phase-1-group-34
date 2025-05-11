@@ -1,5 +1,9 @@
 package org.Group34.model.items.crafting.srategies;
 
+import org.Group34.model.entities.naturalElements.Crop;
+import org.Group34.model.enums.animals.Product;
+import org.Group34.model.enums.fishing.FishType;
+import org.Group34.model.items.foods.*;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.Ingredient;
 
@@ -9,13 +13,23 @@ public enum ProcessingStrategy {
     MAYONNAISE_MACHINE {
         @Override
         public HashMap<Item, Integer> process(Item input, int amount) {
-            return new HashMap<>();
+            if (input.equals(Product.EGG) || input.equals(Product.LARGE_EGG) ||
+                    input.equals(Product.DUCK_EGG))
+                return this.output(input, new ProcessedFood(ProcessedFoodType.MAYONNAISE, input), amount, 1);
+            return new HashMap<>(){{
+                put(input, amount);
+            }};
         }
     },
     CHEESE_PRESS {
         @Override
         public HashMap<Item, Integer> process(Item input, int amount) {
-            return new HashMap<>();
+            if (input.equals(Product.MILK) || input.equals(Product.LARGE_MILK) ||
+                    input.equals(Product.GOAT_MILK) || input.equals(Product.LARGE_GOAT_MILK))
+                return this.output(input, new ProcessedFood(ProcessedFoodType.CHEESE, input), amount, 1);
+            return new HashMap<>(){{
+                put(input, amount);
+            }};
         }
     },
     FURNACE {
@@ -37,31 +51,55 @@ public enum ProcessingStrategy {
     OIL_MAKER {
         @Override
         public HashMap<Item, Integer> process(Item input, int amount) {
-            return new HashMap<>();
+            if (input.equals(Product.TRUFFLE))
+                return this.output(input, new ProcessedFood(ProcessedFoodType.OIL, input), amount, 1);
+            return new HashMap<>(){{
+                put(input, amount);
+            }};
         }
     },
     LOOM {
         @Override
         public HashMap<Item, Integer> process(Item input, int amount) {
-            return new HashMap<>();
+            if (input.equals(Product.WOOL))
+                return this.output(input, Ingredient.SHEEP_FABRIC, amount, 1);
+            if (input.equals(Product.RABBIT_WOOL))
+                return this.output(input, Ingredient.RABBIT_FABRIC, amount, 1);
+            return new HashMap<>(){{
+                put(input, amount);
+            }};
         }
     },
     KEG {
         @Override
         public HashMap<Item, Integer> process(Item input, int amount) {
-            return new HashMap<>();
+            if (input instanceof Fruit || input instanceof Vegetable)
+                return this.output(input, new ProcessedFood(ProcessedFoodType.JUICE, input), amount, 10);
+            return new HashMap<>(){{
+                put(input, amount);
+            }};
         }
     },
     PRESERVES_JAR {
         @Override
         public HashMap<Item, Integer> process(Item input, int amount) {
-            return new HashMap<>();
+            if (input instanceof Fruit)
+                return this.output(input, new ProcessedFood(ProcessedFoodType.JAM, input), amount, 1);
+            if (input instanceof Vegetable)
+                return this.output(input, new ProcessedFood(ProcessedFoodType.PICKLE, input), amount, 1);
+            return new HashMap<>(){{
+                put(input, amount);
+            }};
         }
     },
     DEHYDRATOR {
         @Override
         public HashMap<Item, Integer> process(Item input, int amount) {
-            return new HashMap<>();
+            if (input instanceof Fruit || input instanceof Fungi)
+                return this.output(input, new ProcessedFood(ProcessedFoodType.DEHYDRATED_FOOD, input), amount, 1);
+            return new HashMap<>(){{
+                put(input, amount);
+            }};
         }
     },
     CHARCOAL_KILN {
@@ -77,7 +115,11 @@ public enum ProcessingStrategy {
     FISH_SMOKER {
         @Override
         public HashMap<Item, Integer> process(Item input, int amount) {
-            return new HashMap<>();
+            if (input instanceof FishType)
+                return this.output(input, new ProcessedFood(ProcessedFoodType.SMOKED_FISH, input), amount, 1);
+            return new HashMap<>(){{
+                put(input, amount);
+            }};
         }
     };
 

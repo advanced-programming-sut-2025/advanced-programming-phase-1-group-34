@@ -107,6 +107,36 @@ public class FarmingController {
         return new Result(true, "");
     }
 
+    // ----- Use Tools -----
+    public Result useHoe(String direction) {
+        int locationX = getLocationOfDirectionX(direction);
+        int locationY = getLocationOfDirectionY(direction);
+        Entity desiredTile = currentSpace.getEntityByLocation(locationX, locationY);
+
+        if (desiredTile != null) {
+            return new Result(false, "Error: You can't plow here.");
+        }
+
+        return new Result(true, "");
+    }
+
+    public Result usePickaxe(String direction) {
+        return new Result(true, "");
+    }
+
+    public Result useAxe(String direction) {
+        return new Result(true, "");
+    }
+
+    public Result useWateringCan(String direction) {
+        return new Result(true, "");
+    }
+
+    public Result useScythe(String direction) {
+        return new Result(true, "");
+    }
+    // ---------------------
+
 
     private int getLocationOfDirectionX(String direction) {
         int playerLocation = currentPLayer.getLocation()[0];

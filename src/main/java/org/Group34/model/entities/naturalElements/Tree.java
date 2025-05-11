@@ -4,7 +4,8 @@ import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Color;
 import org.Group34.model.enums.Season;
 import org.Group34.model.items.Fertilizer;
-import org.Group34.model.items.Fruit;
+import org.Group34.model.items.foods.FarmingProduct;
+import org.Group34.model.items.foods.Fruit;
 import org.Group34.model.items.PlantingSource;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class Tree implements Entity, PlantAble {
     private PlantingSource source;
     private int[] stages;
     private int totalHarvestTime;
-    private Fruit fruit;
+    private FarmingProduct farmingProduct;
     private int fruitHarvestCycle;
     private ArrayList<Season> seasons;
 
@@ -37,7 +38,7 @@ public class Tree implements Entity, PlantAble {
 
 
 
-    public Tree(String name, PlantingSource source, int[] stages, int totalHarvestTime, Fruit fruit, String[] seasons) {
+    public Tree(String name, PlantingSource source, int[] stages, int totalHarvestTime, FarmingProduct farmingProduct, String[] seasons) {
         this.name = name;
         this.source = source;
         this.stages = stages;
@@ -57,7 +58,7 @@ public class Tree implements Entity, PlantAble {
             }
         }
 
-        this.fruit = fruit;
+        this.farmingProduct = farmingProduct;
     }
 
     // ----- getter & setter -----
@@ -89,11 +90,11 @@ public class Tree implements Entity, PlantAble {
         this.totalHarvestTime = totalHarvestTime;
     }
 
-    public Fruit getFruit() {
-        return fruit;
+    public FarmingProduct getFruit() {
+        return farmingProduct;
     }
-    public void setFruit(Fruit fruit) {
-        this.fruit = fruit;
+    public void setFruit(FarmingProduct farmingProduct) {
+        this.farmingProduct = farmingProduct;
     }
 
     public int getFruitHarvestCycle() {
@@ -178,7 +179,7 @@ public class Tree implements Entity, PlantAble {
         StringBuilder result = new StringBuilder();
 
         result
-                .append("Name: " + fruit.getName() + "\n")
+                .append("Name: " + farmingProduct.getName() + "\n")
                 .append("Source: " + source.getName() + "\n")
                 .append("Stages: ");
 
@@ -191,10 +192,10 @@ public class Tree implements Entity, PlantAble {
         result
                 .append("Total Harvest Time: " + totalHarvestTime + "\n")
                 .append("Fruit Harvest Cycle: " + fruitHarvestCycle + "\n")
-                .append("Base Sell Price: " + fruit.getBaseSellPrice() + "\n")
-                .append("Is Edible: " + fruit.isEdible() + "\n")
-                .append("Base Energy: " + fruit.getEnergy() + "\n")
-                .append("Base Health: " + fruit.getHealth() + "\n")
+                .append("Base Sell Price: " + farmingProduct.getBaseSellPrice() + "\n")
+                .append("Is Edible: " + farmingProduct.isEdible() + "\n")
+                .append("Base Energy: " + farmingProduct.getEnergy() + "\n")
+                .append("Base Health: " + farmingProduct.getHealth() + "\n")
                 .append("Season: ");
 
         for (Season season : seasons) {

@@ -3,7 +3,8 @@ package org.Group34.model.entities.naturalElements;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Season;
 import org.Group34.model.items.Fertilizer;
-import org.Group34.model.items.Fruit;
+import org.Group34.model.items.foods.FarmingProduct;
+import org.Group34.model.items.foods.Fruit;
 import org.Group34.model.items.PlantingSource;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class Crop implements Entity, PlantAble {
     private int totalHarvestTime;
     private boolean isOneTime;
     private int regrowthTime;
-    private Fruit fruit;
+    private FarmingProduct farmingProduct;
     private ArrayList<Season> seasons;
     private boolean canBecomeGiant;
 
@@ -32,14 +33,14 @@ public class Crop implements Entity, PlantAble {
     private boolean needWater = true;
 
     public Crop(String name, PlantingSource source, int[] stage, int totalHarvestTime, boolean isOneTime,
-                int regrowthTime, Fruit fruit, String[] seasons, boolean canBecomeGiant) {
+                int regrowthTime, FarmingProduct farmingProduct, String[] seasons, boolean canBecomeGiant) {
         this.name = name;
         this.source = source;
         this.stages = stage;
         this.totalHarvestTime = totalHarvestTime;
         this.isOneTime = isOneTime;
         this.regrowthTime = regrowthTime;
-        this.fruit = fruit;
+        this.farmingProduct = farmingProduct;
         this.canBecomeGiant = canBecomeGiant;
 
         this.maxLevel = stage.length;
@@ -93,7 +94,7 @@ public class Crop implements Entity, PlantAble {
         this.regrowthTime = regrowthTime;
     }
 
-    public Fruit getFruit(){return fruit;}
+    public FarmingProduct getFarmingProduct(){return farmingProduct;}
 
     public ArrayList<Season> getSeasons() {
         return seasons;
@@ -191,10 +192,10 @@ public class Crop implements Entity, PlantAble {
         result.append("\n");
 
         result
-                .append("Base Sell Price: " + fruit.getBaseSellPrice() + "\n")
-                .append("Is Edible: " + fruit.isEdible() + "\n")
-                .append("Base Energy: " + fruit.getEnergy() + "\n")
-                .append("Base Health: " + fruit.getHealth() + "\n")
+                .append("Base Sell Price: " + farmingProduct.getBaseSellPrice() + "\n")
+                .append("Is Edible: " + farmingProduct.isEdible() + "\n")
+                .append("Base Energy: " + farmingProduct.getEnergy() + "\n")
+                .append("Base Health: " + farmingProduct.getHealth() + "\n")
                 .append("Season: ");
 
         for (Season season : seasons) {
