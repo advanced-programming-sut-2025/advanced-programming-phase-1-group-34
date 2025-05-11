@@ -1,5 +1,6 @@
 package org.Group34.controller;
 
+import org.Group34.model.Result;
 import org.Group34.model.enums.*;
 import org.Group34.model.enums.fishing.FishType;
 import org.Group34.model.enums.fishing.FishingRodType;
@@ -10,24 +11,39 @@ public class FishingController {
     private static final int MAX_FISH_PER_CAST = 6;
     private static final Random random = new Random();
 
-    public List<FishResult> startFishing(int playerSkill, Season currentSeason,
-                                         WeatherCondition weather,
-                                         FishingRodType rod) {
-        List<FishResult> results = new ArrayList<>();
-
+    public Result startFishing(int playerSkill, Season currentSeason,
+                               WeatherCondition weather,
+                               FishingRodType rod) {
         if (!hasFishingRod(rod)) {
-            return Collections.emptyList();
+            return new Result(false, "You don't have a fishing rod.");
         }
 
         int fishCount = calculateFishCount(playerSkill, weather);
+        List<FishResult> results = new ArrayList<>();
+
         for (int i = 0; i < fishCount; i++) {
             FishType fish = getRandomFish(currentSeason, playerSkill);
             Quality quality = calculateQuality(playerSkill, rod);
             results.add(new FishResult(fish, quality));
         }
 
-        return results;
+        if (results.isEmpty())
+            return new Result(false, "No fish caught.");
+
+        StringBuilder resultMessage = new StringBuilder("Fishing Results:\n");
+        for (FishResult res : results) {
+            resultMessage.append(res.fish().name())
+                    .append(" - ")
+                    .append(res.quality().name())
+                    .append(" (Value: ")
+                    .append(res.getValue())
+                    .append(")\n");
+        }
+
+        return new Result(true, resultMessage.toString().trim());
     }
+
+    // ---------- Helper Methods ----------
 
     private int calculateFishCount(int skill, WeatherCondition weather) {
         double weatherModifier = getWeatherModifier(weather);
@@ -48,13 +64,11 @@ public class FishingController {
     private FishType getRandomFish(Season season, int playerSkill) {
         List<FishType> availableFish = new ArrayList<>();
 
-        // Add regular fish
         Arrays.stream(FishType.values())
                 .filter(f -> !f.isLegendary)
                 .filter(f -> f.season == season)
                 .forEach(availableFish::add);
 
-        // Add legendary fish if max skill
         if (playerSkill >= 10) {
             Arrays.stream(FishType.values())
                     .filter(FishType::isLegendary)
@@ -75,7 +89,6 @@ public class FishingController {
     }
 
     private boolean hasFishingRod(FishingRodType rod) {
-        // Implementation depends on your inventory system
         return true; // Placeholder
     }
 
