@@ -19,7 +19,6 @@ public class GameController {
     private final int mainUser = 0;
     private int currentUser = 0;
     private final ArrayList<Boolean> forceTerminating = new ArrayList<>();
-    private final ArrayList<User> passedOutUsers = new ArrayList<>();
 
 
     public GameController(Game game){
@@ -56,9 +55,7 @@ public class GameController {
             return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
 
         forceTerminating.add(true);
-        currentUser++;
-        if (currentUser >= orderOfPlay.size())
-            currentUser = 0;
+        nextUser();
 
         return new Result(true,  "Force-terminate has been started. Do you want to delete game?(yes|no)");
     }
@@ -94,7 +91,10 @@ public class GameController {
         nextUser();
         if (currentUser == 0) game.time().addHour(1);
 
-        while (passedOutUsers.contains(orderOfPlay.get(currentUser)))
+        // TODO from here we should call StartANewDayController
+        // TODO remember when all players passedOut we have to jump to next day
+
+        while (game.players().get(orderOfPlay.get(currentUser)).isPassedOut())
             nextUser();
 
         return new Result(true, orderOfPlay.get(currentUser) + " turn.");
@@ -170,17 +170,15 @@ public class GameController {
         if (distance == 0)
             return new Result(false, "Error: there is no path to target location");
 
-        float energy = distance / 20f;
-        if (energy > player.getEnergy()){
-            player.passOut();
-            passedOutUsers.add(orderOfPlay.get(currentUser)); //TODO reset passOutUsers at start of new day
-            if (passedOutUsers.size() >= orderOfPlay.size())
-                game.time().addDays(1);
-            return new Result(false, "Your character have been passed out.");
-        }
-        else{
+        int energy = distance / 20;
+        if (player.decreaseEnergy(energy)){
             game.map().movePlayer(player, targetX, targetY);
             return new Result(true, "Your character have been moved to: " + "<" + targetX + " ," + targetY + ">");
+        }
+        else{
+            if (Player.passedOutUsers() >= orderOfPlay.size())
+                game.time().addDays(1);
+            return new Result(false, "Your character have been passed out.");
         }
 
     }
