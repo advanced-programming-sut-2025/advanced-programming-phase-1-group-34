@@ -15,7 +15,7 @@ import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
-import org.Group34.model.time.Time;
+import org.Group34.model.items.Time;
 
 import java.util.Random;
 
@@ -683,7 +683,7 @@ public class FarmingController {
             }
         }
 
-        else if (time.getSeason() == Season.AUTUMN) {
+        else if (time.getSeason() == Season.FALL) {
             int randInt = rand.nextInt(6);
 
             if (randInt == 0) {

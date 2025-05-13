@@ -89,7 +89,7 @@ public class GameController {
             return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
 
         nextUser();
-        if (currentUser == 0) game.time().addHour(1);
+        if (currentUser == 0) game.time().addHours(1);
 
         // TODO from here we should call StartANewDayController
         // TODO remember when all players passedOut we have to jump to next day
@@ -114,7 +114,7 @@ public class GameController {
         try {
             Integer h = getInt(hours);
             if (h == null) return new Result(false, "Error: you should give a number as hours argument");
-            game.time().addHour(h);
+            game.time().addHours(h);
             return new Result(true, "Cheat Code Activated: (" + game.time() + ")");
         }
         catch (Exception IllegalArgumentException){

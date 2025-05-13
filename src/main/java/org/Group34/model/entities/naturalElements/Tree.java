@@ -5,7 +5,6 @@ import org.Group34.model.enums.Color;
 import org.Group34.model.enums.Season;
 import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.foods.FarmingProduct;
-import org.Group34.model.items.foods.Fruit;
 import org.Group34.model.items.PlantingSource;
 
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class Tree implements Entity, PlantAble {
             } else if (season.equals("Summer")) {
                 this.seasons.add(Season.SUMMER);
             } else if (season.equals("Autumn")) {
-                this.seasons.add(Season.AUTUMN);
+                this.seasons.add(Season.FALL);
             } else if (season.equals("Winter")) {
                 this.seasons.add(Season.WINTER);
             }

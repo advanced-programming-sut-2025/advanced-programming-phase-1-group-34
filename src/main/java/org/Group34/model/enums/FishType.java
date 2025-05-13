@@ -4,10 +4,10 @@ import org.Group34.model.items.Item;
 
 public enum FishType implements Item {
     // Regular fish
-    SALMON("Salmon", 75, Season.AUTUMN, false),
-    SARDINE("Sardine", 40, Season.AUTUMN, false),
-    SHAD("Shad", 60, Season.AUTUMN, false),
-    BLUE_DISCUS("Blue Discus", 120, Season.AUTUMN, false),
+    SALMON("Salmon", 75, Season.FALL, false),
+    SARDINE("Sardine", 40, Season.FALL, false),
+    SHAD("Shad", 60, Season.FALL, false),
+    BLUE_DISCUS("Blue Discus", 120, Season.FALL, false),
     MIDNIGHT_CARP("Midnight Carp", 150, Season.WINTER, false),
     SQUID("Squid", 80, Season.WINTER, false),
     TUNA("Tuna", 100, Season.WINTER, false),
@@ -24,7 +24,7 @@ public enum FishType implements Item {
     // Legendary fish
     LEGEND("Legend", 5000, Season.SPRING, true),
     GLACIERFISH("Glacierfish", 1000, Season.WINTER, true),
-    ANGLER("Angler", 900, Season.AUTUMN, true),
+    ANGLER("Angler", 900, Season.FALL, true),
     CRIMSONFISH("Crimsonfish", 1500, Season.SUMMER, true);
 
     public final String name;

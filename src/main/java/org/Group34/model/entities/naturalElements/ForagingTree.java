@@ -17,7 +17,7 @@ public class ForagingTree implements Entity, Foraging {
             } else if (season.equals("Summer")) {
                 this.seasons.add(Season.SUMMER);
             } else if (season.equals("Autumn")) {
-                this.seasons.add(Season.AUTUMN);
+                this.seasons.add(Season.FALL);
             } else if (season.equals("Winter")) {
                 this.seasons.add(Season.WINTER);
             }

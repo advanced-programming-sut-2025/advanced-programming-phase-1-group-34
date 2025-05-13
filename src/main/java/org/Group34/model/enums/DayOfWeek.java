@@ -20,6 +20,12 @@ public enum DayOfWeek {
     }
 
     public DayOfWeek next(int days) {
-        return values()[(this.ordinal() + days) % 7];
+        int index = Math.floorMod(this.ordinal() + days, 7);
+        return values()[index];
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

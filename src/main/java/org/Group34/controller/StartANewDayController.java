@@ -11,11 +11,10 @@ import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.creatorOfNaturalElements.*;
-import org.Group34.model.items.Item;
 import org.Group34.model.items.Mineral;
 import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.map.Space;
-import org.Group34.model.time.Time;
+import org.Group34.model.items.Time;
 
 import java.util.*;
 
@@ -254,7 +253,7 @@ public class StartANewDayController {
             plants.add(TreeCreator.MYSTIC_TREE.createInstance());
         }
 
-        else if (time.getSeason() == Season.AUTUMN) {
+        else if (time.getSeason() == Season.FALL) {
             plants.add(ForagingCropCreator.COMMON_MUSHROOM.createInstance());
             plants.add(ForagingCropCreator.BLACKBERRY.createInstance());
             plants.add(ForagingCropCreator.CHANTERELLE.createInstance());
