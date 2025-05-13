@@ -1,35 +1,34 @@
 package org.Group34.controller;
 
 import org.Group34.model.Result;
+import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.entities.naturalElements.Crop;
-import org.Group34.model.enums.Season;
+import org.Group34.model.items.crafting.Ingredient;
 
 public class GreenHouseController {
     private final GreenHouse greenhouse;
-    private final InventoryController inventoryController;
 
-    public GreenHouseController(GreenHouse greenhouse, InventoryController inventoryController) {
+    public GreenHouseController(GreenHouse greenhouse) {
         this.greenhouse = greenhouse;
-        this.inventoryController = inventoryController;
     }
 
-    public Result repairGreenhouse() {
+    public Result repairGreenhouse(Player player) {
+        if (player.isExistInInventory(Ingredient.WOOD) &&
+                player.getAmountOfItem(Ingredient.WOOD) >= greenhouse.getRepairWood() &&
+                player.getMoney() >= greenhouse.getRepairMoney()) {
 
-        // if (inventoryController.hasItem("Wood", greenhouse.getRepairWood()) &&
-        //         inventoryController.hasItem("Stone", greenhouse.getRepairStone())) {
-        //     inventoryController.removeItem("Wood", greenhouse.getRepairWood());
-        //     inventoryController.removeItem("Stone", greenhouse.getRepairStone());
-        //     boolean repaired = greenhouse.repair(greenhouse.getRepairWood(), greenhouse.getRepairStone());
-        //     return new Result(repaired, repaired ? "Greenhouse repaired!" : "Repair failed.");
-        // }
+            player.removeFromInventory(Ingredient.WOOD, greenhouse.getRepairWood());
+            player.addMoney(-greenhouse.getRepairMoney());
+            greenhouse.repair();
 
-        //TODO add hasItem and removeItem methods to inventory class
-        return new Result(false, "Inventory system not implemented yet.");
+            return new Result(true, "Greenhouse repaired!");
+        }
+        return new Result(false, "Not enough resources.");
     }
 
-    public void dailyMaintenance(Season currentSeason, boolean isRaining) {
-        greenhouse.dailyUpdate(currentSeason, isRaining);
+    public void dailyMaintenance() {
+        greenhouse.dailyUpdate();
     }
 
     public Result plantCrop(int row, int col, Crop crop) {

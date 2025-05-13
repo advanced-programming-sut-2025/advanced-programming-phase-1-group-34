@@ -106,4 +106,8 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
             player.setLocation(new int[]{targetX, targetY});
         }
     }
+
+    public Space getCurrentPlayerFarm(Player currentPlayer) {
+        return playerFarms.get(currentPlayer);
+    }
 }

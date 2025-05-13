@@ -29,6 +29,7 @@ public class Crop implements Entity, PlantAble {
     private Fertilizer fertilizer = null;
 
     private boolean needWater = true;
+    private int numberOfDaysNeedWater = 0;
 
     public Crop(String name, PlantingSource source, int[] stage, int totalHarvestTime, boolean isOneTime,
                 int regrowthTime, FarmingProduct farmingProduct, String[] seasons, boolean canBecomeGiant) {
@@ -49,7 +50,7 @@ public class Crop implements Entity, PlantAble {
             } else if (season.equals("Summer")) {
                 this.seasons.add(Season.SUMMER);
             } else if (season.equals("Autumn")) {
-                this.seasons.add(Season.AUTUMN);
+                this.seasons.add(Season.FALL);
             } else if (season.equals("Winter")) {
                 this.seasons.add(Season.WINTER);
             }
@@ -160,6 +161,13 @@ public class Crop implements Entity, PlantAble {
     public int getMaxLevel() {
         return maxLevel;
     }
+
+    public int getNumberOfDaysNeedWater() {
+        return numberOfDaysNeedWater;
+    }
+    public void setNumberOfDaysNeedWater(int number) {
+        this.numberOfDaysNeedWater = number;
+    }
     // -----------------------------
 
     public String getStructuralInformation() {
@@ -207,11 +215,45 @@ public class Crop implements Entity, PlantAble {
         return result.toString();
     }
 
+    public String getInformation() {
+        StringBuilder result = new StringBuilder();
+
+        result
+                .append("Name: " + name + "\n")
+                .append("Time Remaining Until Bears Fruit: " );
+
+        if (harvested) {
+            if (age >= regrowthTime) {
+                result.append(0 + " days\n");
+            } else {
+                result.append(regrowthTime - age).append(" days\n");
+            }
+        } else {
+            if (age >= totalHarvestTime) {
+                result.append(0 + " days\n");
+            } else {
+                result.append(totalHarvestTime - age).append(" days\n");
+            }
+        }
+
+        result
+                .append("Growth Level: " + growthLevel + "\n")
+                .append("Need Water:" + needWater + "\n")
+                .append("Product Quality: Good" + "\n")
+                .append("Has Been Given Fertilizer: " + isGivenFertilizer + "\n");
+
+        return result.toString();
+    }
+
     public void startANewDay() {
         Random rand = new Random();
 
+        numberOfDaysNeedWater++;
         age++;
-        checkAgeAndGrow();
+        if (!needWater) {
+            numberOfDaysNeedWater = 0;
+            checkAgeAndGrow();
+        }
 
         if (fertilizer == null) {
             needWater = true;
@@ -244,49 +286,16 @@ public class Crop implements Entity, PlantAble {
         }
     }
 
-    public String getInformation() {
-        StringBuilder result = new StringBuilder();
-
-        result
-                .append("Name: " + name + "\n")
-                .append("Time Remaining Until Bears Fruit: " );
-
-        if (harvested) {
-            if (age >= regrowthTime) {
-                result.append(0 + " days\n");
-            } else {
-                result.append(regrowthTime - age).append(" days\n");
-            }
-        } else {
-            if (age >= totalHarvestTime) {
-                result.append(0 + " days\n");
-            } else {
-                result.append(totalHarvestTime - age).append(" days\n");
-            }
-        }
-
-        result
-                .append("Growth Level: " + growthLevel + "\n")
-                .append("Need Water:" + needWater + "\n")
-                .append("Product Quality: " + "\n")
-                .append("Has Been Given Fertilizer: " + isGivenFertilizer + "\n");
-
-        return result.toString();
-    }
-
     public void useFertilizer(Fertilizer fertilizer) {
         isGivenFertilizer = true;
         this.fertilizer = fertilizer;
     }
 
     public void harvest() {
-        if (harvested) {
-            age = 0;
-            growthLevel = maxLevel - 1;
-        } else {
+        if (!harvested) {
             harvested = true;
-            age = 0;
-            growthLevel = maxLevel - 1;
         }
+        age = 0;
+        growthLevel = maxLevel - 1;
     }
 }

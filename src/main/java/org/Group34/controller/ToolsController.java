@@ -5,9 +5,7 @@ import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.Lake;
-import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.entities.naturalElements.PloughedLand;
-import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.model.enums.LevelType;
 import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.items.tools.*;
@@ -116,7 +114,7 @@ public class ToolsController { // TODO This class must be filled.
             return farmingController.useWateringCan(direction, enoughEnergy, (WateringCan) player.getCurrentTool());
         }
 
-        else if (player.getCurrentTool() instanceof Scythe) {
+        else if (player.getCurrentTool() instanceof Scythe)  {
             int enoughEnergy = ((Scythe) player.getCurrentTool()).getEnergy();
 
             if (player.getEnergy() < enoughEnergy) {

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class  Player implements Entity {
+    private String name;
+    private int money;
 
     private static int passedOutUsers = 0;
 
@@ -107,6 +109,26 @@ public class  Player implements Entity {
 
     public int getAmountOfItem(Item item) {
         return inventory.get(item);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getMoney() {
+        return money;
+    }
+
+    public void addMoney(int amount) {
+        money += amount;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
     }
 
     public boolean isExistInInventory(Item item) {

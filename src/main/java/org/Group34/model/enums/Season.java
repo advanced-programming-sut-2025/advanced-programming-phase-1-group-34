@@ -3,7 +3,7 @@ package org.Group34.model.enums;
 public enum Season {
     SPRING("Spring"),
     SUMMER("Summer"),
-    AUTUMN("Autumn"),
+    FALL("Fall"),
     WINTER("Winter"),
     ALL("all");
 
@@ -18,7 +18,8 @@ public enum Season {
     }
 
     public Season next(int count) {
-        return values()[(this.ordinal() + count) % values().length];
+        int index = Math.floorMod(this.ordinal() + count, 4);
+        return values()[index];
     }
 
     @Override

@@ -1,10 +1,10 @@
-package org.Group34.model.time;
+package org.Group34.model.items;
 
 import org.Group34.model.enums.DayOfWeek;
 import org.Group34.model.enums.Season;
 
 /**
- * This class is responsible for managing in-game time
+ * This class is responsible for managing in-game time.
  * Time progresses from 9:00 to 22:00 (14 hours a day)
  * Each season has 28 days, and days wrap across weeks and seasons
  */
@@ -21,25 +21,28 @@ public class Time {
         this.season = Season.SPRING;
     }
 
-    public void addHour(int hours) {
-        if (hours < 0) throw new IllegalArgumentException("Cannot add negative hours");
+    public void addHours(int hours) {
+        if (hours == 0) return;
 
-        int totalHours = (hour - 9) + hours;
-        int daysToAdd = totalHours / 14;
-        this.hour = 9 + (totalHours % 14);
+        int totalRelativeHours = (this.hour - 9) + hours;
 
-        if (daysToAdd > 0) {
+        int daysToAdd = Math.floorDiv(totalRelativeHours, 14);
+        int remainingHours = Math.floorMod(totalRelativeHours, 14);
+
+        this.hour = 9 + remainingHours;
+
+        if (daysToAdd != 0) {
             addDays(daysToAdd);
         }
     }
 
     public void addDays(int days) {
-        if (days < 0) throw new IllegalArgumentException("Cannot add negative days");
+        if (days == 0) return;
 
-        int newDate = this.date + days;
-        int seasonsToAdd = (newDate - 1) / 28;
-        this.date = (newDate - 1) % 28 + 1;
+        int totalDays = this.date + days - 1;  // 0-based
+        int seasonsToAdd = Math.floorDiv(totalDays, 28);
 
+        this.date = Math.floorMod(totalDays, 28) + 1;
         this.dayOfWeek = dayOfWeek.next(days);
         this.season = season.next(seasonsToAdd);
     }

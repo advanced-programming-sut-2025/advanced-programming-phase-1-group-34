@@ -17,7 +17,7 @@ public class ForagingTree implements Entity, Foraging {
             } else if (season.equals("Summer")) {
                 this.seasons.add(Season.SUMMER);
             } else if (season.equals("Autumn")) {
-                this.seasons.add(Season.AUTUMN);
+                this.seasons.add(Season.FALL);
             } else if (season.equals("Winter")) {
                 this.seasons.add(Season.WINTER);
             }
@@ -39,6 +39,20 @@ public class ForagingTree implements Entity, Foraging {
     }
 
     public String getInformation() {
-        return "";
+        StringBuilder result = new StringBuilder();
+
+        result
+                .append("Name: " + name + "\n")
+                .append("Type: " + "Foraging Tree" + "\n")
+                .append("Season: ");
+
+        for (Season season : seasons) {
+            result.append(season.getName() + ", ");
+        }
+        result.deleteCharAt(result.length() - 1);
+        result.deleteCharAt(result.length() - 1);
+        result.append("\n");
+
+        return result.toString();
     }
 }

@@ -20,7 +20,7 @@ public enum WeatherCondition {
      * @return true if the condition is RAIN or STORM; false otherwise
      */
     public boolean isIrrigationFree() {
-        return this == RAIN || this == STORM;
+        return this == STORM;
     }
 
     /**
@@ -49,8 +49,6 @@ public enum WeatherCondition {
 
     /**
      * Selects a random weather condition based on the current season
-     * For non-winter seasons: includes SUNNY, RAIN, STORM
-     * For winter: includes SUNNY, RAIN, SNOW
      *
      * @param season the current season
      * @return a randomly selected WeatherCondition
@@ -58,12 +56,14 @@ public enum WeatherCondition {
     public static WeatherCondition random(Season season) {
         List<WeatherCondition> possible = new ArrayList<>();
         possible.add(SUNNY);
-        possible.add(RAIN);
         if (season != Season.WINTER) {
+            possible.add(RAIN);
             possible.add(STORM);
-        } else {
+        }
+        else {
             possible.add(SNOW);
         }
+
         Collections.shuffle(possible);
         return possible.get(0);
     }

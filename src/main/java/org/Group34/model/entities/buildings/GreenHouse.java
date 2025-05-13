@@ -2,11 +2,10 @@ package org.Group34.model.entities.buildings;
 
 import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.enums.Color;
-import org.Group34.model.enums.Season;
 
-public class GreenHouse extends Building{
+public class GreenHouse extends Building {
     private static final int REPAIR_WOOD = 500;
-    private static final int REPAIR_STONE = 1000;
+    private static final int REPAIR_MONEY = 1000;
 
     private boolean isRepaired;
     private Plot[][] plots;
@@ -27,34 +26,27 @@ public class GreenHouse extends Building{
         }
     }
 
-    public boolean repair(int availableWood, int availableStone) {
-        if (!isRepaired && availableWood >= REPAIR_WOOD && availableStone >= REPAIR_STONE) {
-            this.isRepaired = true;
-            return true;
-        }
-        return false;
+    public void repair() {
+        this.isRepaired = true;
     }
 
-    public void dailyUpdate(Season currentSeason, boolean isRaining) {
+    public void dailyUpdate() {
         if (!isRepaired) return;
 
         for (Plot[] row : plots) {
             for (Plot plot : row) {
                 if (plot.hasCrop()) {
-                    // Greenhouse-specific growth rules
-                    //plot.getCrop().grow(currentSeason, false); // plot.getCrop().wither(); //TODO add crop.grow()
+                    //plot.getCrop().grow();
 
-                    // Mandatory watering system
                     if (!plot.isWatered()) {
-                        // plot.getCrop().wither(); //TODO add crop.wither()
+                        //plot.getCrop().wither();
                     }
                 }
-                plot.setWatered(false); // Reset watering for next day
+                plot.setWatered(false);
             }
         }
     }
 
-    // Special greenhouse planting rules
     public boolean plantCrop(int row, int col, Crop crop) {
         if (!isRepaired || row < 0 || row >= plots.length || col < 0 || col >= plots[0].length) {
             return false;
@@ -76,7 +68,6 @@ public class GreenHouse extends Building{
         return false;
     }
 
-    // Getters and status methods
     public boolean isRepaired() {
         return isRepaired;
     }
@@ -85,8 +76,8 @@ public class GreenHouse extends Building{
         return REPAIR_WOOD;
     }
 
-    public int getRepairStone() {
-        return REPAIR_STONE;
+    public int getRepairMoney() {
+        return REPAIR_MONEY;
     }
 
     public Plot[][] getPlots() {
@@ -100,7 +91,6 @@ public class GreenHouse extends Building{
     public int getWaterTankCapacity() {
         return waterTankCapacity;
     }
-
 
     @Override
     public String toString() {
