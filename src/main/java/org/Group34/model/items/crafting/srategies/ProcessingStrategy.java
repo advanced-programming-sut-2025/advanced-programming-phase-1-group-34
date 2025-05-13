@@ -60,7 +60,7 @@ public enum ProcessingStrategy {
     LOOM {
         @Override
         public HashMap<Item, Integer> process(Item input, int amount) {
-            if (input.equals(Product.WOOL))
+            if (input.equals(Product.SHEEP_WOOL))
                 return this.output(input, Ingredient.SHEEP_FABRIC, amount, 1);
             if (input.equals(Product.RABBIT_WOOL))
                 return this.output(input, Ingredient.RABBIT_FABRIC, amount, 1);

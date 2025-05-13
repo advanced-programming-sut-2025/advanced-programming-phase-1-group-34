@@ -20,14 +20,17 @@ public enum Product implements Item {
     LARGE_GOAT_MILK("Large Goat Milk", 345, 400, AnimalType.GOAT),
 
     // Sheep
-    WOOL("Wool", 340, 0, AnimalType.SHEEP),
+    SHEEP_WOOL("Wool", 340, 0, AnimalType.SHEEP),
 
     // Rabbit
     RABBITS_FOOT("Rabbit's Foot", 565, 600, AnimalType.RABBIT),
-    RABBIT_WOOL("Wool", 340, 0, AnimalType.RABBIT),
+    RABBIT_WOOL("Rabbit Wool", 340, 0, AnimalType.RABBIT),
 
     // Pig
-    TRUFFLE("Truffle", 625, 500, AnimalType.PIG);
+    TRUFFLE("Truffle", 625, 500, AnimalType.PIG),
+
+    // Dinosaur
+    DINOSAUR_EGG("Dinosaur Egg", 350, 0, AnimalType.DINOSAUR);
 
     private final String name;
     private final int price;
