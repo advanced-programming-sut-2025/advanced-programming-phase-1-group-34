@@ -49,7 +49,7 @@ public class FishingController {
             return new Result(false, "You don't have a fishing pole equipped.");
         }
 
-        int playerSkill = player.getLevel().get(LevelType.FISHING_LEVEL);
+        int playerSkill = player.getLevel(LevelType.FISHING_LEVEL);
         FishingController fishingController = new FishingController();
         return fishingController.startFishing(playerSkill, currentSeason, weather, fishingPole);
     }

@@ -31,6 +31,7 @@ public class Tree implements Entity, PlantAble {
     private int maxLevel;
 
     private boolean needWater;
+    private int numberOfDaysNeedWater = 0;
     private boolean isBurned = false;
     private boolean isAttackedByCrow = false;
     private boolean isGivenFertilizer = false;
@@ -173,6 +174,13 @@ public class Tree implements Entity, PlantAble {
     public void setFertilizer(Fertilizer fertilizer) {
         this.fertilizer = fertilizer;
     }
+
+    public int getNumberOfDaysNeedWater() {
+        return numberOfDaysNeedWater;
+    }
+    public void setNumberOfDaysNeedWater(int number) {
+        this.numberOfDaysNeedWater = number;
+    }
     // ---------------------------
 
     public String getStructuralInformation() {
@@ -208,51 +216,6 @@ public class Tree implements Entity, PlantAble {
         return result.toString();
     }
 
-    public void startANewDay() {
-        Random rand = new Random();
-
-        age++;
-        checkAgeAndGrow();
-        isAttackedByCrow = false;
-
-        if (fertilizer == null) {
-            needWater = true;
-        } else if (fertilizer == Fertilizer.BASIC_RETAINING_SOIL && rand.nextInt(2) == 0) {
-            needWater = true;
-        } else if (fertilizer == Fertilizer.QUALITY_RETAINING_SOIL && rand.nextInt(4) == 0) {
-            needWater = true;
-        }
-    }
-    private void checkAgeAndGrow() {
-        if (harvested) {
-            if (age == fruitHarvestCycle) {
-                growthLevel = maxLevel;
-            }
-        }
-
-        else {
-            for (int i = 0; i < maxLevel; i++) {
-                if (growthLevel == i) {
-                    int levelUpTime = 0;
-                    for (int j = 0; j <= growthLevel; j++) {
-                        levelUpTime += stages[j];
-                    }
-
-                    if (age == levelUpTime) {
-                        growthLevel++;
-                    }
-                }
-            }
-        }
-    }
-
-    public void lightningStrike() {
-        isBurned = true;
-    }
-    public void crowInvasion() {
-        isAttackedByCrow = true;
-    }
-
     public String getInformation() {
         StringBuilder result = new StringBuilder();
 
@@ -277,14 +240,72 @@ public class Tree implements Entity, PlantAble {
         result
                 .append("Growth Level: " + growthLevel + "\n")
                 .append("Need Water:" + needWater + "\n")
-                .append("Product Quality: " + "\n")
+                .append("Product Quality: Good" + "\n")
                 .append("Has Been Given Fertilizer: " + isGivenFertilizer + "\n");
 
         return result.toString();
     }
 
+    public void startANewDay() {
+        Random rand = new Random();
+
+        age++;
+        isAttackedByCrow = false;
+        numberOfDaysNeedWater++;
+
+        if (!needWater) {
+            numberOfDaysNeedWater = 0;
+            checkAgeAndGrow();
+        }
+
+        if (fertilizer == null) {
+            needWater = true;
+        } else if (fertilizer == Fertilizer.BASIC_RETAINING_SOIL && rand.nextInt(2) == 0) {
+            needWater = true;
+        } else if (fertilizer == Fertilizer.QUALITY_RETAINING_SOIL && rand.nextInt(4) == 0) {
+            needWater = true;
+        }
+    }
+    private void checkAgeAndGrow() {
+        if (harvested) {
+            if (age == fruitHarvestCycle && !isAttackedByCrow) {
+                growthLevel = maxLevel;
+            }
+        }
+
+        else {
+            for (int i = 0; i < maxLevel; i++) {
+                if (growthLevel == i) {
+                    int levelUpTime = 0;
+                    for (int j = 0; j <= growthLevel; j++) {
+                        levelUpTime += stages[j];
+                    }
+
+                    if (age == levelUpTime && !isAttackedByCrow()) {
+                        growthLevel++;
+                    }
+                }
+            }
+        }
+    }
+
+    public void lightningStrike() {
+        isBurned = true;
+    }
+    public void crowInvasion() {
+        isAttackedByCrow = true;
+    }
+
     public void useFertilizer(Fertilizer fertilizer) {
         isGivenFertilizer = true;
         this.fertilizer = fertilizer;
+    }
+
+    public void harvest() {
+        if (!harvested) {
+            harvested = true;
+        }
+        age = 0;
+        growthLevel = maxLevel - 1;
     }
 }

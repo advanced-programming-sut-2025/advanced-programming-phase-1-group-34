@@ -9,11 +9,8 @@ public class ForagingTree implements Entity, Foraging {
     private String name;
     private ArrayList<Season> seasons;
 
-    private boolean needWater;
-
     public ForagingTree(String name, String[] seasons) {
         this.name = name;
-        this.needWater = true;
         for (String season : seasons) {
             if (season.equals("Spring")) {
                 this.seasons.add(Season.SPRING);
@@ -41,14 +38,21 @@ public class ForagingTree implements Entity, Foraging {
         this.seasons = seasons;
     }
 
-    public boolean getNeedWater() {
-        return needWater;
-    }
-    public void setNeedWater(boolean needWater) {
-        this.needWater = needWater;
-    }
-
     public String getInformation() {
-        return "";
+        StringBuilder result = new StringBuilder();
+
+        result
+                .append("Name: " + name + "\n")
+                .append("Type: " + "Foraging Tree" + "\n")
+                .append("Season: ");
+
+        for (Season season : seasons) {
+            result.append(season.getName() + ", ");
+        }
+        result.deleteCharAt(result.length() - 1);
+        result.deleteCharAt(result.length() - 1);
+        result.append("\n");
+
+        return result.toString();
     }
 }

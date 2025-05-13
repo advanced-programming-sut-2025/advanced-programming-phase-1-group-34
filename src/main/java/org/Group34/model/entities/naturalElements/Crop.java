@@ -4,7 +4,6 @@ import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Season;
 import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.foods.FarmingProduct;
-import org.Group34.model.items.foods.Fruit;
 import org.Group34.model.items.PlantingSource;
 
 import java.util.ArrayList;
@@ -26,11 +25,11 @@ public class Crop implements Entity, PlantAble {
     private int growthLevel = 0;
     private boolean harvested = false;
     private int maxLevel;
-    private boolean isAttackedByCrow = false;
     private boolean isGivenFertilizer = false;
     private Fertilizer fertilizer = null;
 
     private boolean needWater = true;
+    private int numberOfDaysNeedWater = 0;
 
     public Crop(String name, PlantingSource source, int[] stage, int totalHarvestTime, boolean isOneTime,
                 int regrowthTime, FarmingProduct farmingProduct, String[] seasons, boolean canBecomeGiant) {
@@ -145,13 +144,6 @@ public class Crop implements Entity, PlantAble {
         this.harvested = harvested;
     }
 
-    public boolean isAttackedByCrow() {
-        return isAttackedByCrow;
-    }
-    public void setAttackedByCrow(boolean isAttackedByCrow) {
-        this.isAttackedByCrow = isAttackedByCrow;
-    }
-
     public boolean isGivenFertilizer() {
         return isGivenFertilizer;
     }
@@ -164,6 +156,17 @@ public class Crop implements Entity, PlantAble {
     }
     public void setFertilizer(Fertilizer fertilizer) {
         this.fertilizer = fertilizer;
+    }
+
+    public int getMaxLevel() {
+        return maxLevel;
+    }
+
+    public int getNumberOfDaysNeedWater() {
+        return numberOfDaysNeedWater;
+    }
+    public void setNumberOfDaysNeedWater(int number) {
+        this.numberOfDaysNeedWater = number;
     }
     // -----------------------------
 
@@ -212,12 +215,45 @@ public class Crop implements Entity, PlantAble {
         return result.toString();
     }
 
+    public String getInformation() {
+        StringBuilder result = new StringBuilder();
+
+        result
+                .append("Name: " + name + "\n")
+                .append("Time Remaining Until Bears Fruit: " );
+
+        if (harvested) {
+            if (age >= regrowthTime) {
+                result.append(0 + " days\n");
+            } else {
+                result.append(regrowthTime - age).append(" days\n");
+            }
+        } else {
+            if (age >= totalHarvestTime) {
+                result.append(0 + " days\n");
+            } else {
+                result.append(totalHarvestTime - age).append(" days\n");
+            }
+        }
+
+        result
+                .append("Growth Level: " + growthLevel + "\n")
+                .append("Need Water:" + needWater + "\n")
+                .append("Product Quality: Good" + "\n")
+                .append("Has Been Given Fertilizer: " + isGivenFertilizer + "\n");
+
+        return result.toString();
+    }
+
     public void startANewDay() {
         Random rand = new Random();
 
+        numberOfDaysNeedWater++;
         age++;
-        checkAgeAndGrow();
-        isAttackedByCrow = false;
+        if (!needWater) {
+            numberOfDaysNeedWater = 0;
+            checkAgeAndGrow();
+        }
 
         if (fertilizer == null) {
             needWater = true;
@@ -250,42 +286,16 @@ public class Crop implements Entity, PlantAble {
         }
     }
 
-    public void crowInvasion() {
-        isAttackedByCrow = true;
-    }
-
-    public String getInformation() {
-        StringBuilder result = new StringBuilder();
-
-        result
-                .append("Name: " + name + "\n")
-                .append("Time Remaining Until Bears Fruit: " );
-
-        if (harvested) {
-            if (age >= regrowthTime) {
-                result.append(0 + " days\n");
-            } else {
-                result.append(regrowthTime - age).append(" days\n");
-            }
-        } else {
-            if (age >= totalHarvestTime) {
-                result.append(0 + " days\n");
-            } else {
-                result.append(totalHarvestTime - age).append(" days\n");
-            }
-        }
-
-        result
-                .append("Growth Level: " + growthLevel + "\n")
-                .append("Need Water:" + needWater + "\n")
-                .append("Product Quality: " + "\n")
-                .append("Has Been Given Fertilizer: " + isGivenFertilizer + "\n");
-
-        return result.toString();
-    }
-
     public void useFertilizer(Fertilizer fertilizer) {
         isGivenFertilizer = true;
         this.fertilizer = fertilizer;
+    }
+
+    public void harvest() {
+        if (!harvested) {
+            harvested = true;
+        }
+        age = 0;
+        growthLevel = maxLevel - 1;
     }
 }

@@ -1,12 +1,18 @@
 package org.Group34.controller;
 
+import org.Group34.model.Game;
 import org.Group34.model.entities.Entity;
+import org.Group34.model.entities.Player;
+import org.Group34.model.entities.buildings.Quarry;
 import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.entities.naturalElements.PlantAble;
 import org.Group34.model.entities.naturalElements.PloughedLand;
 import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.model.enums.Season;
+import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.creatorOfNaturalElements.*;
+import org.Group34.model.items.Item;
+import org.Group34.model.items.Mineral;
 import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.map.Space;
 import org.Group34.model.time.Time;
@@ -18,9 +24,13 @@ import java.util.*;
  */
 
 public class StartANewDayController {
-    private Map currentMap; //TODO It will fix in GameController
+
+    private final static int MAX_ENERGY = 200;
+    private Game currentGame; //TODO It will fix in GameController
     private ArrayList<Space> spaces; //TODO It will fix in GameController
     private Time time; //TODO It will fix in GameController
+    private WeatherSystem weatherSystem; // TODO It will fix in GameController
+    private Quarry quarry; // TODO It will fix in GameController
 
 
     /**
@@ -28,8 +38,22 @@ public class StartANewDayController {
       to perform tasks to start a new day
      * */
     public void ManageAllTasks() {
-        iterateWholeMap();
         randomPlacementOfForagingMinerals();
+        iterateWholeMap();
+        resetPlayersEnergy();
+    }
+
+
+
+    private void resetPlayersEnergy() {
+        for (Player player: currentGame.players().values()){
+            if (player.isPassedOut()){
+                player.setEnergy(MAX_ENERGY * 3 /4);
+                player.setPassedOut(false);
+            }
+
+            player.setEnergy(MAX_ENERGY);
+        }
     }
 
 
@@ -47,6 +71,9 @@ public class StartANewDayController {
                     randomPlacementOfForagingCropsAndSeeds(space, i, j);
                     sprinklerWatering(space, i, j);
                     addPlant(plantsOnFarm, space, i, j);
+                    startANewDayForPlants(space, i, j);
+                    checkWeatherAndWateringThePlant(space, i, j);
+                    removeDriedPlants(space, i, j);
                     scareCrow(scareCrowPlants, space, i, j);
                 }
 
@@ -69,8 +96,8 @@ public class StartANewDayController {
 
                 if (entities[randomPlant[0]][randomPlant[1]] instanceof Crop) {
                     entities[randomPlant[0]][randomPlant[1]] = null;
-                }if (entities[randomPlant[0]][randomPlant[1]] instanceof Tree){
-                    // TODO when crow invade a Tree it can not produce fruit in other day
+                }if (entities[randomPlant[0]][randomPlant[1]] instanceof Tree tree){
+                    tree.crowInvasion();
                 }
             }
 
@@ -152,8 +179,6 @@ public class StartANewDayController {
             }
         }
     }
-
-
     private ArrayList<Entity> getPlantsOfCurrentSeason() {
         ArrayList<Entity> plants = new ArrayList<>();
 
@@ -287,6 +312,79 @@ public class StartANewDayController {
 
     // ----- Random Placement Of Foraging Minerals -----
     private void randomPlacementOfForagingMinerals() {
-        // TODO
+        for (int i = 0; i < 5; i++) {
+            Mineral randomMineral = getRandomMineral();
+            quarry.addItem(randomMineral, 1);
+        }
+    }
+    private Mineral getRandomMineral() {
+        Random rand = new Random();
+        int randInt = rand.nextInt(17);
+
+        if (randInt == 0) {
+            return Mineral.QUARTZ;
+        } else if (randInt == 1) {
+            return Mineral.EARTH_CRYSTAL;
+        } else if (randInt == 2) {
+            return Mineral.FROZEN_TEAR;
+        } else if (randInt == 3) {
+            return Mineral.FIRE_QUARTZ;
+        } else if (randInt == 4) {
+            return Mineral.EMERALD;
+        } else if (randInt == 5) {
+            return Mineral.AQUAMARINE;
+        } else if (randInt == 6) {
+            return Mineral.RUBY;
+        } else if (randInt == 7) {
+            return Mineral.AMETHYST;
+        } else if (randInt == 8) {
+            return Mineral.TOPAZ;
+        } else if (randInt == 9) {
+            return Mineral.JADE;
+        } else if (randInt == 10) {
+            return Mineral.DIAMOND;
+        } else if (randInt == 11) {
+            return Mineral.PRISMATIC_SHARD;
+        } else if (randInt == 12) {
+            return Mineral.COPPER;
+        } else if (randInt == 13) {
+            return Mineral.IRON;
+        } else if (randInt == 14) {
+            return Mineral.GOLD;
+        } else if (randInt == 15) {
+            return Mineral.IRIDIUM;
+        } else {
+            return Mineral.COAL;
+        }
+    }
+
+    // ----- Start A New Day For Plants -----
+    private void startANewDayForPlants(Space space, int i, int j) {
+        if (space.getEntityByLocation(i, j) instanceof Crop crop) {
+            crop.startANewDay();
+        } else if (space.getEntityByLocation(i, j) instanceof Tree tree) {
+            tree.startANewDay();
+        }
+    }
+
+    // ----- Watering The Plants -----
+    private void checkWeatherAndWateringThePlant(Space space, int i, int j) {
+        if (weatherSystem.getTodayCondition() == WeatherCondition.RAIN ||
+            weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
+            if (space.getEntityByLocation(i, j) instanceof Crop crop) {
+                crop.setNeedWater(false);
+            } else if (space.getEntityByLocation(i, j) instanceof Tree tree) {
+                tree.setNeedWater(false);
+            }
+        }
+    }
+
+    // ----- Remove Dried Plants -----
+    private void removeDriedPlants(Space space, int i, int j) {
+        if (space.getEntityByLocation(i, j) instanceof Crop crop && crop.getNumberOfDaysNeedWater() > 2) {
+            space.placingEntity(i, j, null);
+        } else if (space.getEntityByLocation(i, j) instanceof Tree tree && tree.getNumberOfDaysNeedWater() > 2) {
+            space.placingEntity(i, j, null);
+        }
     }
 }

@@ -66,6 +66,10 @@ public class WateringCan implements Item {
     public void setAmountOfWater(int amount) {
         this.amountOfWater = amount;
     }
+
+    public void fillIt() {
+        amountOfWater = getCapacity();
+    }
     // ---------------------------
 
 }

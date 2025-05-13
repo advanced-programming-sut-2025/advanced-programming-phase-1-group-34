@@ -5,13 +5,14 @@ import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.Lake;
-import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.entities.naturalElements.PloughedLand;
-import org.Group34.model.entities.naturalElements.Tree;
+import org.Group34.model.enums.LevelType;
+import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.items.tools.*;
 
 public class ToolsController { // TODO This class must be filled.
     private Player player; // TODO It will fix in GameController
+    private WeatherSystem weatherSystem; // TODO It will fix in GameController
 
     public Result toolsEquip(String toolName) {
         return new Result(true, "");
@@ -35,27 +36,92 @@ public class ToolsController { // TODO This class must be filled.
         Entity desiredTile = player.getCurrentSpace().getEntityByLocation(locationX, locationY);
 
         if (player.getCurrentTool() instanceof Hoe) {
-            return farmingController.useHoe(direction);
+            int enoughEnergy = ((Hoe) player.getCurrentTool()).getEnergy();
+            if (player.getLevel(LevelType.FARMING_LEVEL) == 4) {
+                enoughEnergy--;
+            }
+            if (weatherSystem.getTodayCondition() == WeatherCondition.RAIN ||
+                weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
+                enoughEnergy *= 1.5;
+            } else if (weatherSystem.getTodayCondition() == WeatherCondition.SNOW) {
+                enoughEnergy *= 2;
+            }
+
+            if (player.getEnergy() < enoughEnergy) {
+                return new Result(false, "Error: You do not have enough energy to use this tool.");
+            }
+
+            return farmingController.useHoe(direction, enoughEnergy);
         }
 
         else if (player.getCurrentTool() instanceof Pickaxe) {
-            if (desiredTile instanceof PloughedLand) {
-                return farmingController.usePickaxe(direction);
+            int enoughEnergy = ((Pickaxe) player.getCurrentTool()).getEnergy();
+            if (player.getLevel(LevelType.MINING_LEVEL) == 4) {
+                enoughEnergy--;
             }
+            if (weatherSystem.getTodayCondition() == WeatherCondition.RAIN ||
+                    weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
+                enoughEnergy *= 1.5;
+            } else if (weatherSystem.getTodayCondition() == WeatherCondition.SNOW) {
+                enoughEnergy *= 2;
+            }
+
+            if (player.getEnergy() < enoughEnergy) {
+                return new Result(false, "Error: You do not have enough energy to use this tool.");
+            }
+
+            if (desiredTile instanceof PloughedLand) {
+                return farmingController.usePickaxe(direction, enoughEnergy);
+            }
+            // TODO This tool can perform other tasks that are not related to farming.
         }
 
         else if (player.getCurrentTool() instanceof Axe) {
-            return farmingController.useAxe(direction);
+            int enoughEnergy = ((Axe) player.getCurrentTool()).getEnergy();
+            if (player.getLevel(LevelType.FORAGING_LEVEL) == 4) {
+                enoughEnergy--;
+            }
+            if (weatherSystem.getTodayCondition() == WeatherCondition.RAIN ||
+                    weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
+                enoughEnergy *= 1.5;
+            } else if (weatherSystem.getTodayCondition() == WeatherCondition.SNOW) {
+                enoughEnergy *= 2;
+            }
+
+            if (player.getEnergy() < enoughEnergy) {
+                return new Result(false, "Error: You do not have enough energy to use this tool.");
+            }
+
+            return farmingController.useAxe(direction, enoughEnergy);
         }
 
         else if (player.getCurrentTool() instanceof WateringCan) {
-            return farmingController.useWateringCan(direction);
+            int enoughEnergy = ((WateringCan) player.getCurrentTool()).getEnergy();
+            if (player.getLevel(LevelType.FARMING_LEVEL) == 4) {
+                enoughEnergy--;
+            }
+            if (weatherSystem.getTodayCondition() == WeatherCondition.RAIN ||
+                    weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
+                enoughEnergy *= 1.5;
+            } else if (weatherSystem.getTodayCondition() == WeatherCondition.SNOW) {
+                enoughEnergy *= 2;
+            }
+
+            if (player.getEnergy() < enoughEnergy) {
+                return new Result(false, "Error: You do not have enough energy to use this tool.");
+            }
+
+            return farmingController.useWateringCan(direction, enoughEnergy, (WateringCan) player.getCurrentTool());
         }
 
-        else if (player.getCurrentTool() instanceof Scythe) {
-            if (desiredTile instanceof Crop || desiredTile instanceof Tree) {
-                return farmingController.useScythe(direction);
+        else if (player.getCurrentTool() instanceof Scythe)  {
+            int enoughEnergy = ((Scythe) player.getCurrentTool()).getEnergy();
+
+            if (player.getEnergy() < enoughEnergy) {
+                return new Result(false, "Error: You do not have enough energy to use this tool.");
             }
+
+            return farmingController.useScythe(direction, enoughEnergy);
         }
 
         else if (player.getCurrentTool() instanceof MilkPail) {
