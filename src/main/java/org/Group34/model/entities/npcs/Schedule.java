@@ -1,10 +1,22 @@
 package org.Group34.model.entities.npcs;
 
-import org.Group34.model.enums.Season;
-
-import javax.xml.stream.Location;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Schedule {
-//    private Map<TimeSlot, Location> dailyRoutine;
-//    private Map<Season, Map<TimeSlot, Location>> seasonalVariations;
+    private Map<DayOfWeek, LocalTime> dailyRoutine = new HashMap<>();
+
+    public void setRoutine(DayOfWeek day, LocalTime time) {
+        dailyRoutine.put(day, time);
+    }
+
+    public LocalTime getRoutine(DayOfWeek day) {
+        return dailyRoutine.get(day);
+    }
+
+    public Map<DayOfWeek, LocalTime> getFullSchedule() {
+        return dailyRoutine;
+    }
 }
