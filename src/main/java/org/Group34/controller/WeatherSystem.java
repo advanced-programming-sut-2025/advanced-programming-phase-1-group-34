@@ -18,7 +18,6 @@ import java.util.*;
 public class WeatherSystem {
     private WeatherCondition todayCondition;
     private WeatherCondition tomorrowCondition;
-    private final java.util.Map<String, Boolean> lightningStrikeMap = new HashMap<>();
 
     /**
      * Initializes the weather system by generating today's and tomorrow's weather based on current time
@@ -29,7 +28,6 @@ public class WeatherSystem {
     public void initializeWeather(Time time, Map map) {
         this.todayCondition = WeatherCondition.random(time.getSeason());
         this.tomorrowCondition = WeatherCondition.random(time.getSeason());
-        lightningStrikeMap.clear();
 
         if (todayCondition.canHaveLightning()) {
             generateLightningStrikes(map);
@@ -45,7 +43,6 @@ public class WeatherSystem {
     public void advanceWeather(Time time, Map map) {
         this.todayCondition = this.tomorrowCondition;
         this.tomorrowCondition = WeatherCondition.random(time.getSeason());
-        lightningStrikeMap.clear();
 
         if (todayCondition.canHaveLightning()) {
             generateLightningStrikes(map);
@@ -59,27 +56,29 @@ public class WeatherSystem {
         Random random = new Random();
 
         for (Player player : map.playerFarms().keySet()) {
-            Space farm = map.playerFarms().get(player);
-            Set<String> generatedCoords = new HashSet<>();
-            int strikes = 0;
+            if (random.nextDouble() < 0.6) {
+                Space farm = map.playerFarms().get(player);
+                Set<String> generatedCoords = new HashSet<>();
+                int strikes = 0;
 
-            while (strikes < 3) {
-                int x = random.nextInt(farm.width());
-                int y = random.nextInt(farm.height());
-                String key = x + "," + y;
-                if (generatedCoords.add(key)) {
-                    strikes++;
-                    Entity entity = farm.getEntityByLocation(x, y);
+                while (strikes < 3) {
+                    int x = random.nextInt(farm.width());
+                    int y = random.nextInt(farm.height());
+                    String key = x + "," + y;
 
-                    if (entity instanceof Tree || entity instanceof Foraging) {
-                        farm.placingEntity(x, y, null);
+                    if (generatedCoords.add(key)) {
+                        strikes++;
+                        Entity entity = farm.getEntityByLocation(x, y);
+
+                        if (entity instanceof Tree || entity instanceof Foraging) {
+                            farm.placingEntity(x, y, null);
+                        }
                     }
-
-                    lightningStrikeMap.put(key, true);
                 }
             }
         }
     }
+
 
     /**
      * @return today's weather condition
