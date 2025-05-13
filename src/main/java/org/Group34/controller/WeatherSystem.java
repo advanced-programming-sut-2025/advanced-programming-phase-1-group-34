@@ -51,6 +51,7 @@ public class WeatherSystem {
 
     /**
      * Randomly selects 3 coordinates to simulate lightning strikes during a storm.
+     * Does the job for all players with a 60% probability
      */
     private void generateLightningStrikes(Map map) {
         Random random = new Random();
@@ -103,4 +104,34 @@ public class WeatherSystem {
     public double getEnergyMultiplier(Season season) {
         return todayCondition.getEnergyMultiplier(season);
     }
+
+    /*
+    public void cheatLightningStrike(int x, int y, Space farm) {
+        if (x < 0 || x >= farm.width() || y < 0 || y >= farm.height()) {
+            return;
+        }
+        Entity entity = farm.getEntityByLocation(x, y);
+        if (entity instanceof Tree || entity instanceof Foraging) {
+            farm.placingEntity(x, y, null);
+        }
+        lightningStrikeMap.put(x + "," + y, true);
+    }
+
+    public void processCheatCommand(String command, Player currentPlayer, Map map) {
+        if (command.startsWith("Thor cheat")) {
+            String[] parts = command.split(" ");
+            if (parts.length == 3) {
+                String[] coords = parts[2].split(",");
+                try {
+                    int x = Integer.parseInt(coords[0]);
+                    int y = Integer.parseInt(coords[1]);
+                    Space farm = map.getCurrentPlayerFarm(currentPlayer);
+                    weatherSystem.cheatLightningStrike(x, y, farm);
+                } catch (NumberFormatException e) {
+                    // Handle invalid coordinates
+                }
+            }
+        }
+    }
+    */
 }
