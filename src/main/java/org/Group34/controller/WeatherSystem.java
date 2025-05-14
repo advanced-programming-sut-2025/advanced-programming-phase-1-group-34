@@ -1,23 +1,22 @@
 package org.Group34.controller;
 
-import org.Group34.model.entities.Entity;
-import org.Group34.model.entities.Player;
-import org.Group34.model.entities.naturalElements.Foraging;
-import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.items.Time;
-import org.Group34.model.map.Space;
-import org.Group34.model.map.Map;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Simulates weather in the game world, maintaining both today's and tomorrow's weather condition
+ * Supports lightning strikes during storms and allows querying weather-related game effects
  */
 public class WeatherSystem {
     private WeatherCondition todayCondition;
     private WeatherCondition tomorrowCondition;
+    private final ArrayList<int[]> lightningStrikeMap = new ArrayList<>();
 
     /**
      * Initializes the weather system by generating today's and tomorrow's weather based on current time
@@ -25,12 +24,13 @@ public class WeatherSystem {
      *
      * @param time the current game time
      */
-    public void initializeWeather(Time time, Map map) {
+    public void initializeWeather(Time time) {
         this.todayCondition = WeatherCondition.random(time.getSeason());
         this.tomorrowCondition = WeatherCondition.random(time.getSeason());
+        lightningStrikeMap.clear();
 
         if (todayCondition.canHaveLightning()) {
-            generateLightningStrikes(map);
+            generateLightningStrikes();
         }
     }
 
@@ -40,46 +40,41 @@ public class WeatherSystem {
      *
      * @param time the new game time (used to determine season for tomorrow's weather)
      */
-    public void advanceWeather(Time time, Map map) {
+    public void advanceWeather(Time time) {
         this.todayCondition = this.tomorrowCondition;
         this.tomorrowCondition = WeatherCondition.random(time.getSeason());
+        lightningStrikeMap.clear();
 
         if (todayCondition.canHaveLightning()) {
-            generateLightningStrikes(map);
+            generateLightningStrikes();
         }
     }
 
     /**
      * Randomly selects 3 coordinates to simulate lightning strikes during a storm.
-     * Does the job for all players with a 60% probability
+     * Coordinates are saved in a map for lookup.
+     * NOTE: The bounds (0-99) are placeholders and should match the map dimensions.
      */
-    private void generateLightningStrikes(Map map) {
+    public ArrayList<int[]> generateLightningStrikes() {
         Random random = new Random();
-
-        for (Player player : map.playerFarms().keySet()) {
-            if (random.nextDouble() < 0.6) {
-                Space farm = map.playerFarms().get(player);
-                Set<String> generatedCoords = new HashSet<>();
-                int strikes = 0;
-
-                while (strikes < 3) {
-                    int x = random.nextInt(farm.width());
-                    int y = random.nextInt(farm.height());
-                    String key = x + "," + y;
-
-                    if (generatedCoords.add(key)) {
-                        strikes++;
-                        Entity entity = farm.getEntityByLocation(x, y);
-
-                        if (entity instanceof Tree || entity instanceof Foraging) {
-                            farm.placingEntity(x, y, null);
-                        }
-                    }
-                }
-            }
+        for (int i = 0; i < 3; i++) {
+            int x = random.nextInt(100);
+            int y = random.nextInt(100);
+            lightningStrikeMap.add(new int[]{x, y});
         }
+        return lightningStrikeMap;
     }
 
+    /**
+     * Checks if a specific coordinate has been struck by lightning today.
+     *
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @return true if struck by lightning; false otherwise
+     */
+    public boolean isStruckByLightning(int x, int y) {
+        return lightningStrikeMap.contains(new int[]{x, y});
+    }
 
     /**
      * @return today's weather condition
@@ -96,6 +91,13 @@ public class WeatherSystem {
     }
 
     /**
+     * @return true if today's weather provides free irrigation (RAIN or STORM)
+     */
+    public boolean isIrrigationFree() {
+        return todayCondition.isIrrigationFree();
+    }
+
+    /**
      * Returns the energy multiplier based on today's weather and season.
      *
      * @param season current season
@@ -104,34 +106,4 @@ public class WeatherSystem {
     public double getEnergyMultiplier(Season season) {
         return todayCondition.getEnergyMultiplier(season);
     }
-
-    /*
-    public void cheatLightningStrike(int x, int y, Space farm) {
-        if (x < 0 || x >= farm.width() || y < 0 || y >= farm.height()) {
-            return;
-        }
-        Entity entity = farm.getEntityByLocation(x, y);
-        if (entity instanceof Tree || entity instanceof Foraging) {
-            farm.placingEntity(x, y, null);
-        }
-        lightningStrikeMap.put(x + "," + y, true);
-    }
-
-    public void processCheatCommand(String command, Player currentPlayer, Map map) {
-        if (command.startsWith("Thor cheat")) {
-            String[] parts = command.split(" ");
-            if (parts.length == 3) {
-                String[] coords = parts[2].split(",");
-                try {
-                    int x = Integer.parseInt(coords[0]);
-                    int y = Integer.parseInt(coords[1]);
-                    Space farm = map.getCurrentPlayerFarm(currentPlayer);
-                    weatherSystem.cheatLightningStrike(x, y, farm);
-                } catch (NumberFormatException e) {
-                    // Handle invalid coordinates
-                }
-            }
-        }
-    }
-    */
 }

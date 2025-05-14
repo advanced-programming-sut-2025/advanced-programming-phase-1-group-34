@@ -24,6 +24,7 @@ public class GameController {
     public GameController(Game game){
         this.game = game;
         setOrderOfPlay();
+        game.weatherSystem().initializeWeather(game.time());
     }
 
     private void setOrderOfPlay() {

@@ -3,18 +3,14 @@ package org.Group34.controller;
 import org.Group34.model.Game;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
-import org.Group34.model.entities.buildings.Quarry;
-import org.Group34.model.entities.naturalElements.Crop;
-import org.Group34.model.entities.naturalElements.PlantAble;
-import org.Group34.model.entities.naturalElements.PloughedLand;
-import org.Group34.model.entities.naturalElements.Tree;
+import org.Group34.model.entities.naturalElements.*;
 import org.Group34.model.enums.Season;
-import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.creatorOfNaturalElements.*;
-import org.Group34.model.items.Mineral;
-import org.Group34.model.items.crafting.PlacingCraft;
-import org.Group34.model.map.Space;
 import org.Group34.model.items.Time;
+import org.Group34.model.items.crafting.Ingredient;
+import org.Group34.model.items.crafting.PlacingCraft;
+import org.Group34.model.items.crafting.ProcessorCraft;
+import org.Group34.model.map.Space;
 
 import java.util.*;
 
@@ -28,8 +24,6 @@ public class StartANewDayController {
     private Game currentGame; //TODO It will fix in GameController
     private ArrayList<Space> spaces; //TODO It will fix in GameController
     private Time time; //TODO It will fix in GameController
-    private WeatherSystem weatherSystem; // TODO It will fix in GameController
-    private Quarry quarry; // TODO It will fix in GameController
 
 
     /**
@@ -37,11 +31,10 @@ public class StartANewDayController {
       to perform tasks to start a new day
      * */
     public void ManageAllTasks() {
-        randomPlacementOfForagingMinerals();
+        currentGame.weatherSystem().advanceWeather(currentGame.time());
         iterateWholeMap();
         resetPlayersEnergy();
     }
-
 
 
     private void resetPlayersEnergy() {
@@ -65,18 +58,33 @@ public class StartANewDayController {
         HashSet<int[]> scareCrowPlants = new HashSet<>();
 
         for (Space space : spaces) {
+            lightningStrike(space);
+
             for (int i = 0; i < space.width(); i++)
                 for (int j = 0; j < space.height(); j++) {
                     randomPlacementOfForagingCropsAndSeeds(space, i, j);
+                    randomPlacementOfForagingMinerals();
                     sprinklerWatering(space, i, j);
                     addPlant(plantsOnFarm, space, i, j);
-                    startANewDayForPlants(space, i, j);
-                    checkWeatherAndWateringThePlant(space, i, j);
-                    removeDriedPlants(space, i, j);
                     scareCrow(scareCrowPlants, space, i, j);
                 }
 
             crowInvasion(space, plantsOnFarm, scareCrowPlants);
+        }
+    }
+
+    private void lightningStrike(Space space) {
+        WeatherSystem weather = currentGame.weatherSystem();
+        Entity[][] entities = space.entities();
+
+        for (int[] coordinate: weather.generateLightningStrikes()){
+            int x = coordinate[0];
+            int y = coordinate[1];
+
+            if (entities[x][y] instanceof Tree || entities[x][y] instanceof ForagingTree)
+                entities[x][y] = Ingredient.COAL;
+            if (entities[x][y] instanceof Crop)
+                entities[x][y] = null;
         }
     }
 
@@ -106,27 +114,11 @@ public class StartANewDayController {
 
     private static void scareCrow(HashSet<int[]> scareCrowPlants, Space space, int x, int y) {
         Entity entity = space.getEntityByLocation(x, y);
-        if (entity.equals(PlacingCraft.SCARECROW))
-            scareSurrounding(scareCrowPlants, space, x, y, 8);
-        if (entity.equals(PlacingCraft.DELUXE_SCARECROW))
-            scareSurrounding(scareCrowPlants, space, x, y, 12);
+        if (entity.equals(PlacingCraft.SCARECROW) || entity.equals(PlacingCraft.DELUXE_SCARECROW))
+            ((PlacingCraft) entity).place(scareCrowPlants, space, x, y);
     }
 
-    private static void scareSurrounding(HashSet<int[]> scareCrowPlants, Space space, int x, int y, int r) {
-        Entity[][] entities = space.entities();
-        int xBegin = x - r;
-        int xEnd = x + r;
-        int yBegin = y - r;
-        int yEnd = y + r;
 
-        for (int i = xBegin; i <= xEnd; i++)
-            for (int j = yBegin; j <= yEnd; j++) {
-                Entity entity = entities[i][j];
-
-                if (entity instanceof PlantAble)
-                    scareCrowPlants.add(new int[]{i, j});
-            }
-    }
 
     private static void addPlant(HashSet<int[]> plantsOnFarm, Space space, int i, int j) {
         if (space.getEntityByLocation(i, j) instanceof PlantAble){
@@ -137,29 +129,12 @@ public class StartANewDayController {
 
     private void sprinklerWatering(Space space, int x, int y) {
         Entity entity = space.getEntityByLocation(x, y);
-        if (entity.equals(PlacingCraft.SPRINKLER))
-            waterSurrounding(space, x, y, 4);
-        if (entity.equals(PlacingCraft.QUALITY_SPRINKLER))
-            waterSurrounding(space, x, y, 8);
-        if (entity.equals(PlacingCraft.IRIDIUM_SPRINKLER))
-            waterSurrounding(space, x, y, 24);
+        if (entity.equals(PlacingCraft.SPRINKLER) || entity.equals(PlacingCraft.QUALITY_SPRINKLER)
+                 || entity.equals(PlacingCraft.IRIDIUM_SPRINKLER))
+            ((PlacingCraft) entity).place(space, x, y);
     }
 
-    private void waterSurrounding(Space space, int x, int y, int r) {
-        Entity[][] entities = space.entities();
-        int xBegin = x - r;
-        int xEnd = x + r;
-        int yBegin = y - r;
-        int yEnd = y + r;
 
-        for (int i = xBegin; i <= xEnd; i++)
-            for (int j = yBegin; j <= yEnd; j++) {
-                Entity entity = entities[i][j];
-
-                if (entity instanceof PlantAble)
-                    ((PlantAble) entity).setNeedWater(false);
-            }
-    }
 
 
     // ----- Random Placement Of Foraging Crops And Seeds -----
@@ -178,6 +153,8 @@ public class StartANewDayController {
             }
         }
     }
+
+
     private ArrayList<Entity> getPlantsOfCurrentSeason() {
         ArrayList<Entity> plants = new ArrayList<>();
 
@@ -311,79 +288,6 @@ public class StartANewDayController {
 
     // ----- Random Placement Of Foraging Minerals -----
     private void randomPlacementOfForagingMinerals() {
-        for (int i = 0; i < 5; i++) {
-            Mineral randomMineral = getRandomMineral();
-            quarry.addItem(randomMineral, 1);
-        }
-    }
-    private Mineral getRandomMineral() {
-        Random rand = new Random();
-        int randInt = rand.nextInt(17);
-
-        if (randInt == 0) {
-            return Mineral.QUARTZ;
-        } else if (randInt == 1) {
-            return Mineral.EARTH_CRYSTAL;
-        } else if (randInt == 2) {
-            return Mineral.FROZEN_TEAR;
-        } else if (randInt == 3) {
-            return Mineral.FIRE_QUARTZ;
-        } else if (randInt == 4) {
-            return Mineral.EMERALD;
-        } else if (randInt == 5) {
-            return Mineral.AQUAMARINE;
-        } else if (randInt == 6) {
-            return Mineral.RUBY;
-        } else if (randInt == 7) {
-            return Mineral.AMETHYST;
-        } else if (randInt == 8) {
-            return Mineral.TOPAZ;
-        } else if (randInt == 9) {
-            return Mineral.JADE;
-        } else if (randInt == 10) {
-            return Mineral.DIAMOND;
-        } else if (randInt == 11) {
-            return Mineral.PRISMATIC_SHARD;
-        } else if (randInt == 12) {
-            return Mineral.COPPER;
-        } else if (randInt == 13) {
-            return Mineral.IRON;
-        } else if (randInt == 14) {
-            return Mineral.GOLD;
-        } else if (randInt == 15) {
-            return Mineral.IRIDIUM;
-        } else {
-            return Mineral.COAL;
-        }
-    }
-
-    // ----- Start A New Day For Plants -----
-    private void startANewDayForPlants(Space space, int i, int j) {
-        if (space.getEntityByLocation(i, j) instanceof Crop crop) {
-            crop.startANewDay();
-        } else if (space.getEntityByLocation(i, j) instanceof Tree tree) {
-            tree.startANewDay();
-        }
-    }
-
-    // ----- Watering The Plants -----
-    private void checkWeatherAndWateringThePlant(Space space, int i, int j) {
-        if (weatherSystem.getTodayCondition() == WeatherCondition.RAIN ||
-            weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
-            if (space.getEntityByLocation(i, j) instanceof Crop crop) {
-                crop.setNeedWater(false);
-            } else if (space.getEntityByLocation(i, j) instanceof Tree tree) {
-                tree.setNeedWater(false);
-            }
-        }
-    }
-
-    // ----- Remove Dried Plants -----
-    private void removeDriedPlants(Space space, int i, int j) {
-        if (space.getEntityByLocation(i, j) instanceof Crop crop && crop.getNumberOfDaysNeedWater() > 2) {
-            space.placingEntity(i, j, null);
-        } else if (space.getEntityByLocation(i, j) instanceof Tree tree && tree.getNumberOfDaysNeedWater() > 2) {
-            space.placingEntity(i, j, null);
-        }
+        // TODO
     }
 }
