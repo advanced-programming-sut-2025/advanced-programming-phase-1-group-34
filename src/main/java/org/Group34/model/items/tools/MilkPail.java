@@ -5,6 +5,8 @@ import org.Group34.model.items.Item;
 
 public class MilkPail implements Item {
     private final int ENERGY_COST = 4;
+    private final int price = 1000;
+    private final String description = "Gather milk from your animals.";
 
     public String getName() {
         return "Milk Pail";
@@ -12,6 +14,14 @@ public class MilkPail implements Item {
 
     public int getEnergy() {
         return ENERGY_COST;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getUsage() {

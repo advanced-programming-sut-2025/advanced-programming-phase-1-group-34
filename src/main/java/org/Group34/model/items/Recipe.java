@@ -8,7 +8,7 @@ import org.Group34.model.items.foods.CookedFood;
 /**
  * Enum of all craftable recipes, linking each recipe to its placeable or processable item.
  */
-public enum Recipe {
+public enum Recipe implements Item {
     // Placing crafts
     SPRINKLER("Sprinkler", 0, PlacingCraft.SPRINKLER),
     QUALITY_SPRINKLER("Quality Sprinkler", 0, PlacingCraft.QUALITY_SPRINKLER),

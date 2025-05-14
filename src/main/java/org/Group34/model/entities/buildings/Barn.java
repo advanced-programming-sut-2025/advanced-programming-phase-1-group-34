@@ -3,11 +3,9 @@ package org.Group34.model.entities.buildings;
 import org.Group34.model.enums.animals.BarnType;
 
 public class Barn extends AnimalsBuilding {
-
-
     public Barn(BarnType type) {
         this.type = type.name();
-        this.capacity = type.capacity;
+        this.capacity = type.getCapacity();
     }
 
     @Override
@@ -19,6 +17,6 @@ public class Barn extends AnimalsBuilding {
     public void upgrade() {
         BarnType current = BarnType.valueOf(type);
         this.type = BarnType.values()[current.ordinal() + 1].name();
-        this.capacity = BarnType.valueOf(type).capacity;
+        this.capacity = BarnType.valueOf(type).getCapacity();
     }
 }

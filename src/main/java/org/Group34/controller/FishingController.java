@@ -1,11 +1,8 @@
 package org.Group34.controller;
 
 import org.Group34.model.Result;
-import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.enums.*;
-import org.Group34.model.items.Item;
-import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.tools.FishingPole;
 
 import java.util.*;

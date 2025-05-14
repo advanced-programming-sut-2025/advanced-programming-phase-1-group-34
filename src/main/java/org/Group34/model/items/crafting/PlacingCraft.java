@@ -54,7 +54,7 @@ public enum PlacingCraft implements Craft, Entity {
             "Grass Starter", Recipe.GRASS_STARTER,
             "Grows grass on the tile where it's placed.",
             Map.of(Ingredient.WOOD, 1, Ingredient.FIBER, 1),
-            "Pierre's General Store", 0, PlacingStrategy.GRASS_STARTER),
+            "Pierre's General Store", 125, PlacingStrategy.GRASS_STARTER),
     MYSTIC_TREE_SEED(
             "Mystic Tree Seed", Recipe.MYSTIC_TREE_SEED,
             "Can be planted to grow a Mystic Tree.",
