@@ -1,7 +1,8 @@
 package org.Group34.controller.menu;
 
+import org.Group34.controller.WeatherSystem;
 import org.Group34.model.*;
-import org.Group34.model.items.Time;
+import org.Group34.model.Time;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.MapBuilder;
 import org.Group34.model.entities.Player;
@@ -16,7 +17,7 @@ import java.util.HashMap;
 public class GameMenuController {
     private int usersChoosingMap = 0;
     private ArrayList<User> users = new ArrayList<>();
-    private ArrayList<FarmType> farmTypes = new ArrayList<>();
+    private final ArrayList<FarmType> farmTypes = new ArrayList<>();
     private static final int MAX_PLAYERS = 3;
     private static final int[] PLAYER_INITIAL_LOCATION = new int[]{72, 10};
 
@@ -113,7 +114,7 @@ public class GameMenuController {
         for (User user: users)
             players.put(user, new Player(PLAYER_INITIAL_LOCATION));
 
-        return new Game(App.getCurrentUser(), players, generateMap(players.values()), new Time());
+        return new Game(App.getCurrentUser(), players, generateMap(players.values()), new Time(), new WeatherSystem());
     }
 
     private Map generateMap(Collection<Player> players){
