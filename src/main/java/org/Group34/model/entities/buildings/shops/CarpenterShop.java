@@ -10,7 +10,7 @@ import org.Group34.model.items.crafting.Ingredient;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class CarpenterShop {
+public class CarpenterShop extends Shop {
     private static final String name = "Carpenter's Shop";
     private static final String ownerName = "Robin";
     private static final int openingHour = 9;

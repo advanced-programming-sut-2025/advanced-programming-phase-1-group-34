@@ -5,7 +5,7 @@ import org.Group34.model.items.Item;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FishShop {
+public class FishShop extends Shop {
     private static final String name = "Fish Shop";
     private static final String ownerName = "Willy";
     private static final int openingHour = 9;

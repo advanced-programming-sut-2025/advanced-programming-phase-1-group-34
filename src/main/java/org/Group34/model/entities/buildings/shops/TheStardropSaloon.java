@@ -5,7 +5,7 @@ import org.Group34.model.items.Item;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class TheStardropSaloon {
+public class TheStardropSaloon extends Shop {
     private static final String name = "The Stardrop Saloon";
     private static final String ownerName = "Gus";
     private static final int openingHour = 12;

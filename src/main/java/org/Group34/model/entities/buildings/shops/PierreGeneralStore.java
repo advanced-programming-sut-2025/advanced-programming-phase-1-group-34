@@ -9,7 +9,7 @@ import org.Group34.model.items.crafting.PlacingCraft;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PierreGeneralStore {
+public class PierreGeneralStore extends Shop {
     private static final String name = "Pierre's General Store";
     private static final String ownerName = "Pierre";
     private static final int openingHour = 9;

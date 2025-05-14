@@ -6,7 +6,7 @@ import org.Group34.model.items.crafting.Ingredient;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Blacksmith {
+public class Blacksmith extends Shop {
     private static final String name = "Blacksmith";
     private static final String ownerName = "Clint";
     private static final int openingHour = 9;

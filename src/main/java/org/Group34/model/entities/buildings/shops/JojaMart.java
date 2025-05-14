@@ -7,7 +7,7 @@ import org.Group34.model.items.crafting.PlacingCraft;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class JojaMart {
+public class JojaMart extends Shop {
     private static final String name = "JojaMart";
     private static final String ownerName = "Morris";
     private static final int openingHour = 9;

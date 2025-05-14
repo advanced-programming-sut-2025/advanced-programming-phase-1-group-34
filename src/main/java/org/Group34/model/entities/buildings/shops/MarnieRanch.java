@@ -8,7 +8,7 @@ import org.Group34.model.items.tools.Shear;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MarnieRanch {
+public class MarnieRanch extends Shop {
     private static final String name = "Marnie's Ranch";
     private static final String ownerName = "Marnie";
     private static final int openingHour = 9;
