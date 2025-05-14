@@ -29,7 +29,7 @@ public class ToolsController { // TODO This class must be filled.
     public Result toolUse(String direction) {
         FarmingController farmingController = new FarmingController();
         FishingController fishingController = new FishingController();
-        AnimalHusbandryController animalHusbandryController = new AnimalHusbandryController();
+        AnimalController animalHusbandryController = new AnimalController();
 
         int locationX = getLocationOfDirectionX(direction);
         int locationY = getLocationOfDirectionY(direction);

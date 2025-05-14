@@ -1,63 +1,54 @@
 package org.Group34.model.enums.animals;
 
-import org.Group34.model.items.Item;
-
-public enum Product implements Item {
+public enum Product {
     // Chicken
-    EGG("Egg", 50, 0, AnimalType.CHICKEN),
-    LARGE_EGG("Large Egg", 95, 200, AnimalType.CHICKEN),
+    EGG(AnimalType.CHICKEN, 50, 0),
+    LARGE_EGG(AnimalType.CHICKEN, 95, 100),
 
     // Duck
-    DUCK_EGG("Duck Egg", 95, 0, AnimalType.DUCK),
-    DUCK_FEATHER("Duck Feather", 250, 300, AnimalType.DUCK),
-
-    // Cow
-    MILK("Milk", 125, 0, AnimalType.COW),
-    LARGE_MILK("Large Milk", 190, 300, AnimalType.COW),
-
-    // Goat
-    GOAT_MILK("Goat Milk", 225, 0, AnimalType.GOAT),
-    LARGE_GOAT_MILK("Large Goat Milk", 345, 400, AnimalType.GOAT),
-
-    // Sheep
-    SHEEP_WOOL("Wool", 340, 0, AnimalType.SHEEP),
+    DUCK_EGG(AnimalType.DUCK, 95, 0),
+    DUCK_FEATHER(AnimalType.DUCK, 250, 100),
 
     // Rabbit
-    RABBITS_FOOT("Rabbit's Foot", 565, 600, AnimalType.RABBIT),
-    RABBIT_WOOL("Rabbit Wool", 340, 0, AnimalType.RABBIT),
-
-    // Pig
-    TRUFFLE("Truffle", 625, 500, AnimalType.PIG),
+    RABBIT_WOOL(AnimalType.RABBIT, 340, 0),
+    RABBIT_FOOT(AnimalType.RABBIT, 565, 100),
 
     // Dinosaur
-    DINOSAUR_EGG("Dinosaur Egg", 350, 0, AnimalType.DINOSAUR);
+    DINOSAUR_EGG(AnimalType.DINOSAUR, 350, 0),
 
-    private final String name;
-    private final int price;
-    private final int reqFriendship;
+    // Cow
+    MILK(AnimalType.COW, 125, 0),
+    LARGE_MILK(AnimalType.COW, 190, 100),
+
+    // Goat
+    GOAT_MILK(AnimalType.GOAT, 225, 0),
+    LARGE_GOAT_MILK(AnimalType.GOAT, 345, 100),
+
+    // Sheep
+    SHEEP_WOOL(AnimalType.SHEEP, 340, 0),
+
+    // Pig
+    TRUFFLE(AnimalType.PIG, 625, 0);
+
     private final AnimalType type;
+    private final int basePrice;
+    private final int requiredFriendship;
 
-    Product(String name, int price, int reqFriendship, AnimalType type) {
-        this.name = name;
-        this.price = price;
-        this.reqFriendship = reqFriendship;
+    Product(AnimalType type, int basePrice, int requiredFriendship) {
         this.type = type;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public int getReqFriendship() {
-        return reqFriendship;
+        this.basePrice = basePrice;
+        this.requiredFriendship = requiredFriendship;
     }
 
     public AnimalType getType() {
         return type;
     }
-}
 
+    public int getBasePrice() {
+        return basePrice;
+    }
+
+    public int getRequiredFriendship() {
+        return requiredFriendship;
+    }
+}

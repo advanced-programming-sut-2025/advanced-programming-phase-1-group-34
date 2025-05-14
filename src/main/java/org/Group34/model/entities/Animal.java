@@ -3,7 +3,7 @@ package org.Group34.model.entities;
 import org.Group34.model.enums.animals.AnimalType;
 import org.Group34.model.enums.animals.Product;
 
-import java.util.*;
+import java.util.List;
 
 public class Animal {
     private final String name;
@@ -12,11 +12,12 @@ public class Animal {
     private boolean isFed = false;
     private int daysSinceLastProduce = 0;
     private boolean isOutside = false;
-    private final List<Product> possibleProducts = new ArrayList<>();
+    private final List<Product> possibleProducts;
 
     public Animal(String name, AnimalType type) {
         this.name = name;
         this.type = type;
+        this.possibleProducts = type.getPossibleProducts();
     }
 
     public boolean isFed() {
@@ -47,16 +48,51 @@ public class Animal {
         return type;
     }
 
+    public void addDaysSinceLastProduce() {
+        daysSinceLastProduce++;
+    }
+
     public Product collectProduct() {
         if (!isFed) return null;
+        if (daysSinceLastProduce < type.getRequiredDays()) return null;
+        if (type == AnimalType.PIG && !isOutside) return null;
+
         isFed = false;
         daysSinceLastProduce = 0;
 
-        return Arrays.stream(Product.values())
-                .filter(p -> p.getType() == this.type)
-                .filter(p -> p.getReqFriendship() <= friendship)
-                .max(Comparator.comparingInt(Product::getReqFriendship))
-                .orElse(null);
+        Product selectedProduct = null;
+        for (Product product : possibleProducts) {
+            if (friendship >= product.getRequiredFriendship()) {
+                if (selectedProduct == null || product.getRequiredFriendship() > selectedProduct.getRequiredFriendship()) {
+                    selectedProduct = product;
+                }
+            }
+        }
+
+        if (selectedProduct == null) return null;
+
+        if (selectedProduct.getRequiredFriendship() > 0) {
+            double randomFactor = 0.5 + Math.random();
+            double probability = (friendship + (150 * randomFactor)) / 1500;
+            if (probability < 0.6) {
+                Product lowerProduct = null;
+                for (Product product : possibleProducts) {
+                    if (product.getRequiredFriendship() < selectedProduct.getRequiredFriendship()) {
+                        if (lowerProduct == null || product.getRequiredFriendship() < lowerProduct.getRequiredFriendship()) {
+                            lowerProduct = product;
+                        }
+                    }
+                }
+                if (lowerProduct != null) {
+                    selectedProduct = lowerProduct;
+                }
+            }
+        }
+
+        return selectedProduct;
     }
 
+    public void setOutside(boolean outside) {
+        isOutside = outside;
+    }
 }

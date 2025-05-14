@@ -1,22 +1,37 @@
 package org.Group34.model.enums.animals;
 
+
+import java.util.List;
+
 public enum AnimalType {
-    CHICKEN(800, "Coop", 4),
-    DUCK(1200, "Big Coop", 8),
-    RABBIT(8000, "Deluxe Coop", 12),
-    DINOSAUR(14000, "Big Coop", 8),
-    COW(1500, "Barn", 4),
-    GOAT(4000, "Big Barn", 8),
-    SHEEP(8000, "Deluxe Barn", 12),
-    PIG(16000, "Deluxe Barn", 12);
+    CHICKEN(BarnType.COOP_BASIC, 1, List.of(Product.EGG, Product.LARGE_EGG)),
+    DUCK(BarnType.COOP_BIG, 2, List.of(Product.DUCK_EGG, Product.DUCK_FEATHER)),
+    RABBIT(BarnType.COOP_DELUXE, 4, List.of(Product.RABBIT_WOOL, Product.RABBIT_FOOT)),
+    DINOSAUR(BarnType.COOP_BIG, 7, List.of(Product.DINOSAUR_EGG)),
+    COW(BarnType.BARN_BASIC, 1, List.of(Product.MILK, Product.LARGE_MILK)),
+    GOAT(BarnType.BARN_BIG, 2, List.of(Product.GOAT_MILK, Product.LARGE_GOAT_MILK)),
+    SHEEP(BarnType.BARN_DELUXE, 3, List.of(Product.SHEEP_WOOL)),
+    PIG(BarnType.BARN_DELUXE, 1, List.of(Product.TRUFFLE));
 
-    public final int price;
-    public final String requiredBuilding;
-    public final int buildingCapacity;
+    private final BarnType requiredBuilding;
+    private final int requiredDays;
+    private final List<Product> possibleProducts;
 
-    AnimalType(int price, String building, int capacity) {
-        this.price = price;
-        this.requiredBuilding = building;
-        this.buildingCapacity = capacity;
+    AnimalType(BarnType requiredBuilding, int requiredDays, List<Product> possibleProducts) {
+        this.requiredBuilding = requiredBuilding;
+        this.requiredDays = requiredDays;
+        this.possibleProducts = possibleProducts;
+    }
+
+    public BarnType getRequiredBuilding() {
+        return requiredBuilding;
+    }
+
+    public int getRequiredDays() {
+        return requiredDays;
+    }
+
+    public List<Product> getPossibleProducts() {
+        return possibleProducts;
     }
 }
