@@ -39,7 +39,7 @@ public class LevelUpController {
         int nextLevelUnit = 100 * (nextLevel + 1) + 50;
 
         if (currentLevelUnit >= nextLevel){
-            player.levelUp(levelType);
+            player.levelUp(levelType, 1);
             player.setLevelUnit(levelType, currentLevelUnit - nextLevelUnit);
             return true;
         }

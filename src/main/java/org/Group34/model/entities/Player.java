@@ -145,8 +145,8 @@ public class  Player implements Entity {
         return level.get(levelType);
     }
 
-    public void levelUp(LevelType levelType){
-        level.put(levelType, level.get(levelType)+1);
+    public void levelUp(LevelType levelType, int amount){
+        level.put(levelType, level.get(levelType) + amount);
     }
 
     public HashMap<LevelType, Integer> getLevelUnit() {

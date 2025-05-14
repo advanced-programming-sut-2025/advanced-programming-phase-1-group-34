@@ -4,6 +4,8 @@ import org.Group34.model.Result;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.enums.*;
+import org.Group34.model.items.Item;
+import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.tools.FishingPole;
 
 import java.util.*;
@@ -12,21 +14,23 @@ public class FishingController {
     private static final int MAX_FISH_PER_CAST = 6;
     private static final Random random = new Random();
 
-    public Result startFishing(int playerSkill, Season currentSeason,
+    public Result startFishing(Player player, Season currentSeason,
                                WeatherCondition weather,
                                FishingPole rod) {
-        if (!hasFishingRod(rod)) {
+        if (rod == null) {
             return new Result(false, "You don't have a fishing rod.");
         }
 
-        int fishCount = calculateFishCount(playerSkill, weather);
+        int fishCount = calculateFishCount(player.getLevel(LevelType.FISHING_LEVEL), weather);
         List<FishResult> results = new ArrayList<>();
 
         for (int i = 0; i < fishCount; i++) {
-            FishType fish = getRandomFish(currentSeason, playerSkill);
-            Quality quality = calculateQuality(playerSkill, rod);
+            FishType fish = getRandomFish(currentSeason, player.getLevel(LevelType.FISHING_LEVEL));
+            Quality quality = calculateQuality(player.getLevel(LevelType.FISHING_LEVEL), rod);
             results.add(new FishResult(fish, quality));
         }
+
+        player.decreaseEnergy(calculateEnergy(rod, player));
 
         if (results.isEmpty())
             return new Result(false, "No fish caught.");
@@ -41,17 +45,8 @@ public class FishingController {
                     .append(")\n");
         }
 
+        player.levelUp(LevelType.FISHING_LEVEL, 5);
         return new Result(true, resultMessage.toString().trim());
-    }
-
-    public Result useFishingPole(Player player, Season currentSeason, WeatherCondition weather) {
-        if (!(player.getCurrentTool() instanceof FishingPole fishingPole)) {
-            return new Result(false, "You don't have a fishing pole equipped.");
-        }
-
-        int playerSkill = player.getLevel(LevelType.FISHING_LEVEL);
-        FishingController fishingController = new FishingController();
-        return fishingController.startFishing(playerSkill, currentSeason, weather, fishingPole);
     }
 
     // ---------- Helper Methods ----------
@@ -59,7 +54,7 @@ public class FishingController {
     private int calculateFishCount(int skill, WeatherCondition weather) {
         double weatherModifier = getWeatherModifier(weather);
         double r = random.nextDouble();
-        int count = (int) Math.ceil(r * (2 + skill * weatherModifier));
+        int count = (int) Math.ceil(r * (2 + skill) * weatherModifier);
         return Math.min(count, MAX_FISH_PER_CAST);
     }
 
@@ -80,7 +75,7 @@ public class FishingController {
                 .filter(f -> f.season == season)
                 .forEach(availableFish::add);
 
-        if (playerSkill >= 10) {
+        if (playerSkill >= 450) {
             Arrays.stream(FishType.values())
                     .filter(FishType::isLegendary)
                     .filter(f -> f.season == season)
@@ -99,8 +94,16 @@ public class FishingController {
         return Quality.REGULAR;
     }
 
-    private boolean hasFishingRod(FishingPole rod) {
-        return rod != null;
+    private int calculateEnergy(FishingPole rod, Player player) {
+        if (rod.getMaterial().equals("Training") || rod.getMaterial().equals("Bamboo")) {
+            return 8 + (player.getLevel(LevelType.FISHING_LEVEL) >= 450 ? -1 : 0);
+        }
+        else if (rod.getMaterial().equals("Fiberglass")) {
+            return 6 + (player.getLevel(LevelType.FISHING_LEVEL) >= 450 ? -1 : 0);
+        }
+        else {
+            return 4 + (player.getLevel(LevelType.FISHING_LEVEL) >= 450 ? -1 : 0);
+        }
     }
 
     public record FishResult(FishType fish, Quality quality) {
@@ -108,4 +111,6 @@ public class FishingController {
             return (int) (fish.basePrice * quality.multiplier);
         }
     }
+
+
 }
