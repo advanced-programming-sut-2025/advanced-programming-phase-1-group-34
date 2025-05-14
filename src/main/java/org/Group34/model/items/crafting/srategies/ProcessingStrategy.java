@@ -1,5 +1,6 @@
 package org.Group34.model.items.crafting.srategies;
 
+import org.Group34.model.entities.Player;
 import org.Group34.model.enums.animals.Product;
 import org.Group34.model.enums.FishType;
 import org.Group34.model.items.PlantingSource;
@@ -7,208 +8,192 @@ import org.Group34.model.items.foods.*;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.Ingredient;
 
-import java.util.HashMap;
 
 public enum ProcessingStrategy {
 
-    BEE_HOUSE{
+    BEE_HOUSE {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount) {
-            return new HashMap<>(){{
-                put(ProcessedFood.HONEY, 1);
-            }};
+        public Item process(Player player, Item input) {
+            // No input consumed, always returns honey
+            return ProcessedFood.HONEY;
         }
     },
-    MAYONNAISE_MACHINE{
+    MAYONNAISE_MACHINE {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount) {
+        public Item process(Player player, Item input) {
             if (input.equals(Product.EGG) || input.equals(Product.LARGE_EGG)) {
-                return this.output(input, ProcessedFood.MAYONNAISE, amount, 1);
+                return output(input, ProcessedFood.MAYONNAISE, player, 1);
             }
             if (input.equals(Product.DUCK_EGG)) {
-                return this.output(input, ProcessedFood.DUCK_MAYONNAISE, amount, 1);
+                return output(input, ProcessedFood.DUCK_MAYONNAISE, player, 1);
             }
             if (input.equals(Product.DINOSAUR_EGG)) {
-                return this.output(input, ProcessedFood.DINOSAUR_MAYONNAISE, amount, 1);
+                return output(input, ProcessedFood.DINOSAUR_MAYONNAISE, player, 1);
             }
-            return new HashMap<>(){{
-                put(input, amount);
-            }};
+            return null;
         }
     },
-
     FURNACE {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount, Ingredient coal, int coalAmount) {
-            if (coal.equals(Ingredient.COAL)){
-                if (input.equals(Ingredient.IRON_ORE))
-                    return this.output(Ingredient.IRON_ORE, Ingredient.IRON_BAR, amount, 5, coalAmount);
-                if (input.equals(Ingredient.COPPER_ORE))
-                    return this.output(Ingredient.COPPER_ORE, Ingredient.COPPER_BAR, amount, 5, coalAmount);
-                if (input.equals(Ingredient.GOLD_ORE))
-                    return this.output(Ingredient.GOLD_ORE, Ingredient.GOLD_BAR, amount, 5, coalAmount);
-                if (input.equals(Ingredient.IRIDIUM_ORE))
-                    return this.output(Ingredient.IRIDIUM_ORE, Ingredient.IRON_BAR, amount, 5, coalAmount);
+        public Item process(Player player, Item input_1, Item input_2) {
+            // Requires one ore and one coal
+            if (input_2.equals(Ingredient.COAL)){
+                if (input_1.equals(Ingredient.IRON_ORE)) {
+                    return output(Ingredient.IRON_ORE, Ingredient.COAL, Ingredient.IRON_BAR, player, 5, 1);
+                }
+                if (input_1.equals(Ingredient.COPPER_ORE)) {
+                    return output(Ingredient.COPPER_ORE, Ingredient.COAL, Ingredient.COPPER_BAR, player, 5, 1);
+                }
+                if (input_1.equals(Ingredient.GOLD_ORE)) {
+                    return output(Ingredient.GOLD_ORE, Ingredient.COAL, Ingredient.GOLD_BAR, player, 5, 1);
+                }
+                if (input_1.equals(Ingredient.IRIDIUM_ORE)) {
+                    return output(Ingredient.IRIDIUM_ORE, Ingredient.COAL, Ingredient.IRON_BAR, player, 5, 1);
+                }
             }
-            return new HashMap<>(){{
-                put(input, amount);
-            }};
+            return null;
         }
     },
     OIL_MAKER {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount) {
+        public Item process(Player player, Item input) {
             if (input.equals(Product.TRUFFLE)) {
-                return this.output(input, ProcessedFood.TRUFFLE_OIL, amount, 1);
+                return output(input, ProcessedFood.TRUFFLE_OIL, player, 1);
             }
-            if (input.equals(Vegetable.CORN) ||
-                    input.equals(OtherFarmingProduct.SUNFLOWER) ||
-                    input.equals(PlantingSource.SUNFLOWER_SEEDS)) {
-                return this.output(input, ProcessedFood.OIL, amount, 1);
+            if (input.equals(Vegetable.CORN)
+                    || input.equals(OtherFarmingProduct.SUNFLOWER)
+                    || input.equals(PlantingSource.SUNFLOWER_SEEDS)) {
+                return output(input, ProcessedFood.OIL, player, 1);
             }
-            return new HashMap<>() {{
-                put(input, amount);
-            }};
+            return null;
         }
-
-
     },
     LOOM {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount) {
-            if (input.equals(Product.SHEEP_WOOL))
-                return this.output(input, ProcessedFood.CLOTH, amount, 1);
-            if (input.equals(Product.RABBIT_WOOL))
-                return this.output(input, ProcessedFood.CLOTH, amount, 1);
-            return new HashMap<>(){{
-                put(input, amount);
-            }};
+        public Item process(Player player, Item input) {
+            if (input.equals(Product.SHEEP_WOOL) || input.equals(Product.RABBIT_WOOL)) {
+                return output(input, ProcessedFood.CLOTH, player, 1);
+            }
+            return null;
         }
     },
     KEG {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount) {
-            if (input.equals(CropProduct.WHEAT))
-                return this.output(input, ProcessedFood.BEER, amount, 1);
-            if (input.equals(CropProduct.HOPS))
-                return this.output(input, ProcessedFood.PALE_ALE, amount, 1);
-            if (input.equals(ProcessedFood.HONEY))
-                return this.output(input, ProcessedFood.MEAD, amount, 1);
-            if (input.equals(CropProduct.COFFEE_BEAN))
-                return this.output(input, ProcessedFood.COFFEE, amount, 5);
-            if (input.equals(CropProduct.UNMILLED_RICE))
-                return this.output(input, ProcessedFood.VINEGAR, amount, 1);
-            if (input instanceof Fruit)
-                return this.output(input, ((Fruit) input).getWineForm(), amount, 1);
-            if (input instanceof  Vegetable)
-                return this.output(input, ((Vegetable) input).getJuiceForm(), amount, 1);
-
-            return new HashMap<>() {{
-                put(input, amount);
-            }};
+        public Item process(Player player, Item input) {
+            if (input.equals(CropProduct.WHEAT)) {
+                return output(input, ProcessedFood.BEER, player, 1);
+            }
+            if (input.equals(CropProduct.HOPS)) {
+                return output(input, ProcessedFood.PALE_ALE, player, 1);
+            }
+            if (input.equals(ProcessedFood.HONEY)) {
+                return output(input, ProcessedFood.MEAD, player, 1);
+            }
+            if (input.equals(CropProduct.COFFEE_BEAN)) {
+                return output(input, ProcessedFood.COFFEE, player, 5);
+            }
+            if (input.equals(CropProduct.UNMILLED_RICE)) {
+                return output(input, ProcessedFood.VINEGAR, player, 1);
+            }
+            if (input instanceof Fruit) {
+                return output(input, ((Fruit) input).getWineForm(), player, 1);
+            }
+            if (input instanceof Vegetable) {
+                return output(input, ((Vegetable) input).getJuiceForm(), player, 1);
+            }
+            return null;
         }
     },
-
     PRESERVES_JAR {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount) {
-            if (input instanceof Fruit)
-                return this.output(input, ((Fruit) input).getJellyForm(), amount, 1);
-            if (input instanceof Vegetable)
-                return this.output(input, ((Vegetable) input).getPickleForm(), amount, 1);
-            return new HashMap<>(){{
-                put(input, amount);
-            }};
+        public Item process(Player player, Item input) {
+            if (input instanceof Fruit) {
+                return output(input, ((Fruit) input).getJellyForm(), player, 1);
+            }
+            if (input instanceof Vegetable) {
+                return output(input, ((Vegetable) input).getPickleForm(), player, 1);
+            }
+            return null;
         }
     },
     DEHYDRATOR {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount) {
+        public Item process(Player player, Item input) {
             if (input.equals(CropProduct.GRAPE)) {
-                return this.output(input, ProcessedFood.RAISINS, amount, 5);
+                return output(input, ProcessedFood.RAISINS, player, 5);
             }
             if (input.equals(Fungi.COMMON_MUSHROOM)) {
-                return this.output(input, ProcessedFood.DRIED_COMMON_MUSHROOM, amount, 5);
+                return output(input, ProcessedFood.DRIED_COMMON_MUSHROOM, player, 5);
             }
             if (input instanceof Fruit) {
-                return this.output(input, ((Fruit) input).getDriedForm(), amount, 5);
+                return output(input, ((Fruit) input).getDriedForm(), player, 5);
             }
-            return new HashMap<>() {{
-                put(input, amount);
-            }};
+            return null;
         }
     },
     CHARCOAL_KILN {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount) {
-            if (input.equals(Ingredient.WOOD))
-                return this.output(Ingredient.WOOD, Ingredient.COAL, amount, 10);
-            return new HashMap<>(){{
-                put(input, amount);
-            }};
+        public Item process(Player player, Item input) {
+            if (input.equals(Ingredient.WOOD)) {
+                return output(input, Ingredient.COAL, player, 10);
+            }
+            return null;
         }
     },
     CHEESE_PRESS {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount) {
-            if (input.equals(Product.MILK))
-                return this.output(input, ProcessedFood.CHEESE, amount, 1);
-            if (input.equals(Product.LARGE_MILK))
-                return this.output(input, ProcessedFood.LARGE_CHEESE, amount, 1);
-            if (input.equals(Product.GOAT_MILK))
-                return this.output(input, ProcessedFood.GOAT_CHEESE, amount, 1);
-            if (input.equals(Product.LARGE_GOAT_MILK))
-                return this.output(input, ProcessedFood.LARGE_GOAT_CHEESE, amount, 1);
-            return new HashMap<>() {{
-                put(input, amount);
-            }};
+        public Item process(Player player, Item input) {
+            if (input.equals(Product.MILK)) {
+                return output(input, ProcessedFood.CHEESE, player, 1);
+            }
+            if (input.equals(Product.LARGE_MILK)) {
+                return output(input, ProcessedFood.LARGE_CHEESE, player, 1);
+            }
+            if (input.equals(Product.GOAT_MILK)) {
+                return output(input, ProcessedFood.GOAT_CHEESE, player, 1);
+            }
+            if (input.equals(Product.LARGE_GOAT_MILK)) {
+                return output(input, ProcessedFood.LARGE_GOAT_CHEESE, player, 1);
+            }
+            return null;
         }
     },
     FISH_SMOKER {
         @Override
-        public HashMap<Item, Integer> process(Item input, int amount, Ingredient coal, int coalAmount) {
-            if (input instanceof FishType && coal.equals(Ingredient.COAL)) {
-                return this.output(input, ((FishType) input).getSmokedForm(), amount, 1, coalAmount);
+        public Item process(Player player, Item input_1, Item input_2) {
+            if (input_1 instanceof FishType && input_2.equals(Ingredient.COAL)) {
+                return output(input_1, input_2, ((FishType) input_1).getSmokedForm(), player, 1, 1);
             }
-            return new HashMap<>(){{
-                put(input, amount);
-            }};
+            return null;
         }
     };
 
-    public HashMap<Item, Integer> process(Item input, int amount){
+    // New abstract method signature
+    public Item process(Player player, Item input){
         return null;
     }
-    public HashMap<Item, Integer> process(Item input, int amount, Ingredient coal, int coalAmount){
+    public Item process(Player player, Item input_1, Item input_2){
         return null;
     }
 
-
-    protected HashMap<Item, Integer> output(Item input, Item output, int inputAmount, int ratio){
-        HashMap<Item, Integer> result = new HashMap<>();
-
-        int outputAmount = inputAmount / ratio;
-        int remainingInput = inputAmount % ratio;
-        result.put(output, outputAmount);
-        if (remainingInput != 0) result.put(input, remainingInput);
-
-        return result;
+    // Single-input output
+    protected Item output(Item input, Item output, Player player, int inputNeeded) {
+        int inventoryAmount = player.getAmountOfItem(input);
+        if (inventoryAmount < inputNeeded) return input;
+        player.removeFromInventory(input, inputNeeded);
+        return output;
     }
 
-    protected HashMap<Item, Integer> output(Item input, Item output, int amount, int ratio, int coalAmount){
-        HashMap<Item, Integer> result;
+    // Two-input output (ore + coal)
+    protected Item output(Item input1, Item input2, Item output, Player player, int input1Needed, int input2Needed) {
+        int inv1 = player.getAmountOfItem(input1);
+        int inv2 = player.getAmountOfItem(input2);
 
-        if (coalAmount > amount){
-            result = this.output(input, output, amount, ratio);
-            result.put(Ingredient.COAL, coalAmount-amount);
-        }
-        if (coalAmount < amount){
-            result = this.output(input, output, coalAmount, ratio);
-            result.put(input, amount-coalAmount);
-        }
-        else result = this.output(input, output, amount, ratio);
+        if (inv1 < input1Needed) return input1;
+        if (inv2 < input2Needed) return input2;
 
-        return result;
+        player.removeFromInventory(input1, input1Needed);
+        player.removeFromInventory(input2, input2Needed);
+        return output;
     }
-
 }

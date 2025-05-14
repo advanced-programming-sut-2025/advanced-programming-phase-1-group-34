@@ -15,7 +15,7 @@ import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
-import org.Group34.model.items.Time;
+import org.Group34.model.Time;
 
 import java.util.Random;
 

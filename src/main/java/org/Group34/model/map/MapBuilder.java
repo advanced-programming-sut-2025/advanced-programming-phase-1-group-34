@@ -1,12 +1,18 @@
 package org.Group34.model.map;
 
+import org.Group34.model.Time;
 import org.Group34.model.entities.*;
 import org.Group34.model.entities.buildings.*;
-import org.Group34.model.entities.naturalElements.Foraging;
-import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.model.enums.FarmType;
+import org.Group34.model.enums.Season;
+import org.Group34.model.enums.creatorOfNaturalElements.CropCreator;
+import org.Group34.model.enums.creatorOfNaturalElements.ForagingCropCreator;
+import org.Group34.model.enums.creatorOfNaturalElements.TreeCreator;
+import org.Group34.model.items.crafting.Ingredient;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 /**
  * This class first generates Farms of each Player
@@ -101,15 +107,146 @@ public class MapBuilder {
         for (int x = 0; x < SPACE_WIDTH; x++)
             for (int y = 0; y < SPACE_HEIGHT; y++)
                 if (spaceGrid[x][y] == null) {
-                    double randomNum = Math.random();
-                    float  chance    = farmType.getTreeSpawnChance();
+                    Random rand = new Random();
 
-                    if (randomNum < chance)
-                        spaceGrid[x][y] = new Tree();
-                    else if (randomNum < (chance += farmType.getStoneSpawnChance()))
-                        spaceGrid[x][y] = new Stone();
-                    else if (randomNum < chance + farmType.getForagingSpawnChance())
-                        spaceGrid[x][y] = new Foraging();
+                    if (rand.nextInt(100) < farmType.getForagingSpawnChance()) {
+                        ArrayList<Entity> plants = MapBuilder.getPlantsOfCurrentSeason(new Time());
+                        int randInt = rand.nextInt(plants.size());
+                        spaceGrid[x][y] = plants.get(randInt);
+                    }
+                    else if (rand.nextInt(100) < farmType.getStoneSpawnChance())
+                        spaceGrid[x][y] = Ingredient.STONE;
                 }
+    }
+
+    public static ArrayList<Entity> getPlantsOfCurrentSeason(Time time) {
+        ArrayList<Entity> plants = new ArrayList<>();
+
+        if (time.getSeason() == Season.SPRING) {
+            plants.add(ForagingCropCreator.COMMON_MUSHROOM.createInstance());
+            plants.add(ForagingCropCreator.DAFFODIL.createInstance());
+            plants.add(ForagingCropCreator.DANDELION.createInstance());
+            plants.add(ForagingCropCreator.LEEK.createInstance());
+            plants.add(ForagingCropCreator.MOREL.createInstance());
+            plants.add(ForagingCropCreator.SALMONBERRY.createInstance());
+            plants.add(ForagingCropCreator.SPRING_ONION.createInstance());
+            plants.add(ForagingCropCreator.WILD_HORSERADISH.createInstance());
+
+            plants.add(CropCreator.BLUE_JAZZ.createInstance());
+            plants.add(CropCreator.CARROT.createInstance());
+            plants.add(CropCreator.CAULIFLOWER.createInstance());
+            plants.add(CropCreator.COFFEE_BEAN.createInstance());
+            plants.add(CropCreator.GARLIC.createInstance());
+            plants.add(CropCreator.GREEN_BEAN.createInstance());
+            plants.add(CropCreator.KALE.createInstance());
+            plants.add(CropCreator.PARSNIP.createInstance());
+            plants.add(CropCreator.POTATO.createInstance());
+            plants.add(CropCreator.RHUBARB.createInstance());
+            plants.add(CropCreator.STRAWBERRY.createInstance());
+            plants.add(CropCreator.TULIP.createInstance());
+            plants.add(CropCreator.UNMILLED_RICE.createInstance());
+            plants.add(CropCreator.ANCIENT_FRUIT.createInstance());
+
+            plants.add(TreeCreator.APRICOT_TREE.createInstance());
+            plants.add(TreeCreator.CHERRY_TREE.createInstance());
+            plants.add(TreeCreator.OAK_TREE.createInstance());
+            plants.add(TreeCreator.MAPLE_TREE.createInstance());
+            plants.add(TreeCreator.PINE_TREE.createInstance());
+            plants.add(TreeCreator.MAHOGANY_TREE.createInstance());
+            plants.add(TreeCreator.MUSHROOM_TREE.createInstance());
+            plants.add(TreeCreator.MYSTIC_TREE.createInstance());
+        }
+
+        else if (time.getSeason() == Season.SUMMER) {
+            plants.add(ForagingCropCreator.COMMON_MUSHROOM.createInstance());
+            plants.add(ForagingCropCreator.FIDDLEHEAD_FERN.createInstance());
+            plants.add(ForagingCropCreator.GRAPE.createInstance());
+            plants.add(ForagingCropCreator.RED_MUSHROOM.createInstance());
+            plants.add(ForagingCropCreator.SPICE_BERRY.createInstance());
+            plants.add(ForagingCropCreator.SWEET_PEA.createInstance());
+
+            plants.add(CropCreator.COFFEE_BEAN.createInstance());
+            plants.add(CropCreator.BLUEBERRY.createInstance());
+            plants.add(CropCreator.CORN.createInstance());
+            plants.add(CropCreator.HOPS.createInstance());
+            plants.add(CropCreator.HOT_PEPPER.createInstance());
+            plants.add(CropCreator.MELON.createInstance());
+            plants.add(CropCreator.POPPY.createInstance());
+            plants.add(CropCreator.RADISH.createInstance());
+            plants.add(CropCreator.RED_CABBAGE.createInstance());
+            plants.add(CropCreator.STARFRUIT.createInstance());
+            plants.add(CropCreator.SUMMER_SPANGLE.createInstance());
+            plants.add(CropCreator.SUMMER_SQUASH.createInstance());
+            plants.add(CropCreator.SUNFLOWER.createInstance());
+            plants.add(CropCreator.TOMATO.createInstance());
+            plants.add(CropCreator.WHEAT.createInstance());
+            plants.add(CropCreator.ANCIENT_FRUIT.createInstance());
+
+            plants.add(TreeCreator.BANANA_TREE.createInstance());
+            plants.add(TreeCreator.MANGO_TREE.createInstance());
+            plants.add(TreeCreator.ORANGE_TREE.createInstance());
+            plants.add(TreeCreator.PEACH_TREE.createInstance());
+            plants.add(TreeCreator.OAK_TREE.createInstance());
+            plants.add(TreeCreator.MAPLE_TREE.createInstance());
+            plants.add(TreeCreator.PINE_TREE.createInstance());
+            plants.add(TreeCreator.MAHOGANY_TREE.createInstance());
+            plants.add(TreeCreator.MUSHROOM_TREE.createInstance());
+            plants.add(TreeCreator.MYSTIC_TREE.createInstance());
+        }
+
+        else if (time.getSeason() == Season.FALL) {
+            plants.add(ForagingCropCreator.COMMON_MUSHROOM.createInstance());
+            plants.add(ForagingCropCreator.BLACKBERRY.createInstance());
+            plants.add(ForagingCropCreator.CHANTERELLE.createInstance());
+            plants.add(ForagingCropCreator.HAZELNUT.createInstance());
+            plants.add(ForagingCropCreator.PURPLE_MUSHROOM.createInstance());
+            plants.add(ForagingCropCreator.WILD_PLUM.createInstance());
+
+            plants.add(CropCreator.CORN.createInstance());
+            plants.add(CropCreator.SUNFLOWER.createInstance());
+            plants.add(CropCreator.WHEAT.createInstance());
+            plants.add(CropCreator.AMARANTH.createInstance());
+            plants.add(CropCreator.ARTICHOKE.createInstance());
+            plants.add(CropCreator.BEET.createInstance());
+            plants.add(CropCreator.BOK_CHOY.createInstance());
+            plants.add(CropCreator.BROCCOLI.createInstance());
+            plants.add(CropCreator.CRANBERRIES.createInstance());
+            plants.add(CropCreator.EGGPLANT.createInstance());
+            plants.add(CropCreator.FAIRY_ROSE.createInstance());
+            plants.add(CropCreator.GRAPE.createInstance());
+            plants.add(CropCreator.PUMPKIN.createInstance());
+            plants.add(CropCreator.YAM.createInstance());
+            plants.add(CropCreator.SWEET_GEM_BERRY.createInstance());
+            plants.add(CropCreator.ANCIENT_FRUIT.createInstance());
+
+            plants.add(TreeCreator.APPLE_TREE.createInstance());
+            plants.add(TreeCreator.POMEGRANATE_TREE.createInstance());
+            plants.add(TreeCreator.OAK_TREE.createInstance());
+            plants.add(TreeCreator.MAPLE_TREE.createInstance());
+            plants.add(TreeCreator.PINE_TREE.createInstance());
+            plants.add(TreeCreator.MAHOGANY_TREE.createInstance());
+            plants.add(TreeCreator.MUSHROOM_TREE.createInstance());
+            plants.add(TreeCreator.MYSTIC_TREE.createInstance());
+        }
+
+        else if (time.getSeason() == Season.WINTER) {
+            plants.add(ForagingCropCreator.COMMON_MUSHROOM.createInstance());
+            plants.add(ForagingCropCreator.CROCUS.createInstance());
+            plants.add(ForagingCropCreator.CRYSTAL_FRUIT.createInstance());
+            plants.add(ForagingCropCreator.HOLLY.createInstance());
+            plants.add(ForagingCropCreator.SNOW_YAM.createInstance());
+            plants.add(ForagingCropCreator.WINTER_ROOT.createInstance());
+
+            plants.add(CropCreator.POWDERMELON.createInstance());
+
+            plants.add(TreeCreator.OAK_TREE.createInstance());
+            plants.add(TreeCreator.MAPLE_TREE.createInstance());
+            plants.add(TreeCreator.PINE_TREE.createInstance());
+            plants.add(TreeCreator.MAHOGANY_TREE.createInstance());
+            plants.add(TreeCreator.MUSHROOM_TREE.createInstance());
+            plants.add(TreeCreator.MYSTIC_TREE.createInstance());
+        }
+
+        return plants;
     }
 }
