@@ -1,11 +1,17 @@
 package org.Group34.model.items.crafting;
 
+import org.Group34.model.entities.Entity;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.Recipe;
 import org.Group34.model.items.crafting.srategies.ProcessingStrategy;
 import java.util.Map;
 
-public enum ProcessorCraft implements Item {
+public enum ProcessorCraft implements Craft, Entity {
+    BEE_HOUSE(
+            "Bee House", Recipe.BEE_HOUSE,
+            "Produces honey when placed outside.",
+            Map.of(Ingredient.WOOD, 40, Ingredient.COAL, 8, Ingredient.IRON_BAR, 1),
+            "Farming Level 1", 0, ProcessingStrategy.BEE_HOUSE),
     CHARCOAL_KILN(
             "Charcoal Kiln", Recipe.CHARCOAL_KILN,
             "Turns 10 wood into 1 coal.",
@@ -81,11 +87,24 @@ public enum ProcessorCraft implements Item {
 
     public Map<Item, Integer> getIngredients() { return ingredients; }
 
-    public int getSellPrice() { return sellPrice; }
+    public int getPrice() { return sellPrice; }
 
     public String getSource() { return source; }
+
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 
     public Map<Item, Integer> process(Item item, int amount) {
         return strategy.process(item, amount);
     }
+
+    public Map<Item, Integer> process(Item item, int amount, Ingredient coal, int coalAmount) {
+        return strategy.process(item, amount, coal, coalAmount);
+    }
+
 }

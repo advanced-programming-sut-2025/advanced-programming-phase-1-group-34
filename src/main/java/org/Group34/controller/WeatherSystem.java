@@ -2,7 +2,7 @@ package org.Group34.controller;
 
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.WeatherCondition;
-import org.Group34.model.time.Time;
+import org.Group34.model.items.Time;
 
 import java.util.ArrayList;
 import java.util.HashMap;

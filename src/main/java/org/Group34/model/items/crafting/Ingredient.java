@@ -9,7 +9,7 @@ public enum Ingredient implements Item, Entity {
     GOLD_BAR("Gold Bar", 0),
     IRIDIUM_BAR("Iridium Bar", 0),
     WOOD("Wood", 0),
-    COAL("Coal", 0),
+    COAL("Coal", 50),
     FIBER("Fiber", 0),
     IRIDIUM_ORE("Iridium Ore", 0),
     COPPER_ORE("Copper Ore", 0),

@@ -12,8 +12,6 @@ public enum GameCommands implements Command {
     WALK("\\s*walk\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s*"),
     PRINT_MAP("\\s*print\\s+map\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s+-s\\s+(?<size>\\d+)\\s*"),
     HELP_READING_MAP("\\s*help\\s+reading\\s+map\\s*"),
-    INVENTORY_SHOW("\\s*inventory\\s+show\\s*"),
-    INVENTORY_TRASH("\\s*inventory\\s+trash\\s+-i\\s+(?<itemName>.+)\\s+-n\\s+(?<number>\\d+)\\s*"),
 
     // ----- Farming Commands -----
     CRAFT_INFO("\\s*craftinfo\\s+-n\\s+(?<craftName>.+)\\s*"),
@@ -28,8 +26,28 @@ public enum GameCommands implements Command {
     SHOW_CURRENT_TOOLS("\\s*tools\\s+show\\s+current\\s*"),
     SHOW_AVAILABLE_TOOLS("\\s*tools\\s+show\\s+available\\s*"),
     TOOLS_UPGRADE("\\s*tools\\s+upgrade\\s+(?<toolName>.+)\\s*"),
-    TOOLS_USE("\\s*tools\\s+use\\s+-d\\s+(?<direction>.+)\\s*");
+    TOOLS_USE("\\s*tools\\s+use\\s+-d\\s+(?<direction>.+)\\s*"),
     // -------------------------
+
+    // ----- Inventory Commands -----
+    INVENTORY_SHOW("\\s*inventory\\s+show\\s*"),
+    INVENTORY_TRASH("\\s*inventory\\s+trash\\s+-i\\s+(?<itemName>.+)\\s+-n\\s+(?<number>\\d+)\\s*"),
+    INVENTORY_PLACE_ITEM("\\s*place\\s+item\\s+-n\\s+(?<item_name>.+)\\s+-d\\s+(?<direction>.+)\\s*"),
+    CHEAT_ADD_ITEM("\\s*cheat\\s+add\\s+item\\s+-n\\s+(?<item_name>.+)\\s+-c\\s+(?<count>\\d+)\\s*"),
+    // -------------------------
+
+    // ----- HouseMenu Commands -----
+    SHOW_RECIPES("\\s*crafting\\s+show\\s+recipes\\s*"),
+    CRAFT_ITEM("\\s*crafting\\s+craft\\s+(?<item_name>.+)\\s*"),
+    // -------------------------
+
+    // ----- Artisan Commands -----
+    ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisan_name>.+)\\s+(?<item1_name>.+)(\\s+(?<item2_name))?\\s*"),
+    ARTISAN_GET("\\s+artisan\\s+get\\s+(?<artisan_name>.+)\\s+");
+    // -------------------------
+
+
+
 
     // Regex: ---------- END -------------
 

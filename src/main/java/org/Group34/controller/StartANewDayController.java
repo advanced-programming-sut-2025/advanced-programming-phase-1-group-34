@@ -6,10 +6,11 @@ import org.Group34.model.entities.Player;
 import org.Group34.model.entities.naturalElements.*;
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.creatorOfNaturalElements.*;
+import org.Group34.model.items.Time;
 import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.crafting.PlacingCraft;
+import org.Group34.model.items.crafting.ProcessorCraft;
 import org.Group34.model.map.Space;
-import org.Group34.model.time.Time;
 
 import java.util.*;
 
@@ -113,27 +114,11 @@ public class StartANewDayController {
 
     private static void scareCrow(HashSet<int[]> scareCrowPlants, Space space, int x, int y) {
         Entity entity = space.getEntityByLocation(x, y);
-        if (entity.equals(PlacingCraft.SCARECROW))
-            scareSurrounding(scareCrowPlants, space, x, y, 8);
-        if (entity.equals(PlacingCraft.DELUXE_SCARECROW))
-            scareSurrounding(scareCrowPlants, space, x, y, 12);
+        if (entity.equals(PlacingCraft.SCARECROW) || entity.equals(PlacingCraft.DELUXE_SCARECROW))
+            ((PlacingCraft) entity).place(scareCrowPlants, space, x, y);
     }
 
-    private static void scareSurrounding(HashSet<int[]> scareCrowPlants, Space space, int x, int y, int r) {
-        Entity[][] entities = space.entities();
-        int xBegin = x - r;
-        int xEnd = x + r;
-        int yBegin = y - r;
-        int yEnd = y + r;
 
-        for (int i = xBegin; i <= xEnd; i++)
-            for (int j = yBegin; j <= yEnd; j++) {
-                Entity entity = entities[i][j];
-
-                if (entity instanceof PlantAble)
-                    scareCrowPlants.add(new int[]{i, j});
-            }
-    }
 
     private static void addPlant(HashSet<int[]> plantsOnFarm, Space space, int i, int j) {
         if (space.getEntityByLocation(i, j) instanceof PlantAble){
@@ -144,29 +129,12 @@ public class StartANewDayController {
 
     private void sprinklerWatering(Space space, int x, int y) {
         Entity entity = space.getEntityByLocation(x, y);
-        if (entity.equals(PlacingCraft.SPRINKLER))
-            waterSurrounding(space, x, y, 4);
-        if (entity.equals(PlacingCraft.QUALITY_SPRINKLER))
-            waterSurrounding(space, x, y, 8);
-        if (entity.equals(PlacingCraft.IRIDIUM_SPRINKLER))
-            waterSurrounding(space, x, y, 24);
+        if (entity.equals(PlacingCraft.SPRINKLER) || entity.equals(PlacingCraft.QUALITY_SPRINKLER)
+                 || entity.equals(PlacingCraft.IRIDIUM_SPRINKLER))
+            ((PlacingCraft) entity).place(space, x, y);
     }
 
-    private void waterSurrounding(Space space, int x, int y, int r) {
-        Entity[][] entities = space.entities();
-        int xBegin = x - r;
-        int xEnd = x + r;
-        int yBegin = y - r;
-        int yEnd = y + r;
 
-        for (int i = xBegin; i <= xEnd; i++)
-            for (int j = yBegin; j <= yEnd; j++) {
-                Entity entity = entities[i][j];
-
-                if (entity instanceof PlantAble)
-                    ((PlantAble) entity).setNeedWater(false);
-            }
-    }
 
 
     // ----- Random Placement Of Foraging Crops And Seeds -----
@@ -262,7 +230,7 @@ public class StartANewDayController {
             plants.add(TreeCreator.MYSTIC_TREE.createInstance());
         }
 
-        else if (time.getSeason() == Season.AUTUMN) {
+        else if (time.getSeason() == Season.FALL) {
             plants.add(ForagingCropCreator.COMMON_MUSHROOM.createInstance());
             plants.add(ForagingCropCreator.BLACKBERRY.createInstance());
             plants.add(ForagingCropCreator.CHANTERELLE.createInstance());
