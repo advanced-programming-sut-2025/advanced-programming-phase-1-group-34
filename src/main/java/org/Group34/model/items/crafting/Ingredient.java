@@ -1,14 +1,15 @@
 package org.Group34.model.items.crafting;
 
+import org.Group34.model.entities.Entity;
 import org.Group34.model.items.Item;
 
-public enum Ingredient implements Item {
+public enum Ingredient implements Item, Entity {
     COPPER_BAR("Copper Bar", 0),
     IRON_BAR("Iron Bar", 0),
     GOLD_BAR("Gold Bar", 0),
     IRIDIUM_BAR("Iridium Bar", 0),
     WOOD("Wood", 0),
-    COAL("Coal", 0),
+    COAL("Coal", 50),
     FIBER("Fiber", 0),
     IRIDIUM_ORE("Iridium Ore", 0),
     COPPER_ORE("Copper Ore", 0),

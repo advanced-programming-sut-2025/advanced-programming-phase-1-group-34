@@ -9,18 +9,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class  Player implements Entity {
-    private String name;
-    private int money;
-
     private static int passedOutUsers = 0;
 
+    private String name;
+    private int money;
     private int[] location;
     private Space currentSpace;
     private int energy = 200;
     private boolean passedOut = false;
-    private HashMap<Item, Integer> inventory = new HashMap<>();
-    private ArrayList<Recipe> learnedRecipes = new ArrayList<>();
-    private HashMap<LevelType, Integer> levelUnit = new HashMap<>(){{
+    private final HashMap<Item, Integer> inventory = new HashMap<>();
+    private final ArrayList<Recipe> learnedRecipes = new ArrayList<>();
+    private final HashMap<LevelType, Integer> levelUnit = new HashMap<>(){{
         level.put(LevelType.FARMING_LEVEL, 0);
         level.put(LevelType.MINING_LEVEL, 0);
         level.put(LevelType.FORAGING_LEVEL, 0);
@@ -180,6 +179,8 @@ public class  Player implements Entity {
         Player.passedOutUsers++;
         this.passedOut = passedOut;
     }
+
+
 
     @Override
     public String toString() {

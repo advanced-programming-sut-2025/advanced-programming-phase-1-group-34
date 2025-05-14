@@ -1,14 +1,14 @@
 package org.Group34.model;
 
+import org.Group34.controller.WeatherSystem;
 import org.Group34.model.entities.Player;
-import org.Group34.model.items.Time;
 import org.Group34.model.map.Map;
 
 import java.util.HashMap;
 
 
 
-public record Game(User creator, HashMap<User, Player> players, Map map, Time time) {
+public record Game(User creator, HashMap<User, Player> players, Map map, Time time, WeatherSystem weatherSystem) {
 
     public void save(){
         //TODO saves in files in directory
