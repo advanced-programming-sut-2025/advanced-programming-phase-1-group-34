@@ -15,17 +15,12 @@ public class MarnieRanch extends Shop {
     private static final int closingHour = 16;
     private static final ArrayList<Item> shopInventory = new ArrayList<>();
     private static final ArrayList<Item> livesTock = new ArrayList<>();
-    private static final HashMap<Item, Integer> shopInventoryLimit = new HashMap<>();
-    private static final HashMap<Item, Integer> livesTockLimit = new HashMap<>();
+    private HashMap<Item, Integer> shopInventoryLimit = new HashMap<>();
+    private HashMap<Item, Integer> livesTockLimit = new HashMap<>();
     static {
 //        shopInventory.add(Hay); TODO
         shopInventory.add(new MilkPail());
         shopInventory.add(new Shear());
-
-        shopInventoryLimit.put(shopInventory.get(0), -11);
-        shopInventoryLimit.put(shopInventory.get(1), 1);
-        shopInventoryLimit.put(shopInventory.get(2), 1);
-
 
         livesTock.add(AnimalType.CHICKEN);
         livesTock.add(AnimalType.COW);
@@ -35,6 +30,11 @@ public class MarnieRanch extends Shop {
         livesTock.add(AnimalType.RABBIT);
         livesTock.add(AnimalType.DINOSAUR);
         livesTock.add(AnimalType.PIG);
+    }
+    {
+        shopInventoryLimit.put(shopInventory.get(0), -11);
+        shopInventoryLimit.put(shopInventory.get(1), 1);
+        shopInventoryLimit.put(shopInventory.get(2), 1);
 
         livesTockLimit.put(livesTock.get(0), 2);
         livesTockLimit.put(livesTock.get(1), 2);
@@ -71,20 +71,73 @@ public class MarnieRanch extends Shop {
         return livesTock;
     }
 
-    public static HashMap<Item, Integer> getShopInventoryLimit() {
+    public HashMap<Item, Integer> getShopInventoryLimit() {
         return shopInventoryLimit;
     }
 
-    public static HashMap<Item, Integer> getLivesTockLimit() {
+    public HashMap<Item, Integer> getLivesTockLimit() {
         return livesTockLimit;
     }
     // -----------------------------
 
-    public static int getShopInventory(Item inventory) {
+    public int getShopInventoryLimit(Item inventory) {
         return shopInventoryLimit.get(inventory);
     }
 
-    public static int getLiveTock(Item liveTock) {
+    public int getLiveTockLimit(Item liveTock) {
         return livesTockLimit.get(liveTock);
+    }
+
+    public String showAllProducts() {
+        StringBuilder result = new StringBuilder();
+
+        result.append("----- Blacksmith -----\n");
+        result.append("\n* Shop Inventory:\n");
+        for (Item item : shopInventory) {
+            if (item instanceof MilkPail tool) {
+                result
+                        .append("Name: " + tool.getName() + "\n")
+                        .append("Price: " + tool.getPrice() + "\n")
+                        .append("Description: " + tool.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getShopInventoryLimit(item) >= 0) {
+                    result.append(getShopInventoryLimit(item) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+            }
+            else if (item instanceof Shear tool) {
+                result
+                        .append("Name: " + tool.getName() + "\n")
+                        .append("Price: " + tool.getPrice() + "\n")
+                        .append("Description: " + tool.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getShopInventoryLimit(item) >= 0) {
+                    result.append(getShopInventoryLimit(item) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+            }
+            result.append("----------------------\n");
+        }
+
+        result.append("\n* Lives Tock:\n");
+        for (Item item : livesTock) {
+            AnimalType tool = (AnimalType) item;
+            result
+                    .append("Name: " + tool.getName() + "\n")
+                    .append("Price: " + tool.getPrice() + "\n")
+                    .append("Description: " + tool.getDescription() + "\n")
+                    .append("Daily Limit: ");
+            if (getLiveTockLimit(item) >= 0) {
+                result.append(getLiveTockLimit(item) + "\n");
+            } else {
+                result.append("unlimited\n");
+            }
+            result.append("----------------------\n");
+        }
+
+        result.deleteCharAt(result.length() - 1);
+        return result.toString();
     }
 }

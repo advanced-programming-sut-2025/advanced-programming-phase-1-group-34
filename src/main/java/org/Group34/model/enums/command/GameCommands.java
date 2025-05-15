@@ -43,11 +43,57 @@ public enum GameCommands implements Command {
 
     // ----- Artisan Commands -----
     ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisan_name>.+)\\s+(?<item1_name>.+)(\\s+(?<item2_name))?\\s*"),
-    ARTISAN_GET("\\s+artisan\\s+get\\s+(?<artisan_name>.+)\\s+");
+    ARTISAN_GET("\\s+artisan\\s+get\\s+(?<artisan_name>.+)\\s+"),
     // -------------------------
 
+    // ----- Time Commands -----
+    SHOW_TIME("\\s*time\\s*"),
+    SHOW_DATE("\\s*date\\s*"),
+    SHOW_DATETIME("\\s*datetime\\s*"),
+    SHOW_WEEKDAY("\\s*day\\s+of\\s+the\\s+week\\s*"),
+    // -------------------------
 
+    // ----- Season Commands -----
+    SHOW_SEASON("\\s*season\\s*"),
+    // -------------------------
 
+    // ----- Weather Commands -----
+    SHOW_TODAY_WEATHER("\\s*weather\\s*"),
+    SHOW_TOMORROW_WEATHER("\\s*weather\\s+forecast\\s*"),
+    // -------------------------
+
+    // ----- Greenhouse Commands -----
+    BUILD_GREENHOUSE("\\s*greenhouse\\s+build\\s*"),
+    // -------------------------
+
+    // ----- Animals Commands -----
+    BUILD_ANIMALS_PLACEMENT("\\s*build\\s+-a\\s+(?<buildingName>.+)\\s+-l\\s+(?<x>\\d+)\\s+,\\s+(?<y>\\d+)\\s*"),
+    BUY_ANIMAL("\\s*buy\\s+animal\\s+-a\\s+(?<animal>.+)\\s+-n\\s+(?<name>.+)\\s*"),
+    PET_ANIMAL("\\s*pet\\s+-n\\s+(?<name>.+)\\s*"),
+    LIST_ANIMALS("\\s*animals\\s*"),
+    SHEPHERD_ANIMAL("\\s*shepherd\\s+animals\\s+-n\\s+(?<animalName>.+)\\s+-l\\s+(?<x>\\d+)\\s+,\\s+(?<y>\\d+)\\s*"),
+    FEED_ANIMAL("\\s*feed\\s+hay\\s+-n\\s+(?<animalName).+)\\s*"),
+    SHOW_PRODUCTS("\\s*produces\\s*"),
+    COLLECT_PRODUCTS("\\s*collect\\s+produce\\s+-n\\s+(?<animalName>.+)\\s*"),
+    SELL_ANIMAL("\\s*sell\\s+animal\\s+-n\\s+(?<animalName>.+)\\s*"),
+    // -------------------------
+
+    // ----- Fishing Commands -----
+    START_FISHING("\\s*fishing\\s+-p\\s+(?<fishingPole>.+)\\s*"),
+    // -------------------------
+
+    // ----- NPC Commands -----
+    MEET_NPC("\\s*meet\\s+NPC\\s+(?<npcName>.+)\\s*"),
+    SEND_GIFT("\\s*gift\\s+NPC\\s+(?<npcName>.+)\\s+-i\\s+(?<itemName>.+)\\s*"),
+    LIST_NPC_FRIENDSHIP("\\s*friendship\\s+NPC\\s+list\\s*"),
+    // -------------------------
+
+    // ----- Shop Commands -----
+    SHOW_ALL_PRODUCTS("\\s*show\\s+all\\s+products\\s*"),
+    SHOW_AVAILABLE_PRODUCTS("\\s*show\\s+all\\s+available\\s+products\\s*"),
+    PURCHASE("\\s*purchase\\s+(?<productName>.+)\\s*"),
+    PURCHASE_WITH_COUNT("\\s*purchase\\s+(?<productName>.+)\\s+-n\\s+(?<count>\\d+)\\s*");
+    // -------------------------
 
     // Regex: ---------- END -------------
 

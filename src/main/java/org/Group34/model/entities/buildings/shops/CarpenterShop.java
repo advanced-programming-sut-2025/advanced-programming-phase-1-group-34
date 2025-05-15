@@ -17,15 +17,11 @@ public class CarpenterShop extends Shop {
     private static final int closingHour = 20;
     private static final ArrayList<Item> permanentStock = new ArrayList<>();
     private static final ArrayList<Entity> farmBuildings = new ArrayList<>();
-    private static final HashMap<Item, Integer> permanentStockLimit = new HashMap<>();
-    private static final HashMap<Entity, Integer> farmBuildingsLimit = new HashMap<>();
+    private HashMap<Item, Integer> permanentStockLimit = new HashMap<>();
+    private HashMap<Entity, Integer> farmBuildingsLimit = new HashMap<>();
     static {
         permanentStock.add(Ingredient.WOOD);
         permanentStock.add(Ingredient.STONE);
-
-        permanentStockLimit.put(permanentStock.get(0), -11);
-        permanentStockLimit.put(permanentStock.get(1), -11);
-
 
         farmBuildings.add(new Barn(BarnType.BARN_BASIC));
         farmBuildings.add(new Barn(BarnType.BARN_BIG));
@@ -35,6 +31,10 @@ public class CarpenterShop extends Shop {
         farmBuildings.add(new Coop(BarnType.COOP_DELUXE));
 //        farmBuildings.add(Well);
 //        farmBuildings.add(ShippingBin);
+    }
+    {
+        permanentStockLimit.put(permanentStock.get(0), -11);
+        permanentStockLimit.put(permanentStock.get(1), -11);
 
         farmBuildingsLimit.put(farmBuildings.get(0), 1);
         farmBuildingsLimit.put(farmBuildings.get(1), 1);
@@ -71,21 +71,21 @@ public class CarpenterShop extends Shop {
         return farmBuildings;
     }
 
-    public static HashMap<Item, Integer> getPermanentStockLimit() {
+    public HashMap<Item, Integer> getPermanentStockLimit() {
         return permanentStockLimit;
     }
 
-    public static HashMap<Entity, Integer> getFarmBuildingsLimit() {
+    public HashMap<Entity, Integer> getFarmBuildingsLimit() {
         return farmBuildingsLimit;
     }
     // -----------------------------
 
 
-    public static int getPermanentStockLimit(Item stock) {
+    public int getPermanentStockLimit(Item stock) {
         return permanentStockLimit.get(stock);
     }
 
-    public static int getFarmBuildingLimit(Entity building) {
+    public int getFarmBuildingLimit(Entity building) {
         return farmBuildingsLimit.get(building);
     }
 }

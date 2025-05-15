@@ -2,6 +2,7 @@ package org.Group34.view;
 
 import org.Group34.controller.FarmingController;
 import org.Group34.controller.GameController;
+import org.Group34.controller.ShopController;
 import org.Group34.controller.ToolsController;
 import org.Group34.model.App;
 import org.Group34.model.Game;
@@ -230,6 +231,47 @@ public class GameView extends AppMenu {
             }
             // ----------------------
 
+            // ----- Shop View -----
+            else if (command.matches(GameCommands.SHOW_ALL_PRODUCTS.getRegex())) {
+                ShopController controller = new ShopController(); // TODO It will fix in GameController
+
+                Result result = controller.showAllProducts();
+                showMessage(result.message());
+            }
+            else if (command.matches(GameCommands.SHOW_AVAILABLE_PRODUCTS.getRegex())) {
+                ShopController controller = new ShopController(); // TODO It will fix in GameController
+
+                Result result = controller.showAvailableProducts();
+                showMessage(result.message());
+            }
+            else if (command.matches(GameCommands.PURCHASE.getRegex())) {
+                ShopController controller = new ShopController(); // TODO It will fix in GameController
+
+                Pattern pattern = Pattern.compile(GameCommands.PURCHASE.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String productName = matcher.group("productName").trim();
+
+                    Result result = controller.purchase(productName);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.PURCHASE_WITH_COUNT.getRegex())) {
+                ShopController controller = new ShopController(); // TODO It will fix in GameController
+
+                Pattern pattern = Pattern.compile(GameCommands.PURCHASE_WITH_COUNT.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String productName = matcher.group("productName").trim();
+                    int count = Integer.parseInt(matcher.group("count").trim());
+
+                    Result result = controller.purchase(productName, count);
+                    showMessage(result.message());
+                }
+            }
+            // ---------------------
 
             else {
                 showMessage("Invalid command!");
