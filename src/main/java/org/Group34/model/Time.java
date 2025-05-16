@@ -23,30 +23,28 @@ public class Time implements  Comparable<Time> {
     }
 
     public void addHours(int hours) {
-        if (hours == 0) return;
+        if (hours < 0) throw new IllegalArgumentException("Cannot add negative hours");
 
-        int totalRelativeHours = (this.hour - 9) + hours;
+        int totalHours = (hour - 9) + hours;
+        int daysToAdd = totalHours / 14;
+        this.hour = 9 + (totalHours % 14);
 
-        int daysToAdd = Math.floorDiv(totalRelativeHours, 14);
-        int remainingHours = Math.floorMod(totalRelativeHours, 14);
-
-        this.hour = 9 + remainingHours;
-
-        if (daysToAdd != 0) {
+        if (daysToAdd > 0) {
             addDays(daysToAdd);
         }
     }
 
     public void addDays(int days) {
-        if (days == 0) return;
+        if (days < 0) throw new IllegalArgumentException("Cannot add negative days");
 
-        int totalDays = this.date + days - 1;  // 0-based
-        int seasonsToAdd = Math.floorDiv(totalDays, 28);
+        int newDate = this.date + days;
+        int seasonsToAdd = (newDate - 1) / 28;
+        this.date = (newDate - 1) % 28 + 1;
 
-        this.date = Math.floorMod(totalDays, 28) + 1;
         this.dayOfWeek = dayOfWeek.next(days);
         this.season = season.next(seasonsToAdd);
     }
+
 
     public int getHour() {
         return hour;

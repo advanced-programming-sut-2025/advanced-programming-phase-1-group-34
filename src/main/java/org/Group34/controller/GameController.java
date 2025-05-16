@@ -146,12 +146,12 @@ public class GameController {
 
         String message = "";
         switch (type){
-            case "time": message = game.time().getHour() + ":00" ;
-            case "date": message = game.time().getSeason().getName() + " " + game.time().getDate();
+            case "time": message = game.time().getHour() + ":00" ; break;
+            case "date": message = game.time().getSeason().getName() + " " + game.time().getDate(); break;
             case "datetime": message = game.time().getSeason().getName() + " " + game.time().getDate() + " "
-                    + game.time().getHour() + ":00";
-            case "day of week": message = game.time().getDayOfWeek().getName();
-            case "season": message = game.time().getSeason().getName();
+                    + game.time().getHour() + ":00"; break;
+            case "day of week": message = game.time().getDayOfWeek().getName(); break;
+            case "season": message = game.time().getSeason().getName(); break;
         }
         return new Result(true, message);
     }
