@@ -24,7 +24,7 @@ public class MainMenu extends AppMenu{
                 App.setCurrentMenu(Menu.GAME_MENU);
             }
             else if (command.matches(MainMenuCommand.LOGOUT.getRegex())) {
-                App.setCurrentMenu(Menu.LOGIN_MENU);
+                App.setCurrentMenu(Menu.REGISTER_MENU);
             }
             else if (command.matches(MainMenuCommand.SHOW_MENU.getRegex())) {
                 showMessage("You are currently in Main Menu.");
