@@ -47,6 +47,7 @@ public class GameController {
 
         game.save();
         App.setCurrentGame(null);
+        //TODO change it to main menu after completing game.save()
         App.setAppMenu(new GameMenu());
         return new Result(true, "Game saved. Returning to menu.");
     }

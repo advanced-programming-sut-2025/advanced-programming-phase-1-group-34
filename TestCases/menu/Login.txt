@@ -1,5 +1,5 @@
 register -u ali123 -p P@ss1234 P@ss1234 -n ali -e ali123@example.com -g male
-pick question 1 -a betoche -c betoche
+pick question -q 1 -a betoche -c betoche
 user logout
 go to login
 login -u random -p random -stay-logged-in
