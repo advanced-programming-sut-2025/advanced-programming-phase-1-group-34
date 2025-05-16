@@ -16,3 +16,4 @@ game map 2
 menu enter main menu
 menu enter game menu
 load game
+exit game
