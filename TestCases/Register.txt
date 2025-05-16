@@ -1,0 +1,12 @@
+register -u ali123# -p Pass1234 Pass1234 -n ali -e ali123@example.com -g male
+register -u ali123 -p Pass1234 Pass1234 -n ali -e ali123@example.com -g male
+register -u ali123 -p P@ss1234 Pass1234 -n ali -e ali123@example.com -g male
+P@ss1234
+pick question 1 -a betoche -c betoche
+user logout
+register -u ali123 -p @Pass1234 @Pass1234 -n ali2 -e ali1234@example.com -g female
+no
+register -u newAli123 -p Pa$$1234 Pa$$1234 -n ali -e newAli123@example.com -g female
+pick question 1 -a betoche -c betoche
+user logout
+menu exit
