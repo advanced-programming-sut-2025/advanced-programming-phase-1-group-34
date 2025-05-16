@@ -36,9 +36,6 @@ public class RegisterMenu extends AppMenu {
 
                     Result result = controller.register(scanner, username, password, passwordConfirm, nickname, email, gender);
                     showMessage(result.message());
-                    if (result.success()) {
-                        App.setCurrentMenu(Menu.MAIN_MENU);
-                    }
                 }
             }
 
@@ -54,9 +51,6 @@ public class RegisterMenu extends AppMenu {
 
                     Result result = controller.registerWithRandomPassword(scanner, username, nickname, email, gender);
                     showMessage(result.message());
-                    if (result.success()) {
-                        App.setCurrentMenu(Menu.MAIN_MENU);
-                    }
                 }
             }
 
