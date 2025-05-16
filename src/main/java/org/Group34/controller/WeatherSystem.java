@@ -18,6 +18,10 @@ public class WeatherSystem {
     private WeatherCondition tomorrowCondition;
     private final ArrayList<int[]> lightningStrikeMap = new ArrayList<>();
 
+    public void setTodayCondition(WeatherCondition todayCondition) {
+        this.todayCondition = todayCondition;
+    }
+
     /**
      * Initializes the weather system by generating today's and tomorrow's weather based on current time
      * Should be called at the start of the game
