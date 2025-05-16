@@ -13,7 +13,9 @@ public enum MainMenuCommand implements Command {
 
     LOGOUT("user\\s+logout"),
 
-    SHOW_MENU("show\\s+current\\s+menu");
+    SHOW_MENU("show\\s+current\\s+menu"),
+
+    LIST_MENUS("\\s*list\\s+menus\\s*");
     // Regex: ---------- END -------------
     
     private final String regex;

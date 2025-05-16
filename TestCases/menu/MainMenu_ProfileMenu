@@ -1,0 +1,17 @@
+register -u ali123 -p P@ss1234 P@ss1234 -n ali -e ali123@example.com -g male
+pick question 1 -a betoche -c betoche
+show current menu
+list menus
+menu enter profile menu
+user info
+change username -u newAli123
+change nickname -u ali
+change email -e newAli123@gamil@.com
+change password -p NewP@ss123 -o Pass1234
+user info
+menu enter main menu
+show current menu
+menu enter game menu
+menu enter main menu
+user logout
+menu exit

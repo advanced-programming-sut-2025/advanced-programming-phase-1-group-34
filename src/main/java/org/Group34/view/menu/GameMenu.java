@@ -58,6 +58,11 @@ public class GameMenu extends AppMenu{
                 showMessage(result.message());
             }
 
+            else if (command.matches(GameMenuCommands.ENTER_MAIN_MENU.getRegex())) {
+                App.setCurrentMenu(Menu.MAIN_MENU);
+                showMessage("You are now in main menu.");
+            }
+
             else {
                 showMessage("Invalid command.");
             }

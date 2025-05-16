@@ -88,6 +88,7 @@ public class ProfileMenu extends AppMenu {
 
             else if (command.matches(ProfileMenuCommand.ENTER_MAIN_MENU.getRegex())) {
                 App.setCurrentMenu(Menu.MAIN_MENU);
+                showMessage("You are now in Main Menu.");
             }
 
             else {
