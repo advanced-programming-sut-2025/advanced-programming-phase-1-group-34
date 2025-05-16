@@ -6,6 +6,7 @@ import org.Group34.controller.ToolsController;
 import org.Group34.model.App;
 import org.Group34.model.Game;
 import org.Group34.model.Result;
+import org.Group34.model.Time;
 import org.Group34.model.enums.Menu;
 import org.Group34.model.enums.command.GameCommands;
 import org.Group34.view.menu.AppMenu;
@@ -228,6 +229,130 @@ public class GameView extends AppMenu {
                     showMessage(result.message());
                 }
             }
+
+            // ===== Time Commands ====
+            else if (command.matches(GameCommands.SHOW_TIME.getRegex())) {
+                showMessage(controller.displayTime("time").message());
+            }
+            else if (command.matches(GameCommands.SHOW_DATE.getRegex())) {
+                showMessage(controller.displayTime("date").message());
+            }
+            else if (command.matches(GameCommands.SHOW_DATETIME.getRegex())) {
+                showMessage(controller.displayTime("datetime").message());
+            }
+            else if (command.matches(GameCommands.SHOW_WEEKDAY.getRegex())) {
+                showMessage(controller.displayTime("day of week").message());
+            }
+
+            // ===== Season Commands ====
+            else if (command.matches(GameCommands.SHOW_SEASON.getRegex())) {
+                showMessage(controller.displayTime("season").message());
+            }
+
+            // ===== Weather Commands ====
+            else if (command.matches(GameCommands.SHOW_TODAY_WEATHER.getRegex())) {
+                showMessage(controller.displayWeather("today weather").message());
+            }
+            else if (command.matches(GameCommands.SHOW_TOMORROW_WEATHER.getRegex())) {
+                showMessage(controller.displayWeather("tomorrow weather").message());
+            }
+
+            // ===== Greenhouse Commands ====
+            else if (command.matches(GameCommands.BUILD_GREENHOUSE.getRegex())) {
+                // handle build greenhouse
+            }
+
+            // ===== Animals Commands =======
+            else if (command.matches(GameCommands.BUILD_ANIMALS_PLACEMENT.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.BUILD_ANIMALS_PLACEMENT.getRegex()).matcher(command);
+                if (matcher.matches()) {
+                    String buildingName = matcher.group("buildingName");
+                    int x = Integer.parseInt(matcher.group("x"));
+                    int y = Integer.parseInt(matcher.group("y"));
+                    // handle build animal placement
+                }
+            }
+            else if (command.matches(GameCommands.BUY_ANIMAL.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.BUY_ANIMAL.getRegex()).matcher(command);
+                if (matcher.matches()) {
+                    String animal = matcher.group("animal");
+                    String name = matcher.group("name");
+                    // handle buy animal
+                }
+            }
+            else if (command.matches(GameCommands.PET_ANIMAL.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.PET_ANIMAL.getRegex()).matcher(command);
+                if (matcher.matches()) {
+                    String name = matcher.group("name");
+                    // handle pet animal
+                }
+            }
+            else if (command.matches(GameCommands.LIST_ANIMALS.getRegex())) {
+                // handle list animals
+            }
+            else if (command.matches(GameCommands.SHEPHERD_ANIMAL.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.SHEPHERD_ANIMAL.getRegex()).matcher(command);
+                if (matcher.matches()) {
+                    String animalName = matcher.group("animalName");
+                    int x = Integer.parseInt(matcher.group("x"));
+                    int y = Integer.parseInt(matcher.group("y"));
+                    // handle shepherd animal
+                }
+            }
+            else if (command.matches(GameCommands.FEED_ANIMAL.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.FEED_ANIMAL.getRegex()).matcher(command);
+                if (matcher.matches()) {
+                    String animalName = matcher.group("animalName");
+                    // handle feed animal
+                }
+            }
+            else if (command.matches(GameCommands.SHOW_PRODUCTS.getRegex())) {
+                // handle show products
+            }
+            else if (command.matches(GameCommands.COLLECT_PRODUCTS.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.COLLECT_PRODUCTS.getRegex()).matcher(command);
+                if (matcher.matches()) {
+                    String animalName = matcher.group("animalName");
+                    // handle collect product
+                }
+            }
+            else if (command.matches(GameCommands.SELL_ANIMAL.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.SELL_ANIMAL.getRegex()).matcher(command);
+                if (matcher.matches()) {
+                    String animalName = matcher.group("animalName");
+                    // handle sell animal
+                }
+            }
+
+            // ===== Fishing Commands =====
+            else if (command.matches(GameCommands.START_FISHING.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.START_FISHING.getRegex()).matcher(command);
+                if (matcher.matches()) {
+                    String fishingPole = matcher.group("fishingPole");
+                    // handle start fishing
+                }
+            }
+
+            // ===== NPC Commands =========
+            else if (command.matches(GameCommands.MEET_NPC.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.MEET_NPC.getRegex()).matcher(command);
+                if (matcher.matches()) {
+                    String npcName = matcher.group("npcName");
+                    // handle meet NPC
+                }
+            }
+            else if (command.matches(GameCommands.SEND_GIFT.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.SEND_GIFT.getRegex()).matcher(command);
+                if (matcher.matches()) {
+                    String npcName = matcher.group("npcName");
+                    String itemName = matcher.group("itemName");
+                    // handle send gift
+                }
+            }
+            else if (command.matches(GameCommands.LIST_NPC_FRIENDSHIP.getRegex())) {
+                // handle list NPC friendship
+            }
+
             // ----------------------
 
 

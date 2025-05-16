@@ -35,7 +35,7 @@ public class GreenHouseController {
         boolean success = greenhouse.plantCrop(row, col, crop);
         return new Result(success, success
                 ? "Crop planted successfully."
-                : "Failed to plant crop. Maybe plot is already occupied?");
+                : "Failed to plant crop. Maybe plot is already occupied.");
     }
 
     public Result fillWaterTank() {
@@ -47,7 +47,7 @@ public class GreenHouseController {
         boolean success = greenhouse.waterPlot(row, col);
         return new Result(success, success
                 ? String.format("Plot (%d,%d) watered successfully.", row, col)
-                : "Failed to water plot. Not enough water or invalid position?");
+                : "Failed to water plot. Not enough water.");
     }
 
     public Result getStatus() {
