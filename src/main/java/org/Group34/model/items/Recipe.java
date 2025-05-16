@@ -3,7 +3,7 @@ package org.Group34.model.items;
 import org.Group34.model.items.crafting.Craft;
 import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.items.crafting.ProcessorCraft;
-import org.Group34.model.items.foods.CookedFood;
+// import org.Group34.model.items.foods.CookedFood;
 
 /**
  * Enum of all craftable recipes, linking each recipe to its placeable or processable item.

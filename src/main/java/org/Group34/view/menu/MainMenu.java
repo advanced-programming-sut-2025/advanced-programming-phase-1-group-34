@@ -19,15 +19,21 @@ public class MainMenu extends AppMenu{
 
             if(command.matches(MainMenuCommand.ENTER_PROFILE_MENU.getRegex())) {
                 App.setCurrentMenu(Menu.PROFILE_MENU);
+                showMessage("You are now in profile menu.");
             }
             else if (command.matches(MainMenuCommand.ENTER_GAME_MENU.getRegex())) {
                 App.setCurrentMenu(Menu.GAME_MENU);
+                showMessage("You are now in game menu.");
             }
             else if (command.matches(MainMenuCommand.LOGOUT.getRegex())) {
-                App.setCurrentMenu(Menu.LOGIN_MENU);
+                App.setCurrentMenu(Menu.REGISTER_MENU);
+                showMessage("You are now in register menu.");
             }
             else if (command.matches(MainMenuCommand.SHOW_MENU.getRegex())) {
                 showMessage("You are currently in Main Menu.");
+            }
+            else if (command.matches(MainMenuCommand.LIST_MENUS.getRegex())) {
+                showMessage("Profile menu\nGame menu");
             }
             else {
                 showMessage("Invalid command.");

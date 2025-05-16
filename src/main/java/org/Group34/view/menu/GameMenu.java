@@ -41,7 +41,7 @@ public class GameMenu extends AppMenu{
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
-                    String map = matcher.group("map_number");
+                    String map = matcher.group("mapNumber");
 
                     Result result = controller.gameMap(map);
                     showMessage(result.message());
@@ -56,6 +56,11 @@ public class GameMenu extends AppMenu{
             else if (command.matches(GameMenuCommands.SHOW_MENU.getRegex())) {
                 Result result = controller.showMenu();
                 showMessage(result.message());
+            }
+
+            else if (command.matches(GameMenuCommands.ENTER_MAIN_MENU.getRegex())) {
+                App.setCurrentMenu(Menu.MAIN_MENU);
+                showMessage("You are now in main menu.");
             }
 
             else {

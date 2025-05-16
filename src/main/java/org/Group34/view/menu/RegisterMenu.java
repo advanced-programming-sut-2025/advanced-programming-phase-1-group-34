@@ -81,6 +81,11 @@ public class RegisterMenu extends AppMenu {
                 showMessage("You are currently in Register Menu.");
             }
 
+            else if (command.matches(RegisterMenuCommand.GO_TO_LOGIN.getRegex())) {
+                App.setCurrentMenu(Menu.LOGIN_MENU);
+                showMessage("You are currently in Login Menu.");
+            }
+
             else if(command.matches(RegisterMenuCommand.EXIT.getRegex())) {
                 System.exit(0);
             }

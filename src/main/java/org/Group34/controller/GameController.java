@@ -19,7 +19,7 @@ public class GameController {
     private final int mainUser = 0;
     private int currentUser = 0;
     private final ArrayList<Boolean> forceTerminating = new ArrayList<>();
-
+    private final AnimalController animalController = new AnimalController();
 
     public GameController(Game game){
         this.game = game;
@@ -150,7 +150,21 @@ public class GameController {
             case "datetime": message = game.time().getSeason().getName() + " " + game.time().getDate() + " "
                     + game.time().getHour() + ":00";
             case "day of week": message = game.time().getDayOfWeek().getName();
+            case "season": message = game.time().getSeason().getName();
         }
+        return new Result(true, message);
+    }
+
+    public Result displayWeather(String type){
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
+
+        String message = "";
+        switch (type){
+            case "today weather": message = game.weatherSystem().getTodayCondition().toString();
+            case "tomorrow weather": message = game.weatherSystem().getTomorrowCondition().toString();
+        }
+
         return new Result(true, message);
     }
 

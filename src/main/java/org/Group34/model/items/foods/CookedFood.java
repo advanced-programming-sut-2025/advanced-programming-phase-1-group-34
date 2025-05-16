@@ -8,63 +8,63 @@ import org.Group34.model.items.crafting.Ingredient;
 
 import java.util.Map;
 
-public enum CookedFood implements Food {
-    FRIED_EGG("Fried Egg", Recipe.FRIED_EGG, Map.of(Product.EGG, 1), 50, 35),
-    BAKED_FISH("Baked Fish", Recipe.BAKED_FISH, Map.of(FishType.SARDINE, 1, FishType.SALMON, 1, CropProduct.WHEAT, 1), 75, 100),
-    SALAD("Salad", Recipe.SALAD, Map.of(CropProduct.LEEK, 1, CropProduct.DANDELION, 1), 113, 110),
-    OMELET("Omelet", Recipe.OMELET, Map.of(Product.EGG, 1, Product.MILK, 1), 100, 125),
-    PUMPKIN_PIE("Pumpkin Pie", Recipe.PUMPKIN_PIE, Map.of(Vegetable.PUMPKIN, 1, CropProduct.WHEAT_FLOUR, 1, Product.MILK, 1, CropProduct.SUGAR, 1), 225, 385),
-    SPAGHETTI("Spaghetti", Recipe.SPAGHETTI, Map.of(Vegetable.W, 1, Vegetable.TOMATO, 1), 75, 120),
-    PIZZA("Pizza", Recipe.PIZZA, Map.of(Item.WHEAT_FLOUR, 1, Vegetable.TOMATO, 1, Product.CHEESE, 1), 150, 300),
-    TORTILLA("Tortilla", Recipe.TORTILLA, Map.of(Vegetable.CORN, 1), 50, 50),
-    MAKI_ROLL("Maki Roll", Recipe.MAKI_ROLL, Map.of(FishType, 1, CropProduct.UNMILLED_RICE, 1, Ingredient.FIBER, 1), 100, 220),
-    TRIPLE_SHOT_ESPRESSO("Triple Shot Espresso", Recipe.TRIPLE_SHOT_ESPRESSO, Map.of(CropProduct.COFFEE_BEAN, 3), 200, 450),
-    COOKIE("Cookie", Recipe.COOKIE, Map.of(Item.WHEAT_FLOUR, 1, C.SUGAR, 1, Product.EGG, 1), 90, 140),
-    HASH_BROWNS("Hash Browns", Recipe.HASH_BROWNS, Map.of(Vegetable.POTATO, 1, ProcessedFoodType.OIL, 1), 90, 120),
-    PANCAKES("Pancakes", Recipe.PANCAKES, Map.of(Item.WHEAT_FLOUR, 1, Product.EGG, 1), 90, 80),
-    FRUIT_SALAD("Fruit Salad", Recipe.FRUIT_SALAD, Map.of(Fruit.BLUEBERRY, 1, Fruit.MELON, 1, Fruit.APRICOT, 1), 263, 450),
-    RED_PLATE("Red Plate", Recipe.RED_PLATE, Map.of(Item.RED_CABBAGE, 1, FishType.RADISH, 1), 240, 400),
-    BREAD("Bread", Recipe.BREAD, Map.of(Item.WHEAT_FLOUR, 1), 50, 60),
-    SALMON_DINNER("Salmon Dinner", Recipe.SALMON_DINNER, Map.of(FishType.SALMON, 1, Item.AMARANTH, 1, Item.KALE, 1), 125, 300),
-    VEGETABLE_MEDLEY("Vegetable Medley", Recipe.VEGETABLE_MEDLEY, Map.of(Vegetable.TOMATO, 1, Item.BEET, 1), 165, 120),
-    FARMERS_LUNCH("Farmer's Lunch", Recipe.FARMERS_LUNCH, Map.of(CookedFood.OMELET, 1, Item.PARSNIP, 1), 200, 150),
-    SURVIVAL_BURGER("Survival Burger", Recipe.SURVIVAL_BURGER, Map.of(CookedFood.BREAD, 1, Vegetable.CARROT, 1, Vegetable.EGGPLANT, 1), 125, 180),
-    DISH_O_THE_SEA("Dish O' the Sea", Recipe.DISH_O_THE_SEA, Map.of(FishType.SARDINE, 2, CookedFood.HASH_BROWNS, 1), 150, 220),
-    SEAFOAM_PUDDING("Seafoam Pudding", Recipe.SEAFOAM_PUDDING, Map.of(CookedFood.FLOUNDER, 1, CookedFood.MIDNIGHT_CARP, 1), 175, 300),
-    MINERS_TREAT("Miner's Treat", Recipe.MINERS_TREAT, Map.of(Vegetable.CARROT, 2, Vegetable.SUGAR, 1, Product.MILK, 1), 125, 200);
+//public enum CookedFood implements Food {
+//    FRIED_EGG("Fried Egg", Recipe.FRIED_EGG, Map.of(Product.EGG, 1), 50, 35),
+//    BAKED_FISH("Baked Fish", Recipe.BAKED_FISH, Map.of(FishType.SARDINE, 1, FishType.SALMON, 1, CropProduct.WHEAT, 1), 75, 100),
+//    SALAD("Salad", Recipe.SALAD, Map.of(CropProduct.LEEK, 1, CropProduct.DANDELION, 1), 113, 110),
+//    OMELET("Omelet", Recipe.OMELET, Map.of(Product.EGG, 1, Product.MILK, 1), 100, 125),
+//    PUMPKIN_PIE("Pumpkin Pie", Recipe.PUMPKIN_PIE, Map.of(Vegetable.PUMPKIN, 1, CropProduct.WHEAT_FLOUR, 1, Product.MILK, 1, CropProduct.SUGAR, 1), 225, 385),
+//    SPAGHETTI("Spaghetti", Recipe.SPAGHETTI, Map.of(Vegetable.W, 1, Vegetable.TOMATO, 1), 75, 120),
+//    PIZZA("Pizza", Recipe.PIZZA, Map.of(Item.WHEAT_FLOUR, 1, Vegetable.TOMATO, 1, Product.CHEESE, 1), 150, 300),
+//    TORTILLA("Tortilla", Recipe.TORTILLA, Map.of(Vegetable.CORN, 1), 50, 50),
+//    MAKI_ROLL("Maki Roll", Recipe.MAKI_ROLL, Map.of(FishType, 1, CropProduct.UNMILLED_RICE, 1, Ingredient.FIBER, 1), 100, 220),
+//    TRIPLE_SHOT_ESPRESSO("Triple Shot Espresso", Recipe.TRIPLE_SHOT_ESPRESSO, Map.of(CropProduct.COFFEE_BEAN, 3), 200, 450),
+//    COOKIE("Cookie", Recipe.COOKIE, Map.of(Item.WHEAT_FLOUR, 1, C.SUGAR, 1, Product.EGG, 1), 90, 140),
+//    HASH_BROWNS("Hash Browns", Recipe.HASH_BROWNS, Map.of(Vegetable.POTATO, 1, ProcessedFoodType.OIL, 1), 90, 120),
+//    PANCAKES("Pancakes", Recipe.PANCAKES, Map.of(Item.WHEAT_FLOUR, 1, Product.EGG, 1), 90, 80),
+//    FRUIT_SALAD("Fruit Salad", Recipe.FRUIT_SALAD, Map.of(Fruit.BLUEBERRY, 1, Fruit.MELON, 1, Fruit.APRICOT, 1), 263, 450),
+//    RED_PLATE("Red Plate", Recipe.RED_PLATE, Map.of(Item.RED_CABBAGE, 1, FishType.RADISH, 1), 240, 400),
+//    BREAD("Bread", Recipe.BREAD, Map.of(Item.WHEAT_FLOUR, 1), 50, 60),
+//    SALMON_DINNER("Salmon Dinner", Recipe.SALMON_DINNER, Map.of(FishType.SALMON, 1, Item.AMARANTH, 1, Item.KALE, 1), 125, 300),
+//    VEGETABLE_MEDLEY("Vegetable Medley", Recipe.VEGETABLE_MEDLEY, Map.of(Vegetable.TOMATO, 1, Item.BEET, 1), 165, 120),
+//    FARMERS_LUNCH("Farmer's Lunch", Recipe.FARMERS_LUNCH, Map.of(CookedFood.OMELET, 1, Item.PARSNIP, 1), 200, 150),
+//    SURVIVAL_BURGER("Survival Burger", Recipe.SURVIVAL_BURGER, Map.of(CookedFood.BREAD, 1, Vegetable.CARROT, 1, Vegetable.EGGPLANT, 1), 125, 180),
+//    DISH_O_THE_SEA("Dish O' the Sea", Recipe.DISH_O_THE_SEA, Map.of(FishType.SARDINE, 2, CookedFood.HASH_BROWNS, 1), 150, 220),
+//    SEAFOAM_PUDDING("Seafoam Pudding", Recipe.SEAFOAM_PUDDING, Map.of(CookedFood.FLOUNDER, 1, CookedFood.MIDNIGHT_CARP, 1), 175, 300),
+//    MINERS_TREAT("Miner's Treat", Recipe.MINERS_TREAT, Map.of(Vegetable.CARROT, 2, Vegetable.SUGAR, 1, Product.MILK, 1), 125, 200);
 
-    private final String name;
-    private final Recipe recipe;
-    private final Map<Item, Integer> ingredients;
-    private final int energy;
-    private final int price;
-
-    CookedFood(String name, Recipe recipe, Map<Item, Integer> ingredients, int energy, int price) {
-        this.name = name;
-        this.recipe = recipe;
-        this.ingredients = ingredients;
-        this.energy = energy;
-        this.price = price;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
-    public Map<Item, Integer> getIngredients() {
-        return ingredients;
-    }
-
-    public int getEnergy() {
-        return energy;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-}
+//    private final String name;
+//    private final Recipe recipe;
+//    private final Map<Item, Integer> ingredients;
+//    private final int energy;
+//    private final int price;
+//
+//    CookedFood(String name, Recipe recipe, Map<Item, Integer> ingredients, int energy, int price) {
+//        this.name = name;
+//        this.recipe = recipe;
+//        this.ingredients = ingredients;
+//        this.energy = energy;
+//        this.price = price;
+//    }
+//
+//    @Override
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public Recipe getRecipe() {
+//        return recipe;
+//    }
+//
+//    public Map<Item, Integer> getIngredients() {
+//        return ingredients;
+//    }
+//
+//    public int getEnergy() {
+//        return energy;
+//    }
+//
+//    public int getPrice() {
+//        return price;
+//    }
+// }

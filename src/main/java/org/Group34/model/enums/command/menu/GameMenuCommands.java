@@ -9,9 +9,11 @@ import org.Group34.model.enums.command.Command;
 public enum GameMenuCommands implements Command {
     // Regex: ---------- START -----------
     GAME_NEW("\\s*game\\s+new\\s+-u(?:\\s+(?<usernames>\\S.+))?\\s*"),
-    GAME_MAP("\\s*game\\s+map\\s+(?<map_number>\\d+)\\s*"),
+    GAME_MAP("\\s*game\\s+map\\s+(?<mapNumber>\\d+)\\s*"),
     LOAD_GAME("\\s*load\\s+game\\s*"),
-    SHOW_MENU("show\\s+current\\s+menu");
+    SHOW_MENU("show\\s+current\\s+menu"),
+
+    ENTER_MAIN_MENU("menu\\s+enter\\s+main\\s+menu");
     // Regex: ---------- END -------------
 
     private final String regex;

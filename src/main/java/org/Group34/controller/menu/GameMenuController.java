@@ -24,13 +24,13 @@ public class GameMenuController {
 
     public Result gameNew(String[] usernames) {
         if (App.getCurrentUser().getGame() != null)
-            return new Result(false, "Error: You're already in another game");
+            return new Result(false, "You're already in another game");
         if (usersChoosingMap > 0)
-            return new Result(false, "Error: Each player must choose a map first!");
+            return new Result(false, "Each player must choose a map first!");
         if (usernames == null || usernames.length == 0)
-            return new Result(false, "Error: At least one username must be provided after '-u'.");
+            return new Result(false, "At least one username must be provided after '-u'.");
         if (usernames.length > MAX_PLAYERS)
-            return new Result(false, "Error: A maximum of " + MAX_PLAYERS + " usernames is allowed.");
+            return new Result(false, "A maximum of " + MAX_PLAYERS + " usernames is allowed.");
 
 
         for (String u : usernames) {
@@ -38,18 +38,18 @@ public class GameMenuController {
 
             if (user == null) {
                 users = new ArrayList<>();
-                return new Result(false, "Error: Invalid username → '" + u + "'.");
+                return new Result(false, "Invalid username → '" + u + "'.");
             }
             if (user.getGame() != null) {
                 users = new ArrayList<>();
-                return new Result(false, "Error: User already in another game → '" + u + "'.");
+                return new Result(false, "User already in another game → '" + u + "'.");
             }
 
             users.add(user);
         }
 
 
-        usersChoosingMap = usernames.length;
+        usersChoosingMap = 3;
         return new Result(true, "New game created with users: " + String.join(", ", usernames) + ". Please choose maps.");
     }
 
@@ -57,15 +57,15 @@ public class GameMenuController {
         Integer farmNumber = getInt(map);
 
         if (usersChoosingMap <= 0)
-            return new Result(false, "Error: No new game in setup or all players have chosen a map.");
+            return new Result(false, "No new game in setup or all players have chosen a map.");
         if (map == null || map.trim().isEmpty())
-            return new Result(false, "Error: Map cannot be empty.");
+            return new Result(false, "Map cannot be empty.");
         if (farmNumber == null)
-            return new Result(false, "Error: Map should be a number");
+            return new Result(false, "Map should be a number");
 
         FarmType farmType = FarmType.getFarm(farmNumber);
         if (farmType == null)
-            return new Result(false, "Error: No map found with number " + farmNumber);
+            return new Result(false, "No map found with number " + farmNumber);
 
         farmTypes.add(farmType);
         usersChoosingMap--;
@@ -84,7 +84,7 @@ public class GameMenuController {
 
     public Result loadGame() {
         if (usersChoosingMap > 0) {
-            return new Result(false, "Error: Each player must choose a map first!");
+            return new Result(false, "Each player must choose a map first!");
         }
 
         Game game = App.getCurrentUser().getGame();
@@ -97,7 +97,7 @@ public class GameMenuController {
 
     public Result showMenu() {
         if (usersChoosingMap > 0) {
-            return new Result(false, "Error: Each player must choose a map first!");
+            return new Result(false, "Each player must choose a map first!");
         }
         return new Result(true, "You are currently in Profile Menu.");
     }

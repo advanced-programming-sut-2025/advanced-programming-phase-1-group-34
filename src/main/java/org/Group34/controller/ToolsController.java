@@ -8,6 +8,7 @@ import org.Group34.model.entities.buildings.Lake;
 import org.Group34.model.entities.naturalElements.PloughedLand;
 import org.Group34.model.enums.LevelType;
 import org.Group34.model.enums.WeatherCondition;
+import org.Group34.model.enums.animals.Product;
 import org.Group34.model.items.tools.*;
 
 public class ToolsController { // TODO This class must be filled.
@@ -29,7 +30,7 @@ public class ToolsController { // TODO This class must be filled.
     public Result toolUse(String direction) {
         FarmingController farmingController = new FarmingController();
         FishingController fishingController = new FishingController();
-        AnimalController animalHusbandryController = new AnimalController();
+        AnimalController animalController = new AnimalController();
 
         int locationX = getLocationOfDirectionX(direction);
         int locationY = getLocationOfDirectionY(direction);
@@ -127,10 +128,17 @@ public class ToolsController { // TODO This class must be filled.
         else if (player.getCurrentTool() instanceof MilkPail) {
             if (desiredTile instanceof Animal animal) {
                 MilkPail milkPail = (MilkPail) player.getCurrentTool();
+
                 if (milkPail.canMilk(animal.getAnimalType())) {
-                    int x = getLocationOfDirectionX(direction);
-                    int y = getLocationOfDirectionY(direction);
-                    return animalHusbandryController.useMilkPail(player, x, y);
+                    Product product = animalController.collectProduct(((Animal) desiredTile).getName(), player);
+                    if (product != null) {
+                        player.decreaseEnergy(4);
+                        return new Result(true, "Milk pail was used successfully.");
+                    }
+                    else {
+                        player.decreaseEnergy(4);
+                        return new Result(false, "No product found for this animal.");
+                    }
                 }
                 else {
                     return new Result(false, "This tool cannot be used on this type of animal.");

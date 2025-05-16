@@ -15,13 +15,14 @@ public class ForagingCrop implements Entity, Foraging {
         this.name = name;
         this.baseSellPrice = price;
         this.energy = energy;
+        this.seasons = new ArrayList<>();
         for (String season : seasons) {
             if (season.equals("Spring")) {
                 this.seasons.add(Season.SPRING);
             } else if (season.equals("Summer")) {
                 this.seasons.add(Season.SUMMER);
             } else if (season.equals("Autumn")) {
-                this.seasons.add(Season.AUTUMN);
+                this.seasons.add(Season.FALL);
             } else if (season.equals("Winter")) {
                 this.seasons.add(Season.WINTER);
             }

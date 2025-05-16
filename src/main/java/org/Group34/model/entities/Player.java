@@ -19,18 +19,8 @@ public class  Player implements Entity {
     private boolean passedOut = false;
     private final HashMap<Item, Integer> inventory = new HashMap<>();
     private final ArrayList<Recipe> learnedRecipes = new ArrayList<>();
-    private final HashMap<LevelType, Integer> levelUnit = new HashMap<>(){{
-        level.put(LevelType.FARMING_LEVEL, 0);
-        level.put(LevelType.MINING_LEVEL, 0);
-        level.put(LevelType.FORAGING_LEVEL, 0);
-        level.put(LevelType.FISHING_LEVEL, 0);
-    }};
-    private HashMap<LevelType, Integer> level = new HashMap<>(){{
-        level.put(LevelType.FARMING_LEVEL, 0);
-        level.put(LevelType.MINING_LEVEL, 0);
-        level.put(LevelType.FORAGING_LEVEL, 0);
-        level.put(LevelType.FISHING_LEVEL, 0);
-    }};
+    private HashMap<LevelType, Integer> levelUnit = createInitialLevelMap();
+    private HashMap<LevelType, Integer> level = createInitialLevelMap();
 
     private Item currentTool;
 
@@ -180,7 +170,14 @@ public class  Player implements Entity {
         this.passedOut = passedOut;
     }
 
-
+    private HashMap<LevelType, Integer> createInitialLevelMap() {
+        HashMap<LevelType, Integer> map = new HashMap<>();
+        map.put(LevelType.FARMING_LEVEL, 0);
+        map.put(LevelType.MINING_LEVEL, 0);
+        map.put(LevelType.FORAGING_LEVEL, 0);
+        map.put(LevelType.FISHING_LEVEL, 0);
+        return map;
+    }
 
     @Override
     public String toString() {
