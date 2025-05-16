@@ -1,11 +1,11 @@
 register -u aliii1 -p P@ss1234 P@ss1234 -n ali1 -e ali123@example.com -g male
-pick question 1 -a betoche -c betoche
+pick question -q 1 -a betoche -c betoche
 user logout
 register -u aliii2 -p P@ss1234 P@ss1234 -n ali2 -e ali123@example.com -g male
-pick question 1 -a betoche -c betoche
+pick question -q 1 -a betoche -c betoche
 user logout
 register -u aliii3 -p P@ss1234 P@ss1234 -n ali3 -e ali123@example.com -g male
-pick question 1 -a betoche -c betoche
+pick question -q 1 -a betoche -c betoche
 menu enter game menu
 game new -u aliii3 aliii2 aliii
 game new -u aliii3 aliii2 aliii1 aliii3
