@@ -16,6 +16,7 @@ game map 2
 menu enter main menu
 menu enter game menu
 load game
+weather
 time
 date
 datetime
@@ -25,5 +26,4 @@ cheat advance time 2h
 time
 cheat advance date 29d
 date
-weather
 weather forecast

@@ -18,7 +18,6 @@ public class MarnieRanch extends Shop {
     private HashMap<Item, Integer> shopInventoryLimit = new HashMap<>();
     private HashMap<Item, Integer> livesTockLimit = new HashMap<>();
     static {
-//        shopInventory.add(Hay); TODO
         shopInventory.add(new MilkPail());
         shopInventory.add(new Shear());
 
@@ -32,7 +31,6 @@ public class MarnieRanch extends Shop {
         livesTock.add(AnimalType.PIG);
     }
     {
-        shopInventoryLimit.put(shopInventory.get(0), -11);
         shopInventoryLimit.put(shopInventory.get(1), 1);
         shopInventoryLimit.put(shopInventory.get(2), 1);
 

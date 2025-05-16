@@ -5,8 +5,10 @@ go to login
 login -u random -p random -stay-logged-in
 login -u ali123 -p password? -stay-logged-in
 forget password -u ali123
-i dont know
-login -u ali123 -p P@ss1234 -stay-logged-in
+betoche
+Pa$$1234
+Pa$$1234
+login -u ali123 -p Pa$$1234 -stay-logged-in
 show current menu
 user logout
 menu exit

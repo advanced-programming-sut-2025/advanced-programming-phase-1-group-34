@@ -379,7 +379,7 @@ public class GameView extends AppMenu {
                 if (matcher.find()) {
                     String productName = matcher.group("productName").trim();
 
-                    Result result = controller.purchase(productName);
+                    Result result = controller.purchase(productName, 1);
                     showMessage(result.message());
                 }
             }
