@@ -74,6 +74,17 @@ public class GameView extends AppMenu {
                     showMessage(result.message());
                 }
             }
+            else if (command.matches(GameCommands.CHEAT_CHANGE_WEATHER.getRegex())){
+                Pattern pattern = Pattern.compile(GameCommands.CHEAT_CHANGE_WEATHER.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String weather = matcher.group("weather");
+                    Result result = controller.cheatChangeWeather(weather);
+                    showMessage(result.message());
+                }
+            }
+
             else if (command.matches(GameCommands.DISPLAY_TIME.getRegex())){
                 Pattern pattern = Pattern.compile(GameCommands.DISPLAY_TIME.getRegex());
                 Matcher matcher = pattern.matcher(command);
@@ -260,8 +271,16 @@ public class GameView extends AppMenu {
             }
 
             // ===== Greenhouse Commands ====
+            else if (command.matches(GameCommands.ENTER_GREENHOUSE.getRegex())) {
+                if (controller.greenhouse.isRepaired()) {
+                    showMessage("You entered the greenhouse.");
+                }
+                else {
+                    showMessage("Greenhouse is not repaired yet.");
+                }
+            }
             else if (command.matches(GameCommands.BUILD_GREENHOUSE.getRegex())) {
-                // handle build greenhouse
+                showMessage(controller.buildGreenhouse().message());
             }
 
             // ===== Animals Commands =======
@@ -271,7 +290,7 @@ public class GameView extends AppMenu {
                     String buildingName = matcher.group("buildingName");
                     int x = Integer.parseInt(matcher.group("x"));
                     int y = Integer.parseInt(matcher.group("y"));
-                    // handle build animal placement
+
                 }
             }
             else if (command.matches(GameCommands.BUY_ANIMAL.getRegex())) {

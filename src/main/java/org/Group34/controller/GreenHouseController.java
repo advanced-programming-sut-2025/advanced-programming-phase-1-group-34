@@ -22,7 +22,8 @@ public class GreenHouseController {
             player.addMoney(-greenhouse.getRepairMoney());
             greenhouse.repair();
 
-            return new Result(true, "Greenhouse repaired!");
+            return new Result(true, "Greenhouse repaired!\n Gold: " + player.getMoney() +
+                                                                         "\nWood: " + player.getAmountOfItem(Ingredient.WOOD));
         }
         return new Result(false, "Not enough resources.");
     }

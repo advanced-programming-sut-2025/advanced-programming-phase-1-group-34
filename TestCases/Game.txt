@@ -17,13 +17,20 @@ menu enter main menu
 menu enter game menu
 load game
 weather
+weather forecast
 time
 date
 datetime
 season
 day of week
 cheat advance time 2h
-time
+datetime
+cheat advance time 12h
+datetime
 cheat advance date 29d
 date
-weather forecast
+weather
+cheat change weather storm
+weather
+enter greenhouse
+greenhouse build
