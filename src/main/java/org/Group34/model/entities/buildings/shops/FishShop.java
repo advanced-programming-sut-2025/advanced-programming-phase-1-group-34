@@ -11,7 +11,7 @@ public class FishShop extends Shop {
     private static final int openingHour = 9;
     private static final int closingHour = 17;
     private static final ArrayList<Item> stock = new ArrayList<>();
-    private static final HashMap<Item, Integer> stockLimit = new HashMap<>();
+    private HashMap<Item, Integer> stockLimit = new HashMap<>();
     static {
 //        stock.add(Recipe.FISH_SMOKER);
 //        stock.add(Trout Soup);
@@ -20,6 +20,9 @@ public class FishShop extends Shop {
 //        stock.add(Fiberglass Rod);
 //        stock.add(Iridium Rod);
 
+
+    }
+    {
         stockLimit.put(stock.get(0), 1);
         stockLimit.put(stock.get(1), 1);
         stockLimit.put(stock.get(2), 1);
@@ -49,7 +52,7 @@ public class FishShop extends Shop {
         return stock;
     }
 
-    public static HashMap<Item, Integer> getStockLimit() {
+    public HashMap<Item, Integer> getStockLimit() {
         return stockLimit;
     }
     // -----------------------------

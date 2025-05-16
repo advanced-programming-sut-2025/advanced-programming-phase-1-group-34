@@ -16,12 +16,12 @@ public enum UpgradeTools implements Item {
 
     private final String name;
     private final Ingredient ingredient;
-    private final int cost;
+    private final int price;
 
-    UpgradeTools(String name, Ingredient ingredient, int cost) {
+    UpgradeTools(String name, Ingredient ingredient, int price) {
         this.name = name;
         this.ingredient = ingredient;
-        this.cost = cost;
+        this.price = price;
     }
 
     public String getName() {
@@ -32,7 +32,7 @@ public enum UpgradeTools implements Item {
         return ingredient;
     }
 
-    public int getCost() {
-        return cost;
+    public int getPrice() {
+        return price;
     }
 }

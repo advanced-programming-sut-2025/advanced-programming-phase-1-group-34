@@ -85,7 +85,14 @@ public enum GameCommands implements Command {
     // ----- NPC Commands -----
     MEET_NPC("\\s*meet\\s+NPC\\s+(?<npcName>.+)\\s*"),
     SEND_GIFT("\\s*gift\\s+NPC\\s+(?<npcName>.+)\\s+-i\\s+(?<itemName>.+)\\s*"),
-    LIST_NPC_FRIENDSHIP("\\s*friendship\\s+NPC\\s+list\\s*");
+    LIST_NPC_FRIENDSHIP("\\s*friendship\\s+NPC\\s+list\\s*"),
+    // -------------------------
+
+    // ----- Shop Commands -----
+    SHOW_ALL_PRODUCTS("\\s*show\\s+all\\s+products\\s*"),
+    SHOW_AVAILABLE_PRODUCTS("\\s*show\\s+all\\s+available\\s+products\\s*"),
+    PURCHASE("\\s*purchase\\s+(?<productName>.+)\\s*"),
+    PURCHASE_WITH_COUNT("\\s*purchase\\s+(?<productName>.+)\\s+-n\\s+(?<count>\\d+)\\s*");
     // -------------------------
 
 

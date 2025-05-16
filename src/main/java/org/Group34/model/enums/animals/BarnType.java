@@ -9,7 +9,7 @@ public enum BarnType {
     COOP_BIG(8, "Houses 8 coop-dwelling animals. Unlocks ducks.", 10000, 400, 150, 6, 3),
     COOP_DELUXE(12, "Houses 12 coop-dwelling animals. Unlocks rabbits.", 20000, 500, 200, 6, 3),;
 
-    public final int capacity;
+    private final int capacity;
     private final String description;
     private final int price;
     private final int woodCost;

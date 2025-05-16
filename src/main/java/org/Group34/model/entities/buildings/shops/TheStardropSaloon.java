@@ -10,11 +10,12 @@ public class TheStardropSaloon extends Shop {
     private static final String ownerName = "Gus";
     private static final int openingHour = 12;
     private static final int closingHour = 0;
-    private static final ArrayList<Item> permanentStock = new ArrayList<>();
-    private static final HashMap<Item, Integer> permanentStockLimit = new HashMap<>();
+    private ArrayList<Item> permanentStock = new ArrayList<>();
+    private HashMap<Item, Integer> permanentStockLimit = new HashMap<>();
     static {
         // TODO
-
+    }
+    {
         permanentStockLimit.put(permanentStock.get(0), -11);
         permanentStockLimit.put(permanentStock.get(1), -11);
         permanentStockLimit.put(permanentStock.get(2), -11);
@@ -49,17 +50,17 @@ public class TheStardropSaloon extends Shop {
         return closingHour;
     }
 
-    public static ArrayList<Item> getPermanentStock() {
+    public ArrayList<Item> getPermanentStock() {
         return permanentStock;
     }
 
-    public static HashMap<Item, Integer> getPermanentStockLimit() {
+    public HashMap<Item, Integer> getPermanentStockLimit() {
         return permanentStockLimit;
     }
     // -----------------------------
 
 
-    public static int getPermanentStock(Item stock) {
+    public int getPermanentStock(Item stock) {
         return permanentStockLimit.get(stock);
     }
 }
