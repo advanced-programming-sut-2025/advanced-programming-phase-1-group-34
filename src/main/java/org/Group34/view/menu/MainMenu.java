@@ -23,7 +23,7 @@ public class MainMenu extends AppMenu{
             }
             else if (command.matches(MainMenuCommand.ENTER_GAME_MENU.getRegex())) {
                 App.setCurrentMenu(Menu.GAME_MENU);
-                showMessage("You are now in games menu.");
+                showMessage("You are now in game menu.");
             }
             else if (command.matches(MainMenuCommand.LOGOUT.getRegex())) {
                 App.setCurrentMenu(Menu.REGISTER_MENU);

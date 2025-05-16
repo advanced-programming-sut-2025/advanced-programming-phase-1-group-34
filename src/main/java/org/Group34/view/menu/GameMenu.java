@@ -41,7 +41,7 @@ public class GameMenu extends AppMenu{
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
-                    String map = matcher.group("map_number");
+                    String map = matcher.group("mapNumber");
 
                     Result result = controller.gameMap(map);
                     showMessage(result.message());

@@ -45,6 +45,7 @@ public class Tree implements Entity, PlantAble {
         this.totalHarvestTime = totalHarvestTime;
         this.needWater = true;
         this.maxLevel = stages.length;
+        this.seasons = new ArrayList<>();
 
         for (String season : seasons) {
             if (season.equals("Spring")) {

@@ -41,6 +41,7 @@ public class Crop implements Entity, PlantAble {
         this.regrowthTime = regrowthTime;
         this.farmingProduct = farmingProduct;
         this.canBecomeGiant = canBecomeGiant;
+        this.seasons = new ArrayList<>();
 
         this.maxLevel = stage.length;
 

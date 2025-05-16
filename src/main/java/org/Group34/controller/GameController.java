@@ -19,6 +19,7 @@ public class GameController {
     private final int mainUser = 0;
     private int currentUser = 0;
     private final ArrayList<Boolean> forceTerminating = new ArrayList<>();
+    private final AnimalController animalController = new AnimalController();
 
     public GameController(Game game){
         this.game = game;
