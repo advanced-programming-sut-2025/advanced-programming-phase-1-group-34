@@ -8,6 +8,7 @@ public enum GameCommands implements Command {
     NEXT_TURN("\\s*next\\s+turn\\s*"),
     CHEAT_ADVANCE_TIME("\\s*cheat\\s+advance\\s+time\\s+(?<hours>\\d+)h\\s*"),
     CHEAT_ADVANCE_DATE("\\s*cheat\\s+advance\\s+date\\s+(?<days>\\d+)d\\s*"),
+    CHEAT_CHANGE_WEATHER("\\s*cheat\\s+change\\s+weather\\s+(?<weather>\\S+)\\s*"),
     DISPLAY_TIME("^\\s*(?<type>time|date|datetime|day of week)\\s*$"),
     WALK("\\s*walk\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s*"),
     PRINT_MAP("\\s*print\\s+map\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s+-s\\s+(?<size>\\d+)\\s*"),
@@ -63,6 +64,7 @@ public enum GameCommands implements Command {
     // -------------------------
 
     // ----- Greenhouse Commands -----
+    ENTER_GREENHOUSE("\\s*enter\\s+greenhouse\\s*"),
     BUILD_GREENHOUSE("\\s*greenhouse\\s+build\\s*"),
     // -------------------------
 

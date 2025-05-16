@@ -1,4 +1,4 @@
-package org.Group34.model.entities.buildings.shops;
+package org.Group34.model.entities.buildings.shops.products;
 
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.Ingredient;
@@ -12,7 +12,10 @@ public enum UpgradeTools implements Item {
     COPPER_TRASH_CAN("Copper Trash Can", Ingredient.COPPER_BAR, 1000),
     STEEL_TRASH_CAN("Steel Trash Can", Ingredient.IRON_BAR, 2500),
     GOLD_TRASH_CAN("Gold Trash Can", Ingredient.GOLD_BAR, 5000),
-    IRIDIUM_TRASH_CAN("Iridium Trash Can", Ingredient.IRIDIUM_BAR, 12500);
+    IRIDIUM_TRASH_CAN("Iridium Trash Can", Ingredient.IRIDIUM_BAR, 12500),
+
+    BIG_BACKPACK("Big Backpack", null, 2000),
+    DELUXE_BACKPACK("Deluxe Backpack", null, 10000);
 
     private final String name;
     private final Ingredient ingredient;

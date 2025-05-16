@@ -138,4 +138,84 @@ public class MarnieRanch extends Shop {
         result.deleteCharAt(result.length() - 1);
         return result.toString();
     }
+
+    public String showAvailableProducts() {
+        StringBuilder result = new StringBuilder();
+
+        result.append("----- Blacksmith -----\n");
+        result.append("\n* Shop Inventory:\n");
+        for (Item item : shopInventory) {
+            if (getShopInventoryLimit(item) > 0 || getShopInventoryLimit(item) == -11) {
+                if (item instanceof MilkPail tool) {
+                    result
+                            .append("Name: " + tool.getName() + "\n")
+                            .append("Price: " + tool.getPrice() + "\n")
+                            .append("Description: " + tool.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getShopInventoryLimit(item) >= 0) {
+                        result.append(getShopInventoryLimit(item) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                }
+                else if (item instanceof Shear tool) {
+                    result
+                            .append("Name: " + tool.getName() + "\n")
+                            .append("Price: " + tool.getPrice() + "\n")
+                            .append("Description: " + tool.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getShopInventoryLimit(item) >= 0) {
+                        result.append(getShopInventoryLimit(item) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                }
+                result.append("----------------------\n");
+            }
+        }
+
+        result.append("\n* Lives Tock:\n");
+        for (Item item : livesTock) {
+            if (getLiveTockLimit(item) > 0 || getLiveTockLimit(item) == -11) {
+                AnimalType tool = (AnimalType) item;
+                result
+                        .append("Name: " + tool.getName() + "\n")
+                        .append("Price: " + tool.getPrice() + "\n")
+                        .append("Description: " + tool.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getLiveTockLimit(item) >= 0) {
+                    result.append(getLiveTockLimit(item) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            }
+        }
+
+        result.deleteCharAt(result.length() - 1);
+        return result.toString();
+    }
+
+    public Item getProductByName(String name) {
+        for (Item item : shopInventory) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        for (Item item : livesTock) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public void buy(Item product, int amount) {
+        if (shopInventory.contains(product)) {
+            shopInventoryLimit.replace(product, shopInventoryLimit.get(product) - amount);
+        }
+        else if (livesTock.contains(product)) {
+            livesTockLimit.replace(product, livesTockLimit.get(product) - amount);
+        }
+    }
 }

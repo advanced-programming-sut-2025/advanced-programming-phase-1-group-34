@@ -1,5 +1,6 @@
 package org.Group34.model.entities.buildings.shops;
 
+import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.Ingredient;
 
@@ -135,7 +136,7 @@ public class Blacksmith extends Shop {
         result.append("\n* Stocks:\n");
         for (Item stock : stocks) {
             Ingredient item = (Ingredient) stock;
-            if (getStockLimit(item) > 0) {
+            if (getStockLimit(item) > 0 || getStockLimit(item) == -11) {
                 result
                         .append("Name: " + item.getName() + "\n")
                         .append("Price: " + item.getPrice() + "\n")
@@ -153,7 +154,7 @@ public class Blacksmith extends Shop {
         result.append("\n* Upgrade Tools:\n");
         for (Item tool : upgradeTools) {
             UpgradeTools item = (UpgradeTools) tool;
-            if (getStockLimit(item) > 0) {
+            if (getStockLimit(item) > 0 || getStockLimit(item) == -11) {
                 result
                         .append("Name: " + item.getName() + "\n")
                         .append("Price: " + item.getPrice() + "\n")

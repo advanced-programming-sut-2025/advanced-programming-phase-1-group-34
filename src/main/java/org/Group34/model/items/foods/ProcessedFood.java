@@ -148,13 +148,13 @@ public enum ProcessedFood implements Food {
     private final String name;
     private final String description;
     private final int energy;
-    private final int sellPrice;
+    private final int price;
 
-    ProcessedFood(String name, String description, int energy, int sellPrice) {
+    ProcessedFood(String name, String description, int energy, int price) {
         this.name = name;
         this.description = description;
         this.energy = energy;
-        this.sellPrice = sellPrice;
+        this.price = price;
     }
 
     @Override
@@ -170,7 +170,7 @@ public enum ProcessedFood implements Food {
         return energy;
     }
 
-    public int getSellPrice() {
-        return sellPrice;
+    public int getPrice() {
+        return price;
     }
 }

@@ -1,10 +1,16 @@
 package org.Group34.controller;
 
 import org.Group34.model.Result;
+import org.Group34.model.Time;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.shops.*;
+import org.Group34.model.entities.buildings.shops.products.ShippingBin;
+import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
+import org.Group34.model.enums.animals.AnimalType;
+import org.Group34.model.enums.animals.BarnType;
 import org.Group34.model.items.Item;
+import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
@@ -14,6 +20,7 @@ import java.util.ArrayList;
 public class ShopController {
     private Player player; // TODO It will fix in GameController
     private Space space; // TODO It will fix in GameController
+    private Time time; // TODO It will fix in GameController
 
     public Result showAllProducts() {
         Entity playerTile = space.getEntityByLocation(player.getLocation()[0], player.getLocation()[1]);
@@ -22,17 +29,25 @@ public class ShopController {
             return new Result(true, shop.showAllProducts());
         }
 
-        else if (playerTile instanceof MarnieRanch) {
+        else if (playerTile instanceof MarnieRanch shop) {
+            return new Result(true, shop.showAllProducts());
+        }
 
-        } else if (playerTile instanceof TheStardropSaloon) {
+        else if (playerTile instanceof TheStardropSaloon) {}
 
-        } else if (playerTile instanceof CarpenterShop) {
+        else if (playerTile instanceof CarpenterShop shop) {
+            return new Result(true, shop.showAllProducts());
+        }
 
-        } else if (playerTile instanceof JojaMart) {
+        else if (playerTile instanceof JojaMart shop) {
+            return new Result(true, shop.showAllProducts());
+        }
 
-        } else if (playerTile instanceof PierreGeneralStore) {
+        else if (playerTile instanceof PierreGeneralStore shop) {
+            return new Result(true, shop.showAllProducts());
+        }
 
-        } else if (playerTile instanceof FishShop) {
+        else if (playerTile instanceof FishShop) {
 
         }
 
@@ -45,17 +60,27 @@ public class ShopController {
             return new Result(true, shop.showAvailableProducts());
         }
 
-        else if (playerTile instanceof MarnieRanch) {
+        else if (playerTile instanceof MarnieRanch shop) {
+            return new Result(true, shop.showAvailableProducts());
+        }
 
-        } else if (playerTile instanceof TheStardropSaloon) {
+        else if (playerTile instanceof TheStardropSaloon) {
 
-        } else if (playerTile instanceof CarpenterShop) {
+        }
 
-        } else if (playerTile instanceof JojaMart) {
+        else if (playerTile instanceof CarpenterShop shop) {
+            return new Result(true, shop.showAvailableProducts());
+        }
 
-        } else if (playerTile instanceof PierreGeneralStore) {
+        else if (playerTile instanceof JojaMart shop) {
+            return new Result(true, shop.showAvailableProducts(time.getSeason()));
+        }
 
-        } else if (playerTile instanceof FishShop) {
+        else if (playerTile instanceof PierreGeneralStore shop) {
+            return new Result(true, shop.showAvailableProducts());
+        }
+
+        else if (playerTile instanceof FishShop) {
 
         }
 
@@ -69,12 +94,13 @@ public class ShopController {
 
             if (product == null) {
                 return new Result(false, "Error: This product is not available in this store.");
-            } else if (shop.getStockLimit(product) <= count - 1) {
-                return new Result(false, "Error: This product is sold out.");
             }
 
             if (product instanceof Ingredient item) {
-                if (player.getMoney() < item.getPrice() * count) {
+                if (shop.getStockLimit(product) <= count - 1 && shop.getStockLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < item.getPrice() * count) {
                     return new Result(false, "Error: You do not have enough balance.");
                 }
 
@@ -85,11 +111,15 @@ public class ShopController {
                 return new Result(true, "The desired product has been purchased.");
             }
             else if (product instanceof UpgradeTools tool) {
-                if (player.getMoney() < tool.getPrice() * count) {
+                if (shop.getUpgradeToolLimit(product) <= count - 1 && shop.getUpgradeToolLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < tool.getPrice() * count) {
                     return new Result(false, "Error: You do not have enough balance.");
                 }
 
-                player.addMoney(tool.getPrice() * -1);
+
+                player.addMoney(tool.getPrice() * count * -1);
                 shop.buy(product, 1);
                 upgradeTools(tool);
 
@@ -97,17 +127,145 @@ public class ShopController {
             }
         }
 
-        else if (playerTile instanceof MarnieRanch) {
+        else if (playerTile instanceof MarnieRanch shop) {
+            Item product = shop.getProductByName(productName);
 
-        } else if (playerTile instanceof TheStardropSaloon) {
+            if (product == null) {
+                return new Result(false, "Error: This product is not available in this store.");
+            }
 
-        } else if (playerTile instanceof CarpenterShop) {
+            if (product instanceof MilkPail tool) {
+                if (shop.getShopInventoryLimit(tool) <= count - 1 && shop.getShopInventoryLimit(tool) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < tool.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
 
-        } else if (playerTile instanceof JojaMart) {
 
-        } else if (playerTile instanceof PierreGeneralStore) {
+                player.addMoney(tool.getPrice() * count * -1);
+                shop.buy(product, count);
+                player.addToInventory(new MilkPail(), 1);
 
-        } else if (playerTile instanceof FishShop) {
+                return new Result(true, "The desired product has been purchased.");
+            }
+            else if (product instanceof Shear tool) {
+                if (shop.getShopInventoryLimit(tool) <= count - 1 && shop.getShopInventoryLimit(tool) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < tool.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+
+                player.addMoney(tool.getPrice() * count * -1);
+                shop.buy(product, count);
+                player.addToInventory(new Shear(), 1);
+
+                return new Result(true, "The desired product has been purchased.");
+            }
+            else if (product instanceof AnimalType animal) {
+                if (shop.getShopInventoryLimit(animal) <= count - 1 && shop.getShopInventoryLimit(animal) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < animal.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+
+                player.addMoney(animal.getPrice() * count * -1);
+                shop.buy(product, count);
+                player.addToInventory(animal, count);
+
+                return new Result(true, "The desired product has been purchased.");
+            }
+        }
+
+        else if (playerTile instanceof TheStardropSaloon) {
+
+        }
+
+        else if (playerTile instanceof CarpenterShop shop) {
+            Item product = shop.getProductByName(productName);
+
+            if (product == null) {
+                return new Result(false, "Error: This product is not available in this store.");
+            }
+            if (product instanceof Ingredient item) {
+                if (shop.getPermanentStockLimit(product) <= count - 1 && shop.getPermanentStockLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < item.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addToInventory(product, count);
+                player.addMoney(item.getPrice() * count * -1);
+                shop.buy(product, count);
+
+                return new Result(true, "The desired product has been purchased.");
+            }
+            else if (product instanceof BarnType item) {
+                if (shop.getFarmBuildingLimit(product) <= count - 1 && shop.getFarmBuildingLimit(product) == -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < item.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addToInventory(product, count);
+                player.addMoney(item.getPrice() * count * -1);
+                shop.buy(product, count);
+
+                return new Result(true, "The desired product has been purchased.");
+            }
+            else if (product instanceof ShippingBin item) {
+                if (shop.getFarmBuildingLimit(product) <= count - 1 && shop.getFarmBuildingLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < item.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addToInventory(product, count);
+                player.addMoney(item.getPrice() * count * -1);
+                shop.buy(product, count);
+                SalePlace.increaseShippingBinCount(count);
+
+                return new Result(true, "The desired product has been purchased.");
+            }
+        }
+
+        else if (playerTile instanceof JojaMart shop) {
+            Item product = shop.getProductByName(productName);
+
+            if (product == null) {
+                return new Result(false, "Error: This product is not available in this store.");
+            } else if (shop.isAvailable(product, count, time.getSeason())) {
+                return new Result(false, "Error: This item is not available.");
+            }
+
+            PlantingSource item = (PlantingSource) product;
+            if (player.getMoney() < item.getPrice() * count) {
+                return new Result(false, "Error: You do not have enough balance.");
+            }
+
+            player.addMoney(item.getPrice() * count * -1);
+            shop.buy(item, count);
+            player.addToInventory(item, count);
+
+            return new Result(true, "The desired product has been purchased.");
+        }
+
+        else if (playerTile instanceof PierreGeneralStore shop) {
+            Item product = shop.getProductByName(productName);
+
+            if (product == null) {
+                return new Result(false, "Error: This product is not available in this store.");
+            }
+        }
+
+        else if (playerTile instanceof FishShop) {
 
         }
 
@@ -189,8 +347,6 @@ public class ShopController {
         }
     }
 }
-
-
 
 
 

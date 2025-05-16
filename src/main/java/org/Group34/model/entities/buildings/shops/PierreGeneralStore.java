@@ -1,10 +1,14 @@
 package org.Group34.model.entities.buildings.shops;
 
+import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
 import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.Recipe;
+import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.crafting.PlacingCraft;
+import org.Group34.model.items.foods.ProcessedFood;
+import org.Group34.model.items.tools.ToolType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,18 +27,13 @@ public class PierreGeneralStore extends Shop {
     private HashMap<Item, Integer> summerStockLimit = new HashMap<>();
     private HashMap<Item, Integer> fallStockLimit = new HashMap<>();
     static {
-//        yearRoundStock.add(Rice);
-//        yearRoundStock.add(Wheat Flour);
-//        yearRoundStock.add(Bouquet);
-//        yearRoundStock.add(Wedding Ring);
         yearRoundStock.add(Recipe.DEHYDRATOR);
         yearRoundStock.add(Recipe.GRASS_STARTER);
-//        yearRoundStock.add(Sugar);
-//        yearRoundStock.add(ProcessedFoodType.OIL);
-//        yearRoundStock.add(Vinegar);
+        yearRoundStock.add(ProcessedFood.OIL);
+        yearRoundStock.add(ProcessedFood.VINEGAR);
         yearRoundStock.add(Fertilizer.DELUXE_RETAINING_SOIL);
         yearRoundStock.add(PlacingCraft.GRASS_STARTER);
-//        yearRoundStock.add(Speed Gro);
+        yearRoundStock.add(Fertilizer.SPEED_GROW);
         yearRoundStock.add(PlantingSource.APPLE_SAPLING);
         yearRoundStock.add(PlantingSource.APRICOT_SAPLING);
         yearRoundStock.add(PlantingSource.CHERRY_SAPLING);
@@ -43,8 +42,8 @@ public class PierreGeneralStore extends Shop {
         yearRoundStock.add(PlantingSource.POWDERMELON_SEEDS);
         yearRoundStock.add(Fertilizer.BASIC_RETAINING_SOIL);
         yearRoundStock.add(Fertilizer.QUALITY_RETAINING_SOIL);
-//        yearRoundStock.add(large Pack);
-//        yearRoundStock.add(Delux Pack);
+        yearRoundStock.add(UpgradeTools.BIG_BACKPACK);
+        yearRoundStock.add(UpgradeTools.DELUXE_BACKPACK);
 
         springStock.add(PlantingSource.PARSNIP_SEEDS);
         springStock.add(PlantingSource.BEAN_STARTER);
@@ -83,13 +82,8 @@ public class PierreGeneralStore extends Shop {
         fallStock.add(PlantingSource.ARTICHOKE_SEEDS);
     }
     {
-        yearRoundStockLimit.put(yearRoundStock.get(0), -11);
-        yearRoundStockLimit.put(yearRoundStock.get(1), -11);
-        yearRoundStockLimit.put(yearRoundStock.get(2), 2);
-        yearRoundStockLimit.put(yearRoundStock.get(3), 2);
         yearRoundStockLimit.put(yearRoundStock.get(4), 1);
         yearRoundStockLimit.put(yearRoundStock.get(5), 1);
-        yearRoundStockLimit.put(yearRoundStock.get(6), -11);
         yearRoundStockLimit.put(yearRoundStock.get(7), -11);
         yearRoundStockLimit.put(yearRoundStock.get(8), -11);
         yearRoundStockLimit.put(yearRoundStock.get(9), -11);
@@ -208,5 +202,314 @@ public class PierreGeneralStore extends Shop {
 
     public int getFallStockLimit(Item stock) {
         return fallStockLimit.get(stock);
+    }
+
+    public String showAllProducts() {
+        StringBuilder result = new StringBuilder();
+
+        result.append("----- Blacksmith -----\n");
+        result.append("\n* Year_Round Stock:\n");
+        for (Item item : yearRoundStock) {
+            if (item instanceof Recipe stock) {
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Daily Limit: ");
+                if (getYearRoundStockLimit(stock) >= 0) {
+                    result.append(getYearRoundStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            } else if (item instanceof ProcessedFood stock) {
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Description: " + stock.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getYearRoundStockLimit(stock) >= 0) {
+                    result.append(getYearRoundStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            } else if (item instanceof Fertilizer stock) {
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Description: " + stock.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getYearRoundStockLimit(stock) >= 0) {
+                    result.append(getYearRoundStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            } else if (item instanceof PlacingCraft stock) {
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Description: " + stock.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getYearRoundStockLimit(stock) >= 0) {
+                    result.append(getYearRoundStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            } else if (item instanceof PlantingSource stock) {
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Description: " + stock.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getYearRoundStockLimit(stock) >= 0) {
+                    result.append(getYearRoundStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            } else if (item instanceof UpgradeTools stock) {
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Daily Limit: ");
+                if (getYearRoundStockLimit(stock) >= 0) {
+                    result.append(getYearRoundStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            }
+        }
+
+        result.append("\n* Spring Stock:\n");
+        for (Item item : springStock) {
+            PlantingSource stock = (PlantingSource) item;
+            result
+                    .append("Name: " + stock.getName() + "\n")
+                    .append("Price: " + stock.getPrice() + "\n")
+                    .append("Description: " + stock.getDescription() + "\n")
+                    .append("Daily Limit: ");
+            if (getSpringStockLimit(stock) >= 0) {
+                result.append(getSpringStockLimit(stock) + "\n");
+            } else {
+                result.append("unlimited\n");
+            }
+            result.append("----------------------\n");
+        }
+
+        result.append("\n* Summer Stock:\n");
+        for (Item item : summerStock) {
+            PlantingSource stock = (PlantingSource) item;
+            result
+                    .append("Name: " + stock.getName() + "\n")
+                    .append("Price: " + stock.getPrice() + "\n")
+                    .append("Description: " + stock.getDescription() + "\n")
+                    .append("Daily Limit: ");
+            if (getSummerStockLimit(stock) >= 0) {
+                result.append(getSummerStockLimit(stock) + "\n");
+            } else {
+                result.append("unlimited\n");
+            }
+            result.append("----------------------\n");
+        }
+
+        result.append("\n* Fall Stock:\n");
+        for (Item item : fallStock) {
+            PlantingSource stock = (PlantingSource) item;
+            result
+                    .append("Name: " + stock.getName() + "\n")
+                    .append("Price: " + stock.getPrice() + "\n")
+                    .append("Description: " + stock.getDescription() + "\n")
+                    .append("Daily Limit: ");
+            if (getFallStockLimit(stock) >= 0) {
+                result.append(getFallStockLimit(stock) + "\n");
+            } else {
+                result.append("unlimited\n");
+            }
+            result.append("----------------------\n");
+        }
+
+        result.deleteCharAt(result.length() - 1);
+        return result.toString();
+    }
+
+    public String showAvailableProducts() {
+        StringBuilder result = new StringBuilder();
+
+        result.append("----- Blacksmith -----\n");
+        result.append("\n* Year_Round Stock:\n");
+        for (Item item : yearRoundStock) {
+            if (getYearRoundStockLimit(item) > 0 || getYearRoundStockLimit(item) == -11) {
+                if (item instanceof Recipe stock) {
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Daily Limit: ");
+                    if (getYearRoundStockLimit(stock) >= 0) {
+                        result.append(getYearRoundStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                } else if (item instanceof ProcessedFood stock) {
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Description: " + stock.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getYearRoundStockLimit(stock) >= 0) {
+                        result.append(getYearRoundStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                } else if (item instanceof Fertilizer stock) {
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Description: " + stock.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getYearRoundStockLimit(stock) >= 0) {
+                        result.append(getYearRoundStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                } else if (item instanceof PlacingCraft stock) {
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Description: " + stock.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getYearRoundStockLimit(stock) >= 0) {
+                        result.append(getYearRoundStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                } else if (item instanceof PlantingSource stock) {
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Description: " + stock.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getYearRoundStockLimit(stock) >= 0) {
+                        result.append(getYearRoundStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                } else if (item instanceof UpgradeTools stock) {
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Daily Limit: ");
+                    if (getYearRoundStockLimit(stock) >= 0) {
+                        result.append(getYearRoundStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                }
+            }
+        }
+
+        result.append("\n* Spring Stock:\n");
+        for (Item item : springStock) {
+            if (getSpringStockLimit(item) > 0 || getSpringStockLimit(item) == -11) {
+                PlantingSource stock = (PlantingSource) item;
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Description: " + stock.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getSpringStockLimit(stock) >= 0) {
+                    result.append(getSpringStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            }
+        }
+
+        result.append("\n* Summer Stock:\n");
+        for (Item item : summerStock) {
+            if (getSummerStockLimit(item) > 0 || getSummerStockLimit(item) == -11) {
+                PlantingSource stock = (PlantingSource) item;
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Description: " + stock.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getSummerStockLimit(stock) >= 0) {
+                    result.append(getSummerStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            }
+        }
+
+        result.append("\n* Fall Stock:\n");
+        for (Item item : fallStock) {
+            if (getFallStockLimit(item) > 0 || getFallStockLimit(item) == -11) {
+                PlantingSource stock = (PlantingSource) item;
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Description: " + stock.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getFallStockLimit(stock) >= 0) {
+                    result.append(getFallStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            }
+        }
+
+        result.deleteCharAt(result.length() - 1);
+        return result.toString();
+    }
+
+    public Item getProductByName(String name) {
+        for (Item item : yearRoundStock) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        for (Item item : springStock) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        for (Item item : summerStock) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        for (Item item : fallStock) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public void buy(Item product, int amount) {
+        if (yearRoundStock.contains(product)) {
+            yearRoundStockLimit.replace(product, yearRoundStockLimit.get(product) - amount);
+        }
+        else if (springStock.contains(product)) {
+            springStockLimit.replace(product, springStockLimit.get(product) - amount);
+        }
+        else if (summerStock.contains(product)) {
+            summerStockLimit.replace(product, summerStockLimit.get(product) - amount);
+        }
+        else if (fallStock.contains(product)) {
+            fallStockLimit.replace(product, fallStockLimit.get(product) - amount);
+        }
     }
 }

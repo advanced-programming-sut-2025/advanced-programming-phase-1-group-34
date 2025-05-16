@@ -1,7 +1,10 @@
 package org.Group34.model.entities.buildings.shops;
 
+import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
+import org.Group34.model.enums.Season;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.PlantingSource;
+import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.crafting.PlacingCraft;
 
 import java.util.ArrayList;
@@ -23,12 +26,8 @@ public class JojaMart extends Shop {
     private HashMap<Item, Integer> fallStockLimit = new HashMap<>();
     private HashMap<Item, Integer> winterStockLimit = new HashMap<>();
     static {
-//        permanentStock.add(Joja Cola);
         permanentStock.add(PlantingSource.ANCIENT_SEEDS);
         permanentStock.add(PlacingCraft.GRASS_STARTER);
-//        permanentStock.add(Sugar);
-//        permanentStock.add(Wheat Flour);
-//        permanentStock.add(Rice);
 
         springStock.add(PlantingSource.PARSNIP_SEEDS);
         springStock.add(PlantingSource.BEAN_STARTER);
@@ -73,12 +72,8 @@ public class JojaMart extends Shop {
         winterStock.add(PlantingSource.POWDERMELON_SEEDS);
     }
     {
-        permanentStockLimit.put(permanentStock.get(0), -11);
         permanentStockLimit.put(permanentStock.get(1), 1);
         permanentStockLimit.put(permanentStock.get(2), -11);
-        permanentStockLimit.put(permanentStock.get(3), -11);
-        permanentStockLimit.put(permanentStock.get(4), -11);
-        permanentStockLimit.put(permanentStock.get(5), -11);
 
         springStockLimit.put(springStock.get(0), 5);
         springStockLimit.put(springStock.get(1), 5);
@@ -200,4 +195,333 @@ public class JojaMart extends Shop {
     public int getWinterStockLimit(Item stock) {
         return winterStockLimit.get(stock);
     }
+
+    public String showAllProducts() {
+        StringBuilder result = new StringBuilder();
+
+        result.append("----- Blacksmith -----\n");
+        result.append("\n* Permanent Stock:\n");
+        for (Item item : permanentStock) {
+            if (item instanceof PlantingSource stock) {
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Description: " + stock.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getPermanentStockLimit(stock) >= 0) {
+                    result.append(getPermanentStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            }
+            else if (item instanceof PlacingCraft stock) {
+                result
+                        .append("Name: " + stock.getName() + "\n")
+                        .append("Price: " + stock.getPrice() + "\n")
+                        .append("Description: " + stock.getDescription() + "\n")
+                        .append("Daily Limit: ");
+                if (getPermanentStockLimit(stock) >= 0) {
+                    result.append(getPermanentStockLimit(stock) + "\n");
+                } else {
+                    result.append("unlimited\n");
+                }
+                result.append("----------------------\n");
+            }
+        }
+
+        result.append("\n* Spring Stock:\n");
+        for (Item item : springStock) {
+            PlantingSource stock = (PlantingSource) item;
+            result
+                    .append("Name: " + stock.getName() + "\n")
+                    .append("Price: " + stock.getPrice() + "\n")
+                    .append("Description: " + stock.getDescription() + "\n")
+                    .append("Daily Limit: ");
+            if (getSpringStockLimit(stock) >= 0) {
+                result.append(getSpringStockLimit(stock) + "\n");
+            } else {
+                result.append("unlimited\n");
+            }
+            result.append("----------------------\n");
+        }
+
+        result.append("\n* Summer Stock:\n");
+        for (Item item : summerStock) {
+            PlantingSource stock = (PlantingSource) item;
+            result
+                    .append("Name: " + stock.getName() + "\n")
+                    .append("Price: " + stock.getPrice() + "\n")
+                    .append("Description: " + stock.getDescription() + "\n")
+                    .append("Daily Limit: ");
+            if (getSummerStockLimit(stock) >= 0) {
+                result.append(getSummerStockLimit(stock) + "\n");
+            } else {
+                result.append("unlimited\n");
+            }
+            result.append("----------------------\n");
+        }
+
+        result.append("\n* Fall Stock:\n");
+        for (Item item : fallStock) {
+            PlantingSource stock = (PlantingSource) item;
+            result
+                    .append("Name: " + stock.getName() + "\n")
+                    .append("Price: " + stock.getPrice() + "\n")
+                    .append("Description: " + stock.getDescription() + "\n")
+                    .append("Daily Limit: ");
+            if (getFallStockLimit(stock) >= 0) {
+                result.append(getFallStockLimit(stock) + "\n");
+            } else {
+                result.append("unlimited\n");
+            }
+            result.append("----------------------\n");
+        }
+
+        result.append("\n* Winter Stock:\n");
+        for (Item item : winterStock) {
+            PlantingSource stock = (PlantingSource) item;
+            result
+                    .append("Name: " + stock.getName() + "\n")
+                    .append("Price: " + stock.getPrice() + "\n")
+                    .append("Description: " + stock.getDescription() + "\n")
+                    .append("Daily Limit: ");
+            if (getWinterStockLimit(stock) >= 0) {
+                result.append(getWinterStockLimit(stock) + "\n");
+            } else {
+                result.append("unlimited\n");
+            }
+            result.append("----------------------\n");
+        }
+
+        result.deleteCharAt(result.length() - 1);
+        return result.toString();
+    }
+
+    public String showAvailableProducts(Season season) {
+        StringBuilder result = new StringBuilder();
+
+        result.append("----- Blacksmith -----\n");
+        result.append("\n* Permanent Stock:\n");
+        for (Item item : permanentStock) {
+            if (getPermanentStockLimit(item) > 0 || getPermanentStockLimit(item) == -11) {
+                if (item instanceof PlantingSource stock) {
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Description: " + stock.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getPermanentStockLimit(stock) >= 0) {
+                        result.append(getPermanentStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                }
+                else if (item instanceof PlacingCraft stock) {
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Description: " + stock.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getPermanentStockLimit(stock) >= 0) {
+                        result.append(getPermanentStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                }
+            }
+        }
+
+        if (season == Season.SPRING) {
+            result.append("\n* Spring Stock:\n");
+            for (Item item : springStock) {
+                if (getSpringStockLimit(item) > 0 || getSpringStockLimit(item) == -11) {
+                    PlantingSource stock = (PlantingSource) item;
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Description: " + stock.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getSpringStockLimit(stock) >= 0) {
+                        result.append(getSpringStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                }
+            }
+        } else if (season == Season.SUMMER) {
+            result.append("\n* Summer Stock:\n");
+            for (Item item : summerStock) {
+                if (getSummerStockLimit(item) > 0 || getSummerStockLimit(item) == -11) {
+                    PlantingSource stock = (PlantingSource) item;
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Description: " + stock.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getSummerStockLimit(stock) >= 0) {
+                        result.append(getSummerStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                }
+            }
+        } else if (season == Season.FALL) {
+            result.append("\n* Fall Stock:\n");
+            for (Item item : fallStock) {
+                if (getFallStockLimit(item) > 0 || getFallStockLimit(item) == -11) {
+                    PlantingSource stock = (PlantingSource) item;
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Description: " + stock.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getFallStockLimit(stock) >= 0) {
+                        result.append(getFallStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                }
+            }
+        } else if (season == Season.WINTER) {
+            result.append("\n* Winter Stock:\n");
+            for (Item item : winterStock) {
+                if (getWinterStockLimit(item) > 0 || getWinterStockLimit(item) == -11) {
+                    PlantingSource stock = (PlantingSource) item;
+                    result
+                            .append("Name: " + stock.getName() + "\n")
+                            .append("Price: " + stock.getPrice() + "\n")
+                            .append("Description: " + stock.getDescription() + "\n")
+                            .append("Daily Limit: ");
+                    if (getWinterStockLimit(stock) >= 0) {
+                        result.append(getWinterStockLimit(stock) + "\n");
+                    } else {
+                        result.append("unlimited\n");
+                    }
+                    result.append("----------------------\n");
+                }
+            }
+        }
+
+
+        result.deleteCharAt(result.length() - 1);
+        return result.toString();
+    }
+
+    public Item getProductByName(String name) {
+        for (Item item : permanentStock) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        for (Item item : springStock) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        for (Item item : summerStock) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        for (Item item : fallStock) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        for (Item item : winterStock) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public void buy(Item product, int amount) {
+        if (permanentStock.contains(product)) {
+            permanentStockLimit.replace(product, permanentStockLimit.get(product) - amount);
+        }
+        else if (springStock.contains(product)) {
+            springStockLimit.replace(product, springStockLimit.get(product) - amount);
+        }
+        else if (summerStock.contains(product)) {
+            summerStockLimit.replace(product, summerStockLimit.get(product) - amount);
+        }
+        else if (fallStock.contains(product)) {
+            fallStockLimit.replace(product, fallStockLimit.get(product) - amount);
+        }
+        else if (winterStock.contains(product)) {
+            winterStockLimit.replace(product, winterStockLimit.get(product) - amount);
+        }
+    }
+
+    public boolean isAvailable(Item product, int amount, Season season) {
+        if (permanentStock.contains(product)) {
+            if (getPermanentStockLimit(product) < amount && getPermanentStockLimit(product) != -11) {
+                return false;
+            }
+            return true;
+        }
+        else if (springStock.contains(product)) {
+            if (getSpringStockLimit(product) < amount && getSpringStockLimit(product) != -11) {
+                return false;
+            } else if (season != Season.SPRING) {
+                return false;
+            }
+            return true;
+        }
+        else if (summerStock.contains(product)) {
+            if (getSummerStockLimit(product) < amount && getSummerStockLimit(product) != -11) {
+                return false;
+            } else if (season != Season.SUMMER) {
+                return false;
+            }
+            return true;
+        }
+        else if (fallStock.contains(product)) {
+            if (getFallStockLimit(product) < amount && getFallStockLimit(product) != -11) {
+                return false;
+            } else if (season != Season.FALL) {
+                return false;
+            }
+            return true;
+        }
+        else if (winterStock.contains(product)) {
+            if (getWinterStockLimit(product) < amount && getWinterStockLimit(product) != -11) {
+                return false;
+            } else if (season != Season.WINTER) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,7 +6,9 @@ import org.Group34.model.Result;
 import org.Group34.model.User;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.enums.Color;
+import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.map.MapBuilder;
 import org.Group34.view.menu.GameMenu;
 
@@ -19,7 +21,9 @@ public class GameController {
     private final int mainUser = 0;
     private int currentUser = 0;
     private final ArrayList<Boolean> forceTerminating = new ArrayList<>();
-    private final AnimalController animalController = new AnimalController();
+    public final AnimalController animalController = new AnimalController();
+    public final GreenHouse greenhouse = new GreenHouse();
+    public final GreenHouseController greenHouseController = new GreenHouseController(greenhouse);
 
     public GameController(Game game){
         this.game = game;
@@ -142,6 +146,16 @@ public class GameController {
         }
     }
 
+    public Result cheatChangeWeather(String weather) {
+        switch (weather){
+            case "sunny": game.weatherSystem().setTodayCondition(WeatherCondition.SUNNY); break;
+            case "rain": game.weatherSystem().setTodayCondition(WeatherCondition.RAIN); break;
+            case "storm": game.weatherSystem().setTodayCondition(WeatherCondition.STORM); break;
+            case "snow": game.weatherSystem().setTodayCondition(WeatherCondition.SNOW); break;
+        }
+        return new Result(true, "Cheat Code Activated: (" + game.weatherSystem().getTodayCondition() + ")");
+    }
+
     public Result displayTime(String type){
         if (!forceTerminating.isEmpty())
             return new Result(false, "Error: Force-terminate vote in progress; you can only vote now");
@@ -164,8 +178,8 @@ public class GameController {
 
         String message = "";
         switch (type){
-            case "today weather": message = game.weatherSystem().getTodayCondition().toString();
-            case "tomorrow weather": message = game.weatherSystem().getTomorrowCondition().toString();
+            case "today weather": message = game.weatherSystem().getTodayCondition().toString(); break;
+            case "tomorrow weather": message = game.weatherSystem().getTomorrowCondition().toString(); break;
         }
 
         return new Result(true, message);
@@ -252,4 +266,13 @@ public class GameController {
             return null;
         }
     }
+
+    public Result buildGreenhouse() {
+        return greenHouseController.repairGreenhouse(game.players().get(orderOfPlay.get(currentUser)));
+    }
+
+    public Result buildAnimalPlacement() {
+        return animalController.
+    }
+
 }
