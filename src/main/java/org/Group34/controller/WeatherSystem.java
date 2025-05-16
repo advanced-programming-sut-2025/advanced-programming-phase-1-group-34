@@ -5,6 +5,7 @@ import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.Time;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -12,6 +13,7 @@ import java.util.Random;
  * Supports lightning strikes during storms and allows querying weather-related game effects
  */
 public class WeatherSystem {
+    private static final Random RANDOM = new Random();
     private WeatherCondition todayCondition;
     private WeatherCondition tomorrowCondition;
     private final ArrayList<int[]> lightningStrikeMap = new ArrayList<>();
@@ -23,8 +25,9 @@ public class WeatherSystem {
      * @param time the current game time
      */
     public void initializeWeather(Time time) {
-        this.todayCondition = WeatherCondition.random(time.getSeason());
-        this.tomorrowCondition = WeatherCondition.random(time.getSeason());
+        this.todayCondition = randomWeather(time.getSeason());
+        int shift = 1 + RANDOM.nextInt(3);
+        this.tomorrowCondition = WeatherCondition.shifted(todayCondition, shift);
         lightningStrikeMap.clear();
 
         if (todayCondition.canHaveLightning()) {
@@ -40,7 +43,7 @@ public class WeatherSystem {
      */
     public void advanceWeather(Time time) {
         this.todayCondition = this.tomorrowCondition;
-        this.tomorrowCondition = WeatherCondition.random(time.getSeason());
+        this.tomorrowCondition = randomWeather(time.getSeason());
         lightningStrikeMap.clear();
 
         if (todayCondition.canHaveLightning()) {
@@ -54,10 +57,9 @@ public class WeatherSystem {
      * NOTE: The bounds (0-99) are placeholders and should match the map dimensions.
      */
     public ArrayList<int[]> generateLightningStrikes() {
-        Random random = new Random();
         for (int i = 0; i < 3; i++) {
-            int x = random.nextInt(100);
-            int y = random.nextInt(100);
+            int x = RANDOM.nextInt(100);
+            int y = RANDOM.nextInt(100);
             lightningStrikeMap.add(new int[]{x, y});
         }
         return lightningStrikeMap;
@@ -103,5 +105,19 @@ public class WeatherSystem {
      */
     public double getEnergyMultiplier(Season season) {
         return todayCondition.getEnergyMultiplier(season);
+    }
+
+    private WeatherCondition randomWeather(Season season) {
+        List<WeatherCondition> possible = new ArrayList<>();
+        possible.add(WeatherCondition.SUNNY);
+        if (season != Season.WINTER) {
+            possible.add(WeatherCondition.RAIN);
+            possible.add(WeatherCondition.STORM);
+        }
+        else {
+            possible.add(WeatherCondition.SNOW);
+        }
+
+        return possible.get(RANDOM.nextInt(possible.size()));
     }
 }

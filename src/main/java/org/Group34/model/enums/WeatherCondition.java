@@ -3,6 +3,7 @@ package org.Group34.model.enums;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Enumeration of possible weather conditions in the game
@@ -13,6 +14,13 @@ public enum WeatherCondition {
     RAIN,
     STORM,
     SNOW;
+
+    private static final WeatherCondition[] VALUES = values();
+
+    public static WeatherCondition shifted(WeatherCondition base, int shift) {
+        int index = (base.ordinal() + shift) % VALUES.length;
+        return VALUES[index];
+    }
 
     /**
      * Determines whether irrigation is free under this weather condition
@@ -45,26 +53,5 @@ public enum WeatherCondition {
      */
     public boolean canHaveLightning() {
         return this == STORM;
-    }
-
-    /**
-     * Selects a random weather condition based on the current season
-     *
-     * @param season the current season
-     * @return a randomly selected WeatherCondition
-     */
-    public static WeatherCondition random(Season season) {
-        List<WeatherCondition> possible = new ArrayList<>();
-        possible.add(SUNNY);
-        if (season != Season.WINTER) {
-            possible.add(RAIN);
-            possible.add(STORM);
-        }
-        else {
-            possible.add(SNOW);
-        }
-
-        Collections.shuffle(possible);
-        return possible.get(0);
     }
 }
