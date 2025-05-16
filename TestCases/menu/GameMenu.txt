@@ -13,3 +13,6 @@ game new -u aliii3 aliii2 aliii1
 game map 1
 game map 2
 game map 2
+menu enter main menu
+menu enter game menu
+load game

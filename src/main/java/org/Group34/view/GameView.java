@@ -49,6 +49,7 @@ public class GameView extends AppMenu {
             else if (command.matches(GameCommands.NEXT_TURN.getRegex())){
                 Result result = controller.nextTurn();
                 showMessage(result.message());
+                App.getAppMenu().run(scanner);
             }
             else if (command.matches(GameCommands.CHEAT_ADVANCE_TIME.getRegex())){
                 Pattern pattern = Pattern.compile(GameCommands.CHEAT_ADVANCE_TIME.getRegex());

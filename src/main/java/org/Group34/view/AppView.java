@@ -1,6 +1,7 @@
 package org.Group34.view;
 
 import org.Group34.model.App;
+import org.Group34.model.Game;
 import org.Group34.view.menu.*;
 
 import java.util.Scanner;
@@ -28,6 +29,9 @@ public class AppView {
                 case GAME_MENU:
                     GameMenu gameMenu = new GameMenu();
                     gameMenu.run(scanner);
+                    break;
+                case GAME:
+                    App.getAppMenu().run(scanner);
                     break;
             }
         }
