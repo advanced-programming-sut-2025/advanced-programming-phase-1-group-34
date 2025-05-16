@@ -13,6 +13,7 @@ import org.Group34.view.GameView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class GameMenuController {
     private int usersChoosingMap = 0;
