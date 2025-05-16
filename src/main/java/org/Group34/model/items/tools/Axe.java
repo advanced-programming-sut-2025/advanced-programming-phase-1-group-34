@@ -2,51 +2,32 @@ package org.Group34.model.items.tools;
 
 import org.Group34.model.items.Item;
 
-import java.util.HashMap;
-
 public class Axe implements Item {
-    private static HashMap<Integer, String> material;
-    private static HashMap<Integer, Integer> energy;
-    static {
-        material.put(0, "Plastic");
-        material.put(1, "Copper");
-        material.put(2, "Iron");
-        material.put(3, "Gold");
-        material.put(4, "Iridium");
+    private ToolType type;
 
-        energy.put(0, 5);
-        energy.put(1, 4);
-        energy.put(2, 3);
-        energy.put(3, 2);
-        energy.put(4, 1);
-    }
-
-
-    private int level;
-
-    public Axe(int level) {
-        this.level = level;
+    public Axe(ToolType type) {
+        this.type = type;
     }
 
     // ----- getter & setter -----
     public String getName() {
-        return "Axe";
-    }
-
-    public int getLevel() {
-        return level;
-    }
-    public void setLevel(int level) {
-        this.level = level;
+        return type.getName();
     }
 
     public String getMaterial() {
-        return material.get(level);
+        return type.getMaterial();
     }
 
     public int getEnergy() {
-        return energy.get(level);
+        return type.getEnergy();
+    }
+
+    public ToolType getType() {
+        return type;
+    }
+
+    public void setType(ToolType type) {
+        this.type = type;
     }
     // ---------------------------
-
 }

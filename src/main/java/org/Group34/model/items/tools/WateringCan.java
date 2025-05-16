@@ -2,74 +2,49 @@ package org.Group34.model.items.tools;
 
 import org.Group34.model.items.Item;
 
-import java.util.HashMap;
-
 public class WateringCan implements Item {
-    private static HashMap<Integer, String> material;
-    private static HashMap<Integer, Integer> capacity;
-    private static HashMap<Integer, Integer> energy;
-    static {
-        material.put(0, "Plastic");
-        material.put(1, "Copper");
-        material.put(2, "Iron");
-        material.put(3, "Gold");
-        material.put(4, "Iridium");
-
-        capacity.put(0, 40);
-        capacity.put(1, 55);
-        capacity.put(2, 70);
-        capacity.put(3, 85);
-        capacity.put(4, 100);
-
-        energy.put(0, 5);
-        energy.put(1, 4);
-        energy.put(2, 3);
-        energy.put(3, 2);
-        energy.put(4, 1);
-    }
-
-
-    private int level;
+    private ToolType type;
     private int amountOfWater = 0;
 
-    public WateringCan(int level) {
-        this.level = level;
+    public WateringCan(ToolType type) {
+        this.type = type;
     }
 
     // ----- getter & setter -----
     public String getName() {
-        return "Watering Can";
-    }
-
-    public int getLevel() {
-        return level;
-    }
-    public void setLevel(int level) {
-        this.level = level;
+        return type.getName();
     }
 
     public String getMaterial() {
-        return material.get(level);
-    }
-
-    public int getCapacity() {
-        return capacity.get(level);
+        return type.getMaterial();
     }
 
     public int getEnergy() {
-        return energy.get(level);
+        return type.getEnergy();
+    }
+
+    public int getCapacity() {
+        return type.getCapacity();
     }
 
     public int getAmountOfWater() {
         return amountOfWater;
     }
-    public void setAmountOfWater(int amount) {
-        this.amountOfWater = amount;
+
+    public void setAmountOfWater(int amountOfWater) {
+        this.amountOfWater = amountOfWater;
     }
+
+    public ToolType getType() {
+        return type;
+    }
+
+    public void setType(ToolType type) {
+        this.type = type;
+    }
+    // ---------------------------
 
     public void fillIt() {
         amountOfWater = getCapacity();
     }
-    // ---------------------------
-
 }
