@@ -1,0 +1,29 @@
+register -u aliii1 -p P@ss1234 P@ss1234 -n ali1 -e ali123@example.com -g male
+pick question -q 1 -a betoche -c betoche
+user logout
+register -u aliii2 -p P@ss1234 P@ss1234 -n ali2 -e ali123@example.com -g male
+pick question -q 1 -a betoche -c betoche
+user logout
+register -u aliii3 -p P@ss1234 P@ss1234 -n ali3 -e ali123@example.com -g male
+pick question -q 1 -a betoche -c betoche
+menu enter game menu
+game new -u aliii3 aliii2 aliii
+game new -u aliii3 aliii2 aliii1 aliii3
+game new -u aliii3 aliii2 aliii1
+game map 1
+game map 2
+game map 2
+menu enter main menu
+menu enter game menu
+load game
+time
+date
+datetime
+season
+day of week
+cheat advance time 2h
+time
+cheat advance date 29d
+date
+weather
+weather forecast
