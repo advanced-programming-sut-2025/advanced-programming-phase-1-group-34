@@ -1,5 +1,6 @@
 package org.Group34.controller;
 
+import org.Group34.model.Result;
 import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Player;
 import org.Group34.model.enums.animals.AnimalType;
