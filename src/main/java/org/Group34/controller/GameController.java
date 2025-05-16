@@ -133,6 +133,8 @@ public class GameController {
             Integer d = getInt(days);
             if (d == null) return new Result(false, "Error: you should give a number as days argument");
             game.time().addDays(d);
+            game.weatherSystem().initializeWeather(game.time());
+            game.weatherSystem().advanceWeather(game.time());
             return new Result(true, "Cheat Code Activated: (" + game.time() + ")");
         }
         catch (Exception IllegalArgumentException){

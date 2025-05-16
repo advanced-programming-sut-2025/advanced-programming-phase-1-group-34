@@ -25,11 +25,10 @@ public class WeatherSystem {
      * @param time the current game time
      */
     public void initializeWeather(Time time) {
-        this.todayCondition = randomWeather(time.getSeason());
-        int shift = 1 + RANDOM.nextInt(3);
-        this.tomorrowCondition = WeatherCondition.shifted(todayCondition, shift);
-        lightningStrikeMap.clear();
+        this.todayCondition = weightedRandomWeather(time.getSeason(), null);
+        this.tomorrowCondition = weightedRandomWeather(time.getSeason(), todayCondition);
 
+        lightningStrikeMap.clear();
         if (todayCondition.canHaveLightning()) {
             generateLightningStrikes();
         }
@@ -42,10 +41,10 @@ public class WeatherSystem {
      * @param time the new game time (used to determine season for tomorrow's weather)
      */
     public void advanceWeather(Time time) {
-        this.todayCondition = this.tomorrowCondition;
-        this.tomorrowCondition = randomWeather(time.getSeason());
-        lightningStrikeMap.clear();
+        this.todayCondition = weightedRandomWeather(time.getSeason(), null);
+        this.tomorrowCondition = weightedRandomWeather(time.getSeason(), todayCondition);
 
+        lightningStrikeMap.clear();
         if (todayCondition.canHaveLightning()) {
             generateLightningStrikes();
         }
@@ -107,17 +106,42 @@ public class WeatherSystem {
         return todayCondition.getEnergyMultiplier(season);
     }
 
-    private WeatherCondition randomWeather(Season season) {
-        List<WeatherCondition> possible = new ArrayList<>();
-        possible.add(WeatherCondition.SUNNY);
+    private WeatherCondition weightedRandomWeather(Season season, WeatherCondition today) {
+        List<WeatherCondition> weighted = new ArrayList<>();
+
+        weighted.add(WeatherCondition.SUNNY);
+
         if (season != Season.WINTER) {
-            possible.add(WeatherCondition.RAIN);
-            possible.add(WeatherCondition.STORM);
-        }
-        else {
-            possible.add(WeatherCondition.SNOW);
+            weighted.add(WeatherCondition.RAIN);
+            weighted.add(WeatherCondition.STORM);
+        } else {
+            weighted.add(WeatherCondition.SNOW);
         }
 
-        return possible.get(RANDOM.nextInt(possible.size()));
+        if (today != null) {
+            switch (today) {
+                case SUNNY -> {
+                    weighted.add(WeatherCondition.RAIN);
+                    weighted.add(WeatherCondition.STORM);
+                }
+                case RAIN -> {
+                    weighted.add(WeatherCondition.SUNNY);
+                    weighted.add(WeatherCondition.STORM);
+                }
+                case STORM -> {
+                    weighted.add(WeatherCondition.SUNNY);
+                    weighted.add(WeatherCondition.RAIN);
+                    weighted.add(WeatherCondition.SUNNY);
+                }
+                case SNOW -> {
+                    weighted.add(WeatherCondition.SUNNY);
+                    weighted.add(WeatherCondition.SUNNY);
+                }
+            }
+        }
+
+        return weighted.get(RANDOM.nextInt(weighted.size()));
     }
+
+
 }
