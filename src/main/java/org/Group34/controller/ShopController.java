@@ -22,12 +22,8 @@ import org.Group34.model.map.Space;
 import java.util.ArrayList;
 
 public class ShopController {
-    private Player player; // TODO It will fix in GameController
-    private Space space; // TODO It will fix in GameController
-    private Time time; // TODO It will fix in GameController
-
-    public Result showAllProducts() {
-        Entity playerTile = space.getEntityByLocation(player.getLocation()[0], player.getLocation()[1]);
+    public Result showAllProducts(Player player) {
+        Entity playerTile = getDesiredShop(player);
 
         if (playerTile instanceof Blacksmith shop) {
             return new Result(true, shop.showAllProducts());
@@ -55,8 +51,8 @@ public class ShopController {
 
         return new Result(false, "Error: You first need to enter a shop.");
     }
-    public Result showAvailableProducts() {
-        Entity playerTile = space.getEntityByLocation(player.getLocation()[0], player.getLocation()[1]);
+    public Result showAvailableProducts(Player player, Time time) {
+        Entity playerTile = getDesiredShop(player);
 
         if (playerTile instanceof Blacksmith shop) {
             return new Result(true, shop.showAvailableProducts());
@@ -85,8 +81,8 @@ public class ShopController {
 
         return new Result(false, "Error: You first need to enter a shop.");
     }
-    public Result purchase(String productName, int count) {
-        Entity playerTile = space.getEntityByLocation(player.getLocation()[0], player.getLocation()[1]);
+    public Result purchase(String productName, int count, Player player, Time time) {
+        Entity playerTile = getDesiredShop(player);
 
         if (playerTile instanceof Blacksmith shop) {
             Item product = shop.getProductByName(productName);
@@ -120,7 +116,7 @@ public class ShopController {
 
                 player.addMoney(tool.getPrice() * count * -1);
                 shop.buy(product, 1);
-                upgradeTools(tool);
+                upgradeTools(tool, player);
 
                 return new Result(true, "The desired product has been purchased.");
             }
@@ -225,7 +221,7 @@ public class ShopController {
                 player.addToInventory(product, count);
                 player.addMoney(item.getPrice() * count * -1);
                 shop.buy(product, count);
-                SalePlace.increaseShippingBinCount(count);
+                addShippingBin(count, player);
 
                 return new Result(true, "The desired product has been purchased.");
             }
@@ -322,7 +318,7 @@ public class ShopController {
 
                     player.addMoney(stock.getPrice() * count * -1);
                     shop.buy(product, count);
-                    upgradeBackpack(stock);
+                    upgradeBackpack(stock, player);
 
                     return new Result(true, "The desired product has been purchased.");
                 }
@@ -403,7 +399,7 @@ public class ShopController {
 
                 player.addMoney(item.getPrice() * count * -1);
                 shop.buy(product, count);
-                upgradeFishingPole(item);
+                upgradeFishingPole(item, player);
 
                 return new Result(true, "The desired product has been purchased.");
             }
@@ -411,48 +407,101 @@ public class ShopController {
 
         return new Result(false, "Error: You first need to enter a shop.");
     }
+    public Result cheatAddDollars(int count, Player player) {
+        player.addMoney(count);
+        return new Result(true, "count" + " dollars added to money");
+    }
+    public Result sell(String productName, Player player) {
+        Entity playerTile = getSalePlace(player);
+
+        if (!(playerTile instanceof SalePlace)) {
+            return new Result(false, "Error: You should go to the sales location first.");
+        }
+
+        SalePlace salePlace = (SalePlace) playerTile;
+        if (salePlace.getNumberOfShippingBins() <= 0) {
+            return new Result(false, "Error: You do not have an empty Shipping Bin.");
+        }
+
+        Item desiredItem = player.getItemFromInventoryByName(productName);
+        int count = player.getAmountOfItem(desiredItem);
+        if (desiredItem == null) {
+            return new Result(false, "Error: This item is not available in your inventory.");
+        }
+        else if (player.getAmountOfItem(desiredItem) < count) {
+            return new Result(false, "Error: You do not have enough of this product available.");
+        }
+
+        salePlace.addItemToSale(desiredItem, count);
+        player.removeFromInventory(desiredItem, count);
+        return new Result(true, "The desired product has been successfully listed for sale.");
+    }
+    public Result sellWithCount(String productName, int count, Player player) {
+        Entity playerTile = getSalePlace(player);
+
+        if (!(playerTile instanceof SalePlace)) {
+            return new Result(false, "Error: You should go to the sales location first.");
+        }
+
+        SalePlace salePlace = (SalePlace) playerTile;
+        if (salePlace.getNumberOfShippingBins() <= 0) {
+            return new Result(false, "Error: You do not have an empty Shipping Bin.");
+        }
+
+        Item desiredItem = player.getItemFromInventoryByName(productName);
+        if (desiredItem == null) {
+            return new Result(false, "Error: This item is not available in your inventory.");
+        }
+        else if (player.getAmountOfItem(desiredItem) < count) {
+            return new Result(false, "Error: You do not have enough of this product available.");
+        }
+
+        salePlace.addItemToSale(desiredItem, count);
+        player.removeFromInventory(desiredItem, count);
+        return new Result(true, "The desired product has been successfully listed for sale.");
+    }
 
 
-    private void upgradeTools(UpgradeTools tool) {
+    private void upgradeTools(UpgradeTools tool, Player player) {
         if (tool == UpgradeTools.COPPER_TOOL) {
-            removeTools();
+            removeTools(player);
             player.addToInventory(new Axe(ToolType.COPPER_AXE), 1);
             player.addToInventory(new Hoe(ToolType.COPPER_HOE), 1);
             player.addToInventory(new Pickaxe(ToolType.COPPER_PICKAXE), 1);
             player.addToInventory(new WateringCan(ToolType.COPPER_WATERING_CAN), 1);
         } else if (tool == UpgradeTools.STEEL_TOOL) {
-            removeTools();
+            removeTools(player);
             player.addToInventory(new Axe(ToolType.IRON_AXE), 1);
             player.addToInventory(new Hoe(ToolType.IRON_HOE), 1);
             player.addToInventory(new Pickaxe(ToolType.IRON_PICKAXE), 1);
             player.addToInventory(new WateringCan(ToolType.IRON_WATERING_CAN), 1);
         } else if (tool == UpgradeTools.GOLD_TOOL) {
-            removeTools();
+            removeTools(player);
             player.addToInventory(new Axe(ToolType.GOLD_AXE), 1);
             player.addToInventory(new Hoe(ToolType.GOLD_HOE), 1);
             player.addToInventory(new Pickaxe(ToolType.GOLD_PICKAXE), 1);
             player.addToInventory(new WateringCan(ToolType.GOLD_WATERING_CAN), 1);
         } else if (tool == UpgradeTools.IRIDIUM_TOOL) {
-            removeTools();
+            removeTools(player);
             player.addToInventory(new Axe(ToolType.IRIDIUM_AXE), 1);
             player.addToInventory(new Hoe(ToolType.IRIDIUM_HOE), 1);
             player.addToInventory(new Pickaxe(ToolType.IRIDIUM_PICKAXE), 1);
             player.addToInventory(new WateringCan(ToolType.IRIDIUM_WATERING_CAN), 1);
         } else if (tool == UpgradeTools.COPPER_TRASH_CAN) {
-            removeTrashCan();
+            removeTrashCan(player);
             player.addToInventory(new TrashCan(ToolType.COPPER_TRASH_CAN), 1);
         } else if (tool == UpgradeTools.STEEL_TRASH_CAN) {
-            removeTrashCan();
+            removeTrashCan(player);
             player.addToInventory(new TrashCan(ToolType.IRON_TRASH_CAN), 1);
         } else if (tool == UpgradeTools.GOLD_TRASH_CAN) {
-            removeTrashCan();
+            removeTrashCan(player);
             player.addToInventory(new TrashCan(ToolType.GOLD_TRASH_CAN), 1);
         } else if (tool == UpgradeTools.IRIDIUM_TRASH_CAN) {
-            removeTrashCan();
+            removeTrashCan(player);
             player.addToInventory(new TrashCan(ToolType.IRIDIUM_TRASH_CAN), 1);
         }
     }
-    private void removeTools() {
+    private void removeTools(Player player) {
         ArrayList<Item> remove = new ArrayList<>();
 
         for (Item item : player.getInventory().keySet()) {
@@ -465,7 +514,7 @@ public class ShopController {
             player.getInventory().remove(item);
         }
     }
-    private void removeTrashCan() {
+    private void removeTrashCan(Player player) {
         ArrayList<Item> remove = new ArrayList<>();
 
         for (Item item : player.getInventory().keySet()) {
@@ -478,7 +527,7 @@ public class ShopController {
             player.getInventory().remove(item);
         }
     }
-    private void upgradeBackpack(UpgradeTools stock) {
+    private void upgradeBackpack(UpgradeTools stock, Player player) {
         Backpack backpack = null;
         for (Item item : player.getInventory().keySet()) {
             if (item instanceof Backpack backpack1) {
@@ -497,8 +546,8 @@ public class ShopController {
             player.addToInventory(backpack, 1);
         }
     }
-    private void upgradeFishingPole(UpgradeTools stock) {
-        removeFishingPole();
+    private void upgradeFishingPole(UpgradeTools stock, Player player) {
+        removeFishingPole(player);
         if (stock == UpgradeTools.TRAINING_FISHING_POLE) {
             player.addToInventory(new FishingPole(ToolType.TRAINING_FISHING_POLE), 1);
         } else if (stock == UpgradeTools.BAMBOO_FISHING_POLE) {
@@ -509,7 +558,7 @@ public class ShopController {
             player.addToInventory(new FishingPole(ToolType.IRIDIUM_FISHING_POLE), 1);
         }
     }
-    private void removeFishingPole() {
+    private void removeFishingPole(Player player) {
         ArrayList<Item> remove = new ArrayList<>();
 
         for (Item item : player.getInventory().keySet()) {
@@ -521,6 +570,77 @@ public class ShopController {
         for (Item item : remove) {
             player.getInventory().remove(item);
         }
+    }
+    private void addShippingBin(int count, Player player) {
+        Space space = player.getCurrentSpace();
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                if (space.getEntityByLocation(i, j) instanceof SalePlace salePlace) {
+                    salePlace.increaseNumberOfShippingBins(count);
+                    return;
+                }
+            }
+        }
+    }
+    private Entity getDesiredShop(Player player) {
+        Space space = player.getCurrentSpace();
+
+        int x = player.getLocation()[0];
+        int y = player.getLocation()[1];
+
+        Entity desiredShop = null;
+
+        if (space.getEntityByLocation(x-1, y-1) instanceof Shop shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x-1, y) instanceof Shop shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x-1, y+1) instanceof Shop shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x, y-1) instanceof Shop shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x, y) instanceof Shop shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x, y+1) instanceof Shop shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x+1, y-1) instanceof Shop shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x+1, y) instanceof Shop shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x+1, y+1) instanceof Shop shop) {
+            return shop;
+        }
+
+        return null;
+    }
+    private Entity getSalePlace(Player player) {
+        Space space = player.getCurrentSpace();
+
+        int x = player.getLocation()[0];
+        int y = player.getLocation()[1];
+
+        Entity desiredShop = null;
+
+        if (space.getEntityByLocation(x-1, y-1) instanceof SalePlace shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x-1, y) instanceof SalePlace shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x-1, y+1) instanceof SalePlace shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x, y-1) instanceof SalePlace shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x, y) instanceof SalePlace shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x, y+1) instanceof SalePlace shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x+1, y-1) instanceof SalePlace shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x+1, y) instanceof SalePlace shop) {
+            return shop;
+        } else if (space.getEntityByLocation(x+1, y+1) instanceof SalePlace shop) {
+            return shop;
+        }
+
+        return null;
     }
 }
 

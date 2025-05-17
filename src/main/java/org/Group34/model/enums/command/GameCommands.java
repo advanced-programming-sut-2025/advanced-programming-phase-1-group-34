@@ -98,7 +98,10 @@ public enum GameCommands implements Command {
     SHOW_ALL_PRODUCTS("\\s*show\\s+all\\s+products\\s*"),
     SHOW_AVAILABLE_PRODUCTS("\\s*show\\s+all\\s+available\\s+products\\s*"),
     PURCHASE("\\s*purchase\\s+(?<productName>.+)\\s*"),
-    PURCHASE_WITH_COUNT("\\s*purchase\\s+(?<productName>.+)\\s+-n\\s+(?<count>\\d+)\\s*");
+    PURCHASE_WITH_COUNT("\\s*purchase\\s+(?<productName>.+)\\s+-n\\s+(?<count>\\d+)\\s*"),
+    CHEAT_ADD_DOLLARS("\\s*cheat\\s+add\\s+(?<count>[0-9]+)\\s+dollars\\s*"),
+    SELL("\\s*sell\\s+(?<productName>.+)\\s*"),
+    SELL_WITH_COUNT("\\s*sell\\s+(?<productName>.+)\\s+-n\\s+(?<count>[0-9]+)\\s*");
     // -------------------------
 
 

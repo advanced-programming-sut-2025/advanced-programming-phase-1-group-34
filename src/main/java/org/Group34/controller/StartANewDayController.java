@@ -3,6 +3,8 @@ package org.Group34.controller;
 import org.Group34.model.Game;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.buildings.shops.*;
+import org.Group34.model.entities.buildings.shops.products.ShippingBin;
 import org.Group34.model.entities.naturalElements.*;
 import org.Group34.model.Time;
 import org.Group34.model.items.crafting.Ingredient;
@@ -54,6 +56,13 @@ public class StartANewDayController {
     private void iterateWholeMap() {
         HashSet<int[]> plantsOnFarm = new HashSet<>();
         HashSet<int[]> scareCrowPlants = new HashSet<>();
+        Blacksmith blacksmith = new Blacksmith();
+        MarnieRanch marnieRanch = new MarnieRanch();
+        TheStardropSaloon theStardropSaloon = new TheStardropSaloon();
+        CarpenterShop carpenterShop = new CarpenterShop();
+        JojaMart jojaMart = new JojaMart();
+        PierreGeneralStore pierreGeneralStore = new PierreGeneralStore();
+        FishShop fishShop = new FishShop();
 
         for (Space space : spaces) {
             lightningStrike(space);
@@ -65,6 +74,8 @@ public class StartANewDayController {
                     sprinklerWatering(space, i, j);
                     addPlant(plantsOnFarm, space, i, j);
                     scareCrow(scareCrowPlants, space, i, j);
+                    reStartShops(blacksmith, marnieRanch, theStardropSaloon, carpenterShop, jojaMart, pierreGeneralStore, fishShop, space, i, j);
+                    sellItems(space, i, j);
                 }
 
             crowInvasion(space, plantsOnFarm, scareCrowPlants);
@@ -159,5 +170,44 @@ public class StartANewDayController {
 
     // ----- Check animals status -----
     private void checkAnimalStatus() {
+    }
+
+    private void reStartShops(Blacksmith blacksmith,
+                              MarnieRanch marnieRanch,
+                              TheStardropSaloon theStardropSaloon,
+                              CarpenterShop carpenterShop,
+                              JojaMart jojaMart,
+                              PierreGeneralStore pierreGeneralStore,
+                              FishShop fishShop,
+                              Space space,
+                              int i,
+                              int j) {
+        if (space.getEntityByLocation(i, j) instanceof Blacksmith) {
+            space.placingEntity(i, j, blacksmith);
+        } else if (space.getEntityByLocation(i, j) instanceof MarnieRanch) {
+            space.placingEntity(i, j, marnieRanch);
+        } else if (space.getEntityByLocation(i, j) instanceof TheStardropSaloon) {
+            space.placingEntity(i, j, theStardropSaloon);
+        } else if (space.getEntityByLocation(i, j) instanceof CarpenterShop) {
+            space.placingEntity(i, j, carpenterShop);
+        } else if (space.getEntityByLocation(i, j) instanceof JojaMart) {
+            space.placingEntity(i, j, jojaMart);
+        } else if (space.getEntityByLocation(i, j) instanceof PierreGeneralStore) {
+            space.placingEntity(i, j, pierreGeneralStore);
+        } else if (space.getEntityByLocation(i, j) instanceof FishShop) {
+            space.placingEntity(i, j, fishShop);
+        }
+    }
+
+    private void sellItems(Space space, int i, int j) {
+        Player player = null;
+
+        if (space.getEntityByLocation(i, j) instanceof SalePlace salePlace) {
+            for (ShippingBin shippingBin : salePlace.getShippingBins()) {
+                player.addMoney(shippingBin.getAmountOfItem() * 200);
+            }
+
+            salePlace.reStart();
+        }
     }
 }

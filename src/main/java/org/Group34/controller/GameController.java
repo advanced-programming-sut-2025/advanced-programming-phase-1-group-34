@@ -6,6 +6,9 @@ import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.entities.buildings.Lake;
+import org.Group34.model.entities.buildings.shops.*;
+import org.Group34.model.entities.buildings.shops.products.ShippingBin;
+import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
 import org.Group34.model.entities.naturalElements.*;
 import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.entities.npcs.quests.Quest;
@@ -14,12 +17,19 @@ import org.Group34.model.enums.Color;
 import org.Group34.model.enums.LevelType;
 import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.animals.AnimalType;
+import org.Group34.model.enums.animals.BarnType;
 import org.Group34.model.enums.animals.Product;
+import org.Group34.model.items.Fertilizer;
+import org.Group34.model.items.Item;
 import org.Group34.model.items.PlantingSource;
+import org.Group34.model.items.Recipe;
 import org.Group34.model.items.crafting.Ingredient;
+import org.Group34.model.items.crafting.PlacingCraft;
+import org.Group34.model.items.foods.ProcessedFood;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.MapBuilder;
 import org.Group34.view.menu.GameMenu;
+import org.Group34.view.menu.MainMenu;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,13 +47,13 @@ public class GameController {
     private final FishingController fishingController = new FishingController();
     private final FarmingController farmingController = new FarmingController();
     private final ToolsController toolsController = new ToolsController();
+    private final StartANewDayController startANewDayController = new StartANewDayController();
+    private final ShopController shopController = new ShopController();
     private final List<NPC> npcs = npcLoader();
 
     public ShopController getShopController() {
         return shopController;
     }
-
-    private final ShopController shopController = new ShopController();
 
     public FarmingController getFarmingController() {
         return farmingController;
@@ -90,8 +100,7 @@ public class GameController {
 
         game.save();
         App.setCurrentGame(null);
-        //TODO change it to main menu after completing game.save()
-        App.setAppMenu(new GameMenu());
+        App.setAppMenu(new MainMenu());
         return new Result(true, "Game saved. Returning to menu.");
     }
 
@@ -134,15 +143,31 @@ public class GameController {
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
         nextUser();
-        if (currentUser == 0) game.time().addHours(1);
+        if (currentUser == 0){
+            game.time().addHours(1);
 
-        // TODO from here we should call StartANewDayController
-        // TODO remember when all players passedOut we have to jump to next day
+            if (game.time().getHour() == 9){
+                startANewDayController.ManageAllTasks();
+                currentUser = 0;
+                return new Result(true, "New day have been started. " + orderOfPlay.get(currentUser).getNickname() + " turn.");
+            }
+        }
 
-        while (game.players().get(orderOfPlay.get(currentUser)).isPassedOut())
+        int placeHolder = currentUser;
+        while (game.players().get(orderOfPlay.get(currentUser)).isPassedOut()){
             nextUser();
+            if (currentUser == placeHolder){
+                game.time().addHours(23 - game.time().getHour());
+                startANewDayController.ManageAllTasks();
+                currentUser = 0;
+                return new Result(true,
+                        "All players passed out and new day have been started. " + orderOfPlay.get(currentUser).getNickname() + " turn.");
+            }
+        }
 
-        return new Result(true, orderOfPlay.get(currentUser) + " turn.");
+
+
+        return new Result(true, orderOfPlay.get(currentUser).getNickname() + " turn.");
     }
 
     private void nextUser(){
@@ -549,4 +574,24 @@ public class GameController {
     }
     // ==========================================================
 
+    // ==================== Shop Controller ====================
+    public Result showAllProducts() {
+        return shopController.showAllProducts(getPlayer());
+    }
+    public Result showAvailableProducts() {
+        return shopController.showAvailableProducts(getPlayer(), game.time());
+    }
+    public Result purchase(String productName, int count) {
+        return shopController.purchase(productName, count, getPlayer(), game.time());
+    }
+    public Result cheatAddDollars(int count) {
+        return shopController.cheatAddDollars(count, getPlayer());
+    }
+    public Result sell(String productName) {
+        return shopController.sell(productName, getPlayer());
+    }
+    public Result sellWithCount(String productName, int count) {
+        return shopController.sellWithCount(productName, count, getPlayer());
+    }
+    // =========================================================
 }
