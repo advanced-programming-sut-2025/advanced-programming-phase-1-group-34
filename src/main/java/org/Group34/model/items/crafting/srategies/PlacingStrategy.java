@@ -5,6 +5,7 @@ import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.Building;
 import org.Group34.model.entities.naturalElements.ForagingTree;
 import org.Group34.model.entities.naturalElements.PlantAble;
+import org.Group34.model.enums.Color;
 import org.Group34.model.enums.creatorOfNaturalElements.TreeCreator;
 import org.Group34.model.map.Space;
 
@@ -145,4 +146,5 @@ public enum PlacingStrategy {
                     scareCrowPlants.add(new int[]{i, j});
             }
     }
+
 }

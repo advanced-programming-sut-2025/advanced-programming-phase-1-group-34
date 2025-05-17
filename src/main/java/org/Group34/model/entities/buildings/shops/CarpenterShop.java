@@ -1,6 +1,7 @@
 package org.Group34.model.entities.buildings.shops;
 
 import org.Group34.model.entities.buildings.shops.products.ShippingBin;
+import org.Group34.model.enums.Color;
 import org.Group34.model.enums.animals.BarnType;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.Ingredient;
@@ -218,5 +219,10 @@ public class CarpenterShop extends Shop {
         else if (farmBuildings.contains(product)) {
             farmBuildingsLimit.replace(product, farmBuildingsLimit.get(product) - amount);
         }
+    }
+
+    @Override
+    public String toString() {
+        return Color.YELLOW + "C" + Color.RESET;
     }
 }

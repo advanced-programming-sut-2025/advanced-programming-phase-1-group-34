@@ -1,6 +1,7 @@
 package org.Group34.model.entities.naturalElements;
 
 import org.Group34.model.entities.Entity;
+import org.Group34.model.enums.Color;
 import org.Group34.model.enums.Season;
 import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.foods.FarmingProduct;
@@ -301,5 +302,10 @@ public class Crop implements Entity, PlantAble {
         }
         age = 0;
         growthLevel = maxLevel - 1;
+    }
+
+    @Override
+    public String toString() {
+        return Color.GREEN + "C" + Color.RESET;
     }
 }

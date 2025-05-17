@@ -1,6 +1,7 @@
 package org.Group34.model.entities.buildings.shops;
 
 import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
+import org.Group34.model.enums.Color;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.Recipe;
 
@@ -147,5 +148,10 @@ public class FishShop extends Shop {
         if (stock.contains(product)) {
             stockLimit.remove(product, stockLimit.get(product) - amount);
         }
+    }
+
+    @Override
+    public String toString() {
+        return Color.YELLOW + "F" + Color.RESET;
     }
 }

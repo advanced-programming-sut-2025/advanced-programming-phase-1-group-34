@@ -2,6 +2,7 @@ package org.Group34.model.items.crafting;
 
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
+import org.Group34.model.enums.Color;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.Recipe;
 import org.Group34.model.items.crafting.srategies.ProcessingStrategy;
@@ -125,4 +126,8 @@ public enum ProcessorCraft implements Craft, Entity {
         return strategy.process(player, input_1, input_2);
     }
 
-}
+
+    @Override
+    public String toString(){
+        return Color.RED + "D" + Color.RESET;
+    }}

@@ -4,9 +4,7 @@ import org.Group34.model.Result;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.WalkAble;
-import org.Group34.model.entities.buildings.Building;
 import org.Group34.model.enums.Color;
-import org.Group34.model.enums.FarmType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,13 +162,28 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
     }
 
     public Result helpMap() {
-        return new Result(true, "player:      P\n" +
-                "house: " + Color.BROWN + "       H" + Color.RESET + "\n" +
-                "green house: " + Color.YELLOW + "G" + Color.RESET + "\n" +
-                "lake: " + Color.CYAN + "        L" + Color.RESET + "\n" +
-                "quarry: " + Color.GRAY + "      Q" + Color.RESET + "\n" +
-                "foraging: " + Color.RED + "    F" + Color.RESET + "\n" +
-                "stone: " + Color.GRAY + "       S" + Color.RESET + "\n" +
-                "tree: " + Color.GREEN + "        T" + Color.RESET);
+        return new Result(true,""
+                + String.format("%-25s%s\n", "Player:", "P")
+                + String.format("%-25s%s\n", "House:", Color.BROWN + "H" + Color.RESET)
+                + String.format("%-25s%s\n", "Green house:", Color.YELLOW + "G" + Color.RESET)
+                + String.format("%-25s%s\n", "Lake:", Color.CYAN + "L" + Color.RESET)
+                + String.format("%-25s%s\n", "Quarry:", Color.GRAY + "Q" + Color.RESET)
+                + String.format("%-25s%s\n", "Stone:", Color.GRAY + "S" + Color.RESET)
+                + String.format("%-25s%s\n", "Tree:", Color.GREEN + "T" + Color.RESET)
+                + String.format("%-25s%s\n", "Crop:", Color.YELLOW + "C" + Color.RESET)
+                + String.format("%-25s%s\n", "Devices (Crafted Items):", Color.YELLOW + "D" + Color.RESET)
+                + "\n"
+                + "NPC Village:\n"
+                + String.format("%-25s%s\n", "Plough Land:", Color.BROWN + "P" + Color.RESET)
+                + String.format("%-25s%s\n", "Blacksmith:", Color.YELLOW + "B" + Color.RESET)
+                + String.format("%-25s%s\n", "Carpenter Shop:", Color.YELLOW + "C" + Color.RESET)
+                + String.format("%-25s%s\n", "Fish Shop:", Color.YELLOW + "F" + Color.RESET)
+                + String.format("%-25s%s\n", "Jojo Mart:", Color.YELLOW + "J" + Color.RESET)
+                + String.format("%-25s%s\n", "Marnie Ranch:", Color.YELLOW + "M" + Color.RESET)
+                + String.format("%-25s%s\n", "Pierre General Store:", Color.YELLOW + "P" + Color.RESET)
+                + String.format("%-25s%s\n", "Sale Place:", Color.YELLOW + "S" + Color.RESET)
+                + String.format("%-25s%s\n", "The Starrop Saloon:", Color.YELLOW + "T" + Color.RESET));
+
+
     }
 }
