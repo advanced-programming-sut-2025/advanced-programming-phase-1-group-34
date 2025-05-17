@@ -1,6 +1,7 @@
 package org.Group34.controller;
 
 import org.Group34.model.Result;
+import org.Group34.model.Time;
 import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
@@ -12,9 +13,6 @@ import org.Group34.model.enums.animals.Product;
 import org.Group34.model.items.tools.*;
 
 public class ToolsController { // TODO This class must be filled.
-    private Player player; // TODO It will fix in GameController
-    private WeatherSystem weatherSystem; // TODO It will fix in GameController
-
     public Result toolsEquip(String toolName) {
         return new Result(true, "");
     }
@@ -24,16 +22,15 @@ public class ToolsController { // TODO This class must be filled.
     public Result showAvailableTools() {
         return new Result(true, "");
     }
-    public Result toolsUpgrade(String toolName) {
-        return new Result(true, "");
-    }
-    public Result toolUse(String direction) {
-        FarmingController farmingController = new FarmingController();
-        FishingController fishingController = new FishingController();
-        AnimalController animalController = new AnimalController();
-
-        int locationX = getLocationOfDirectionX(direction);
-        int locationY = getLocationOfDirectionY(direction);
+    public Result toolUse(String direction,
+                          FarmingController farmingController,
+                          FishingController fishingController,
+                          AnimalController animalController,
+                          Player player,
+                          Time time,
+                          WeatherSystem weatherSystem) {
+        int locationX = getLocationOfDirectionX(direction, player);
+        int locationY = getLocationOfDirectionY(direction, player);
         Entity desiredTile = player.getCurrentSpace().getEntityByLocation(locationX, locationY);
 
         if (player.getCurrentTool() instanceof Hoe) {
@@ -52,7 +49,7 @@ public class ToolsController { // TODO This class must be filled.
                 return new Result(false, "Error: You do not have enough energy to use this tool.");
             }
 
-            return farmingController.useHoe(direction, enoughEnergy);
+            return farmingController.useHoe(direction, enoughEnergy, player);
         }
 
         else if (player.getCurrentTool() instanceof Pickaxe) {
@@ -72,7 +69,7 @@ public class ToolsController { // TODO This class must be filled.
             }
 
             if (desiredTile instanceof PloughedLand) {
-                return farmingController.usePickaxe(direction, enoughEnergy);
+                return farmingController.usePickaxe(direction, enoughEnergy, player);
             }
             // TODO This tool can perform other tasks that are not related to farming.
         }
@@ -93,7 +90,7 @@ public class ToolsController { // TODO This class must be filled.
                 return new Result(false, "Error: You do not have enough energy to use this tool.");
             }
 
-            return farmingController.useAxe(direction, enoughEnergy);
+            return farmingController.useAxe(direction, enoughEnergy, player);
         }
 
         else if (player.getCurrentTool() instanceof WateringCan) {
@@ -112,7 +109,7 @@ public class ToolsController { // TODO This class must be filled.
                 return new Result(false, "Error: You do not have enough energy to use this tool.");
             }
 
-            return farmingController.useWateringCan(direction, enoughEnergy, (WateringCan) player.getCurrentTool());
+            return farmingController.useWateringCan(direction, enoughEnergy, (WateringCan) player.getCurrentTool(), player);
         }
 
         else if (player.getCurrentTool() instanceof Scythe)  {
@@ -122,7 +119,7 @@ public class ToolsController { // TODO This class must be filled.
                 return new Result(false, "Error: You do not have enough energy to use this tool.");
             }
 
-            return farmingController.useScythe(direction, enoughEnergy);
+            return farmingController.useScythe(direction, enoughEnergy, player, time);
         }
 
         else if (player.getCurrentTool() instanceof MilkPail) {
@@ -163,7 +160,7 @@ public class ToolsController { // TODO This class must be filled.
         return new Result(true, "");
     }
 
-    private int getLocationOfDirectionX(String direction) {
+    private int getLocationOfDirectionX(String direction, Player player) {
         int playerLocation = player.getLocation()[0];
         int location;
 
@@ -177,7 +174,7 @@ public class ToolsController { // TODO This class must be filled.
 
         return location;
     }
-    private int getLocationOfDirectionY(String direction) {
+    private int getLocationOfDirectionY(String direction, Player player) {
         int playerLocation = player.getLocation()[1];
         int location;
 

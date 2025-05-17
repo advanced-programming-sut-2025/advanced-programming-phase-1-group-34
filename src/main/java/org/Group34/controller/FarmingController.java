@@ -10,6 +10,7 @@ import org.Group34.model.enums.Season;
 import org.Group34.model.enums.creatorOfNaturalElements.CropCreator;
 import org.Group34.model.enums.creatorOfNaturalElements.TreeCreator;
 import org.Group34.model.items.Fertilizer;
+import org.Group34.model.items.Item;
 import org.Group34.model.items.Mineral;
 import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.crafting.Ingredient;
@@ -20,12 +21,7 @@ import org.Group34.model.Time;
 import java.util.Random;
 
 public class FarmingController {
-    private Space currentSpace; // TODO It will fix in GameController
-    private Player currentPLayer; // TODO It will fix in GameController
-    private Time time; // TODO It will fix in GameController
-    private LevelUpController levelUpController; // TODO It will fix in GameController
-    private WateringCan playerWateringCan; // TODO It will fix in PLayer class
-
+    private LevelUpController levelUpController = new LevelUpController(); // TODO It will fix in GameController
 
     public Result showCraftInfo(String craftName) {
         Entity plant = getPlantByCraftName(craftName);
@@ -41,36 +37,40 @@ public class FarmingController {
     }
 
 
-    public Result plant(String seedName, String direction) {
-        int locationX = getLocationOfDirectionX(direction);
-        int locationY = getLocationOfDirectionY(direction);
+    public Result plant(String seedName, String direction, Player currentPlayer, Time time) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
+        int locationX = getLocationOfDirectionX(direction, currentPlayer);
+        int locationY = getLocationOfDirectionY(direction, currentPlayer);
         Entity desiredTile = currentSpace.getEntityByLocation(locationX, locationY);
 
         if (desiredTile != null && !(desiredTile instanceof PloughedLand)) {
             return new Result(false, "Error: This tile is not empty.");
         } else if (desiredTile == null) {
             return new Result(false, "Error: You should plow the soil before planting.");
-        } else if (!currentPLayer.isExistInInventory(getSeedByName(seedName))) {
+        } else if (!currentPlayer.isExistInInventory(getSeedByName(seedName))) {
             return new Result(false, "Error: You do not have this seed in your inventory.");
         } else if (getSeedByName(seedName) == PlantingSource.MIXED_SEEDS) {
-            Entity randomPlant = getPlantOfMixedSeed();
-            placingPlantInSpace(locationX, locationY, randomPlant);
+            Entity randomPlant = getPlantOfMixedSeed(time);
+            placingPlantInSpace(locationX, locationY, randomPlant, currentPlayer);
 
-            currentPLayer.removeFromInventory(getSeedByName(seedName), 1);
+            currentPlayer.removeFromInventory(getSeedByName(seedName), 1);
             return new Result(true, "The desired seed has been successfully planted.");
         }
-        else if (!isSeedForCurrentSeason(getPlantBySeedName(seedName))) {
+        else if (!isSeedForCurrentSeason(getPlantBySeedName(seedName), time)) {
             return new Result(false, "Error: This plant is not suitable for this season.");
         }
 
-        placingPlantInSpace(locationX, locationY, getPlantBySeedName(seedName));
-        currentPLayer.removeFromInventory(getSeedByName(seedName), 1);
+        placingPlantInSpace(locationX, locationY, getPlantBySeedName(seedName), currentPlayer);
+        currentPlayer.removeFromInventory(getSeedByName(seedName), 1);
 
         return new Result(true, "The desired seed has been successfully planted.");
     }
 
 
-    public Result showPlant(int x, int y) {
+    public Result showPlant(int x, int y, Player currentPlayer) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
         Entity desiredPlant = currentSpace.getEntityByLocation(x, y);
 
         if (desiredPlant instanceof Crop crop) {
@@ -87,14 +87,16 @@ public class FarmingController {
     }
 
 
-    public Result fertilize(String fertilizer, String direction) {
-        int locationX = getLocationOfDirectionX(direction);
-        int locationY = getLocationOfDirectionY(direction);
+    public Result fertilize(String fertilizer, String direction, Player currentPlayer) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
+        int locationX = getLocationOfDirectionX(direction, currentPlayer);
+        int locationY = getLocationOfDirectionY(direction, currentPlayer);
         Entity desiredPlant = currentSpace.getEntityByLocation(locationX, locationY);
 
         if (!(desiredPlant instanceof Crop) && !(desiredPlant instanceof Tree)) {
             return new Result(false, "Error: You can only fertilize your plants.");
-        } else if (!currentPLayer.isExistInInventory(getFertilizerByName(fertilizer))) {
+        } else if (!currentPlayer.isExistInInventory(getFertilizerByName(fertilizer))) {
             return new Result(false, "Error: You do not have this fertilize in your inventory.");
         }
 
@@ -109,17 +111,19 @@ public class FarmingController {
     }
 
 
-    public Result showAmountOfWater() {
-        return new Result(true, "The amount of water in the Watering Can: " + playerWateringCan.getAmountOfWater());
+    public Result showAmountOfWater(Player currentPlayer) {
+        return new Result(true, "The amount of water in the Watering Can: " + getPlayerWateringCan(currentPlayer).getAmountOfWater());
     }
 
     // ----- Use Tools -----
-    public Result useHoe(String direction, int enoughEnergy) {
-        int locationX = getLocationOfDirectionX(direction);
-        int locationY = getLocationOfDirectionY(direction);
+    public Result useHoe(String direction, int enoughEnergy, Player currentPlayer) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
+        int locationX = getLocationOfDirectionX(direction, currentPlayer);
+        int locationY = getLocationOfDirectionY(direction, currentPlayer);
         Entity desiredTile = currentSpace.getEntityByLocation(locationX, locationY);
 
-        currentPLayer.decreaseEnergy(enoughEnergy);
+        currentPlayer.decreaseEnergy(enoughEnergy);
         if (desiredTile != null) {
             return new Result(false, "Error: You can't plow here.");
         }
@@ -128,43 +132,49 @@ public class FarmingController {
         return new Result(true, "The desired tile has been plowed.");
     }
 
-    public Result usePickaxe(String direction, int enoughEnergy) {
-        int x = getLocationOfDirectionX(direction);
-        int y = getLocationOfDirectionY(direction);
+    public Result usePickaxe(String direction, int enoughEnergy, Player currentPlayer) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
 
-        currentPLayer.decreaseEnergy(enoughEnergy);
+        int x = getLocationOfDirectionX(direction, currentPlayer);
+        int y = getLocationOfDirectionY(direction, currentPlayer);
+
+        currentPlayer.decreaseEnergy(enoughEnergy);
         currentSpace.placingEntity(x, y, null);
 
         return new Result(true, "The plowed land has disappeared.");
     }
 
-    public Result useAxe(String direction, int enoughEnergy) {
-        int x = getLocationOfDirectionX(direction);
-        int y = getLocationOfDirectionY(direction);
+    public Result useAxe(String direction, int enoughEnergy, Player currentPlayer) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
+        int x = getLocationOfDirectionX(direction, currentPlayer);
+        int y = getLocationOfDirectionY(direction, currentPlayer);
         Entity desiredTile = currentSpace.getEntityByLocation(x, y);
 
-        currentPLayer.decreaseEnergy(enoughEnergy);
+        currentPlayer.decreaseEnergy(enoughEnergy);
 
         if (!(desiredTile instanceof Tree) && !(desiredTile instanceof ForagingTree)) {
             return new Result(false, "Error: You can only use Axe on Trees.");
         } else {
             if (desiredTile instanceof Tree tree) {
-                currentPLayer.addToInventory(tree.getSource(), 2);
+                currentPlayer.addToInventory(tree.getSource(), 2);
             }
-            currentPLayer.addToInventory(Ingredient.WOOD, 5);
+            currentPlayer.addToInventory(Ingredient.WOOD, 5);
             currentSpace.placingEntity(x, y, null);
-            levelUpController.foragingLevelUp(currentPLayer, LevelType.FORAGING_LEVEL);
+            levelUpController.foragingLevelUp(currentPlayer, LevelType.FORAGING_LEVEL);
         }
 
         return new Result(true, "The specified tree has been successfully cut down.");
     }
 
-    public Result useWateringCan(String direction, int enoughEnergy, WateringCan playerWateringCan) {
-        int x = getLocationOfDirectionX(direction);
-        int y = getLocationOfDirectionY(direction);
+    public Result useWateringCan(String direction, int enoughEnergy, WateringCan playerWateringCan, Player currentPlayer) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
+        int x = getLocationOfDirectionX(direction, currentPlayer);
+        int y = getLocationOfDirectionY(direction, currentPlayer);
         Entity desiredTile = currentSpace.getEntityByLocation(x, y);
 
-        currentPLayer.decreaseEnergy(enoughEnergy);
+        currentPlayer.decreaseEnergy(enoughEnergy);
 
         if (desiredTile instanceof Lake) {
             playerWateringCan.fillIt();
@@ -190,17 +200,19 @@ public class FarmingController {
         return new Result(false, "You can not use Watering Can here.");
     }
 
-    public Result useScythe(String direction, int enoughEnergy) {
-        int x = getLocationOfDirectionX(direction);
-        int y = getLocationOfDirectionY(direction);
+    public Result useScythe(String direction, int enoughEnergy, Player currentPlayer, Time time) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
+        int x = getLocationOfDirectionX(direction, currentPlayer);
+        int y = getLocationOfDirectionY(direction, currentPlayer);
         Entity desiredTile = currentSpace.getEntityByLocation(x, y);
 
-        currentPLayer.decreaseEnergy(enoughEnergy);
+        currentPlayer.decreaseEnergy(enoughEnergy);
 
         if (desiredTile instanceof Crop crop) {
-            return harvestTheCrop(crop, x, y);
+            return harvestTheCrop(crop, x, y, currentPlayer, time);
         } else if (desiredTile instanceof Tree tree) {
-            return harvestTheTree(tree, x, y);
+            return harvestTheTree(tree, x, y, currentPlayer, time);
         }
 
         return new Result(false, "You can not use Scythe here.");
@@ -208,8 +220,8 @@ public class FarmingController {
     // ---------------------
 
 
-    private int getLocationOfDirectionX(String direction) {
-        int playerLocation = currentPLayer.getLocation()[0];
+    private int getLocationOfDirectionX(String direction, Player currentPlayer) {
+        int playerLocation = currentPlayer.getLocation()[0];
         int location;
 
         if (direction.equals("Up") || direction.equals("UpRight") || direction.equals("UpLeft")) {
@@ -222,8 +234,8 @@ public class FarmingController {
 
         return location;
     }
-    private int getLocationOfDirectionY(String direction) {
-        int playerLocation = currentPLayer.getLocation()[1];
+    private int getLocationOfDirectionY(String direction, Player currentPlayer) {
+        int playerLocation = currentPlayer.getLocation()[1];
         int location;
 
         if (direction.equals("Left") || direction.equals("UpLeft") || direction.equals("DownLeft")) {
@@ -356,7 +368,7 @@ public class FarmingController {
             default -> null;
         };
     }
-    private boolean isSeedForCurrentSeason(Entity plant) {
+    private boolean isSeedForCurrentSeason(Entity plant, Time time) {
         if (plant instanceof Crop crop) {
             return crop.getSeasons().contains(time.getSeason());
         } else if (plant instanceof Tree tree) {
@@ -433,7 +445,9 @@ public class FarmingController {
             default -> null;
         };
     }
-    private void placingPlantInSpace(int x, int y, Entity plant) {
+    private void placingPlantInSpace(int x, int y, Entity plant, Player currentPlayer) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
         if (!(plant instanceof Tree)) {
             currentSpace.placingEntity(x, y, plant);
         } else {
@@ -441,11 +455,13 @@ public class FarmingController {
             if (!crop.isCanBecomeGiant()) {
                 currentSpace.placingEntity(x, y, plant);
             } else {
-                checkAndBecomeGiant(x, y, crop);
+                checkAndBecomeGiant(x, y, crop, currentPlayer);
             }
         }
     }
-    private void checkAndBecomeGiant(int x, int y, Crop crop) {
+    private void checkAndBecomeGiant(int x, int y, Crop crop, Player currentPlayer) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
         if (currentSpace.getEntityByLocation(x-1, y-1) instanceof Crop crop1 &&
             currentSpace.getEntityByLocation(x-1, y) instanceof Crop crop2 &&
             currentSpace.getEntityByLocation(x, y-1) instanceof Crop crop3 &&
@@ -645,7 +661,7 @@ public class FarmingController {
             currentSpace.placingEntity(x, y, crop);
         }
     }
-    private Entity getPlantOfMixedSeed() {
+    private Entity getPlantOfMixedSeed(Time time) {
         Random rand = new Random();
         if (time.getSeason() == Season.SPRING) {
             int randInt = rand.nextInt(5);
@@ -705,22 +721,24 @@ public class FarmingController {
             return CropCreator.POWDERMELON.createInstance();
         }
     }
-    private Result harvestTheCrop(Crop crop, int x, int y) {
+    private Result harvestTheCrop(Crop crop, int x, int y, Player currentPlayer, Time time) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
         if (crop.isGiant()) {
             if (crop.getGrowthLevel() == crop.getMaxLevel()) {
                 if (!crop.getSeasons().contains(time.getSeason())) {
                     return new Result(false, "Error: This product is not for this season.");
                 }
 
-                currentPLayer.addToInventory(crop.getFarmingProduct(), 50);
+                currentPlayer.addToInventory(crop.getFarmingProduct(), 50);
 
                 if (crop.isOneTime()) {
-                    removeGiantCrops(crop, x, y);
+                    removeGiantCrops(crop, x, y, currentPlayer);
                 } else {
                     crop.harvest();
                 }
 
-                levelUpController.farmingLevelUp(currentPLayer, LevelType.FARMING_LEVEL);
+                levelUpController.farmingLevelUp(currentPlayer, LevelType.FARMING_LEVEL);
                 return new Result(true, "The desired plant has been harvested.");
             }
             else {
@@ -734,7 +752,7 @@ public class FarmingController {
 
                 }
 
-                currentPLayer.addToInventory(crop.getFarmingProduct(), 5);
+                currentPlayer.addToInventory(crop.getFarmingProduct(), 5);
 
                 if (crop.isOneTime()) {
                     currentSpace.placingEntity(x, y, null);
@@ -742,7 +760,7 @@ public class FarmingController {
                     crop.harvest();
                 }
 
-                levelUpController.farmingLevelUp(currentPLayer, LevelType.FARMING_LEVEL);
+                levelUpController.farmingLevelUp(currentPlayer, LevelType.FARMING_LEVEL);
                 return new Result(true, "The desired plant has been harvested.");
             }
             else {
@@ -750,12 +768,14 @@ public class FarmingController {
             }
         }
     }
-    private Result harvestTheTree(Tree tree, int x, int y) {
+    private Result harvestTheTree(Tree tree, int x, int y, Player currentPlayer, Time time) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
         if (tree.isBurned()) {
-            currentPLayer.addToInventory(Mineral.COAL, 5);
+            currentPlayer.addToInventory(Mineral.COAL, 5);
             currentSpace.placingEntity(x, y, null);
 
-            levelUpController.farmingLevelUp(currentPLayer, LevelType.FARMING_LEVEL);
+            levelUpController.farmingLevelUp(currentPlayer, LevelType.FARMING_LEVEL);
             return new Result(true, "The tree in question was burned due to being struck by lightning and coal was harvested.");
         }
         else if (tree.getGrowthLevel() == tree.getMaxLevel()) {
@@ -763,16 +783,18 @@ public class FarmingController {
                 return new Result(false, "Error: This product is not for this season.");
             }
 
-            currentPLayer.addToInventory(tree.getFruit(), 5);
+            currentPlayer.addToInventory(tree.getFruit(), 5);
 
             tree.harvest();
 
-            levelUpController.farmingLevelUp(currentPLayer, LevelType.FARMING_LEVEL);
+            levelUpController.farmingLevelUp(currentPlayer, LevelType.FARMING_LEVEL);
             return new Result(true, "The desired plant has been harvested.");
         }
         return new Result(true, "The plant in question has not yet reached the harvesting stage.");
     }
-    private void removeGiantCrops(Crop crop, int x, int y) {
+    private void removeGiantCrops(Crop crop, int x, int y, Player currentPlayer) {
+        Space currentSpace = currentPlayer.getCurrentSpace();
+
         for (int i = x - 1; i <= x + 1; i++) {
             for (int j = y - 1; j <= y + 1; j++) {
                 if (i >= 0 && i < 100 && j >= 0 && j < 100) {
@@ -782,5 +804,13 @@ public class FarmingController {
                 }
             }
         }
+    }
+    private WateringCan getPlayerWateringCan(Player player) {
+        for (Item item : player.getInventory().keySet()) {
+            if (item instanceof WateringCan can) {
+                return can;
+            }
+        }
+        return null;
     }
 }

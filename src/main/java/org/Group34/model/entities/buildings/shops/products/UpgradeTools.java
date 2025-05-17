@@ -15,7 +15,14 @@ public enum UpgradeTools implements Item {
     IRIDIUM_TRASH_CAN("Iridium Trash Can", Ingredient.IRIDIUM_BAR, 12500),
 
     BIG_BACKPACK("Big Backpack", null, 2000),
-    DELUXE_BACKPACK("Deluxe Backpack", null, 10000);
+    DELUXE_BACKPACK("Deluxe Backpack", null, 10000),
+
+    TRAINING_FISHING_POLE("Training Fishing Pole", null, 25),
+    BAMBOO_FISHING_POLE("Bamboo Fishing Pole", null, 500),
+    FIBERGLASS_FISHING_POLE("Fiberglass Fishing Pole", null, 1800),
+    IRIDIUM_FISHING_POLE("Iridium Fishing Pole", null, 7500);
+
+
 
     private final String name;
     private final Ingredient ingredient;

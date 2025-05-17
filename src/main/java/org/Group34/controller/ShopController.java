@@ -9,9 +9,13 @@ import org.Group34.model.entities.buildings.shops.products.ShippingBin;
 import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
 import org.Group34.model.enums.animals.AnimalType;
 import org.Group34.model.enums.animals.BarnType;
+import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.PlantingSource;
+import org.Group34.model.items.Recipe;
 import org.Group34.model.items.crafting.Ingredient;
+import org.Group34.model.items.crafting.PlacingCraft;
+import org.Group34.model.items.foods.ProcessedFood;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
 
@@ -33,8 +37,6 @@ public class ShopController {
             return new Result(true, shop.showAllProducts());
         }
 
-        else if (playerTile instanceof TheStardropSaloon) {}
-
         else if (playerTile instanceof CarpenterShop shop) {
             return new Result(true, shop.showAllProducts());
         }
@@ -47,8 +49,8 @@ public class ShopController {
             return new Result(true, shop.showAllProducts());
         }
 
-        else if (playerTile instanceof FishShop) {
-
+        else if (playerTile instanceof FishShop shop) {
+            return new Result(true, shop.showAllProducts());
         }
 
         return new Result(false, "Error: You first need to enter a shop.");
@@ -64,9 +66,6 @@ public class ShopController {
             return new Result(true, shop.showAvailableProducts());
         }
 
-        else if (playerTile instanceof TheStardropSaloon) {
-
-        }
 
         else if (playerTile instanceof CarpenterShop shop) {
             return new Result(true, shop.showAvailableProducts());
@@ -80,8 +79,8 @@ public class ShopController {
             return new Result(true, shop.showAvailableProducts());
         }
 
-        else if (playerTile instanceof FishShop) {
-
+        else if (playerTile instanceof FishShop shop) {
+            return new Result(true, shop.shopAvailableProducts());
         }
 
         return new Result(false, "Error: You first need to enter a shop.");
@@ -181,10 +180,6 @@ public class ShopController {
             }
         }
 
-        else if (playerTile instanceof TheStardropSaloon) {
-
-        }
-
         else if (playerTile instanceof CarpenterShop shop) {
             Item product = shop.getProductByName(productName);
 
@@ -263,22 +258,159 @@ public class ShopController {
             if (product == null) {
                 return new Result(false, "Error: This product is not available in this store.");
             }
+
+            if (PierreGeneralStore.getYearRoundStock().contains(product)) {
+                if (product instanceof ProcessedFood stock) {
+                    if (shop.getYearRoundStockLimit(product) <= count - 1 && shop.getYearRoundStockLimit(product) != -11) {
+                        return new Result(false, "Error: This product is sold out.");
+                    }
+                    else if (player.getMoney() < stock.getPrice() * count) {
+                        return new Result(false, "Error: You do not have enough balance.");
+                    }
+
+                    player.addMoney(stock.getPrice() * count * -1);
+                    shop.buy(product, count);
+                    player.addToInventory(product, count);
+
+                    return new Result(true, "The desired product has been purchased.");
+                } else if (product instanceof Fertilizer stock) {
+                    if (shop.getYearRoundStockLimit(product) <= count - 1 && shop.getYearRoundStockLimit(product) != -11) {
+                        return new Result(false, "Error: This product is sold out.");
+                    }
+                    else if (player.getMoney() < stock.getPrice() * count) {
+                        return new Result(false, "Error: You do not have enough balance.");
+                    }
+
+                    player.addMoney(stock.getPrice() * count * -1);
+                    shop.buy(product, count);
+                    player.addToInventory(product, count);
+
+                    return new Result(true, "The desired product has been purchased.");
+                } else if (product instanceof PlacingCraft stock) {
+                    if (shop.getYearRoundStockLimit(product) <= count - 1 && shop.getYearRoundStockLimit(product) != -11) {
+                        return new Result(false, "Error: This product is sold out.");
+                    }
+                    else if (player.getMoney() < stock.getPrice() * count) {
+                        return new Result(false, "Error: You do not have enough balance.");
+                    }
+
+                    player.addMoney(stock.getPrice() * count * -1);
+                    shop.buy(product, count);
+                    player.addToInventory(product, count);
+
+                    return new Result(true, "The desired product has been purchased.");
+                } else if (product instanceof PlantingSource stock) {
+                    if (shop.getYearRoundStockLimit(product) <= count - 1 && shop.getYearRoundStockLimit(product) != -11) {
+                        return new Result(false, "Error: This product is sold out.");
+                    }
+                    else if (player.getMoney() < stock.getPrice() * count) {
+                        return new Result(false, "Error: You do not have enough balance.");
+                    }
+
+                    player.addMoney(stock.getPrice() * count * -1);
+                    shop.buy(product, count);
+                    player.addToInventory(product, count);
+
+                    return new Result(true, "The desired product has been purchased.");
+                } else if (product instanceof UpgradeTools stock) {
+                    if (shop.getYearRoundStockLimit(product) <= count - 1 && shop.getYearRoundStockLimit(product) != -11) {
+                        return new Result(false, "Error: This product is sold out.");
+                    }
+                    else if (player.getMoney() < stock.getPrice() * count) {
+                        return new Result(false, "Error: You do not have enough balance.");
+                    }
+
+                    player.addMoney(stock.getPrice() * count * -1);
+                    shop.buy(product, count);
+                    upgradeBackpack(stock);
+
+                    return new Result(true, "The desired product has been purchased.");
+                }
+            }
+            else if (PierreGeneralStore.getSpringStock().contains(product)) {
+                PlantingSource stock = (PlantingSource) product;
+
+                if (shop.getSpringStockLimit(product) <= count - 1 && shop.getSpringStockLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < stock.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addMoney(stock.getPrice() * count * -1);
+                shop.buy(product, count);
+                player.addToInventory(product, count);
+            }
+            else if (PierreGeneralStore.getSummerStock().contains(product)) {
+                PlantingSource stock = (PlantingSource) product;
+
+                if (shop.getSpringStockLimit(product) <= count - 1 && shop.getSpringStockLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < stock.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addMoney(stock.getPrice() * count * -1);
+                shop.buy(product, count);
+                player.addToInventory(product, count);
+            }
+            else if (PierreGeneralStore.getFallStock().contains(product)) {
+                PlantingSource stock = (PlantingSource) product;
+
+                if (shop.getSpringStockLimit(product) <= count - 1 && shop.getSpringStockLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < stock.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addMoney(stock.getPrice() * count * -1);
+                shop.buy(product, count);
+                player.addToInventory(product, count);
+            }
         }
 
-        else if (playerTile instanceof FishShop) {
+        else if (playerTile instanceof FishShop shop) {
+            Item product = shop.getProductByName(productName);
 
+            if (product == null) {
+                return new Result(false, "Error: This product is not available in this store.");
+            }
+
+            if (product instanceof Recipe item) {
+                if (shop.getStockLimit(product) <= count - 1 && shop.getStockLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < item.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addToInventory(product, count);
+                player.addMoney(item.getPrice() * count * -1);
+                shop.buy(product, count);
+
+                return new Result(true, "The desired product has been purchased.");
+            }
+
+            if (product instanceof UpgradeTools item) {
+                if (shop.getStockLimit(product) <= count - 1 && shop.getStockLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < item.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addMoney(item.getPrice() * count * -1);
+                shop.buy(product, count);
+                upgradeFishingPole(item);
+
+                return new Result(true, "The desired product has been purchased.");
+            }
         }
 
         return new Result(false, "Error: You first need to enter a shop.");
     }
-
-
-
-
-
-
-
-
 
 
     private void upgradeTools(UpgradeTools tool) {
@@ -346,14 +478,49 @@ public class ShopController {
             player.getInventory().remove(item);
         }
     }
+    private void upgradeBackpack(UpgradeTools stock) {
+        Backpack backpack = null;
+        for (Item item : player.getInventory().keySet()) {
+            if (item instanceof Backpack backpack1) {
+                backpack = backpack1;
+            }
+        }
+        player.getInventory().remove(backpack);
+
+
+        if (stock == UpgradeTools.BIG_BACKPACK) {
+            backpack.setType(ToolType.BIG_BACKPACK);
+            player.addToInventory(backpack, 1);
+        }
+        else if (stock == UpgradeTools.DELUXE_BACKPACK) {
+            backpack.setType(ToolType.DELUXE_BACKPACK);
+            player.addToInventory(backpack, 1);
+        }
+    }
+    private void upgradeFishingPole(UpgradeTools stock) {
+        removeFishingPole();
+        if (stock == UpgradeTools.TRAINING_FISHING_POLE) {
+            player.addToInventory(new FishingPole(ToolType.TRAINING_FISHING_POLE), 1);
+        } else if (stock == UpgradeTools.BAMBOO_FISHING_POLE) {
+            player.addToInventory(new FishingPole(ToolType.BAMBOO_FISHING_POLE), 1);
+        } else if (stock == UpgradeTools.FIBERGLASS_FISHING_POLE) {
+            player.addToInventory(new FishingPole(ToolType.FIBERGLASS_FISHING_POLE), 1);
+        } else if (stock == UpgradeTools.IRIDIUM_FISHING_POLE) {
+            player.addToInventory(new FishingPole(ToolType.IRIDIUM_FISHING_POLE), 1);
+        }
+    }
+    private void removeFishingPole() {
+        ArrayList<Item> remove = new ArrayList<>();
+
+        for (Item item : player.getInventory().keySet()) {
+            if (item instanceof FishShop) {
+                remove.add(item);
+            }
+        }
+
+        for (Item item : remove) {
+            player.getInventory().remove(item);
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
 

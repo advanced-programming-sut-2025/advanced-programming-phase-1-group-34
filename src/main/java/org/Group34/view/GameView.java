@@ -139,7 +139,7 @@ public class GameView extends AppMenu {
                 if (matcher.find()) {
                     String craftName = matcher.group("craftName").trim();
 
-                    Result result = farmingController.showCraftInfo(craftName);
+                    Result result = controller.showCraftInfo(craftName);
                     showMessage(result.message());
                 }
             }
@@ -151,7 +151,7 @@ public class GameView extends AppMenu {
                     String seed = matcher.group("seed").trim();
                     String direction = matcher.group("direction").trim();
 
-                    Result result = farmingController.plant(seed, direction);
+                    Result result = controller.plant(seed, direction);
                     showMessage(result.message());
                 }
             }
@@ -163,7 +163,7 @@ public class GameView extends AppMenu {
                     int x = Integer.parseInt(matcher.group("x").trim());
                     int y = Integer.parseInt(matcher.group("y").trim());
 
-                    Result result = farmingController.showPlant(x, y);
+                    Result result = controller.showPlant(x, y);
                     showMessage(result.message());
                 }
             }
@@ -175,12 +175,12 @@ public class GameView extends AppMenu {
                     String fertilizer = matcher.group("fertilizer").trim();
                     String direction = matcher.group("direction").trim();
 
-                    Result result = farmingController.fertilize(fertilizer, direction);
+                    Result result = controller.fertilize(fertilizer, direction);
                     showMessage(result.message());
                 }
             }
             else if (command.matches(GameCommands.HOW_MUCH_WATER.getRegex())) {
-                Result result = farmingController.showAmountOfWater();
+                Result result = controller.showAmountOfWater();
                 showMessage(result.message());
             }
             // ------------------------
@@ -193,28 +193,17 @@ public class GameView extends AppMenu {
                 if (matcher.find()) {
                     String toolName = matcher.group("toolName").trim();
 
-                    Result result = toolsController.toolsEquip(toolName);
+                    Result result = controller.toolsEquip(toolName);
                     showMessage(result.message());
                 }
             }
             else if (command.matches(GameCommands.SHOW_CURRENT_TOOLS.getRegex())) {
-                Result result = toolsController.showCurrentTools();
+                Result result = controller.showCurrentTools();
                 showMessage(result.message());
             }
             else if (command.matches(GameCommands.SHOW_AVAILABLE_TOOLS.getRegex())) {
-                Result result = toolsController.showAvailableTools();
+                Result result = controller.showAvailableTools();
                 showMessage(result.message());
-            }
-            else if (command.matches(GameCommands.TOOLS_UPGRADE.getRegex())) {
-                Pattern pattern = Pattern.compile(GameCommands.TOOLS_UPGRADE.getRegex());
-                Matcher matcher = pattern.matcher(command);
-
-                if (matcher.find()) {
-                    String toolName = matcher.group("toolName").trim();
-
-                    Result result = toolsController.toolsUpgrade(toolName);
-                    showMessage(result.message());
-                }
             }
             else if (command.matches(GameCommands.TOOLS_USE.getRegex())) {
                 Pattern pattern = Pattern.compile(GameCommands.TOOLS_USE.getRegex());
@@ -223,7 +212,7 @@ public class GameView extends AppMenu {
                 if (matcher.find()) {
                     String direction = matcher.group("direction").trim();
 
-                    Result result = toolsController.toolUse(direction);
+                    Result result = controller.toolUse(direction);
                     showMessage(result.message());
                 }
             }

@@ -1,18 +1,20 @@
 package org.Group34.controller;
 
-import org.Group34.model.App;
-import org.Group34.model.Game;
-import org.Group34.model.Result;
-import org.Group34.model.User;
+import org.Group34.model.*;
 import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.GreenHouse;
+import org.Group34.model.entities.buildings.Lake;
+import org.Group34.model.entities.naturalElements.*;
 import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.enums.Color;
+import org.Group34.model.enums.LevelType;
 import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.animals.Product;
+import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.crafting.Ingredient;
+import org.Group34.model.items.tools.*;
 import org.Group34.model.map.MapBuilder;
 import org.Group34.view.menu.GameMenu;
 
@@ -393,5 +395,42 @@ public class GameController {
 //    }
 
     // ================================================
+
+    // ==================== Farming Controller ====================
+    public Result showCraftInfo(String craftName) {
+        return farmingController.showCraftInfo(craftName);
+    }
+
+    public Result plant(String seedName, String direction) {
+        return farmingController.plant(seedName, direction, getPlayer(), game.time());
+    }
+
+    public Result showPlant(int x, int y) {
+        return farmingController.showPlant(x, y, getPlayer());
+    }
+
+    public Result fertilize(String fertilizer, String direction) {
+        return farmingController.fertilize(fertilizer, direction, getPlayer());
+    }
+
+    public Result showAmountOfWater() {
+        return farmingController.showAmountOfWater(getPlayer());
+    }
+    // ============================================================
+
+    // ==================== Tools Controller ====================
+    public Result toolsEquip(String toolName) {
+        return toolsController.toolsEquip(toolName);
+    }
+    public Result showCurrentTools() {
+        return toolsController.showCurrentTools();
+    }
+    public Result showAvailableTools() {
+        return toolsController.showAvailableTools();
+    }
+    public Result toolUse(String direction) {
+        return toolsController.toolUse(direction, farmingController, fishingController, animalController, getPlayer(), game.time(), game.weatherSystem());
+    }
+    // ==========================================================
 
 }
