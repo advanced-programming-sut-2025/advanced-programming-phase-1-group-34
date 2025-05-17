@@ -19,10 +19,3 @@ public class QuestLoader {
         );
     }
 }
-
-//TODO add the following lines to load NPCs on game:
-/*
-* List<NPC> npcs = new QuestLoader().loadNPCs("npcs.json");
-* NPC sebastian = npcs.get(0);
-* System.out.println(sebastian.getRandomDialogue());
-* */
