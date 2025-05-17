@@ -112,7 +112,7 @@ public class MapBuilder {
      * to make a door-like functionality; tiles that Building took are just placeholders
      */
     private void addBuilding(Entity[][] spaceGrid, Entity building, int width, int height, int[] location) {
-        int startX = location[0], startY = location[1];
+        int startX = location[1], startY = location[0];
 
         for (int y = startY; y <= startY + height; y++)
             for (int x = startX; x <= startX + width; x++)

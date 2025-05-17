@@ -607,9 +607,9 @@ public class GameController {
     // =========================================================
 
     // ==================== Crafting Controller ====================
-    public Result showRecipes() {
-        return houseMenuController.showRecipes(getPlayer());
-    }
+//    public Result showRecipes() {
+//        return houseMenuController.showRecipes(getPlayer());
+//    }
 
     public Result craftItem(String itemName) {
         Item item = this.getItemByName(itemName);

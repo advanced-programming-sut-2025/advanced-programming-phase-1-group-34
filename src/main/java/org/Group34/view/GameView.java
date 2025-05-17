@@ -491,11 +491,11 @@ public class GameView extends AppMenu {
                     showMessage(result.message());
                 }
             }
-            else if (command.matches(GameCommands.SHOW_RECIPES.getRegex())) {
-                Pattern pattern = Pattern.compile(GameCommands.SHOW_RECIPES.getRegex());
-                showMessage(controller.showRecipes().message());
-
-            }
+//            else if (command.matches(GameCommands.SHOW_RECIPES.getRegex())) {
+//                Pattern pattern = Pattern.compile(GameCommands.SHOW_RECIPES.getRegex());
+//                showMessage(controller.showRecipes().message());
+//
+//            }
             else if (command.matches(GameCommands.CRAFT_ITEM.getRegex())) {
                 Pattern pattern = Pattern.compile(GameCommands.CRAFT_ITEM.getRegex());
                 Matcher matcher = pattern.matcher(command);
@@ -523,9 +523,9 @@ public class GameView extends AppMenu {
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
-                    String itemName = matcher.group("artisan_name").trim();
-                    String item_1 = matcher.group("item1_name").trim();
-                    String item_2 = matcher.group("item2_neme").trim();
+                    String itemName = matcher.group("artisanName").trim();
+                    String item_1 = matcher.group("itemNameOne").trim();
+                    String item_2 = matcher.group("itemNameTwo").trim();
 
 
                     Result result = controller.artisanGet(itemName, item_1, item_2);

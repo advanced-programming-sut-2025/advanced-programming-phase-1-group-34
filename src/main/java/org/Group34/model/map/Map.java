@@ -3,7 +3,11 @@ package org.Group34.model.map;
 import org.Group34.model.Result;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.Quarry;
 import org.Group34.model.entities.WalkAble;
+import org.Group34.model.entities.buildings.Building;
+import org.Group34.model.entities.buildings.GreenHouse;
+import org.Group34.model.entities.buildings.House;
 import org.Group34.model.enums.Color;
 import org.Group34.model.items.Item;
 
@@ -149,14 +153,23 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
         if (beginX == null || beginY == null || size == null)
             return new Result(false, "size or center location should be number format");
 
+
         int endX = Math.min(MapBuilder.SPACE_WIDTH - 1, beginX + size);
         int endY = Math.max(MapBuilder.SPACE_HEIGHT - 1, beginY + size);
 
         for (int i = beginX; i < endX; i++) {
             for (int j = beginY; j < endY; j++) {
-                if (entities[i][j] == null)
+                if (i >= 40 && i < 50 && j >= 10 && j < 20)
+                    message.append("H");
+                else if (i >= 0 && i < 15 && j >= 0 && j < 20)
+                    message.append("Q");
+                else if (i >= 15 && i < 20 && j >= 30 && j < 40)
+                    message.append("G");
+                else if (i >= MapBuilder.SPACE_WIDTH || j >= MapBuilder.SPACE_HEIGHT)
+                    continue;
+                else if (entities[i][j] == null)
                     message.append("-").append(" ");
-                if (entities[i][j] instanceof Item)
+                else if (entities[i][j] instanceof Item)
                     message.append("I").append(" ");
                 else
                     message.append(entities[i][j].toString()).append(" ");

@@ -16,6 +16,8 @@ game map 2
 menu enter main menu
 menu enter game menu
 load game
+
+
 weather
 weather forecast
 time
@@ -46,3 +48,17 @@ inventory place item -n Beat Seed -d Up
 
 
 ## Farming
+craftinfo -n Carrot
+craftinfo -n Garlic
+craftinfo -n Corn
+craftinfo -n Poppy
+craftinfo -n Tomato
+craftinfo -n Cherry
+craftinfo -n Apple
+craftinfo -n Pine
+craftinfo -n Apricot
+
+tools equip Hoe
+tools show current
+tools show available
+

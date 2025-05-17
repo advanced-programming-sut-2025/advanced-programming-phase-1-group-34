@@ -464,7 +464,9 @@ public class ShopController {
             }
         }
 
+
         return new Result(false, "You first need to enter a shop.");
+
     }
     public Result cheatAddDollars(int count, Player player) {
         player.addMoney(count);

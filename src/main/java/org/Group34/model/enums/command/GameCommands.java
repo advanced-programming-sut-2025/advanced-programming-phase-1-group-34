@@ -20,7 +20,7 @@ public enum GameCommands implements Command {
     PLANT("\\s*plant\\s+-s\\s+(?<seed>.+)\\s+-d\\s+(?<direction>.+)\\s*"),
     SHOW_PLANT("\\s*showplant\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s*"),
     FERTILIZE("\\s*fertilize\\s+-f\\s+(?<fertilizer>.+)\\s+-d\\s+(?<direction>.+)\\s*"),
-    HOW_MUCH_WATER("\\S*howmuch\\S+water\\S*"),
+    HOW_MUCH_WATER("\\s*howmuch\\s+water\\s*"),
     // ----------------------------
 
     // ----- Tools Commands -----
@@ -44,7 +44,7 @@ public enum GameCommands implements Command {
     // -------------------------
 
     // ----- Artisan Commands -----
-    ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisanName>.+)\\s+(?<item1Name>.+)(\\s+(?<item2Name))?\\s*"),
+    ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisanName>.+)\\s+(?<itemNameOne>.+)\\s+(?<itemNameTwo>.+)\\s*"),
     ARTISAN_GET("\\s+artisan\\s+get\\s+(?<artisanName>.+)\\s+"),
     // -------------------------
 
@@ -98,7 +98,7 @@ public enum GameCommands implements Command {
     SHOW_ALL_PRODUCTS("\\s*show\\s+all\\s+products\\s*"),
     SHOW_AVAILABLE_PRODUCTS("\\s*show\\s+all\\s+available\\s+products\\s*"),
     PURCHASE("\\s*purchase\\s+(?<productName>.+)\\s*"),
-    PURCHASE_WITH_COUNT("\\s*purchase\\s+(?<productName>.+)\\s+-n\\s+(?<count>\\d+)\\s*"),
+    PURCHASE_WITH_COUNT("\\s*purchase\\s+(?<productName>.+)\\s+-n\\s+(?<count>[0-9]+)\\s*"),
     CHEAT_ADD_DOLLARS("\\s*cheat\\s+add\\s+(?<count>[0-9]+)\\s+dollars\\s*"),
     SELL("\\s*sell\\s+(?<productName>.+)\\s*"),
     SELL_WITH_COUNT("\\s*sell\\s+(?<productName>.+)\\s+-n\\s+(?<count>[0-9]+)\\s*");
