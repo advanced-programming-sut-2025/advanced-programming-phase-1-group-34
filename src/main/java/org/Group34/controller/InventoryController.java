@@ -34,12 +34,11 @@ public class InventoryController {
         return new Result(true, message.toString());
     }
 
-    public Result InventoryTrash(Player player, Item item){
-        //TODO user will input item name. what if there is no item with that name.
-        int removed = player.deleteFromInventory(item);
+    public Result InventoryTrash(Player player, Item item, int number){
+        boolean removed = player.removeFromInventory(item, number);
 
-        if (removed == 0) return new Result(false, "You don't have that item in your inventory");
-        return new Result(false, "Item " + item.getName() + " has been removed from inventory");
+        if (removed) return new Result(true, "Item " + item.getName() + " has been removed from inventory");
+        return new Result(false, "You don't have that item in your inventory");
     }
 
     public Result placeItem(Player player, Item item, Space space, String direction){
@@ -81,7 +80,6 @@ public class InventoryController {
 
 
     public Result cheatAddItem(Player player, Item item, int amount){
-        //TODO what if player inventory was full
         player.addToInventory(item, amount);
         return new Result(true, "Cheat code activated: Item " + item.getName() + " has been added to player inventory.");
     }

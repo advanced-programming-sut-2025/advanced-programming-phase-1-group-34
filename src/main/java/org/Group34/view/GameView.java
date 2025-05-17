@@ -451,6 +451,46 @@ public class GameView extends AppMenu {
                     showMessage(result.message());
                 }
             }
+            else if (command.matches(GameCommands.INVENTORY_SHOW.getRegex())) {
+                Result result = controller.inventoryShow();
+                showMessage(result.message());
+            }
+            else if (command.matches(GameCommands.INVENTORY_TRASH.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.INVENTORY_TRASH.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String ItemName = matcher.group("itemName").trim();
+                    int number = Integer.parseInt(matcher.group("number").trim());
+
+                    Result result = controller.inventoryTrash(ItemName, number);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.INVENTORY_PLACE_ITEM.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.INVENTORY_PLACE_ITEM.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String itemName = matcher.group("item_name").trim();
+                    String direction = matcher.group("direction").trim();
+
+                    Result result = controller.inventoryPlaceItem(itemName, direction);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.CHEAT_ADD_ITEM.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.CHEAT_ADD_ITEM.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String itemName = matcher.group("item_name").trim();
+                    int count = Integer.parseInt(matcher.group("count").trim());
+
+                    Result result = controller.cheatAddItem(itemName, count);
+                    showMessage(result.message());
+                }
+            }
             // ---------------------
 
             else {
