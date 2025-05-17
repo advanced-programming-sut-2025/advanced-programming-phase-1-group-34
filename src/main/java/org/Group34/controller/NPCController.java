@@ -33,7 +33,7 @@ public class NPCController {
     }
 
     public Result doQuest(NPC npc, int questID, Time time) {
-        List<Quest> questList = new ArrayList<>(npc.getQuests().keySet());
+        List<Quest> questList = new ArrayList<>(npc.getQuests());
 
         Quest quest = questList.get(questID);
 

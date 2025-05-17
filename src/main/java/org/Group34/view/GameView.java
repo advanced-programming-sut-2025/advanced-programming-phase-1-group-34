@@ -345,6 +345,7 @@ public class GameView extends AppMenu {
                 if (matcher.matches()) {
                     String fishingPole = matcher.group("fishingPole");
 
+                    showMessage(controller.startFishing(fishingPole).message());
                 }
             }
 
