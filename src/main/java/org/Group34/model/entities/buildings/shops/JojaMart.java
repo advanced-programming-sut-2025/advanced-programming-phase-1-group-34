@@ -28,7 +28,7 @@ public class JojaMart extends Shop {
     private HashMap<Item, Integer> winterStockLimit = new HashMap<>();
     static {
         permanentStock.add(PlantingSource.ANCIENT_SEEDS);
-        permanentStock.add(PlacingCraft.GRASS_STARTER);
+        //permanentStock.add(PlacingCraft.GRASS_STARTER);
 
         springStock.add(PlantingSource.PARSNIP_SEEDS);
         springStock.add(PlantingSource.BEAN_STARTER);
@@ -73,8 +73,8 @@ public class JojaMart extends Shop {
         winterStock.add(PlantingSource.POWDERMELON_SEEDS);
     }
     {
-        permanentStockLimit.put(permanentStock.get(1), 1);
-        permanentStockLimit.put(permanentStock.get(2), -11);
+        permanentStockLimit.put(permanentStock.get(0), 1);
+        //permanentStockLimit.put(permanentStock.get(2), -11);
 
         springStockLimit.put(springStock.get(0), 5);
         springStockLimit.put(springStock.get(1), 5);

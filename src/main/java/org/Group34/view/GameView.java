@@ -472,7 +472,7 @@ public class GameView extends AppMenu {
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
-                    String itemName = matcher.group("item_name").trim();
+                    String itemName = matcher.group("itemName").trim();
                     String direction = matcher.group("direction").trim();
 
                     Result result = controller.inventoryPlaceItem(itemName, direction);
@@ -484,7 +484,7 @@ public class GameView extends AppMenu {
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
-                    String itemName = matcher.group("item_name").trim();
+                    String itemName = matcher.group("itemName").trim();
                     int count = Integer.parseInt(matcher.group("count").trim());
 
                     Result result = controller.cheatAddItem(itemName, count);

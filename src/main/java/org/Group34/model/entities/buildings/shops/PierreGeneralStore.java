@@ -83,8 +83,13 @@ public class PierreGeneralStore extends Shop {
         fallStock.add(PlantingSource.ARTICHOKE_SEEDS);
     }
     {
-        yearRoundStockLimit.put(yearRoundStock.get(4), 1);
-        yearRoundStockLimit.put(yearRoundStock.get(5), 1);
+        yearRoundStockLimit.put(yearRoundStock.get(0), 1);
+        yearRoundStockLimit.put(yearRoundStock.get(1), 1);
+        yearRoundStockLimit.put(yearRoundStock.get(2), -11);
+        yearRoundStockLimit.put(yearRoundStock.get(3), -11);
+        yearRoundStockLimit.put(yearRoundStock.get(4), -11);
+        yearRoundStockLimit.put(yearRoundStock.get(5), -11);
+        yearRoundStockLimit.put(yearRoundStock.get(6), -11);
         yearRoundStockLimit.put(yearRoundStock.get(7), -11);
         yearRoundStockLimit.put(yearRoundStock.get(8), -11);
         yearRoundStockLimit.put(yearRoundStock.get(9), -11);
@@ -93,13 +98,8 @@ public class PierreGeneralStore extends Shop {
         yearRoundStockLimit.put(yearRoundStock.get(12), -11);
         yearRoundStockLimit.put(yearRoundStock.get(13), -11);
         yearRoundStockLimit.put(yearRoundStock.get(14), -11);
-        yearRoundStockLimit.put(yearRoundStock.get(15), -11);
-        yearRoundStockLimit.put(yearRoundStock.get(16), -11);
-        yearRoundStockLimit.put(yearRoundStock.get(17), -11);
-        yearRoundStockLimit.put(yearRoundStock.get(18), -11);
-        yearRoundStockLimit.put(yearRoundStock.get(19), -11);
-        yearRoundStockLimit.put(yearRoundStock.get(20), 1);
-        yearRoundStockLimit.put(yearRoundStock.get(21), 1);
+        yearRoundStockLimit.put(yearRoundStock.get(15), 1);
+        yearRoundStockLimit.put(yearRoundStock.get(16), 1);
 
         springStockLimit.put(springStock.get(0), 5);
         springStockLimit.put(springStock.get(1), 5);

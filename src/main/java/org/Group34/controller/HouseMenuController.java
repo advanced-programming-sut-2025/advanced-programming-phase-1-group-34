@@ -14,18 +14,18 @@ import java.util.Map;
 
 public class HouseMenuController {
 
-    public Result showRecipes(Player player){
-        String message = "Your Recipes:";
-
-        for (Recipe recipe: player.getLearnedRecipes()){
-            Map<Item, Integer> ingredients = recipe.getProduct().getIngredients();
-
-            message += "\n" + recipe.getName();
-            if (canMake(player, ingredients) != null) message += ":     can make";
-            else message += ":      -";
-        }
-        return new Result(true, message);
-    }
+//    public Result showRecipes(Player player){
+//        String message = "Your Recipes:";
+//
+//        for (Recipe recipe: player.getLearnedRecipes()){
+//            Map<Item, Integer> ingredients = recipe.getProduct().getIngredients();
+//
+//            message += "\n" + recipe.getName();
+//            if (canMake(player, ingredients) != null) message += ":     can make";
+//            else message += ":      -";
+//        }
+//        return new Result(true, message);
+//    }
 
 
     public Result craftItem(Player player, Craft craft){

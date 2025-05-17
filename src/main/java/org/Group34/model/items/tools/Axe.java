@@ -9,7 +9,7 @@ public class Axe extends Tool {
 
     // ----- getter & setter -----
     public String getName() {
-        return type.getName();
+        return "Axe";
     }
 
     public String getMaterial() {

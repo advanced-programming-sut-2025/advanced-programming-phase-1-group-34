@@ -10,7 +10,7 @@ public class WateringCan extends Tool {
 
     // ----- getter & setter -----
     public String getName() {
-        return type.getName();
+        return "Watering Can";
     }
 
     public String getMaterial() {

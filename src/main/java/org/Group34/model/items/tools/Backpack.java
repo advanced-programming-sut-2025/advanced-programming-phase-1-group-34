@@ -14,7 +14,7 @@ public class Backpack extends Tool { // TODO This class must be filled.
 
     // ----- getter & setter -----
     public String getName() {
-        return type.getName();
+        return "Backpack";
     }
 
     public int getCapacity() {

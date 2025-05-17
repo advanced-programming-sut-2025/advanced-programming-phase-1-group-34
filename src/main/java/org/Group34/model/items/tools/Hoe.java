@@ -9,7 +9,7 @@ public class Hoe extends Tool {
 
     // ----- getter & setter -----
     public String getName() {
-        return type.getName();
+        return "Hoe";
     }
 
     public String getMaterial() {
