@@ -225,7 +225,7 @@ public class ShopController {
                 player.addToInventory(product, count);
                 player.addMoney(item.getPrice() * count * -1);
                 shop.buy(product, count);
-                SalePlace.increaseShippingBinCount(count);
+                addShippingBin(count);
 
                 return new Result(true, "The desired product has been purchased.");
             }
@@ -411,6 +411,59 @@ public class ShopController {
 
         return new Result(false, "Error: You first need to enter a shop.");
     }
+    public Result cheatAddDollars(int count) {
+        player.addMoney(count);
+        return new Result(true, "count" + " dollars added to money");
+    }
+    public Result sell(String productName) {
+        Entity playerTile = space.getEntityByLocation(player.getLocation()[0], player.getLocation()[1]);
+
+        if (!(playerTile instanceof SalePlace)) {
+            return new Result(false, "Error: You should go to the sales location first.");
+        }
+
+        SalePlace salePlace = (SalePlace) playerTile;
+        if (salePlace.getNumberOfShippingBins() <= 0) {
+            return new Result(false, "Error: You do not have an empty Shipping Bin.");
+        }
+
+        Item desiredItem = player.getItemFromInventoryByName(productName);
+        int count = player.getAmountOfItem(desiredItem);
+        if (desiredItem == null) {
+            return new Result(false, "Error: This item is not available in your inventory.");
+        }
+        else if (player.getAmountOfItem(desiredItem) < count) {
+            return new Result(false, "Error: You do not have enough of this product available.");
+        }
+
+        salePlace.addItemToSale(desiredItem, count);
+        player.removeFromInventory(desiredItem, count);
+        return new Result(true, "The desired product has been successfully listed for sale.");
+    }
+    public Result sellWithCount(String productName, int count) {
+        Entity playerTile = space.getEntityByLocation(player.getLocation()[0], player.getLocation()[1]);
+
+        if (!(playerTile instanceof SalePlace)) {
+            return new Result(false, "Error: You should go to the sales location first.");
+        }
+
+        SalePlace salePlace = (SalePlace) playerTile;
+        if (salePlace.getNumberOfShippingBins() <= 0) {
+            return new Result(false, "Error: You do not have an empty Shipping Bin.");
+        }
+
+        Item desiredItem = player.getItemFromInventoryByName(productName);
+        if (desiredItem == null) {
+            return new Result(false, "Error: This item is not available in your inventory.");
+        }
+        else if (player.getAmountOfItem(desiredItem) < count) {
+            return new Result(false, "Error: You do not have enough of this product available.");
+        }
+
+        salePlace.addItemToSale(desiredItem, count);
+        player.removeFromInventory(desiredItem, count);
+        return new Result(true, "The desired product has been successfully listed for sale.");
+    }
 
 
     private void upgradeTools(UpgradeTools tool) {
@@ -520,6 +573,17 @@ public class ShopController {
 
         for (Item item : remove) {
             player.getInventory().remove(item);
+        }
+    }
+    private void addShippingBin(int count) {
+        Space space = player.getCurrentSpace();
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                if (space.getEntityByLocation(i, j) instanceof SalePlace salePlace) {
+                    salePlace.increaseNumberOfShippingBins(count);
+                    return;
+                }
+            }
         }
     }
 }

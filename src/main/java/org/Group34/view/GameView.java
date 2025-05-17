@@ -416,8 +416,41 @@ public class GameView extends AppMenu {
                     showMessage(result.message());
                 }
             }
-            // ---------------------
+            else if (command.matches(GameCommands.CHEAT_ADD_DOLLARS.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.CHEAT_ADD_DOLLARS.getRegex());
+                Matcher matcher = pattern.matcher(command);
 
+                if (matcher.find()) {
+                    int count = Integer.parseInt(matcher.group("count").trim());
+
+                    Result result = shopController.cheatAddDollars(count);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.SELL.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.SELL.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String productName = matcher.group("productName").trim();
+
+                    Result result = shopController.sell(productName);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.SELL_WITH_COUNT.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.SELL_WITH_COUNT.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String productName = matcher.group("productName").trim();
+                    int count = Integer.parseInt(matcher.group("count").trim());
+
+                    Result result = shopController.sellWithCount(productName, count);
+                    showMessage(result.message());
+                }
+            }
+            // ---------------------
 
             else {
                 showMessage("Invalid command!");

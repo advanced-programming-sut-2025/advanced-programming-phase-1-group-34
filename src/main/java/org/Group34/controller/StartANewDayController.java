@@ -3,6 +3,7 @@ package org.Group34.controller;
 import org.Group34.model.Game;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.buildings.shops.*;
 import org.Group34.model.entities.naturalElements.*;
 import org.Group34.model.Time;
 import org.Group34.model.items.crafting.Ingredient;
@@ -54,6 +55,13 @@ public class StartANewDayController {
     private void iterateWholeMap() {
         HashSet<int[]> plantsOnFarm = new HashSet<>();
         HashSet<int[]> scareCrowPlants = new HashSet<>();
+        Blacksmith blacksmith = new Blacksmith();
+        MarnieRanch marnieRanch = new MarnieRanch();
+        TheStardropSaloon theStardropSaloon = new TheStardropSaloon();
+        CarpenterShop carpenterShop = new CarpenterShop();
+        JojaMart jojaMart = new JojaMart();
+        PierreGeneralStore pierreGeneralStore = new PierreGeneralStore();
+        FishShop fishShop = new FishShop();
 
         for (Space space : spaces) {
             lightningStrike(space);
@@ -160,4 +168,5 @@ public class StartANewDayController {
     // ----- Check animals status -----
     private void checkAnimalStatus() {
     }
+
 }
