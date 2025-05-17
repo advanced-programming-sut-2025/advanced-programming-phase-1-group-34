@@ -21,10 +21,16 @@ import java.util.*;
 public class StartANewDayController {
 
     private final static int MAX_ENERGY = 200;
-    private Game currentGame; //TODO It will fix in GameController
-    private ArrayList<Space> spaces; //TODO It will fix in GameController
-    private Time time; //TODO It will fix in GameController
+    private Game currentGame;
+    private ArrayList<Space> spaces;
+    private Time time;
 
+
+    public StartANewDayController(Game currentGame, ArrayList<Space> spaces, Time time) {
+        this.currentGame = currentGame;
+        this.spaces = spaces;
+        this.time = time;
+    }
 
     /**
      * This function calls all the functions necessary

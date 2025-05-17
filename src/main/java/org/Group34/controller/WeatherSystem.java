@@ -1,5 +1,6 @@
 package org.Group34.controller;
 
+import org.Group34.model.Result;
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.Time;
@@ -155,4 +156,23 @@ public class WeatherSystem {
     }
 
 
+    public Result cheatChangeWeather(String weather) {
+        switch (weather){
+            case "sunny": this.setTodayCondition(WeatherCondition.SUNNY); break;
+            case "rain": this.setTodayCondition(WeatherCondition.RAIN); break;
+            case "storm": this.setTodayCondition(WeatherCondition.STORM); break;
+            case "snow": this.setTodayCondition(WeatherCondition.SNOW); break;
+        }
+        return new Result(true, "Cheat Code Activated: (" + this.getTodayCondition() + ")");
+    }
+
+    public Result displayWeather(String type) {
+        String message = "";
+        switch (type){
+            case "today weather": message = this.getTodayCondition().toString(); break;
+            case "tomorrow weather": message = this.getTomorrowCondition().toString(); break;
+        }
+
+        return new Result(true, message);
+    }
 }

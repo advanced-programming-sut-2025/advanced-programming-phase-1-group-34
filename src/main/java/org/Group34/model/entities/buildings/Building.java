@@ -9,5 +9,5 @@ import org.Group34.model.map.Space;
  * That means it's just a dummy object without any functions that just defines boarders of buillding
  */
 
-public class Building implements Entity {
+public interface Building extends Entity {
 }

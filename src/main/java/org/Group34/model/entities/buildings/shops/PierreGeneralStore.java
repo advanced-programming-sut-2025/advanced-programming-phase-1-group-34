@@ -1,6 +1,7 @@
 package org.Group34.model.entities.buildings.shops;
 
 import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
+import org.Group34.model.enums.Color;
 import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.PlantingSource;
@@ -511,5 +512,10 @@ public class PierreGeneralStore extends Shop {
         else if (fallStock.contains(product)) {
             fallStockLimit.replace(product, fallStockLimit.get(product) - amount);
         }
+    }
+
+    @Override
+    public String toString() {
+        return Color.YELLOW + "P" + Color.RESET;
     }
 }

@@ -1,8 +1,12 @@
 package org.Group34.model.map;
 
+import org.Group34.model.Result;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.WalkAble;
+import org.Group34.model.enums.Color;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -25,6 +29,7 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
     private static final int FARM_EXIT_Y = 0;
     private static final int VILLAGE_EXIT_X = 0;
     private static final int VILLAGE_EXIT_Y = 0;
+
 
 
     /**
@@ -68,8 +73,7 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
                 int nx = cur.x + d[0], ny = cur.y + d[1];
                 if (nx < 0 || nx >= rows || ny < 0 || ny >= cols) continue;
                 if (visited[nx][ny]) continue;
-                // Can move if empty or it's the target cell
-                if (entities[nx][ny] != null && !(nx == tx && ny == ty)) continue;
+                if (!canPassThrough(entities[nx][ny], nx, ny, tx, ty)) continue;
 
                 visited[nx][ny] = true;
                 q.add(new Node(nx, ny, cur.steps + 1));
@@ -80,8 +84,25 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
         return 0;
     }
 
+    /**
+     * Returns true if the player can move onto (x,y).
+     * Movement is allowed if:
+     *   1) It's the goal cell, regardless of its contents.
+     *   2) The cell is empty (null).
+     *   3) The cell contains a WalkAble entity.
+     */
+    private boolean canPassThrough(Entity e, int x, int y, int tx, int ty) {
+        // Always allow stepping onto the target cell
+        if (x == tx && y == ty) {
+            return true;
+        }
+        // Otherwise only if empty or WalkAble
+        return (e == null) || (e instanceof WalkAble);
+    }
+
+
     // TODO how player enters the house menu
-    public void movePlayer(Player player, Integer targetX, Integer targetY) {
+    public Result movePlayer(Player player, Integer targetX, Integer targetY) {
         int playerX = player.getLocation()[0];
         int playerY = player.getLocation()[1];
         Entity[][] entities;
@@ -92,22 +113,77 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
             entities = player.getCurrentSpace().entities();
             entities[FARM_EXIT_X][FARM_EXIT_Y] = player;
             player.setLocation(new int[]{FARM_EXIT_X, FARM_EXIT_Y});
+            return new Result(true, "You have entered Your farm");
         }
         else if (targetX == FARM_EXIT_X && targetY == FARM_EXIT_Y){
             player.setCurrentSpace(NPCVillage);
             entities = player.getCurrentSpace().entities();
             entities[VILLAGE_EXIT_X][VILLAGE_EXIT_Y] = player;
             player.setLocation(new int[]{VILLAGE_EXIT_X, VILLAGE_EXIT_Y});
+            return new Result(true, "You have entered NPC Village");
         }
         else {
             entities = player.getCurrentSpace().entities();
             entities[playerX][playerY] = null;
             entities[targetX][targetY] = player;
             player.setLocation(new int[]{targetX, targetY});
+            return new Result(true, "Your character have been moved to: " + "<" + targetX + " ," + targetY + ">");
         }
     }
 
     public Space getCurrentPlayerFarm(Player currentPlayer) {
         return playerFarms.get(currentPlayer);
+    }
+
+    public ArrayList<Space> getSpaces() {
+        ArrayList<Space> spaces = new ArrayList<>();
+        spaces.addAll(playerFarms.values());
+        spaces.add(NPCVillage);
+        return spaces;
+    }
+
+    public Result printMap(Integer beginX, Integer beginY, Integer size, Entity[][] entities) {
+        StringBuilder message = new StringBuilder();
+
+        if (beginX == null || beginY == null || size == null)
+            return new Result(false, "size or center location should be number format");
+
+        int endX = Math.min(MapBuilder.SPACE_WIDTH - 1, beginX + size);
+        int endY = Math.max(MapBuilder.SPACE_HEIGHT - 1, beginY + size);
+
+        for (int i = beginX; i < endX; i++) {
+            for (int j = beginY; j < endY; j++) {
+                message.append(entities[i][j]).append(" ");
+            }
+            message.append("\n");
+        }
+
+        return new Result(true, message.toString());
+    }
+
+    public Result helpMap() {
+        return new Result(true,""
+                + String.format("%-25s%s\n", "Player:", "P")
+                + String.format("%-25s%s\n", "House:", Color.BROWN + "H" + Color.RESET)
+                + String.format("%-25s%s\n", "Green house:", Color.YELLOW + "G" + Color.RESET)
+                + String.format("%-25s%s\n", "Lake:", Color.CYAN + "L" + Color.RESET)
+                + String.format("%-25s%s\n", "Quarry:", Color.GRAY + "Q" + Color.RESET)
+                + String.format("%-25s%s\n", "Stone:", Color.GRAY + "S" + Color.RESET)
+                + String.format("%-25s%s\n", "Tree:", Color.GREEN + "T" + Color.RESET)
+                + String.format("%-25s%s\n", "Crop:", Color.YELLOW + "C" + Color.RESET)
+                + String.format("%-25s%s\n", "Devices (Crafted Items):", Color.YELLOW + "D" + Color.RESET)
+                + "\n"
+                + "NPC Village:\n"
+                + String.format("%-25s%s\n", "Plough Land:", Color.BROWN + "P" + Color.RESET)
+                + String.format("%-25s%s\n", "Blacksmith:", Color.YELLOW + "B" + Color.RESET)
+                + String.format("%-25s%s\n", "Carpenter Shop:", Color.YELLOW + "C" + Color.RESET)
+                + String.format("%-25s%s\n", "Fish Shop:", Color.YELLOW + "F" + Color.RESET)
+                + String.format("%-25s%s\n", "Jojo Mart:", Color.YELLOW + "J" + Color.RESET)
+                + String.format("%-25s%s\n", "Marnie Ranch:", Color.YELLOW + "M" + Color.RESET)
+                + String.format("%-25s%s\n", "Pierre General Store:", Color.YELLOW + "P" + Color.RESET)
+                + String.format("%-25s%s\n", "Sale Place:", Color.YELLOW + "S" + Color.RESET)
+                + String.format("%-25s%s\n", "The Starrop Saloon:", Color.YELLOW + "T" + Color.RESET));
+
+
     }
 }

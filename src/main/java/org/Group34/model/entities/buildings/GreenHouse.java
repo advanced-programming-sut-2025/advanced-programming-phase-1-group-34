@@ -3,7 +3,7 @@ package org.Group34.model.entities.buildings;
 import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.enums.Color;
 
-public class GreenHouse extends Building {
+public class GreenHouse implements Building {
     private static final int REPAIR_WOOD = 500;
     private static final int REPAIR_MONEY = 1000;
 

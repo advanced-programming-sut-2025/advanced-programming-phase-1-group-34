@@ -1,5 +1,6 @@
-package org.Group34.model.entities.buildings;
+package org.Group34.model.entities;
 
+import org.Group34.model.entities.buildings.Building;
 import org.Group34.model.enums.Color;
 import org.Group34.model.items.Item;
 import org.Group34.model.map.Space;
@@ -7,7 +8,7 @@ import org.Group34.model.map.Space;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Quarry extends Building{
+public class Quarry implements WalkAble {
     @Override
     public String toString() {
         return Color.GRAY + "Q" + Color.RESET;

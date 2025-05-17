@@ -102,6 +102,8 @@ public class User {
     }
 
     public Game getGame() {
+        if (game == null)
+            game = Game.load(username);
         return game;
     }
 
