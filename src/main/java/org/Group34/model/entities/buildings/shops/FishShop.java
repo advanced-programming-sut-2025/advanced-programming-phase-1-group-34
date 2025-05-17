@@ -3,8 +3,6 @@ package org.Group34.model.entities.buildings.shops;
 import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.Recipe;
-import org.Group34.model.items.crafting.Ingredient;
-import org.Group34.model.items.tools.ToolType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +63,7 @@ public class FishShop extends Shop {
     public String showAllProducts() {
         StringBuilder result = new StringBuilder();
 
-        result.append("----- Blacksmith -----\n");
+        result.append("----- Fish Shop -----\n");
         result.append("\n* Stock:\n");
         for (Item item : stock) {
             if (item instanceof Recipe stock) {
@@ -101,7 +99,7 @@ public class FishShop extends Shop {
     public String shopAvailableProducts() {
         StringBuilder result = new StringBuilder();
 
-        result.append("----- Blacksmith -----\n");
+        result.append("----- Fish Shop -----\n");
         result.append("\n* Stock:\n");
         for (Item item : stock) {
             if (getStockLimit(item) > 0 || getStockLimit(item) == -11) {

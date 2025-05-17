@@ -1,13 +1,10 @@
 package org.Group34.model.entities.buildings.shops;
 
-import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.buildings.shops.products.ShippingBin;
-import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
 import org.Group34.model.enums.animals.BarnType;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.Ingredient;
 
-//import java.lang.classfile.instruction.ReturnInstruction;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,7 +27,7 @@ public class CarpenterShop extends Shop {
         farmBuildings.add(BarnType.COOP_BASIC);
         farmBuildings.add(BarnType.COOP_BIG);
         farmBuildings.add(BarnType.COOP_DELUXE);
-        farmBuildings.add(new ShippingBin());
+        farmBuildings.add(new ShippingBin(null, 0));
     }
     {
         permanentStockLimit.put(permanentStock.get(0), -11);
@@ -91,7 +88,7 @@ public class CarpenterShop extends Shop {
     public String showAllProducts() {
         StringBuilder result = new StringBuilder();
 
-        result.append("----- Blacksmith -----\n");
+        result.append("----- Carpenter's Shop -----\n");
         result.append("\n* Permanent Stock:\n");
         for (Item item : permanentStock) {
             Ingredient stock = (Ingredient) item;
@@ -145,7 +142,7 @@ public class CarpenterShop extends Shop {
     public String showAvailableProducts() {
         StringBuilder result = new StringBuilder();
 
-        result.append("----- Blacksmith -----\n");
+        result.append("----- Carpenter's Shop -----\n");
         result.append("\n* Permanent Stock:\n");
         for (Item item : permanentStock) {
             if (getPermanentStockLimit(item) > 0 || getPermanentStockLimit(item) == -11) {

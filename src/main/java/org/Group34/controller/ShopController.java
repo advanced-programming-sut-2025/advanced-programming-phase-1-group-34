@@ -15,6 +15,7 @@ import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.Recipe;
 import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.crafting.PlacingCraft;
+import org.Group34.model.items.foods.CookedFood;
 import org.Group34.model.items.foods.ProcessedFood;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
@@ -30,6 +31,10 @@ public class ShopController {
         }
 
         else if (playerTile instanceof MarnieRanch shop) {
+            return new Result(true, shop.showAllProducts());
+        }
+
+        else if (playerTile instanceof TheStardropSaloon shop) {
             return new Result(true, shop.showAllProducts());
         }
 
@@ -62,6 +67,9 @@ public class ShopController {
             return new Result(true, shop.showAvailableProducts());
         }
 
+        else if (playerTile instanceof TheStardropSaloon shop) {
+            return new Result(true, shop.showAvailableProducts());
+        }
 
         else if (playerTile instanceof CarpenterShop shop) {
             return new Result(true, shop.showAvailableProducts());
@@ -171,6 +179,57 @@ public class ShopController {
                 player.addMoney(animal.getPrice() * count * -1);
                 shop.buy(product, count);
                 player.addToInventory(animal, count);
+
+                return new Result(true, "The desired product has been purchased.");
+            }
+        }
+
+        else if (playerTile instanceof TheStardropSaloon shop) {
+            Item product = shop.getProductByName(productName);
+
+            if (product == null) {
+                return new Result(false, "Error: This product is not available in this store.");
+            }
+
+            if (product instanceof ProcessedFood item) {
+                if (shop.getPermanentStockLimit(product) <= count - 1 && shop.getPermanentStockLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < item.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addToInventory(product, count);
+                player.addMoney(item.getPrice() * count * -1);
+                shop.buy(product, count);
+
+                return new Result(true, "The desired product has been purchased.");
+            }
+            else if (product instanceof CookedFood item) {
+                if (shop.getPermanentStockLimit(product) <= count - 1 && shop.getPermanentStockLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < item.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addToInventory(product, count);
+                player.addMoney(item.getPrice() * count * -1);
+                shop.buy(product, count);
+
+                return new Result(true, "The desired product has been purchased.");
+            }
+            else if (product instanceof Recipe item) {
+                if (shop.getPermanentStockLimit(product) <= count - 1 && shop.getPermanentStockLimit(product) != -11) {
+                    return new Result(false, "Error: This product is sold out.");
+                }
+                else if (player.getMoney() < item.getPrice() * count) {
+                    return new Result(false, "Error: You do not have enough balance.");
+                }
+
+                player.addToInventory(product, count);
+                player.addMoney(item.getPrice() * count * -1);
+                shop.buy(product, count);
 
                 return new Result(true, "The desired product has been purchased.");
             }
