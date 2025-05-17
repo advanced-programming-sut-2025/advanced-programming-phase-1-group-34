@@ -1,5 +1,7 @@
 package org.Group34.model.items;
 
-public interface Item {
+import org.Group34.model.entities.Entity;
+
+public interface Item extends Entity {
     String getName();
 }

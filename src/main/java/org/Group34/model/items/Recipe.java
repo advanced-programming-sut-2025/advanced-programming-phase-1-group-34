@@ -1,5 +1,6 @@
 package org.Group34.model.items;
 
+import org.Group34.model.enums.animals.Product;
 import org.Group34.model.items.crafting.Craft;
 import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.items.crafting.ProcessorCraft;
@@ -76,5 +77,9 @@ public enum Recipe implements Item {
 
     public int getPrice() {
         return price;
+    }
+
+    public Craft getProduct(){
+        return product;
     }
 }
