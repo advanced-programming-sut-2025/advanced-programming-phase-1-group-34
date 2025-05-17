@@ -210,6 +210,9 @@ public class GameController {
 
         if (targetX == null || targetY == null)
             return new Result(false, "target location should be number format");
+        if (targetX >= 100 && targetY >= 100)
+            return new Result(false, "You're out of bound");
+
         if (player.getCurrentSpace().getEntityByLocation(targetX, targetY) != null)
             return new Result(false, "only can go to empty tiles of map");
 

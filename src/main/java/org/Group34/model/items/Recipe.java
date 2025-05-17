@@ -77,8 +77,4 @@ public enum Recipe implements Item {
     public int getPrice() {
         return price;
     }
-
-    public Craft getProduct() {
-        return product;
-    }
 }
