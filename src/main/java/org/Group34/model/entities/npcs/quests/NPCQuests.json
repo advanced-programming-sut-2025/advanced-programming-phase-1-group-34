@@ -12,24 +12,24 @@
       "quests": [
         {
           "level": 1,
-          "title": "Deliver 5 Iron Units",
-          "description": "2 Diamonds!",
-          "rewardGold": 0,
+          "title": "Deliver 50 Iron Units",
+          "description": "Reward: 1000G",
+          "rewardGold": 1000,
           "rewardItem": { "name": "Diamond", "quantity": 2 }
         },
         {
           "level": 2,
           "title": "Deliver Pumpkin Pie",
-          "description": "5000 Golds!",
-          "rewardGold": 5000,
+          "description": "Reward: 5000G",
+          "rewardGold": 10000,
           "rewardItem": null
         },
         {
           "level": 3,
-          "title": "Deliver 15 Stone Units",
-          "description": "You received 5 Quartz!",
-          "rewardGold": 0,
-          "rewardItem": { "name": "Quartz", "quantity": 5 }
+          "title": "Deliver 150 Stone Units",
+          "description": "Reward: 50000G",
+          "rewardGold": 50000,
+          "rewardItem": { "name": "Quartz", "quantity": 50 }
         }
       ]
     },
@@ -46,22 +46,22 @@
         {
           "level": 1,
           "title": "Deliver 1 Gold Bar",
-          "description": "Friendship Level +1!",
-          "rewardGold": 0,
+          "description": "Reward: 10000G",
+          "rewardGold": 10000,
           "rewardItem": { "name": "Friendship Token", "quantity": 1 }
         },
         {
           "level": 2,
           "title": "Deliver a Pumpkin",
-          "description": "5 Gold Coins added!",
-          "rewardGold": 5,
+          "description": "Reward: 1000G",
+          "rewardGold": 2000,
           "rewardItem": null
         },
         {
           "level": 3,
           "title": "Deliver 5 Wheat",
-          "description": "You got an Iridium Sprinkler!",
-          "rewardGold": 0,
+          "description": "Reward: 3000G",
+          "rewardGold": 3000,
           "rewardItem": { "name": "Iridium Sprinkler", "quantity": 1 }
         }
       ]
@@ -79,22 +79,22 @@
         {
           "level": 1,
           "title": "Deliver 12 Favorite Plants",
-          "description": "75 Gold Coins added!",
-          "rewardGold": 75,
+          "description": "Reward: 750G",
+          "rewardGold": 750,
           "rewardItem": null
         },
         {
           "level": 2,
           "title": "Deliver 1 Salmon",
-          "description": "Friendship Level +1!",
-          "rewardGold": 0,
-          "rewardItem": { "name": "Friendship Token", "quantity": 1 }
+          "description": "Reward: 500G",
+          "rewardGold": 1000,
+          "rewardItem": { "name": "Friendship Token", "quantity": 2 }
         },
         {
           "level": 3,
           "title": "Deliver 1 Bottle of Wine",
-          "description": "You received 5 Salads!",
-          "rewardGold": 0,
+          "description": "Reward: 1000G",
+          "rewardGold": 1000,
           "rewardItem": { "name": "Salad", "quantity": 5 }
         }
       ]
@@ -112,22 +112,22 @@
         {
           "level": 1,
           "title": "Deliver 10 Hardwood",
-          "description": "500 Gold Coins added!",
+          "description": "Reward: 500G",
           "rewardGold": 500,
           "rewardItem": null
         },
         {
           "level": 2,
           "title": "Deliver 1 Salmon",
-          "description": "Salmon Dinner Recipe unlocked!",
-          "rewardGold": 0,
-          "rewardItem": { "name": "Salmon Dinner Recipe", "quantity": 1 }
+          "description": "Reward: 1000G",
+          "rewardGold": 2000,
+          "rewardItem": { "name": "Salmon Dinner Recipe", "quantity": 2 }
         },
         {
           "level": 3,
           "title": "Deliver 200 Wood",
-          "description": "Deluxe Scarecrow received!",
-          "rewardGold": 0,
+          "description": "Reward: 5000G",
+          "rewardGold": 5000,
           "rewardItem": { "name": "Deluxe Scarecrow", "quantity": 1 }
         }
       ]
@@ -145,22 +145,22 @@
         {
           "level": 1,
           "title": "Deliver 80 Wood",
-          "description": "100 Gold Coins added!",
-          "rewardGold": 100,
+          "description": "Reward: 1000G",
+          "rewardGold": 1000,
           "rewardItem": null
         },
         {
           "level": 2,
           "title": "Deliver 10 Iron Bars",
-          "description": "3 Bee Houses received!",
-          "rewardGold": 0,
-          "rewardItem": { "name": "Bee House", "quantity": 3 }
+          "description": "Reward: 5000G",
+          "rewardGold": 10000,
+          "rewardItem": { "name": "Bee House", "quantity": 6 }
         },
         {
           "level": 3,
           "title": "Deliver 100 Wood",
-          "description": "25 Gold Coins added!",
-          "rewardGold": 25,
+          "description": "Reward: 500G",
+          "rewardGold": 500,
           "rewardItem": null
         }
       ]

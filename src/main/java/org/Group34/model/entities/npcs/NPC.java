@@ -1,5 +1,6 @@
 package org.Group34.model.entities.npcs;
 
+import org.Group34.model.Time;
 import org.Group34.model.entities.npcs.quests.Quest;
 import org.Group34.model.enums.Season;
 
@@ -54,9 +55,6 @@ public class NPC {
         return friendshipPoints;
     }
 
-    public void addGiftPreferences(List<String> loved) {
-        likedItems.addAll(loved);
-    }
 
     public String getName() {
         return name;
@@ -68,5 +66,15 @@ public class NPC {
 
     public List<String> getLikedItems() {
         return likedItems;
+    }
+
+    public boolean isQuestAvailable(Quest quest, Time time) {
+        if (quest.getLevel() == 2 && this.getFriendshipPoints() >= 200) {
+            return true;
+        }
+        else if (quest.getLevel() == 3 && time.getDate() > 5 + this.getName().charAt(0) - 65) {
+            return true;
+        }
+        return true;
     }
 }

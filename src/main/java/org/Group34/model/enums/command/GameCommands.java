@@ -9,6 +9,7 @@ public enum GameCommands implements Command {
     CHEAT_ADVANCE_TIME("\\s*cheat\\s+advance\\s+time\\s+(?<hours>\\d+)h\\s*"),
     CHEAT_ADVANCE_DATE("\\s*cheat\\s+advance\\s+date\\s+(?<days>\\d+)d\\s*"),
     CHEAT_CHANGE_WEATHER("\\s*cheat\\s+change\\s+weather\\s+(?<weather>\\S+)\\s*"),
+    CHEAT_ADD_MONEY("\\s*cheat\\s+add\\s+money\\s+(?<amount>\\d+)\\s*"),
     DISPLAY_TIME("^\\s*(?<type>time|date|datetime|day of week)\\s*$"),
     WALK("\\s*walk\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s*"),
     PRINT_MAP("\\s*print\\s+map\\s+-l\\s+<(?<x>\\d+), (?<y>\\d+)>\\s+-s\\s+(?<size>\\d+)\\s*"),
@@ -89,6 +90,8 @@ public enum GameCommands implements Command {
     MEET_NPC("\\s*meet\\s+NPC\\s+(?<npcName>.+)\\s*"),
     SEND_GIFT("\\s*gift\\s+NPC\\s+(?<npcName>.+)\\s+-i\\s+(?<itemName>.+)\\s*"),
     LIST_NPC_FRIENDSHIP("\\s*friendship\\s+NPC\\s+list\\s*"),
+    LIST_AVAILABLE_QUESTS("\\s*available\\s+quests\\s*"),
+    COMPLETE_QUEST("\\s*complete\\s+quest\\s+ -n\\s+(?<npcName>.+)\\s+-i\\s+(?<questNumber>.+)\\s*"),
     // -------------------------
 
     // ----- Shop Commands -----
