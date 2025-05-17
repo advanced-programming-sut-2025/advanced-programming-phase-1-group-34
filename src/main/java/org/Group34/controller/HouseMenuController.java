@@ -35,6 +35,7 @@ public class HouseMenuController {
         for (Craft item: ProcessorCraft.values())
             if (item.getRecipe().equals(recipe))
                 return item;
+        return null;
     }
 
 
