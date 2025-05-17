@@ -62,7 +62,7 @@ public class GameController {
     private List<NPC> npcLoader() {
         List<NPC> temp;
         try {
-            temp = new QuestLoader().loadNPCs("model/entities/npcs/quests/npcs.json");
+            temp = new QuestLoader().loadNPCs("src/main/resources/NPCQuests.json");
         } catch (IOException e) {
             e.printStackTrace();
             temp = new ArrayList<>();
@@ -478,7 +478,7 @@ public class GameController {
     public Result listAvailableQuests() {
         StringBuilder result = new StringBuilder();
         for (NPC npc : npcs) {
-            for (Quest quest : npc.getQuests().keySet()) {
+            for (Quest quest : npc.getQuests()) {
                 if (npc.isQuestAvailable(quest, game.time())) {
                     result.append(quest.getTitle()).append("\n");
                 }
@@ -490,7 +490,7 @@ public class GameController {
     public Result completeQuest(String npcName, int questNumber) {
         for (NPC npc : npcs) {
             if (npc.getName().equalsIgnoreCase(npcName)) {
-                for (Quest quest : npc.getQuests().keySet()) {
+                for (Quest quest : npc.getQuests()) {
                     if (quest.getLevel() == questNumber) {
                         if (quest.isCompleted()) {
                             return new Result(false, "Quest is already completed by another player!");

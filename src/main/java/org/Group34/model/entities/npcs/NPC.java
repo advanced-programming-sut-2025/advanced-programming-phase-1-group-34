@@ -3,6 +3,8 @@ package org.Group34.model.entities.npcs;
 import org.Group34.model.Time;
 import org.Group34.model.entities.npcs.quests.Quest;
 import org.Group34.model.enums.Season;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.*;
 
@@ -11,26 +13,34 @@ public class NPC {
     private final List<String> dialogues;
     private int friendshipPoints;
     private final List<String> likedItems;
-    private final LinkedHashMap<Quest, Boolean> quests;
+    private final List<Quest> quests;
 
-    public NPC(String name, List<String> likedItems, List<Quest> questList, List<String> dialogues) {
+    @JsonCreator
+    public NPC(
+            @JsonProperty("name") String name,
+            @JsonProperty("likedItems") List<String> likedItems,
+            @JsonProperty("quests") List<Quest> questList,
+            @JsonProperty("dialogues") List<String> dialogues
+    ) {
         this.name = name;
-        this.likedItems = likedItems;
-        this.dialogues = dialogues;
+        this.likedItems = likedItems != null ? likedItems : new ArrayList<>();
+        this.dialogues = dialogues != null ? dialogues : new ArrayList<>();
         this.friendshipPoints = 0;
 
-        this.quests = new LinkedHashMap<>();
-        for (Quest q : questList) {
-            this.quests.put(q, false);
+        this.quests = new ArrayList<>();
+        if (questList != null) {
+            this.quests.addAll(questList);
         }
     }
 
+
+
     public boolean completeQuest(Quest quest) {
-        if (!quests.get(quest)) {
-            quests.put(quest, true);
-            return true;
+        if (!quest.isCompleted()) {
+            return false;
         }
-        return false;
+        quest.completeQuest();
+        return true;
     }
 
     public String getDialogueBySeason(Season season) {
@@ -46,7 +56,6 @@ public class NPC {
         return dialogues.get(index);
     }
 
-
     public void increaseFriendship(int amount) {
         friendshipPoints = Math.min(799, friendshipPoints + amount);
     }
@@ -55,12 +64,11 @@ public class NPC {
         return friendshipPoints;
     }
 
-
     public String getName() {
         return name;
     }
 
-    public HashMap<Quest, Boolean> getQuests() {
+    public List<Quest> getQuests() {
         return quests;
     }
 
@@ -71,8 +79,7 @@ public class NPC {
     public boolean isQuestAvailable(Quest quest, Time time) {
         if (quest.getLevel() == 2 && this.getFriendshipPoints() >= 200) {
             return true;
-        }
-        else if (quest.getLevel() == 3 && time.getDate() > 5 + this.getName().charAt(0) - 65) {
+        } else if (quest.getLevel() == 3 && time.getDate() > 5 + this.getName().charAt(0) - 65) {
             return true;
         }
         return true;
