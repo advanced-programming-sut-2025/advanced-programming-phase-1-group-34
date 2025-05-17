@@ -5,6 +5,7 @@ import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.WalkAble;
 import org.Group34.model.enums.Color;
+import org.Group34.model.items.Item;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -153,7 +154,12 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
 
         for (int i = beginX; i < endX; i++) {
             for (int j = beginY; j < endY; j++) {
-                message.append(entities[i][j]).append(" ");
+                if (entities[i][j] == null)
+                    message.append("-").append(" ");
+                if (entities[i][j] instanceof Item)
+                    message.append("I").append(" ");
+                else
+                    message.append(entities[i][j].toString()).append(" ");
             }
             message.append("\n");
         }

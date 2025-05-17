@@ -8,6 +8,9 @@ import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.entities.npcs.quests.Quest;
 import org.Group34.model.entities.npcs.quests.QuestLoader;
 import org.Group34.model.enums.Color;
+import org.Group34.model.items.Item;
+import org.Group34.model.items.PlantingSource;
+import org.Group34.model.items.foods.Fruit;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.MapBuilder;
 import org.Group34.view.menu.GameMenu;
@@ -241,40 +244,14 @@ public class GameController {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        Integer beginX = getInt(x);
-        Integer beginY = getInt(y);
-        Integer size = getInt(sz);
-        Entity[][] entities = getPlayer().getCurrentSpace().entities();
-        StringBuilder message = new StringBuilder();
-
-        if (beginX == null || beginY == null || size == null)
-            return new Result(false, "size or center location should be number format");
-
-        int endX = Math.min(MapBuilder.SPACE_WIDTH - 1, beginX + size);
-        int endY = Math.max(MapBuilder.SPACE_HEIGHT - 1, beginY + size);
-
-        for (int i = beginX; i < endX; i++) {
-            for (int j = beginY; j < endY; j++) {
-                message.append(entities[i][j]).append(" ");
-            }
-            message.append("\n");
-        }
-
-        return new Result(true, message.toString());
+        return game.map().printMap(getInt(x), getInt(y), getInt(sz), getPlayer().getCurrentSpace().entities());
     }
 
     public Result helpReadingMap() {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return new Result(true, "player:      P\n" +
-                        "house: " + Color.BROWN + "       H" + Color.RESET + "\n" +
-                        "green house: " + Color.YELLOW + "G" + Color.RESET + "\n" +
-                        "lake: " + Color.CYAN + "        L" + Color.RESET + "\n" +
-                        "quarry: " + Color.GRAY + "      Q" + Color.RESET + "\n" +
-                        "foraging: " + Color.RED + "    F" + Color.RESET + "\n" +
-                        "stone: " + Color.GRAY + "       S" + Color.RESET + "\n" +
-                        "tree: " + Color.GREEN + "        T" + Color.RESET);
+        return game.map().helpMap();
     }
 
     private static Integer getInt(String string) {
@@ -542,7 +519,16 @@ public class GameController {
 
     // ==================== Inventory Controller ====================
     public Result cheatAddItem(String itemName, int count) {
-        return inventoryController.cheatAddItem(getPlayer(), getPlayer().getItemFromInventoryByName(itemName), count);
+        Item item = null;
+        if (itemName.equals("Copper Axe"))
+            item = new Axe(ToolType.COPPER_AXE);
+        if (itemName.equals("Beet Seed"))
+            item = PlantingSource.BEET_SEEDS;
+        if (itemName.equals("Orange"))
+            item = Fruit.ORANGE;
+        if (itemName.equals("Banana"))
+            item = Fruit.BANANA;
+        return inventoryController.cheatAddItem(getPlayer(), item, count);
     }
 
     public Result inventoryPlaceItem(String itemName, String direction) {
