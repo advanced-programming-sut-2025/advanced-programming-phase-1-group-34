@@ -12,7 +12,6 @@ import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.animals.Product;
 import org.Group34.model.items.tools.*;
 
-import java.util.logging.Level;
 
 public class ToolsController { // TODO This class must be filled.
     public Result toolsEquip(String toolName) {
@@ -42,7 +41,7 @@ public class ToolsController { // TODO This class must be filled.
                 enoughEnergy--;
             }
             if (weatherSystem.getTodayCondition() == WeatherCondition.RAIN ||
-                weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
+                    weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
                 enoughEnergy *= 1.5;
             } else if (weatherSystem.getTodayCondition() == WeatherCondition.SNOW) {
                 enoughEnergy *= 2;
