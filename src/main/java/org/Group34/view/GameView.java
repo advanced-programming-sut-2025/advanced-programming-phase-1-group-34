@@ -89,6 +89,15 @@ public class GameView extends AppMenu {
                     showMessage(result.message());
                 }
             }
+            else if (command.matches(GameCommands.CHEAT_ADD_MONEY.getRegex())){
+                Pattern pattern = Pattern.compile(GameCommands.CHEAT_ADD_MONEY.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String amount = matcher.group("amount");
+                    showMessage(controller.cheatAddMoney(amount).message());
+                }
+            }
 
             else if (command.matches(GameCommands.DISPLAY_TIME.getRegex())){
                 Pattern pattern = Pattern.compile(GameCommands.DISPLAY_TIME.getRegex());
@@ -354,19 +363,33 @@ public class GameView extends AppMenu {
                 Matcher matcher = Pattern.compile(GameCommands.MEET_NPC.getRegex()).matcher(command);
                 if (matcher.matches()) {
                     String npcName = matcher.group("npcName");
-                    // handle meet NPC
+
+                    showMessage(controller.meetNPC(npcName).message());
                 }
+            }
+            else if (command.matches(GameCommands.LIST_AVAILABLE_QUESTS.getRegex())) {
+                showMessage(controller.listAvailableQuests().message());
             }
             else if (command.matches(GameCommands.SEND_GIFT.getRegex())) {
                 Matcher matcher = Pattern.compile(GameCommands.SEND_GIFT.getRegex()).matcher(command);
                 if (matcher.matches()) {
                     String npcName = matcher.group("npcName");
                     String itemName = matcher.group("itemName");
-                    // handle send gift
+                    showMessage(controller.sendGift(npcName, itemName).message());
                 }
             }
             else if (command.matches(GameCommands.LIST_NPC_FRIENDSHIP.getRegex())) {
-                // handle list NPC friendship
+                showMessage(controller.listNPCs().message());
+            }
+            else if (command.matches(GameCommands.COMPLETE_QUEST.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.COMPLETE_QUEST.getRegex()).matcher(command);
+
+                if (matcher.matches()) {
+                    String questName = matcher.group("questName");
+                    int questNumber = Integer.parseInt(matcher.group("questNumber"));
+
+                    showMessage(controller.completeQuest(questName, questNumber).message());
+                }
             }
 
             // ----------------------

@@ -9,6 +9,7 @@ import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.entities.npcs.NPC;
+import org.Group34.model.entities.npcs.quests.Quest;
 import org.Group34.model.entities.npcs.quests.QuestLoader;
 import org.Group34.model.enums.Color;
 import org.Group34.model.enums.WeatherCondition;
@@ -189,6 +190,12 @@ public class GameController {
             case "snow": game.weatherSystem().setTodayCondition(WeatherCondition.SNOW); break;
         }
         return new Result(true, "Cheat Code Activated: (" + game.weatherSystem().getTodayCondition() + ")");
+    }
+
+    public Result cheatAddMoney(String amount) {
+        Player player = game.players().get(orderOfPlay.get(currentUser));
+        player.addMoney(Integer.parseInt(amount));
+        return new Result(true, "Cheat Code Activated: (" + player.getMoney() + ")");
     }
 
     public Result displayTime(String type){
@@ -400,9 +407,7 @@ public class GameController {
         }
     }
 
-    public List<NPC> getNpcs() {
-        return npcs;
-    }
+
 
 //    public Result startFishing() {
 //        Player player = game.players().get(orderOfPlay.get(currentUser));
@@ -410,6 +415,76 @@ public class GameController {
 //                game.weatherSystem().getTodayCondition(), player.)
 //    }
 
-    // ================================================
+    // ==================== NPCs ===================
+    public Result meetNPC(String name) {
+        for (NPC npc : npcs) {
+            if (npc.getName().equals(name)) {
+                npc.increaseFriendship(20);
+                return new Result(true, npc.getDialogueBySeason(game.weatherSystem().getSeason()));
+            }
+        }
+        return new Result(false, "No NPC found");
+    }
 
+    public Result listNPCs() {
+        StringBuilder result = new StringBuilder();
+
+        for (NPC npc : this.npcs) {
+            result.append(npc.getName()).append(": ").append(npc.getFriendshipPoints()).append("\n");
+        }
+
+        return new Result(true, result.toString());
+    }
+
+    public Result sendGift(String npcName, String itemName) {
+        for (NPC npc : npcs) {
+            if (npc.getName().equalsIgnoreCase(npcName)) {
+                if (npc.getLikedItems().contains(itemName)) {
+                    npc.increaseFriendship(200);
+                    return new Result(true, "They liked this item!\nFriendship increased by 200!");
+                }
+                else {
+                    npc.increaseFriendship(50);
+                    return new Result(true, "They Friendship increased by 50!");
+                }
+            }
+        }
+        return new Result(false, "No NPC found");
+    }
+
+    public Result listAvailableQuests() {
+        StringBuilder result = new StringBuilder();
+        for (NPC npc : npcs) {
+            for (Quest quest : npc.getQuests().keySet()) {
+                if (npc.isQuestAvailable(quest, game.time())) {
+                    result.append(quest.getTitle()).append("\n");
+                }
+            }
+        }
+        return new Result(true, result.toString());
+    }
+
+    public Result completeQuest(String npcName, int questNumber) {
+        for (NPC npc : npcs) {
+            if (npc.getName().equalsIgnoreCase(npcName)) {
+                for (Quest quest : npc.getQuests().keySet()) {
+                    if (quest.getLevel() == questNumber) {
+                        if (quest.isCompleted()) {
+                            return new Result(false, "Quest is already completed by another player!");
+                        }
+                        else {
+                            quest.completeQuest();
+                            Player player = game.players().get(orderOfPlay.get(currentUser));
+                            player.addMoney(quest.getRewardGold());
+                            return new Result(true, "Quest completed!\nYou received "
+                            + quest.getRewardGold() + " Golds!");
+                        }
+                    }
+                }
+                return new Result(false, "Quest not available!");
+            }
+        }
+        return new Result(false, "No NPC found");
+    }
 }
+    // ================================================
