@@ -1,8 +1,6 @@
 package org.Group34.model.items.tools;
 
-import org.Group34.model.items.Item;
-
-public class WateringCan implements Item {
+public class WateringCan extends Tool {
     private ToolType type;
     private int amountOfWater = 0;
 

@@ -2,7 +2,7 @@ package org.Group34.model.items.tools;
 
 import org.Group34.model.items.Item;
 
-public class FishingPole implements Item {
+public class FishingPole extends Tool {
     private ToolType type;
 
     public FishingPole(ToolType type) {

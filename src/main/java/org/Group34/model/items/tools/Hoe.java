@@ -1,8 +1,6 @@
 package org.Group34.model.items.tools;
 
-import org.Group34.model.items.Item;
-
-public class Hoe implements Item {
+public class Hoe extends Tool {
     private ToolType type;
 
     public Hoe(ToolType type) {

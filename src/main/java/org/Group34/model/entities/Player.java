@@ -3,6 +3,7 @@ package org.Group34.model.entities;
 import org.Group34.model.enums.LevelType;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.Recipe;
+import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
 
 import java.util.ArrayList;
@@ -23,6 +24,16 @@ public class  Player implements Entity {
     private HashMap<LevelType, Integer> level = createInitialLevelMap();
 
     private Item currentTool;
+
+    {
+        inventory.put(new Hoe(ToolType.PLASTIC_HOE), 1);
+        inventory.put(new Pickaxe(ToolType.PLASTIC_PICKAXE), 1);
+        inventory.put(new Axe(ToolType.PLASTIC_AXE), 1);
+        inventory.put(new WateringCan(ToolType.PLASTIC_WATERING_CAN), 1);
+        inventory.put(new Scythe(), 1);
+        inventory.put(new Backpack(ToolType.BASIC_BACKPACK), 1);
+        inventory.put(new TrashCan(ToolType.PLASTIC_TRASH_CAN), 1);
+    }
 
 
     public static int passedOutUsers(){

@@ -4,7 +4,7 @@ import org.Group34.model.items.Item;
 
 import java.util.ArrayList;
 
-public class Backpack implements Item { // TODO This class must be filled.
+public class Backpack extends Tool { // TODO This class must be filled.
     private ToolType type;
     private ArrayList<Item> items;
 

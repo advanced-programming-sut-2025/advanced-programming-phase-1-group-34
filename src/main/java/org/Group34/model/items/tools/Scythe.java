@@ -1,8 +1,6 @@
 package org.Group34.model.items.tools;
 
-import org.Group34.model.items.Item;
-
-public class Scythe implements Item {
+public class Scythe extends Tool {
 
     // ----- getter & setter -----
     public String getName() {

@@ -1,8 +1,6 @@
 package org.Group34.model.items.tools;
 
-import org.Group34.model.items.Item;
-
-public class TrashCan implements Item { // TODO This class must be filled.
+public class TrashCan extends Tool { // TODO This class must be filled.
     private ToolType type;
 
     public TrashCan(ToolType type) {

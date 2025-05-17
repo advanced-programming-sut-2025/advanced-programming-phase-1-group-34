@@ -1,9 +1,8 @@
 package org.Group34.model.items.tools;
 
 import org.Group34.model.enums.animals.AnimalType;
-import org.Group34.model.items.Item;
 
-public class MilkPail implements Item {
+public class MilkPail extends Tool {
     private final int ENERGY_COST = 4;
     private final int price = 1000;
     private final String description = "Gather milk from your animals.";

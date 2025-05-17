@@ -10,18 +10,29 @@ import org.Group34.model.entities.naturalElements.PloughedLand;
 import org.Group34.model.enums.LevelType;
 import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.animals.Product;
+import org.Group34.model.items.Item;
 import org.Group34.model.items.tools.*;
 
-
 public class ToolsController { // TODO This class must be filled.
-    public Result toolsEquip(String toolName) {
-        return new Result(true, "");
+    public Result toolsEquip(String toolName, Player player) {
+        Item tool = player.getItemFromInventoryByName(toolName);
+
+        if (tool == null) {
+            return new Result(false, "Error: You do not have this tool.");
+        }
+
+        player.setCurrentTool(tool);
+        return new Result(true, "You have been equipped with the desired tool.");
     }
-    public Result showCurrentTools() {
-        return new Result(true, "");
+    public Result showCurrentTools(Player player) {
+        if (player.getCurrentTool() == null) {
+            return new Result(true, "You currently do not have any tools at hand.");
+        }
+
+        return new Result(true, "Your Current Tool: " + player.getCurrentTool().getName());
     }
-    public Result showAvailableTools() {
-        return new Result(true, "");
+    public Result showAvailableTools(Player player) {
+        return new Result(true, stringifyAvailableTools(player));
     }
     public Result toolUse(String direction,
                           FarmingController farmingController,
@@ -41,7 +52,7 @@ public class ToolsController { // TODO This class must be filled.
                 enoughEnergy--;
             }
             if (weatherSystem.getTodayCondition() == WeatherCondition.RAIN ||
-                    weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
+                weatherSystem.getTodayCondition() == WeatherCondition.STORM) {
                 enoughEnergy *= 1.5;
             } else if (weatherSystem.getTodayCondition() == WeatherCondition.SNOW) {
                 enoughEnergy *= 2;
@@ -189,5 +200,17 @@ public class ToolsController { // TODO This class must be filled.
         }
 
         return location;
+    }
+    private String stringifyAvailableTools(Player player) {
+        StringBuilder result = new StringBuilder();
+        result.append("* Available Tools:\n");
+
+        for (Item item : player.getInventory().keySet()) {
+            if (item instanceof Tool) {
+                result.append("- " + item.getName() + "\n");
+            }
+        }
+
+        return result.toString();
     }
 }

@@ -1,8 +1,6 @@
 package org.Group34.model.items.tools;
 
-import org.Group34.model.items.Item;
-
-public class Axe implements Item {
+public class Axe extends Tool {
     private ToolType type;
 
     public Axe(ToolType type) {
