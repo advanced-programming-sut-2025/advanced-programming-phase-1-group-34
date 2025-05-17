@@ -40,7 +40,7 @@ public class CarpenterShop extends Shop {
         farmBuildingsLimit.put(farmBuildings.get(3), 1);
         farmBuildingsLimit.put(farmBuildings.get(4), 1);
         farmBuildingsLimit.put(farmBuildings.get(5), 1);
-        farmBuildingsLimit.put(farmBuildings.get(7), -11);
+        farmBuildingsLimit.put(farmBuildings.get(6), -11);
     }
 
     // ----- getters & setters -----

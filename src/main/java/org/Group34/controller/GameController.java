@@ -493,19 +493,19 @@ public class GameController {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return toolsController.toolsEquip(toolName);
+        return toolsController.toolsEquip(toolName, getPlayer());
     }
     public Result showCurrentTools() {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return toolsController.showCurrentTools();
+        return toolsController.showCurrentTools(getPlayer());
     }
     public Result showAvailableTools() {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return toolsController.showAvailableTools();
+        return toolsController.showAvailableTools(getPlayer());
     }
     public Result toolUse(String direction) {
         if (!forceTerminating.isEmpty())
