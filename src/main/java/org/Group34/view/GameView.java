@@ -284,7 +284,7 @@ public class GameView extends AppMenu {
                     String buildingName = matcher.group("buildingName");
                     int x = Integer.parseInt(matcher.group("x"));
                     int y = Integer.parseInt(matcher.group("y"));
-                    // handle building animal's placement
+                    showMessage("Building " + buildingName + " at " + x + ", " + y + "built.");
                 }
             }
             else if (command.matches(GameCommands.BUY_ANIMAL.getRegex())) {
@@ -292,7 +292,8 @@ public class GameView extends AppMenu {
                 if (matcher.matches()) {
                     String animal = matcher.group("animal");
                     String name = matcher.group("name");
-                    // handle buy animal
+
+                    showMessage(controller.buyAnimal(animal, name).message());
                 }
             }
             else if (command.matches(GameCommands.PET_ANIMAL.getRegex())) {

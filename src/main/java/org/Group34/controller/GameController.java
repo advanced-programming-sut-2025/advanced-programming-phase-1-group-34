@@ -13,6 +13,7 @@ import org.Group34.model.entities.npcs.quests.Quest;
 import org.Group34.model.entities.npcs.quests.QuestLoader;
 import org.Group34.model.enums.Color;
 import org.Group34.model.enums.WeatherCondition;
+import org.Group34.model.enums.animals.AnimalType;
 import org.Group34.model.enums.animals.Product;
 import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.map.MapBuilder;
@@ -382,6 +383,26 @@ public class GameController {
             }
         }
         return new Result(true, result.toString());
+    }
+
+    public Result buyAnimal(String animal, String animalName) {
+        AnimalType targetAnimal = AnimalType.valueOf(animal);
+        if (targetAnimal == null) {
+            return new Result(false, "No animal found");
+        }
+        Player player = game.players().get(orderOfPlay.get(currentUser));
+
+        if (player.getMoney() >= targetAnimal.getPrice()) {
+            if (animalController.addAnimal(animalName, targetAnimal)) {
+                return new Result(true, "You have bought a " + animal);
+            }
+            else {
+                return new Result(false, "You have a animal with this type and name");
+            }
+        }
+        else {
+            return new Result(false, "You don't have enough money");
+        }
     }
 
     public Result sellAnimal(String name) {
