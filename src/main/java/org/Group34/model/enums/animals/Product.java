@@ -1,6 +1,8 @@
 package org.Group34.model.enums.animals;
 
-public enum Product {
+import org.Group34.model.items.Item;
+
+public enum Product implements Item {
     // Chicken
     EGG(AnimalType.CHICKEN, 50, 0),
     LARGE_EGG(AnimalType.CHICKEN, 95, 100),
@@ -50,5 +52,10 @@ public enum Product {
 
     public int getRequiredFriendship() {
         return requiredFriendship;
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }

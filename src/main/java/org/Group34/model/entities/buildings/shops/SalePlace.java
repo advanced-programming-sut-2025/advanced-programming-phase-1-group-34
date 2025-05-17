@@ -26,4 +26,8 @@ public class SalePlace extends Building {
     public void increaseNumberOfShippingBins(int amount) {
         numberOfShippingBins += amount;
     }
+
+    public void reStart() {
+        shippingBins = new ArrayList<>();
+    }
 }

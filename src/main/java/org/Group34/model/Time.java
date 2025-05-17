@@ -30,6 +30,7 @@ public class Time implements  Comparable<Time> {
         this.hour = 9 + (totalHours % 14);
 
         if (daysToAdd > 0) {
+            this.hour = 9;
             addDays(daysToAdd);
         }
     }

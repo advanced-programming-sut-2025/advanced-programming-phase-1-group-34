@@ -26,7 +26,8 @@ public enum FishType implements Item {
     LEGEND("Legend", 5000, Season.SPRING, true, ProcessedFood.SMOKED_LEGEND),
     GLACIERFISH("Glacierfish", 1000, Season.WINTER, true, ProcessedFood.SMOKED_GLACIERFISH),
     ANGLER("Angler", 900, Season.FALL, true, ProcessedFood.SMOKED_ANGLER),
-    CRIMSONFISH("Crimsonfish", 1500, Season.SUMMER, true, ProcessedFood.SMOKED_CRIMSONFISH);
+    CRIMSONFISH("Crimsonfish", 1500, Season.SUMMER, true, ProcessedFood.SMOKED_CRIMSONFISH),
+    ALL("All", 0, Season.ALL, true, null);
 
     public final String name;
     public final int basePrice;
