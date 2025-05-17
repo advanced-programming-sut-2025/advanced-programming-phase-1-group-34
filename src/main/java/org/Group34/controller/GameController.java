@@ -66,7 +66,7 @@ public class GameController {
     private List<NPC> npcLoader() {
         List<NPC> temp;
         try {
-            temp = new QuestLoader().loadNPCs("model/entities/npcs/quests/npcs.json");
+            temp = new QuestLoader().loadNPCs("src/main/resources/NPCQuests.json");
         } catch (IOException e) {
             e.printStackTrace();
             temp = new ArrayList<>();

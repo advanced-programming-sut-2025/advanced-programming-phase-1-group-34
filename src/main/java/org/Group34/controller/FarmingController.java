@@ -26,7 +26,7 @@ public class FarmingController {
         Entity plant = getPlantByCraftName(craftName);
 
         if (plant == null) {
-            return new Result(false, "Error: This fruit does not exist.");
+            return new Result(false, "This fruit does not exist.");
         } else if (plant instanceof Crop crop) {
             return new Result(true, crop.getStructuralInformation());
         } else {
@@ -44,11 +44,11 @@ public class FarmingController {
         Entity desiredTile = currentSpace.getEntityByLocation(locationX, locationY);
 
         if (desiredTile != null && !(desiredTile instanceof PloughedLand)) {
-            return new Result(false, "Error: This tile is not empty.");
+            return new Result(false, "This tile is not empty.");
         } else if (desiredTile == null) {
-            return new Result(false, "Error: You should plow the soil before planting.");
+            return new Result(false, "You should plow the soil before planting.");
         } else if (!currentPlayer.isExistInInventory(getSeedByName(seedName))) {
-            return new Result(false, "Error: You do not have this seed in your inventory.");
+            return new Result(false, "You do not have this seed in your inventory.");
         } else if (getSeedByName(seedName) == PlantingSource.MIXED_SEEDS) {
             Entity randomPlant = getPlantOfMixedSeed(time);
             placingPlantInSpace(locationX, locationY, randomPlant, currentPlayer);
@@ -57,7 +57,7 @@ public class FarmingController {
             return new Result(true, "The desired seed has been successfully planted.");
         }
         else if (!isSeedForCurrentSeason(getPlantBySeedName(seedName), time)) {
-            return new Result(false, "Error: This plant is not suitable for this season.");
+            return new Result(false, "This plant is not suitable for this season.");
         }
 
         placingPlantInSpace(locationX, locationY, getPlantBySeedName(seedName), currentPlayer);
@@ -82,7 +82,7 @@ public class FarmingController {
             return new Result(true, foragingTree.getInformation());
         }
 
-        return new Result(false, "Error: There are no plants in this place.");
+        return new Result(false, "There are no plants in this place.");
     }
 
 
@@ -94,9 +94,9 @@ public class FarmingController {
         Entity desiredPlant = currentSpace.getEntityByLocation(locationX, locationY);
 
         if (!(desiredPlant instanceof Crop) && !(desiredPlant instanceof Tree)) {
-            return new Result(false, "Error: You can only fertilize your plants.");
+            return new Result(false, "You can only fertilize your plants.");
         } else if (!currentPlayer.isExistInInventory(getFertilizerByName(fertilizer))) {
-            return new Result(false, "Error: You do not have this fertilize in your inventory.");
+            return new Result(false, "You do not have this fertilize in your inventory.");
         }
 
         if (desiredPlant instanceof Crop crop) {
@@ -124,7 +124,7 @@ public class FarmingController {
 
         currentPlayer.decreaseEnergy(enoughEnergy);
         if (desiredTile != null) {
-            return new Result(false, "Error: You can't plow here.");
+            return new Result(false, "You can't plow here.");
         }
 
         currentSpace.placingEntity(locationX, locationY, new PloughedLand());
@@ -153,7 +153,7 @@ public class FarmingController {
         currentPlayer.decreaseEnergy(enoughEnergy);
 
         if (!(desiredTile instanceof Tree) && !(desiredTile instanceof ForagingTree)) {
-            return new Result(false, "Error: You can only use Axe on Trees.");
+            return new Result(false, "You can only use Axe on Trees.");
         } else {
             if (desiredTile instanceof Tree tree) {
                 currentPlayer.addToInventory(tree.getSource(), 2);
@@ -181,7 +181,7 @@ public class FarmingController {
         }
         else if (desiredTile instanceof Crop crop) {
             if (!crop.getNeedWater()) {
-                return new Result(false, "Error: This plant does not need watering.");
+                return new Result(false, "This plant does not need watering.");
             }
             crop.setNeedWater(false);
             playerWateringCan.setAmountOfWater(playerWateringCan.getAmountOfWater() - 1);
@@ -727,7 +727,7 @@ public class FarmingController {
         if (crop.isGiant()) {
             if (crop.getGrowthLevel() == crop.getMaxLevel()) {
                 if (!crop.getSeasons().contains(time.getSeason())) {
-                    return new Result(false, "Error: This product is not for this season.");
+                    return new Result(false, "This product is not for this season.");
                 }
 
                 currentPlayer.addToInventory(crop.getFarmingProduct(), 50);
@@ -742,13 +742,13 @@ public class FarmingController {
                 return new Result(true, "The desired plant has been harvested.");
             }
             else {
-                return new Result(false, "Error: The plant in question has not yet reached the harvesting stage.");
+                return new Result(false, "The plant in question has not yet reached the harvesting stage.");
             }
         }
         else {
             if (crop.getGrowthLevel() == crop.getMaxLevel()) {
                 if (!crop.getSeasons().contains(time.getSeason())) {
-                    return new Result(false, "Error: This product is not for this season.");
+                    return new Result(false, "This product is not for this season.");
 
                 }
 
@@ -780,7 +780,7 @@ public class FarmingController {
         }
         else if (tree.getGrowthLevel() == tree.getMaxLevel()) {
             if (!tree.getSeason().contains(time.getSeason())) {
-                return new Result(false, "Error: This product is not for this season.");
+                return new Result(false, "This product is not for this season.");
             }
 
             currentPlayer.addToInventory(tree.getFruit(), 5);

@@ -54,7 +54,7 @@ public class ShopController {
             return new Result(true, shop.showAllProducts());
         }
 
-        return new Result(false, "Error: You first need to enter a shop.");
+        return new Result(false, "You first need to enter a shop.");
     }
     public Result showAvailableProducts(Player player, Time time) {
         Entity playerTile = getDesiredShop(player);
@@ -87,7 +87,7 @@ public class ShopController {
             return new Result(true, shop.shopAvailableProducts());
         }
 
-        return new Result(false, "Error: You first need to enter a shop.");
+        return new Result(false, "You first need to enter a shop.");
     }
     public Result purchase(String productName, int count, Player player, Time time) {
         Entity playerTile = getDesiredShop(player);
@@ -96,15 +96,15 @@ public class ShopController {
             Item product = shop.getProductByName(productName);
 
             if (product == null) {
-                return new Result(false, "Error: This product is not available in this store.");
+                return new Result(false, "This product is not available in this store.");
             }
 
             if (product instanceof Ingredient item) {
                 if (shop.getStockLimit(product) <= count - 1 && shop.getStockLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < item.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addToInventory(product, count);
@@ -115,10 +115,10 @@ public class ShopController {
             }
             else if (product instanceof UpgradeTools tool) {
                 if (shop.getUpgradeToolLimit(product) <= count - 1 && shop.getUpgradeToolLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < tool.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
 
@@ -134,15 +134,15 @@ public class ShopController {
             Item product = shop.getProductByName(productName);
 
             if (product == null) {
-                return new Result(false, "Error: This product is not available in this store.");
+                return new Result(false, "This product is not available in this store.");
             }
 
             if (product instanceof MilkPail tool) {
                 if (shop.getShopInventoryLimit(tool) <= count - 1 && shop.getShopInventoryLimit(tool) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < tool.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
 
@@ -154,10 +154,10 @@ public class ShopController {
             }
             else if (product instanceof Shear tool) {
                 if (shop.getShopInventoryLimit(tool) <= count - 1 && shop.getShopInventoryLimit(tool) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < tool.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
 
@@ -169,10 +169,10 @@ public class ShopController {
             }
             else if (product instanceof AnimalType animal) {
                 if (shop.getShopInventoryLimit(animal) <= count - 1 && shop.getShopInventoryLimit(animal) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < animal.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
 
@@ -188,15 +188,15 @@ public class ShopController {
             Item product = shop.getProductByName(productName);
 
             if (product == null) {
-                return new Result(false, "Error: This product is not available in this store.");
+                return new Result(false, "This product is not available in this store.");
             }
 
             if (product instanceof ProcessedFood item) {
                 if (shop.getPermanentStockLimit(product) <= count - 1 && shop.getPermanentStockLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < item.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addToInventory(product, count);
@@ -207,10 +207,10 @@ public class ShopController {
             }
             else if (product instanceof CookedFood item) {
                 if (shop.getPermanentStockLimit(product) <= count - 1 && shop.getPermanentStockLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < item.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addToInventory(product, count);
@@ -221,10 +221,10 @@ public class ShopController {
             }
             else if (product instanceof Recipe item) {
                 if (shop.getPermanentStockLimit(product) <= count - 1 && shop.getPermanentStockLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < item.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addToInventory(product, count);
@@ -239,14 +239,14 @@ public class ShopController {
             Item product = shop.getProductByName(productName);
 
             if (product == null) {
-                return new Result(false, "Error: This product is not available in this store.");
+                return new Result(false, "This product is not available in this store.");
             }
             if (product instanceof Ingredient item) {
                 if (shop.getPermanentStockLimit(product) <= count - 1 && shop.getPermanentStockLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < item.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addToInventory(product, count);
@@ -257,10 +257,10 @@ public class ShopController {
             }
             else if (product instanceof BarnType item) {
                 if (shop.getFarmBuildingLimit(product) <= count - 1 && shop.getFarmBuildingLimit(product) == -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < item.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addToInventory(product, count);
@@ -271,10 +271,10 @@ public class ShopController {
             }
             else if (product instanceof ShippingBin item) {
                 if (shop.getFarmBuildingLimit(product) <= count - 1 && shop.getFarmBuildingLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < item.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addToInventory(product, count);
@@ -290,14 +290,14 @@ public class ShopController {
             Item product = shop.getProductByName(productName);
 
             if (product == null) {
-                return new Result(false, "Error: This product is not available in this store.");
+                return new Result(false, "This product is not available in this store.");
             } else if (shop.isAvailable(product, count, time.getSeason())) {
-                return new Result(false, "Error: This item is not available.");
+                return new Result(false, "This item is not available.");
             }
 
             PlantingSource item = (PlantingSource) product;
             if (player.getMoney() < item.getPrice() * count) {
-                return new Result(false, "Error: You do not have enough balance.");
+                return new Result(false, "You do not have enough balance.");
             }
 
             player.addMoney(item.getPrice() * count * -1);
@@ -311,16 +311,16 @@ public class ShopController {
             Item product = shop.getProductByName(productName);
 
             if (product == null) {
-                return new Result(false, "Error: This product is not available in this store.");
+                return new Result(false, "This product is not available in this store.");
             }
 
             if (PierreGeneralStore.getYearRoundStock().contains(product)) {
                 if (product instanceof ProcessedFood stock) {
                     if (shop.getYearRoundStockLimit(product) <= count - 1 && shop.getYearRoundStockLimit(product) != -11) {
-                        return new Result(false, "Error: This product is sold out.");
+                        return new Result(false, "This product is sold out.");
                     }
                     else if (player.getMoney() < stock.getPrice() * count) {
-                        return new Result(false, "Error: You do not have enough balance.");
+                        return new Result(false, "You do not have enough balance.");
                     }
 
                     player.addMoney(stock.getPrice() * count * -1);
@@ -330,10 +330,10 @@ public class ShopController {
                     return new Result(true, "The desired product has been purchased.");
                 } else if (product instanceof Fertilizer stock) {
                     if (shop.getYearRoundStockLimit(product) <= count - 1 && shop.getYearRoundStockLimit(product) != -11) {
-                        return new Result(false, "Error: This product is sold out.");
+                        return new Result(false, "This product is sold out.");
                     }
                     else if (player.getMoney() < stock.getPrice() * count) {
-                        return new Result(false, "Error: You do not have enough balance.");
+                        return new Result(false, "You do not have enough balance.");
                     }
 
                     player.addMoney(stock.getPrice() * count * -1);
@@ -343,10 +343,10 @@ public class ShopController {
                     return new Result(true, "The desired product has been purchased.");
                 } else if (product instanceof PlacingCraft stock) {
                     if (shop.getYearRoundStockLimit(product) <= count - 1 && shop.getYearRoundStockLimit(product) != -11) {
-                        return new Result(false, "Error: This product is sold out.");
+                        return new Result(false, "This product is sold out.");
                     }
                     else if (player.getMoney() < stock.getPrice() * count) {
-                        return new Result(false, "Error: You do not have enough balance.");
+                        return new Result(false, "You do not have enough balance.");
                     }
 
                     player.addMoney(stock.getPrice() * count * -1);
@@ -356,10 +356,10 @@ public class ShopController {
                     return new Result(true, "The desired product has been purchased.");
                 } else if (product instanceof PlantingSource stock) {
                     if (shop.getYearRoundStockLimit(product) <= count - 1 && shop.getYearRoundStockLimit(product) != -11) {
-                        return new Result(false, "Error: This product is sold out.");
+                        return new Result(false, "This product is sold out.");
                     }
                     else if (player.getMoney() < stock.getPrice() * count) {
-                        return new Result(false, "Error: You do not have enough balance.");
+                        return new Result(false, "You do not have enough balance.");
                     }
 
                     player.addMoney(stock.getPrice() * count * -1);
@@ -369,10 +369,10 @@ public class ShopController {
                     return new Result(true, "The desired product has been purchased.");
                 } else if (product instanceof UpgradeTools stock) {
                     if (shop.getYearRoundStockLimit(product) <= count - 1 && shop.getYearRoundStockLimit(product) != -11) {
-                        return new Result(false, "Error: This product is sold out.");
+                        return new Result(false, "This product is sold out.");
                     }
                     else if (player.getMoney() < stock.getPrice() * count) {
-                        return new Result(false, "Error: You do not have enough balance.");
+                        return new Result(false, "You do not have enough balance.");
                     }
 
                     player.addMoney(stock.getPrice() * count * -1);
@@ -386,10 +386,10 @@ public class ShopController {
                 PlantingSource stock = (PlantingSource) product;
 
                 if (shop.getSpringStockLimit(product) <= count - 1 && shop.getSpringStockLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < stock.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addMoney(stock.getPrice() * count * -1);
@@ -400,10 +400,10 @@ public class ShopController {
                 PlantingSource stock = (PlantingSource) product;
 
                 if (shop.getSpringStockLimit(product) <= count - 1 && shop.getSpringStockLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < stock.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addMoney(stock.getPrice() * count * -1);
@@ -414,10 +414,10 @@ public class ShopController {
                 PlantingSource stock = (PlantingSource) product;
 
                 if (shop.getSpringStockLimit(product) <= count - 1 && shop.getSpringStockLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < stock.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addMoney(stock.getPrice() * count * -1);
@@ -430,15 +430,15 @@ public class ShopController {
             Item product = shop.getProductByName(productName);
 
             if (product == null) {
-                return new Result(false, "Error: This product is not available in this store.");
+                return new Result(false, "This product is not available in this store.");
             }
 
             if (product instanceof Recipe item) {
                 if (shop.getStockLimit(product) <= count - 1 && shop.getStockLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < item.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addToInventory(product, count);
@@ -450,10 +450,10 @@ public class ShopController {
 
             if (product instanceof UpgradeTools item) {
                 if (shop.getStockLimit(product) <= count - 1 && shop.getStockLimit(product) != -11) {
-                    return new Result(false, "Error: This product is sold out.");
+                    return new Result(false, "This product is sold out.");
                 }
                 else if (player.getMoney() < item.getPrice() * count) {
-                    return new Result(false, "Error: You do not have enough balance.");
+                    return new Result(false, "You do not have enough balance.");
                 }
 
                 player.addMoney(item.getPrice() * count * -1);
@@ -464,31 +464,31 @@ public class ShopController {
             }
         }
 
-        return new Result(false, "Error: You first need to enter a shop.");
+        return new Result(false, "You first need to enter a shop.");
     }
     public Result cheatAddDollars(int count, Player player) {
         player.addMoney(count);
-        return new Result(true, "count" + " dollars added to money");
+        return new Result(true, count + " dollars added to money");
     }
     public Result sell(String productName, Player player) {
         Entity playerTile = getSalePlace(player);
 
         if (!(playerTile instanceof SalePlace)) {
-            return new Result(false, "Error: You should go to the sales location first.");
+            return new Result(false, "You should go to the sales location first.");
         }
 
         SalePlace salePlace = (SalePlace) playerTile;
         if (salePlace.getNumberOfShippingBins() <= 0) {
-            return new Result(false, "Error: You do not have an empty Shipping Bin.");
+            return new Result(false, "You do not have an empty Shipping Bin.");
         }
 
         Item desiredItem = player.getItemFromInventoryByName(productName);
         int count = player.getAmountOfItem(desiredItem);
         if (desiredItem == null) {
-            return new Result(false, "Error: This item is not available in your inventory.");
+            return new Result(false, "This item is not available in your inventory.");
         }
         else if (player.getAmountOfItem(desiredItem) < count) {
-            return new Result(false, "Error: You do not have enough of this product available.");
+            return new Result(false, "You do not have enough of this product available.");
         }
 
         salePlace.addItemToSale(desiredItem, count);
@@ -499,20 +499,20 @@ public class ShopController {
         Entity playerTile = getSalePlace(player);
 
         if (!(playerTile instanceof SalePlace)) {
-            return new Result(false, "Error: You should go to the sales location first.");
+            return new Result(false, "You should go to the sales location first.");
         }
 
         SalePlace salePlace = (SalePlace) playerTile;
         if (salePlace.getNumberOfShippingBins() <= 0) {
-            return new Result(false, "Error: You do not have an empty Shipping Bin.");
+            return new Result(false, "You do not have an empty Shipping Bin.");
         }
 
         Item desiredItem = player.getItemFromInventoryByName(productName);
         if (desiredItem == null) {
-            return new Result(false, "Error: This item is not available in your inventory.");
+            return new Result(false, "This item is not available in your inventory.");
         }
         else if (player.getAmountOfItem(desiredItem) < count) {
-            return new Result(false, "Error: You do not have enough of this product available.");
+            return new Result(false, "You do not have enough of this product available.");
         }
 
         salePlace.addItemToSale(desiredItem, count);

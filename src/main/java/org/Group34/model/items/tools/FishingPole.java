@@ -11,7 +11,7 @@ public class FishingPole extends Tool {
 
     // ----- getter & setter -----
     public String getName() {
-        return type.getName();
+        return "Fishing Pole";
     }
 
     public String getMaterial() {

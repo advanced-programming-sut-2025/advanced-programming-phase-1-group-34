@@ -9,7 +9,7 @@ public class Pickaxe extends Tool {
 
     // ----- getter & setter -----
     public String getName() {
-        return type.getName();
+        return "Pickaxe";
     }
 
     public String getMaterial() {

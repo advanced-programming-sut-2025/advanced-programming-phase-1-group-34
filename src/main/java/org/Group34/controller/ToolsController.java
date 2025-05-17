@@ -18,7 +18,7 @@ public class ToolsController { // TODO This class must be filled.
         Item tool = player.getItemFromInventoryByName(toolName);
 
         if (tool == null) {
-            return new Result(false, "Error: You do not have this tool.");
+            return new Result(false, "You do not have this tool.");
         }
 
         player.setCurrentTool(tool);
@@ -59,7 +59,7 @@ public class ToolsController { // TODO This class must be filled.
             }
 
             if (player.getEnergy() < enoughEnergy) {
-                return new Result(false, "Error: You do not have enough energy to use this tool.");
+                return new Result(false, "You do not have enough energy to use this tool.");
             }
 
             return farmingController.useHoe(direction, enoughEnergy, player);
@@ -78,7 +78,7 @@ public class ToolsController { // TODO This class must be filled.
             }
 
             if (player.getEnergy() < enoughEnergy) {
-                return new Result(false, "Error: You do not have enough energy to use this tool.");
+                return new Result(false, "You do not have enough energy to use this tool.");
             }
 
             if (desiredTile instanceof PloughedLand) {
@@ -100,7 +100,7 @@ public class ToolsController { // TODO This class must be filled.
             }
 
             if (player.getEnergy() < enoughEnergy) {
-                return new Result(false, "Error: You do not have enough energy to use this tool.");
+                return new Result(false, "You do not have enough energy to use this tool.");
             }
 
             return farmingController.useAxe(direction, enoughEnergy, player, levelUpController);
@@ -119,7 +119,7 @@ public class ToolsController { // TODO This class must be filled.
             }
 
             if (player.getEnergy() < enoughEnergy) {
-                return new Result(false, "Error: You do not have enough energy to use this tool.");
+                return new Result(false, "You do not have enough energy to use this tool.");
             }
 
             return farmingController.useWateringCan(direction, enoughEnergy, (WateringCan) player.getCurrentTool(), player);
@@ -129,7 +129,7 @@ public class ToolsController { // TODO This class must be filled.
             int enoughEnergy = ((Scythe) player.getCurrentTool()).getEnergy();
 
             if (player.getEnergy() < enoughEnergy) {
-                return new Result(false, "Error: You do not have enough energy to use this tool.");
+                return new Result(false, "You do not have enough energy to use this tool.");
             }
 
             return farmingController.useScythe(direction, enoughEnergy, player, time, levelUpController);

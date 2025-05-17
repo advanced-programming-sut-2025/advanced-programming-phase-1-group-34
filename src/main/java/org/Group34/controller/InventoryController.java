@@ -43,9 +43,9 @@ public class InventoryController {
 
     public Result placeItem(Player player, Item item, Space space, String direction){
         if (!InventoryController.direction.containsKey(direction))
-            return new Result(false, "Error: This direction isn't valid!");
+            return new Result(false, "This direction isn't valid!");
         if (!player.getInventory().containsKey(item))
-            return new Result(false, "Error: This Item isn't available in your Inventory!");
+            return new Result(false, "This Item isn't available in your Inventory!");
 
         int x = player.getLocation()[0] + InventoryController.direction.get(direction)[0];
         int y = player.getLocation()[1] + InventoryController.direction.get(direction)[1];
@@ -71,11 +71,11 @@ public class InventoryController {
             }
             else {
                 player.addToInventory(item, 1);
-                return new Result(false, "Error: You can not place Item in this location!");
+                return new Result(false, "You can not place Item in this location!");
             }
         }
 
-        return new Result(false, "Error: This Item can not be placed on map!");
+        return new Result(false, "This Item can not be placed on map!");
     }
 
 

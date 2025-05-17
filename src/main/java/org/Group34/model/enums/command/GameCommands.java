@@ -34,18 +34,18 @@ public enum GameCommands implements Command {
     // ----- Inventory Commands -----
     INVENTORY_SHOW("\\s*inventory\\s+show\\s*"),
     INVENTORY_TRASH("\\s*inventory\\s+trash\\s+-i\\s+(?<itemName>.+)\\s+-n\\s+(?<number>\\d+)\\s*"),
-    INVENTORY_PLACE_ITEM("\\s*place\\s+item\\s+-n\\s+(?<item_name>.+)\\s+-d\\s+(?<direction>.+)\\s*"),
-    CHEAT_ADD_ITEM("\\s*cheat\\s+add\\s+item\\s+-n\\s+(?<item_name>.+)\\s+-c\\s+(?<count>\\d+)\\s*"),
+    INVENTORY_PLACE_ITEM("\\s*place\\s+item\\s+-n\\s+(?<itemName>.+)\\s+-d\\s+(?<direction>.+)\\s*"),
+    CHEAT_ADD_ITEM("\\s*cheat\\s+add\\s+item\\s+-n\\s+(?<itemName>.+)\\s+-c\\s+(?<count>\\d+)\\s*"),
     // -------------------------
 
     // ----- HouseMenu Commands -----
     SHOW_RECIPES("\\s*crafting\\s+show\\s+recipes\\s*"),
-    CRAFT_ITEM("\\s*crafting\\s+craft\\s+(?<item_name>.+)\\s*"),
+    CRAFT_ITEM("\\s*crafting\\s+craft\\s+(?<itemName>.+)\\s*"),
     // -------------------------
 
     // ----- Artisan Commands -----
-    ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisan_name>.+)\\s+(?<item1_name>.+)(\\s+(?<item2_name))?\\s*"),
-    ARTISAN_GET("\\s+artisan\\s+get\\s+(?<artisan_name>.+)\\s+"),
+    ARTISAN_USE("\\s*artisan\\s+use\\s+(?<artisanName>.+)\\s+(?<item1Name>.+)(\\s+(?<item2Name))?\\s*"),
+    ARTISAN_GET("\\s+artisan\\s+get\\s+(?<artisanName>.+)\\s+"),
     // -------------------------
 
     // ----- Time Commands -----

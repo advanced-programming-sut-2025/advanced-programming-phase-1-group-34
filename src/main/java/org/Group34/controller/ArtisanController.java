@@ -17,8 +17,8 @@ public class ArtisanController {
 
         if (timeToResult.containsKey(machine)) {
             if (time.compareTo(timeToResult.get(machine)) >= 0)
-                return new Result(false, "Error: Machine is full. Take Item inside it with get Artisan command.");
-            return new Result(false, "Error: This Machine is already in process.");
+                return new Result(false, "Machine is full. Take Item inside it with get Artisan command.");
+            return new Result(false, "This Machine is already in process.");
         }
 
         if (input_2 == null) food = machine.process(player, input_1);
@@ -26,9 +26,9 @@ public class ArtisanController {
 
 
         if (food == null)
-            return new Result(false, "Error: You imported wrong inputs.");
+            return new Result(false, "You imported wrong inputs.");
         else if (food.equals(input_1))
-            return new Result(false, "Error: You don't have enough amount of " + food.getName() + " in your inventory.");
+            return new Result(false, "You don't have enough amount of " + food.getName() + " in your inventory.");
 
         Time readyTime = time.copy();
         readyTime.addDays(machine.getDaysToComplete());
@@ -45,9 +45,9 @@ public class ArtisanController {
 
     public Result getArtisan(ProcessorCraft machine, Player player, Time time){
         if (!timeToResult.containsKey(time))
-            new Result(false, "Error: Your machine is not in process.");
+            new Result(false, "Your machine is not in process.");
         if (time.compareTo(timeToResult.get(machine)) < 0)
-            return new Result(false, "Error: Your order is still on process get back at "
+            return new Result(false, "Your order is still on process get back at "
                     + timeToResult.get(machine).toString());
 
         player.addToInventory(result.get(machine), 1);

@@ -32,8 +32,8 @@ public class MarnieRanch extends Shop {
         livesTock.add(AnimalType.PIG);
     }
     {
+        shopInventoryLimit.put(shopInventory.get(0), 1);
         shopInventoryLimit.put(shopInventory.get(1), 1);
-        shopInventoryLimit.put(shopInventory.get(2), 1);
 
         livesTockLimit.put(livesTock.get(0), 2);
         livesTockLimit.put(livesTock.get(1), 2);
