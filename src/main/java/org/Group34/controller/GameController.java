@@ -456,12 +456,12 @@ public class GameController {
     }
 
 
-
-//    public Result startFishing() {
-//        Player player = game.players().get(orderOfPlay.get(currentUser));
-//        fishingController.startFishing(player, game.time().getSeason(),
-//                game.weatherSystem().getTodayCondition(), player.)
-//    }
+    public Result startFishing(String fishingPole) {
+        Player player = game.players().get(orderOfPlay.get(currentUser));
+        return fishingController.startFishing(player, game.time().getSeason(),
+                game.weatherSystem().getTodayCondition(),
+                (FishingPole) player.getItemFromInventoryByName(fishingPole));
+    }
 
     // ==================== NPCs ===================
     public Result meetNPC(String name) {
