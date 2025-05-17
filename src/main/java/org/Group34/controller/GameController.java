@@ -6,6 +6,9 @@ import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.entities.buildings.Lake;
+import org.Group34.model.entities.buildings.shops.*;
+import org.Group34.model.entities.buildings.shops.products.ShippingBin;
+import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
 import org.Group34.model.entities.naturalElements.*;
 import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.entities.npcs.quests.Quest;
@@ -14,9 +17,15 @@ import org.Group34.model.enums.Color;
 import org.Group34.model.enums.LevelType;
 import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.animals.AnimalType;
+import org.Group34.model.enums.animals.BarnType;
 import org.Group34.model.enums.animals.Product;
+import org.Group34.model.items.Fertilizer;
+import org.Group34.model.items.Item;
 import org.Group34.model.items.PlantingSource;
+import org.Group34.model.items.Recipe;
 import org.Group34.model.items.crafting.Ingredient;
+import org.Group34.model.items.crafting.PlacingCraft;
+import org.Group34.model.items.foods.ProcessedFood;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.MapBuilder;
 import org.Group34.view.menu.GameMenu;
@@ -39,13 +48,12 @@ public class GameController {
     private final FarmingController farmingController = new FarmingController();
     private final ToolsController toolsController = new ToolsController();
     private final StartANewDayController startANewDayController = new StartANewDayController();
+    private final ShopController shopController = new ShopController();
     private final List<NPC> npcs = npcLoader();
 
     public ShopController getShopController() {
         return shopController;
     }
-
-    private final ShopController shopController = new ShopController();
 
     public FarmingController getFarmingController() {
         return farmingController;
@@ -566,4 +574,24 @@ public class GameController {
     }
     // ==========================================================
 
+    // ==================== Shop Controller ====================
+    public Result showAllProducts() {
+        return shopController.showAllProducts(getPlayer());
+    }
+    public Result showAvailableProducts() {
+        return shopController.showAvailableProducts(getPlayer(), game.time());
+    }
+    public Result purchase(String productName, int count) {
+        return shopController.purchase(productName, count, getPlayer(), game.time());
+    }
+    public Result cheatAddDollars(int count) {
+        return shopController.cheatAddDollars(count, getPlayer());
+    }
+    public Result sell(String productName) {
+        return shopController.sell(productName, getPlayer());
+    }
+    public Result sellWithCount(String productName, int count) {
+        return shopController.sellWithCount(productName, count, getPlayer());
+    }
+    // =========================================================
 }
