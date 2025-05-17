@@ -16,18 +16,18 @@ public class FishShop extends Shop {
     private static final ArrayList<Item> stock = new ArrayList<>();
     private HashMap<Item, Integer> stockLimit = new HashMap<>();
     static {
-        stock.add(Recipe.FISH_SMOKER);
+        //stock.add(Recipe.FISH_SMOKER);
         stock.add(UpgradeTools.TRAINING_FISHING_POLE);
         stock.add(UpgradeTools.BAMBOO_FISHING_POLE);
         stock.add(UpgradeTools.FIBERGLASS_FISHING_POLE);
         stock.add(UpgradeTools.IRIDIUM_FISHING_POLE);
     }
     {
+//        stockLimit.put(stock.get(0), 1);
         stockLimit.put(stock.get(0), 1);
+        stockLimit.put(stock.get(1), 1);
         stockLimit.put(stock.get(2), 1);
         stockLimit.put(stock.get(3), 1);
-        stockLimit.put(stock.get(4), 1);
-        stockLimit.put(stock.get(5), 1);
     }
 
     // ----- getters & setters -----
