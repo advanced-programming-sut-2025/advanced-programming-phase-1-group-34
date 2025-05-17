@@ -89,7 +89,7 @@ public class MarnieRanch extends Shop {
     public String showAllProducts() {
         StringBuilder result = new StringBuilder();
 
-        result.append("----- Blacksmith -----\n");
+        result.append("----- Marnie's Ranch -----\n");
         result.append("\n* Shop Inventory:\n");
         for (Item item : shopInventory) {
             if (item instanceof MilkPail tool) {
@@ -142,7 +142,7 @@ public class MarnieRanch extends Shop {
     public String showAvailableProducts() {
         StringBuilder result = new StringBuilder();
 
-        result.append("----- Blacksmith -----\n");
+        result.append("----- Marnie's Ranch -----\n");
         result.append("\n* Shop Inventory:\n");
         for (Item item : shopInventory) {
             if (getShopInventoryLimit(item) > 0 || getShopInventoryLimit(item) == -11) {

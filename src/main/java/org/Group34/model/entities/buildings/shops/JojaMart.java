@@ -199,7 +199,7 @@ public class JojaMart extends Shop {
     public String showAllProducts() {
         StringBuilder result = new StringBuilder();
 
-        result.append("----- Blacksmith -----\n");
+        result.append("----- Joja Mart -----\n");
         result.append("\n* Permanent Stock:\n");
         for (Item item : permanentStock) {
             if (item instanceof PlantingSource stock) {
@@ -301,7 +301,7 @@ public class JojaMart extends Shop {
     public String showAvailableProducts(Season season) {
         StringBuilder result = new StringBuilder();
 
-        result.append("----- Blacksmith -----\n");
+        result.append("----- Joja Mart -----\n");
         result.append("\n* Permanent Stock:\n");
         for (Item item : permanentStock) {
             if (getPermanentStockLimit(item) > 0 || getPermanentStockLimit(item) == -11) {

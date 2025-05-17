@@ -207,7 +207,7 @@ public class PierreGeneralStore extends Shop {
     public String showAllProducts() {
         StringBuilder result = new StringBuilder();
 
-        result.append("----- Blacksmith -----\n");
+        result.append("----- Pierre's General Store -----\n");
         result.append("\n* Year_Round Stock:\n");
         for (Item item : yearRoundStock) {
             if (item instanceof Recipe stock) {
@@ -338,7 +338,7 @@ public class PierreGeneralStore extends Shop {
     public String showAvailableProducts() {
         StringBuilder result = new StringBuilder();
 
-        result.append("----- Blacksmith -----\n");
+        result.append("----- Pierre's General Store -----\n");
         result.append("\n* Year_Round Stock:\n");
         for (Item item : yearRoundStock) {
             if (getYearRoundStockLimit(item) > 0 || getYearRoundStockLimit(item) == -11) {

@@ -12,6 +12,8 @@ import org.Group34.model.enums.WeatherCondition;
 import org.Group34.model.enums.animals.Product;
 import org.Group34.model.items.tools.*;
 
+import java.util.logging.Level;
+
 public class ToolsController { // TODO This class must be filled.
     public Result toolsEquip(String toolName) {
         return new Result(true, "");
@@ -28,7 +30,8 @@ public class ToolsController { // TODO This class must be filled.
                           AnimalController animalController,
                           Player player,
                           Time time,
-                          WeatherSystem weatherSystem) {
+                          WeatherSystem weatherSystem,
+                          LevelUpController levelUpController) {
         int locationX = getLocationOfDirectionX(direction, player);
         int locationY = getLocationOfDirectionY(direction, player);
         Entity desiredTile = player.getCurrentSpace().getEntityByLocation(locationX, locationY);
@@ -90,7 +93,7 @@ public class ToolsController { // TODO This class must be filled.
                 return new Result(false, "Error: You do not have enough energy to use this tool.");
             }
 
-            return farmingController.useAxe(direction, enoughEnergy, player);
+            return farmingController.useAxe(direction, enoughEnergy, player, levelUpController);
         }
 
         else if (player.getCurrentTool() instanceof WateringCan) {
@@ -119,7 +122,7 @@ public class ToolsController { // TODO This class must be filled.
                 return new Result(false, "Error: You do not have enough energy to use this tool.");
             }
 
-            return farmingController.useScythe(direction, enoughEnergy, player, time);
+            return farmingController.useScythe(direction, enoughEnergy, player, time, levelUpController);
         }
 
         else if (player.getCurrentTool() instanceof MilkPail) {

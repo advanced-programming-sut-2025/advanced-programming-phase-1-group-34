@@ -130,6 +130,15 @@ public class  Player implements Entity {
         }
     }
 
+    public Item getItemFromInventoryByName(String name) {
+        for (Item item : inventory.keySet()) {
+            if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
     public int getLevel(LevelType levelType) {
         return level.get(levelType);
     }
