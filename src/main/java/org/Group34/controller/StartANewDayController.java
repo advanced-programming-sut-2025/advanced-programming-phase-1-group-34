@@ -158,7 +158,6 @@ public class StartANewDayController {
     }
 
     // ----- Check animals status -----
-    public void checkAnimalStatus() {
-
+    private void checkAnimalStatus() {
     }
 }

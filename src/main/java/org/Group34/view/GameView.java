@@ -293,6 +293,16 @@ public class GameView extends AppMenu {
                     showMessage(controller.petAnimal(name).message());
                 }
             }
+            else if(command.matches(GameCommands.CHEAT_SET_FRIENDSHIP.getRegex())) {
+                Matcher matcher = Pattern.compile(GameCommands.CHEAT_SET_FRIENDSHIP.getRegex()).matcher(command);
+
+                if (matcher.matches()) {
+                    String animalName = matcher.group("animalName");
+                    int amount = Integer.parseInt(matcher.group("amount"));
+
+                    showMessage(controller.cheatAnimalFriendship(animalName, amount).message());
+                }
+            }
             else if (command.matches(GameCommands.LIST_ANIMALS.getRegex())) {
                     showMessage(controller.listAnimals().message());
             }
@@ -394,6 +404,7 @@ public class GameView extends AppMenu {
                 }
             }
             // ---------------------
+
 
             else {
                 showMessage("Invalid command!");

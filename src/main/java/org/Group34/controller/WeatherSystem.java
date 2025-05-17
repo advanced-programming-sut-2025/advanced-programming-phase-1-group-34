@@ -13,10 +13,15 @@ import java.util.Random;
  * Supports lightning strikes during storms and allows querying weather-related game effects
  */
 public class WeatherSystem {
+    private Season season;
     private static final Random RANDOM = new Random();
     private WeatherCondition todayCondition;
     private WeatherCondition tomorrowCondition;
     private final ArrayList<int[]> lightningStrikeMap = new ArrayList<>();
+
+    public Season getSeason() {
+        return season;
+    }
 
     public void setTodayCondition(WeatherCondition todayCondition) {
         this.todayCondition = todayCondition;
@@ -29,6 +34,7 @@ public class WeatherSystem {
      * @param time the current game time
      */
     public void initializeWeather(Time time) {
+        this.season = time.getSeason();
         this.todayCondition = weightedRandomWeather(time.getSeason(), null);
         this.tomorrowCondition = weightedRandomWeather(time.getSeason(), todayCondition);
 
@@ -45,6 +51,7 @@ public class WeatherSystem {
      * @param time the new game time (used to determine season for tomorrow's weather)
      */
     public void advanceWeather(Time time) {
+        this.season = time.getSeason();
         this.todayCondition = weightedRandomWeather(time.getSeason(), null);
         this.tomorrowCondition = weightedRandomWeather(time.getSeason(), todayCondition);
 

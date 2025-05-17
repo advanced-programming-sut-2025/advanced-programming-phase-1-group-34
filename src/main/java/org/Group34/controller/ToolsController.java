@@ -132,11 +132,11 @@ public class ToolsController { // TODO This class must be filled.
                 if (milkPail.canMilk(animal.getAnimalType())) {
                     Product product = animalController.collectProduct(((Animal) desiredTile).getName(), player);
                     if (product != null) {
-                        player.decreaseEnergy(4);
+                        player.decreaseEnergy((int) (weatherSystem.getEnergyMultiplier(weatherSystem.getSeason()) * 4));
                         return new Result(true, "Milk pail was used successfully.");
                     }
                     else {
-                        player.decreaseEnergy(4);
+                        player.decreaseEnergy((int) (weatherSystem.getEnergyMultiplier(weatherSystem.getSeason()) * 4));
                         return new Result(false, "No product found for this animal.");
                     }
                 }
@@ -151,12 +151,12 @@ public class ToolsController { // TODO This class must be filled.
 
         else if (player.getCurrentTool() instanceof FishingPole) {
             if (desiredTile instanceof Lake) {
-    //          return fishingController.useFishingPole(player, currentSeason, weather);
+                return fishingController.startFishing(player, weatherSystem.getSeason(),
+                        weatherSystem.getTodayCondition(), (FishingPole) player.getCurrentTool());
             }
             else {
                 return new Result(false, "You can only fish in water.");
             }
-            //TODO add current season and weather and to game, then activate this part
         }
 
 

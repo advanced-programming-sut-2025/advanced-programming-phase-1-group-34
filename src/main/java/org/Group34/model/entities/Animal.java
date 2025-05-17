@@ -9,6 +9,7 @@ public class Animal {
     private final String name;
     private final AnimalType type;
     private int friendship = 0;
+    private boolean hasPet = false ;
     private boolean isFed = false;
     private int daysSinceLastProduce = 0;
     private boolean isOutside = false;
@@ -18,6 +19,10 @@ public class Animal {
         this.name = name;
         this.type = type;
         this.possibleProducts = type.getPossibleProducts();
+    }
+
+    public void setFriendship(int friendship) {
+        this.friendship = friendship;
     }
 
     public boolean isFed() {
@@ -105,5 +110,13 @@ public class Animal {
 
     public boolean isCollected() {
         return daysSinceLastProduce >= type.getRequiredDays() || daysSinceLastProduce <= 0;
+    }
+
+    public boolean isHasPet() {
+        return hasPet;
+    }
+
+    public void setHasPet(boolean hasPet) {
+        this.hasPet = hasPet;
     }
 }

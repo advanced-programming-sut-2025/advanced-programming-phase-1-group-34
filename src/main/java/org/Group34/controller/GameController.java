@@ -369,7 +369,17 @@ public class GameController {
         if (animalController.getAllAnimals().contains(animal)) {
             player.addMoney((int)(((double) animal.getFriendship() / 1000) + 0.3) * animal.getAnimalType().getPrice());
             animalController.sellAnimal(name);
-            return new Result(true, "You sold this animal");
+            return new Result(true, "You sold this animal\nCurrent Gold: " + player.getMoney());
+        }
+        else {
+            return new Result(false, "No animal found");
+        }
+    }
+
+    public Result cheatAnimalFriendship(String name, int amount) {
+        if (amount > 100 || amount < 0) return new Result(false, "Invalid amount!");
+        if (animalController.cheatSetFriendship(name, amount)) {
+            return new Result(true, "Friendship set to: " + amount);
         }
         else {
             return new Result(false, "No animal found");

@@ -78,6 +78,7 @@ public enum GameCommands implements Command {
     SHOW_PRODUCTS("\\s*produces\\s*"),
     COLLECT_PRODUCTS("\\s*collect\\s+produce\\s+-n\\s+(?<animalName>.+)\\s*"),
     SELL_ANIMAL("\\s*sell\\s+animal\\s+-n\\s+(?<animalName>.+)\\s*"),
+    CHEAT_SET_FRIENDSHIP("\\s*cheat\\s+set\\s+friendship\\s+-n\\s+(?<animalName>.+)\\s+-c\\s+(<amount>\\d+)\\s*"),
     // -------------------------
 
     // ----- Fishing Commands -----

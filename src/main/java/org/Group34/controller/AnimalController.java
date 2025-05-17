@@ -41,6 +41,7 @@ public class AnimalController {
         if (animal == null) return false;
 
         animal.increaseFriendship(15);
+        animal.setHasPet(true);
         return true;
     }
 
@@ -64,6 +65,7 @@ public class AnimalController {
             if (requiresTool(type) && !hasTool(player, type)) {
                 return null;
             }
+            player.decreaseEnergy(4);
         }
 
         animal.increaseFriendship(5);
@@ -116,5 +118,14 @@ public class AnimalController {
     public void sellAnimal(String name) {
         Animal animal = animals.get(name);
         animals.remove(animal.getName());
+    }
+
+    public boolean cheatSetFriendship(String name, int amount) {
+        Animal animal = animals.get(name);
+
+        if (animal == null) return false;
+
+        animal.setFriendship(amount);
+        return true;
     }
 }

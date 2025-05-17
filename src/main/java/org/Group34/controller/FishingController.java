@@ -26,8 +26,7 @@ public class FishingController {
             Quality quality = calculateQuality(player.getLevel(LevelType.FISHING_LEVEL), rod);
             results.add(new FishResult(fish, quality));
         }
-
-        player.decreaseEnergy(calculateEnergy(rod, player));
+        player.decreaseEnergy((int) (weather.getEnergyMultiplier(currentSeason) * calculateEnergy(rod, player)));
 
         if (results.isEmpty())
             return new Result(false, "No fish caught.");
