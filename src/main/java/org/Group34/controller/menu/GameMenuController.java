@@ -89,6 +89,9 @@ public class GameMenuController {
         }
 
         Game game = App.getCurrentUser().getGame();
+        if (game == null)
+            return new Result(false, "You don't have an active game.");
+
         App.setCurrentMenu(Menu.GAME);
         App.setCurrentGame(game);
         App.setAppMenu(new GameView(game));

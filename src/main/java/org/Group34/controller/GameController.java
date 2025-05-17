@@ -1,24 +1,11 @@
 package org.Group34.controller;
 
 import org.Group34.model.*;
-import org.Group34.model.entities.Animal;
-import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.GreenHouse;
-import org.Group34.model.entities.buildings.Lake;
-import org.Group34.model.entities.naturalElements.*;
 import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.entities.npcs.quests.Quest;
 import org.Group34.model.entities.npcs.quests.QuestLoader;
-import org.Group34.model.enums.Color;
-import org.Group34.model.enums.LevelType;
-import org.Group34.model.enums.WeatherCondition;
-import org.Group34.model.enums.animals.AnimalType;
-import org.Group34.model.enums.animals.Product;
-import org.Group34.model.items.PlantingSource;
-import org.Group34.model.items.crafting.Ingredient;
-import org.Group34.model.items.tools.*;
-import org.Group34.model.map.MapBuilder;
 import org.Group34.view.menu.GameMenu;
 import org.Group34.view.menu.MainMenu;
 
@@ -38,8 +25,17 @@ public class GameController {
     private final FishingController fishingController = new FishingController();
     private final FarmingController farmingController = new FarmingController();
     private final ToolsController toolsController = new ToolsController();
-    private final StartANewDayController startANewDayController = new StartANewDayController();
+    private final StartANewDayController startANewDayController;
     private final List<NPC> npcs = npcLoader();
+
+    public GameController(Game game){
+        this.game = game;
+        this.startANewDayController = new StartANewDayController(game, game.map().getSpaces(), game.time());
+        setOrderOfPlay();
+        game.weatherSystem().initializeWeather(game.time());
+    }
+
+
 
     public ShopController getShopController() {
         return shopController;
@@ -53,12 +49,6 @@ public class GameController {
 
     public ToolsController getToolsController() {
         return toolsController;
-    }
-
-    public GameController(Game game){
-        this.game = game;
-        setOrderOfPlay();
-        game.weatherSystem().initializeWeather(game.time());
     }
 
     private List<NPC> npcLoader() {
@@ -145,17 +135,8 @@ public class GameController {
             }
         }
 
-        int placeHolder = currentUser;
-        while (game.players().get(orderOfPlay.get(currentUser)).isPassedOut()){
+        while (getPlayer().isPassedOut())
             nextUser();
-            if (currentUser == placeHolder){
-                game.time().addHours(23 - game.time().getHour());
-                startANewDayController.ManageAllTasks();
-                currentUser = 0;
-                return new Result(true,
-                        "All players passed out and new day have been started. " + orderOfPlay.get(currentUser).getNickname() + " turn.");
-            }
-        }
 
 
 
@@ -173,47 +154,28 @@ public class GameController {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        try {
-            Integer h = getInt(hours);
-            if (h == null) return new Result(false, "you should give a number as hours argument");
-            game.time().addHours(h);
-            return new Result(true, "Cheat Code Activated: (" + game.time() + ")");
-        }
-        catch (Exception IllegalArgumentException){
-            return new Result(false, "input an positive number as hours argument");
-        }
-
+        return game.time().cheatAdvanceTime(getInt(hours));
     }
 
     public Result cheatAdvanceDate(String days) {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        try {
-            Integer d = getInt(days);
-            if (d == null) return new Result(false, "you should give a number as days argument");
-            game.time().addDays(d);
-            game.weatherSystem().initializeWeather(game.time());
-            game.weatherSystem().advanceWeather(game.time());
-            return new Result(true, "Cheat Code Activated: (" + game.time() + ")");
-        }
-        catch (Exception IllegalArgumentException){
-            return new Result(false, "input an positive number as days argument");
-        }
+        return game.time().cheatAdvanceDate(getInt(days), game);
     }
 
     public Result cheatChangeWeather(String weather) {
-        switch (weather){
-            case "sunny": game.weatherSystem().setTodayCondition(WeatherCondition.SUNNY); break;
-            case "rain": game.weatherSystem().setTodayCondition(WeatherCondition.RAIN); break;
-            case "storm": game.weatherSystem().setTodayCondition(WeatherCondition.STORM); break;
-            case "snow": game.weatherSystem().setTodayCondition(WeatherCondition.SNOW); break;
-        }
-        return new Result(true, "Cheat Code Activated: (" + game.weatherSystem().getTodayCondition() + ")");
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
+
+        return game.weatherSystem().cheatChangeWeather(weather);
     }
 
     public Result cheatAddMoney(String amount) {
-        Player player = game.players().get(orderOfPlay.get(currentUser));
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
+
+        Player player = getPlayer();
         player.addMoney(Integer.parseInt(amount));
         return new Result(true, "Cheat Code Activated: (" + player.getMoney() + ")");
     }
@@ -222,29 +184,14 @@ public class GameController {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        String message = "";
-        switch (type){
-            case "time": message = game.time().getHour() + ":00" ; break;
-            case "date": message = game.time().getSeason().getName() + " " + game.time().getDate(); break;
-            case "datetime": message = game.time().getSeason().getName() + " " + game.time().getDate() + " "
-                    + game.time().getHour() + ":00"; break;
-            case "day of week": message = game.time().getDayOfWeek().getName(); break;
-            case "season": message = game.time().getSeason().getName(); break;
-        }
-        return new Result(true, message);
+        return game.time().displayTime(type);
     }
 
     public Result displayWeather(String type){
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        String message = "";
-        switch (type){
-            case "today weather": message = game.weatherSystem().getTodayCondition().toString(); break;
-            case "tomorrow weather": message = game.weatherSystem().getTomorrowCondition().toString(); break;
-        }
-
-        return new Result(true, message);
+        return game.weatherSystem().displayWeather(type);
     }
 
     public Result walk(String x, String y) {
@@ -266,15 +213,19 @@ public class GameController {
 
         int energy = distance / 20;
         if (player.decreaseEnergy(energy)){
-            game.map().movePlayer(player, targetX, targetY);
-            return new Result(true, "Your character have been moved to: " + "<" + targetX + " ," + targetY + ">");
+            return game.map().movePlayer(player, targetX, targetY);
         }
         else{
-            if (Player.passedOutUsers() >= orderOfPlay.size())
-                game.time().addDays(1);
+            if (Player.passedOutUsers() >= orderOfPlay.size()){
+                game.time().addHours(23 - game.time().getHour());
+                startANewDayController.ManageAllTasks();
+                currentUser = 0;
+                return new Result(true,
+                        "All players passed out and new day have been started. " + orderOfPlay.get(currentUser).getNickname() + " turn.");
+
+            }
             return new Result(false, "Your character have been passed out.");
         }
-
     }
 
     private Player getPlayer() {
@@ -285,40 +236,14 @@ public class GameController {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        Integer beginX = getInt(x);
-        Integer beginY = getInt(y);
-        Integer size = getInt(sz);
-        Entity[][] entities = getPlayer().getCurrentSpace().entities();
-        StringBuilder message = new StringBuilder();
-
-        if (beginX == null || beginY == null || size == null)
-            return new Result(false, "size or center location should be number format");
-
-        int endX = Math.min(MapBuilder.SPACE_WIDTH - 1, beginX + size);
-        int endY = Math.max(MapBuilder.SPACE_HEIGHT - 1, beginY + size);
-
-        for (int i = beginX; i < endX; i++) {
-            for (int j = beginY; j < endY; j++) {
-                message.append(entities[i][j]).append(" ");
-            }
-            message.append("\n");
-        }
-
-        return new Result(true, message.toString());
+        return game.map().printMap(getInt(x), getInt(y), getInt(sz), getPlayer().getCurrentSpace().entities());
     }
 
     public Result helpReadingMap() {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return new Result(true, "player:      P\n" +
-                        "house: " + Color.BROWN + "       H" + Color.RESET + "\n" +
-                        "green house: " + Color.YELLOW + "G" + Color.RESET + "\n" +
-                        "lake: " + Color.CYAN + "        L" + Color.RESET + "\n" +
-                        "quarry: " + Color.GRAY + "      Q" + Color.RESET + "\n" +
-                        "foraging: " + Color.RED + "    F" + Color.RESET + "\n" +
-                        "stone: " + Color.GRAY + "       S" + Color.RESET + "\n" +
-                        "tree: " + Color.GREEN + "        T" + Color.RESET);
+        return game.map().helpMap();
     }
 
     private static Integer getInt(String string) {
@@ -330,127 +255,80 @@ public class GameController {
     }
 
     public Result buildGreenhouse() {
-        return greenHouseController.repairGreenhouse(game.players().get(orderOfPlay.get(currentUser)));
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
+
+        return greenHouseController.repairGreenhouse(getPlayer());
     }
 
     // ==================== Animals ===================
     public Result petAnimal(String name) {
-        if (animalController.petAnimal(name)) {
-            return new Result(true, "You have been pet animal\nYour friendship increased by 15");
-        }
-        else {
-            return new Result(false, "No animal found");
-        }
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
+
+        return animalController.petAnimal(name);
     }
 
     public Result listAnimals() {
-        List<Animal> animals = animalController.getAllAnimals();
-        StringBuilder result = new StringBuilder();
-        for (Animal animal : animals) {
-            result.append(animal.getName()).append(": ").append(animal.getFriendship()).append("\n");
-        }
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return new Result(true, result.toString());
+        return animalController.listAnimals();
     }
 
     public Result shepherdAnimal(String name, int x, int y) {
-        if (x > 100 || y > 100 || x < 0 || y < 0) {
-            return new Result(false, "Invalid coordinates");
-        }
-        else if (animalController.getAnimal(name) == null) {
-            return new Result(false, "No animal found");
-        }
-        else if (animalController.setOutside(name)){
-            return new Result(true, "Operation successful.\nAnimal is now fed and your friendship was increased.");
-        }
-        else {
-            return new Result(false, "This animal cannot be shepherd");
-        }
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
+
+        return animalController.shepherdAnimal(name, x, y);
     }
 
     public Result feedAnimal(String name) {
-        Player player = game.players().get(orderOfPlay.get(currentUser));
-        if (player.getAmountOfItem(Ingredient.MAHOGANY_SEED) >= 1 &&
-                animalController.feedAnimal(name)) {
-            player.removeFromInventory(Ingredient.MAHOGANY_SEED, 1);
-            return new Result(true, "Animal have been fed and your friendship was increased!");
-        }
-        else {
-            return new Result(false, "No animal found or animal is already fed.");
-        }
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
+
+       return animalController.feedAnimal(name, getPlayer());
     }
 
     public Result collectProduct(String name) {
-        Player player = game.players().get(orderOfPlay.get(currentUser));
-        Product product = animalController.collectProduct(name, player);
-        if (product == null) {
-            return new Result(false, "No product found");
-        }
-        else {
-            player.addToInventory(product.getType(), 1);
-            return new Result(true, "You have been collected one" + product.getType());
-        }
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
+
+        return animalController.collectProductNow(name, getPlayer());
     }
 
     public Result showProducts() {
-        List<Animal> animals = animalController.getAllAnimals();
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        StringBuilder result = new StringBuilder();
-        for (Animal animal : animals) {
-            if (animal.isCollected()) {
-                result.append(animal.getName()).append(": ").append(animal.getAnimalType().getPossibleProducts()).append("\n");
-            }
-        }
-        return new Result(true, result.toString());
+        return animalController.showProducts();
     }
 
     public Result buyAnimal(String animal, String animalName) {
-        AnimalType targetAnimal = AnimalType.valueOf(animal);
-        if (targetAnimal == null) {
-            return new Result(false, "No animal found");
-        }
-        Player player = game.players().get(orderOfPlay.get(currentUser));
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        if (player.getMoney() >= targetAnimal.getPrice()) {
-            if (animalController.addAnimal(animalName, targetAnimal)) {
-                return new Result(true, "You have bought a " + animal);
-            }
-            else {
-                return new Result(false, "You have a animal with this type and name");
-            }
-        }
-        else {
-            return new Result(false, "You don't have enough money");
-        }
+        return animalController.buyAnimalNow(animal, animalName, getPlayer());
     }
 
     public Result sellAnimal(String name) {
-        Player player = game.players().get(orderOfPlay.get(currentUser));
-        Animal animal = animalController.getAnimal(name);
-        if (animalController.getAllAnimals().contains(animal)) {
-            player.addMoney((int)(((double) animal.getFriendship() / 1000) + 0.3) * animal.getAnimalType().getPrice());
-            animalController.sellAnimal(name);
-            return new Result(true, "You sold this animal\nCurrent Gold: " + player.getMoney());
-        }
-        else {
-            return new Result(false, "No animal found");
-        }
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
+
+        return animalController.sellAnimalNow(name, getPlayer());
     }
 
     public Result cheatAnimalFriendship(String name, int amount) {
-        if (amount > 100 || amount < 0) return new Result(false, "Invalid amount!");
-        if (animalController.cheatSetFriendship(name, amount)) {
-            return new Result(true, "Friendship set to: " + amount);
-        }
-        else {
-            return new Result(false, "No animal found");
-        }
+        if (!forceTerminating.isEmpty())
+            return new Result(false, "Force-terminate vote in progress; you can only vote now");
+
+        return animalController.cheatAnimalFriendShip(name, amount);
     }
 
 
 
 //    public Result startFishing() {
-//        Player player = game.players().get(orderOfPlay.get(currentUser));
+//        Player player = getPlayer();
 //        fishingController.startFishing(player, game.time().getSeason(),
 //                game.weatherSystem().getTodayCondition(), player.)
 //    }
@@ -514,7 +392,7 @@ public class GameController {
                         }
                         else {
                             quest.completeQuest();
-                            Player player = game.players().get(orderOfPlay.get(currentUser));
+                            Player player = getPlayer();
                             player.addMoney(quest.getRewardGold());
                             return new Result(true, "Quest completed!\nYou received "
                             + quest.getRewardGold() + " Golds!");

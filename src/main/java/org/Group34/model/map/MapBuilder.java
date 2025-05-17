@@ -3,6 +3,7 @@ package org.Group34.model.map;
 import org.Group34.model.Time;
 import org.Group34.model.entities.*;
 import org.Group34.model.entities.buildings.*;
+import org.Group34.model.entities.buildings.shops.*;
 import org.Group34.model.enums.FarmType;
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.creatorOfNaturalElements.CropCreator;
@@ -21,8 +22,8 @@ import java.util.Random;
 public class MapBuilder {
     public static final int SPACE_WIDTH           = 100;
     public static final int SPACE_HEIGHT          = 100;
-    private static final int HOUSE_WIDTH           =   4;
-    private static final int HOUSE_HEIGHT          =   4;
+    private static final int BUILDING_WIDTH        =   4;
+    private static final int BUILDING_HEIGHT       =   4;
     private static final int GREEN_HOUSE_WIDTH     =   6;
     private static final int GREEN_HOUSE_HEIGHT    =   5;
     private static final int LAKE_WIDTH            =   8;
@@ -31,8 +32,16 @@ public class MapBuilder {
     private static final int QUARRY_HEIGHT         =   8;
     private static final int PLAYER_INITIAL_X      =  72;
     private static final int PLAYER_INITIAL_Y      =  10;
+    private static final int[] BLACKSMITH = new int[]{22, 22};
+    private static final int[] FISH_SHOP = new int[]{22, 46};
+    private static final int[] JOJO_MART = new int[]{22, 72};
+    private static final int[] MARNIE_RANCH = new int[]{46, 30};
+    private static final int[] SALE_PLACE = new int[]{46, 64};
+    private static final int[] PIERRE_GENERAL_STORE = new int[]{72, 22};
+    private static final int[] THE_STARDROP_SALOON = new int[]{72, 46};
+    private static final int[] CARPENTER_SHOP = new int[]{72, 22};
 
-//    private static final Building WALL = new Building();
+
 
     private FarmType[] farmTypes;
     private Player[]  players;
@@ -50,6 +59,7 @@ public class MapBuilder {
      */
     public Map generate() {
         HashMap<Player, Space> playerFarms = new HashMap<>();
+
         for (int idx = 0; idx < players.length; idx++) {
             Space farmSpace = generateFarm(farmTypes[idx], players[idx]);
             playerFarms.put(players[idx], farmSpace);
@@ -64,7 +74,17 @@ public class MapBuilder {
      */
     private Space generateNpcVillage() {
         Entity[][] villageGrid = new Entity[SPACE_WIDTH][SPACE_HEIGHT];
-        // TODO Complete NPC Buildings after making all NPCs
+
+        addBuilding(villageGrid, new Blacksmith(), BUILDING_WIDTH, BUILDING_HEIGHT, BLACKSMITH);
+        addBuilding(villageGrid, new CarpenterShop(), BUILDING_WIDTH, BUILDING_HEIGHT, CARPENTER_SHOP);
+        addBuilding(villageGrid, new FishShop(), BUILDING_WIDTH, BUILDING_HEIGHT, FISH_SHOP);
+        addBuilding(villageGrid, new JojaMart(), BUILDING_WIDTH, BUILDING_HEIGHT, JOJO_MART);
+        addBuilding(villageGrid, new MarnieRanch(), BUILDING_WIDTH, BUILDING_HEIGHT, MARNIE_RANCH);
+        addBuilding(villageGrid, new PierreGeneralStore(), BUILDING_WIDTH, BUILDING_HEIGHT, PIERRE_GENERAL_STORE);
+        addBuilding(villageGrid, new TheStardropSaloon(), BUILDING_WIDTH, BUILDING_HEIGHT, THE_STARDROP_SALOON);
+        addBuilding(villageGrid, new SalePlace(), BUILDING_WIDTH, BUILDING_HEIGHT, SALE_PLACE);
+
+
         return new Space(SPACE_WIDTH, SPACE_HEIGHT, villageGrid);
     }
 
@@ -76,7 +96,7 @@ public class MapBuilder {
 
         farmGrid[PLAYER_INITIAL_X][PLAYER_INITIAL_Y] = player;
 
-        addBuilding(farmGrid, new House(), HOUSE_WIDTH, HOUSE_HEIGHT, farmType.getHouseLocation());
+        addBuilding(farmGrid, new House(), BUILDING_WIDTH, BUILDING_HEIGHT, farmType.getHouseLocation());
         addBuilding(farmGrid, new Lake(), LAKE_WIDTH, LAKE_HEIGHT, farmType.getLakeLocation());
         addBuilding(farmGrid, new GreenHouse(), GREEN_HOUSE_WIDTH, GREEN_HOUSE_HEIGHT, farmType.getGreenHouseLocation());
         addBuilding(farmGrid, new Quarry(), QUARRY_WIDTH, QUARRY_HEIGHT, farmType.getQuarryLocation());
@@ -91,7 +111,7 @@ public class MapBuilder {
      * Only bottom of building is considered as Building and player can do things with it
      * to make a door-like functionality; tiles that Building took are just placeholders
      */
-    private void addBuilding(Entity[][] spaceGrid, Building building, int width, int height, int[] location) {
+    private void addBuilding(Entity[][] spaceGrid, Entity building, int width, int height, int[] location) {
         int startX = location[0], startY = location[1];
 
         for (int y = startY; y <= startY + height; y++)

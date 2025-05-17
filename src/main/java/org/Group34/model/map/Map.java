@@ -1,8 +1,14 @@
 package org.Group34.model.map;
 
+import org.Group34.model.Result;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.WalkAble;
+import org.Group34.model.entities.buildings.Building;
+import org.Group34.model.enums.Color;
+import org.Group34.model.enums.FarmType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -25,6 +31,7 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
     private static final int FARM_EXIT_Y = 0;
     private static final int VILLAGE_EXIT_X = 0;
     private static final int VILLAGE_EXIT_Y = 0;
+
 
 
     /**
@@ -68,8 +75,7 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
                 int nx = cur.x + d[0], ny = cur.y + d[1];
                 if (nx < 0 || nx >= rows || ny < 0 || ny >= cols) continue;
                 if (visited[nx][ny]) continue;
-                // Can move if empty or it's the target cell
-                if (entities[nx][ny] != null && !(nx == tx && ny == ty)) continue;
+                if (!canPassThrough(entities[nx][ny], nx, ny, tx, ty)) continue;
 
                 visited[nx][ny] = true;
                 q.add(new Node(nx, ny, cur.steps + 1));
@@ -80,8 +86,25 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
         return 0;
     }
 
+    /**
+     * Returns true if the player can move onto (x,y).
+     * Movement is allowed if:
+     *   1) It's the goal cell, regardless of its contents.
+     *   2) The cell is empty (null).
+     *   3) The cell contains a WalkAble entity.
+     */
+    private boolean canPassThrough(Entity e, int x, int y, int tx, int ty) {
+        // Always allow stepping onto the target cell
+        if (x == tx && y == ty) {
+            return true;
+        }
+        // Otherwise only if empty or WalkAble
+        return (e == null) || (e instanceof WalkAble);
+    }
+
+
     // TODO how player enters the house menu
-    public void movePlayer(Player player, Integer targetX, Integer targetY) {
+    public Result movePlayer(Player player, Integer targetX, Integer targetY) {
         int playerX = player.getLocation()[0];
         int playerY = player.getLocation()[1];
         Entity[][] entities;
@@ -92,22 +115,62 @@ public record Map(HashMap<Player, Space> playerFarms, Space NPCVillage) {
             entities = player.getCurrentSpace().entities();
             entities[FARM_EXIT_X][FARM_EXIT_Y] = player;
             player.setLocation(new int[]{FARM_EXIT_X, FARM_EXIT_Y});
+            return new Result(true, "You have entered Your farm");
         }
         else if (targetX == FARM_EXIT_X && targetY == FARM_EXIT_Y){
             player.setCurrentSpace(NPCVillage);
             entities = player.getCurrentSpace().entities();
             entities[VILLAGE_EXIT_X][VILLAGE_EXIT_Y] = player;
             player.setLocation(new int[]{VILLAGE_EXIT_X, VILLAGE_EXIT_Y});
+            return new Result(true, "You have entered NPC Village");
         }
         else {
             entities = player.getCurrentSpace().entities();
             entities[playerX][playerY] = null;
             entities[targetX][targetY] = player;
             player.setLocation(new int[]{targetX, targetY});
+            return new Result(true, "Your character have been moved to: " + "<" + targetX + " ," + targetY + ">");
         }
     }
 
     public Space getCurrentPlayerFarm(Player currentPlayer) {
         return playerFarms.get(currentPlayer);
+    }
+
+    public ArrayList<Space> getSpaces() {
+        ArrayList<Space> spaces = new ArrayList<>();
+        spaces.addAll(playerFarms.values());
+        spaces.add(NPCVillage);
+        return spaces;
+    }
+
+    public Result printMap(Integer beginX, Integer beginY, Integer size, Entity[][] entities) {
+        StringBuilder message = new StringBuilder();
+
+        if (beginX == null || beginY == null || size == null)
+            return new Result(false, "size or center location should be number format");
+
+        int endX = Math.min(MapBuilder.SPACE_WIDTH - 1, beginX + size);
+        int endY = Math.max(MapBuilder.SPACE_HEIGHT - 1, beginY + size);
+
+        for (int i = beginX; i < endX; i++) {
+            for (int j = beginY; j < endY; j++) {
+                message.append(entities[i][j]).append(" ");
+            }
+            message.append("\n");
+        }
+
+        return new Result(true, message.toString());
+    }
+
+    public Result helpMap() {
+        return new Result(true, "player:      P\n" +
+                "house: " + Color.BROWN + "       H" + Color.RESET + "\n" +
+                "green house: " + Color.YELLOW + "G" + Color.RESET + "\n" +
+                "lake: " + Color.CYAN + "        L" + Color.RESET + "\n" +
+                "quarry: " + Color.GRAY + "      Q" + Color.RESET + "\n" +
+                "foraging: " + Color.RED + "    F" + Color.RESET + "\n" +
+                "stone: " + Color.GRAY + "       S" + Color.RESET + "\n" +
+                "tree: " + Color.GREEN + "        T" + Color.RESET);
     }
 }

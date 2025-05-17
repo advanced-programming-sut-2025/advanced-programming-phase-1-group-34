@@ -195,4 +195,9 @@ public class Blacksmith extends Shop {
             upgradeToolsLimit.replace(product, upgradeToolsLimit.get(product) - amount);
         }
     }
+
+    @Override
+    public String toString() {
+        return "";
+    }
 }

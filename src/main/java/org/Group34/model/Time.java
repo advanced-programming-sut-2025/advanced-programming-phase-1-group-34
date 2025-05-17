@@ -67,6 +67,31 @@ public class Time implements  Comparable<Time> {
         this.season = season;
     }
 
+    public Result cheatAdvanceTime(Integer hours) {
+        try {
+            Integer h = hours;
+            if (h == null) return new Result(false, "you should give a number as hours argument");
+            this.addHours(h);
+            return new Result(true, "Cheat Code Activated: (" + this + ")");
+        }
+        catch (Exception IllegalArgumentException){
+            return new Result(false, "input an positive number as hours argument");
+        }
+    }
+
+    public Result cheatAdvanceDate(Integer d, Game game) {
+        try {
+            if (d == null) return new Result(false, "you should give a number as days argument");
+            this.addDays(d);
+            game.weatherSystem().initializeWeather(this);
+            game.weatherSystem().advanceWeather(this);
+            return new Result(true, "Cheat Code Activated: (" + this + ")");
+        }
+        catch (Exception IllegalArgumentException){
+            return new Result(false, "input an positive number as days argument");
+        }
+    }
+
     @Override
     public String toString() {
         return season.getName() + " " + date + " " + dayOfWeek.getName() + " " + hour + ":00";
@@ -107,5 +132,16 @@ public class Time implements  Comparable<Time> {
         return Integer.compare(this.hour, other.hour);
     }
 
-
+    public Result displayTime(String type) {
+        String message = "";
+        switch (type){
+            case "time": message = this.getHour() + ":00" ; break;
+            case "date": message = this.getSeason().getName() + " " + this.getDate(); break;
+            case "datetime": message = this.getSeason().getName() + " " + this.getDate() + " "
+                    + this.getHour() + ":00"; break;
+            case "day of week": message = this.getDayOfWeek().getName(); break;
+            case "season": message = this.getSeason().getName(); break;
+        }
+        return new Result(true, message);
+    }
 }
