@@ -1,0 +1,167 @@
+[
+  {
+    "name": "Sebastian",
+    "likedItems": ["Wool", "Pumpkin Pie", "Pizza"],
+    "dialogues": [
+      "The glow of a computer screen helps me think... You ever get that feeling?",
+      "I'm working on a new coding project. Don't tell Robin - she thinks I should 'get more sunlight'.",
+      "You ever just sit by the mountain lake and listen to the frogs? ...No? Just me then.",
+      "If you see any cool spiders, let me know. I like studying their web patterns."
+    ],
+    "quests": [
+      {
+        "level": 1,
+        "title": "Deliver 50 Iron Units",
+        "description": "Reward: 1000G",
+        "rewardGold": 1000,
+        "rewardItem": { "name": "Diamond", "quantity": 2 }
+      },
+      {
+        "level": 2,
+        "title": "Deliver Pumpkin Pie",
+        "description": "Reward: 5000G",
+        "rewardGold": 10000,
+        "rewardItem": null
+      },
+      {
+        "level": 3,
+        "title": "Deliver 150 Stone Units",
+        "description": "Reward: 50000G",
+        "rewardGold": 50000,
+        "rewardItem": { "name": "Quartz", "quantity": 50 }
+      }
+    ]
+  },
+  {
+    "name": "Abigail",
+    "likedItems": ["Stone", "Iron Ore", "Coffee"],
+    "dialogues": [
+      "I found a weird purple crystal in the mines yesterday! Wanna see?",
+      "My dad says I shouldn't chew quartz... But how else do you test if it's edible?",
+      "Sometimes I practice swordplay in the graveyard. Don't look at me like that!",
+      "You think the wizard's tower has secret passages? I bet it's full of mysteries!"
+    ],
+    "quests": [
+      {
+        "level": 1,
+        "title": "Deliver 1 Gold Bar",
+        "description": "Reward: 10000G",
+        "rewardGold": 10000,
+        "rewardItem": { "name": "Friendship Token", "quantity": 1 }
+      },
+      {
+        "level": 2,
+        "title": "Deliver a Pumpkin",
+        "description": "Reward: 1000G",
+        "rewardGold": 2000,
+        "rewardItem": null
+      },
+      {
+        "level": 3,
+        "title": "Deliver 5 Wheat",
+        "description": "Reward: 3000G",
+        "rewardGold": 3000,
+        "rewardItem": { "name": "Iridium Sprinkler", "quantity": 1 }
+      }
+    ]
+  },
+  {
+    "name": "Harvey",
+    "likedItems": ["Coffee", "Pickles", "Wine"],
+    "dialogues": [
+      "Remember to stretch regularly! Your posture at the farm can't be healthy.",
+      "I'm researching herbal remedies. Let me know if you find any unusual plants.",
+      "The clinic gets so quiet sometimes... You're welcome to visit just to chat.",
+      "Ever tried yoga? I could show you some basic poses if you're interested."
+    ],
+    "quests": [
+      {
+        "level": 1,
+        "title": "Deliver 12 Favorite Plants",
+        "description": "Reward: 750G",
+        "rewardGold": 750,
+        "rewardItem": null
+      },
+      {
+        "level": 2,
+        "title": "Deliver 1 Salmon",
+        "description": "Reward: 500G",
+        "rewardGold": 1000,
+        "rewardItem": { "name": "Friendship Token", "quantity": 2 }
+      },
+      {
+        "level": 3,
+        "title": "Deliver 1 Bottle of Wine",
+        "description": "Reward: 1000G",
+        "rewardGold": 1000,
+        "rewardItem": { "name": "Salad", "quantity": 5 }
+      }
+    ]
+  },
+  {
+    "name": "Leah",
+    "likedItems": ["Salad", "Grapes", "Wine"],
+    "dialogues": [
+      "The forest gives me such inspiration. You can almost feel the ancient energy here.",
+      "I'm experimenting with driftwood sculptures. They never turn out how I imagine...",
+      "You should try foraging! Every mushroom tells a story through its shape.",
+      "City life never suited me. Here, the trees actually remember your name."
+    ],
+    "quests": [
+      {
+        "level": 1,
+        "title": "Deliver 10 Hardwood",
+        "description": "Reward: 500G",
+        "rewardGold": 500,
+        "rewardItem": null
+      },
+      {
+        "level": 2,
+        "title": "Deliver 1 Salmon",
+        "description": "Reward: 1000G",
+        "rewardGold": 2000,
+        "rewardItem": { "name": "Salmon Dinner Recipe", "quantity": 2 }
+      },
+      {
+        "level": 3,
+        "title": "Deliver 200 Wood",
+        "description": "Reward: 5000G",
+        "rewardGold": 5000,
+        "rewardItem": { "name": "Deluxe Scarecrow", "quantity": 1 }
+      }
+    ]
+  },
+  {
+    "name": "Robin",
+    "likedItems": ["Spaghetti", "Wood", "Iron Bar"],
+    "dialogues": [
+      "That's quality lumber! You can tell by the grain pattern. Want some building tips?",
+      "Demetrius helped me design a solar-powered sawmill. Works great... when it's sunny.",
+      "A good hammer is like an extension of your arm. Feel the balance on this one!",
+      "You ever build something just to smash it? Cathartic... but don't tell my clients!"
+    ],
+    "quests": [
+      {
+        "level": 1,
+        "title": "Deliver 80 Wood",
+        "description": "Reward: 1000G",
+        "rewardGold": 1000,
+        "rewardItem": null
+      },
+      {
+        "level": 2,
+        "title": "Deliver 10 Iron Bars",
+        "description": "Reward: 5000G",
+        "rewardGold": 10000,
+        "rewardItem": { "name": "Bee House", "quantity": 6 }
+      },
+      {
+        "level": 3,
+        "title": "Deliver 100 Wood",
+        "description": "Reward: 500G",
+        "rewardGold": 500,
+        "rewardItem": null
+      }
+    ]
+  }
+]

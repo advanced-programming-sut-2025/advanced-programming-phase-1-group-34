@@ -1,20 +1,29 @@
 package org.Group34.model.entities.npcs.quests;
 
-public class Quest {
-    private final int level;
-    private final String title;
-    private final String description;
-    private boolean isCompleted;
-    private final int rewardGold;
-    private final RewardItem rewardItem;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public Quest(int level, String title, String description, int rewardGold, RewardItem rewardItem) {
+public class Quest {
+    private int level;
+    private String title;
+    private String description;
+    private int rewardGold;
+    private RewardItem rewardItem;
+    private boolean isCompleted = false;
+
+    @JsonCreator
+    public Quest(
+            @JsonProperty("level") int level,
+            @JsonProperty("title") String title,
+            @JsonProperty("description") String description,
+            @JsonProperty("rewardGold") int rewardGold,
+            @JsonProperty("rewardItem") RewardItem rewardItem
+    ) {
         this.level = level;
         this.title = title;
         this.description = description;
-        this.rewardItem = rewardItem;
-        this.isCompleted = false;
         this.rewardGold = rewardGold;
+        this.rewardItem = rewardItem;
     }
 
     public String getTitle() {
