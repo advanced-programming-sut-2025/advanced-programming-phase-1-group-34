@@ -1,13 +1,10 @@
 package org.Group34.model.entities.buildings.shops;
 
-import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.buildings.shops.products.ShippingBin;
-import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
 import org.Group34.model.enums.animals.BarnType;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.Ingredient;
 
-//import java.lang.classfile.instruction.ReturnInstruction;
 import java.util.ArrayList;
 import java.util.HashMap;
 
