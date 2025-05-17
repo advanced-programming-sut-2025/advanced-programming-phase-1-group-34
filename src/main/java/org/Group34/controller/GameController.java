@@ -33,6 +33,7 @@ public class GameController {
     private final LevelUpController levelUpController = new LevelUpController();
     private final List<NPC> npcs = npcLoader();
     private final ShopController shopController = new ShopController();
+    private final InventoryController inventoryController = new InventoryController();
 
     public FarmingController getFarmingController() {
         return farmingController;
@@ -493,19 +494,19 @@ public class GameController {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return toolsController.toolsEquip(toolName);
+        return toolsController.toolsEquip(toolName, getPlayer());
     }
     public Result showCurrentTools() {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return toolsController.showCurrentTools();
+        return toolsController.showCurrentTools(getPlayer());
     }
     public Result showAvailableTools() {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return toolsController.showAvailableTools();
+        return toolsController.showAvailableTools(getPlayer());
     }
     public Result toolUse(String direction) {
         if (!forceTerminating.isEmpty())
@@ -513,6 +514,7 @@ public class GameController {
 
         return toolsController.toolUse(direction, farmingController, fishingController, animalController, getPlayer(), game.time(), game.weatherSystem(), levelUpController);
     }
+
     // ==========================================================
 
     // ==================== Shop Controller ====================
@@ -533,6 +535,23 @@ public class GameController {
     }
     public Result sellWithCount(String productName, int count) {
         return shopController.sellWithCount(productName, count, getPlayer());
+    }
+
+    // ==================== Inventory Controller ====================
+    public Result cheatAddItem(String itemName, int count) {
+        return inventoryController.cheatAddItem(getPlayer(), getPlayer().getItemFromInventoryByName(itemName), count);
+    }
+
+    public Result inventoryPlaceItem(String itemName, String direction) {
+        return inventoryController.placeItem(getPlayer(), getPlayer().getItemFromInventoryByName(itemName), getPlayer().getCurrentSpace(), direction);
+    }
+
+    public Result inventoryTrash(String itemName, int number) {
+        return inventoryController.InventoryTrash(getPlayer(), getPlayer().getItemFromInventoryByName(itemName), number);
+    }
+
+    public Result inventoryShow() {
+        return inventoryController.showInventory(getPlayer().getInventory());
     }
     // =========================================================
 }
