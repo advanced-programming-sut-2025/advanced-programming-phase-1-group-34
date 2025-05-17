@@ -142,7 +142,10 @@ public enum ProcessedFood implements Food {
     SMOKED_LEGEND("Smoked Legend", "Smoked to legendary perfection.", (int)(1.5 * 5000), 2 * 5000),
     SMOKED_GLACIERFISH("Smoked Glacierfish", "Chilled and smoked excellence.", (int)(1.5 * 1000), 2 * 1000),
     SMOKED_ANGLER("Smoked Angler", "Bold and smoky.", (int)(1.5 * 900), 2 * 900),
-    SMOKED_CRIMSONFISH("Smoked Crimsonfish", "Spicy and smoked just right.", (int)(1.5 * 1500), 2 * 1500);
+    SMOKED_CRIMSONFISH("Smoked Crimsonfish", "Spicy and smoked just right.", (int)(1.5 * 1500), 2 * 1500),
+    WHEAT_FLOUR("Wheat Flour", "Wheat Flour", 0, 0),
+    SUGAR("Sugar", "Sugar", 0, 0);
+
 
 
     private final String name;
