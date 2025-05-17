@@ -34,3 +34,11 @@ cheat change weather storm
 weather
 enter greenhouse
 greenhouse build
+
+
+## Inventory
+inventory show 
+cheat add item -n Beet Seed add -c 10
+cheat add item -n Orange -c 50
+inventory trash -i Beet Seed -n 10
+inventory place item -n Beat Seed -d Up
