@@ -7,7 +7,6 @@ import org.Group34.controller.ToolsController;
 import org.Group34.model.App;
 import org.Group34.model.Game;
 import org.Group34.model.Result;
-import org.Group34.model.Time;
 import org.Group34.model.enums.Menu;
 import org.Group34.model.enums.command.GameCommands;
 import org.Group34.view.menu.AppMenu;
@@ -18,9 +17,15 @@ import java.util.regex.Pattern;
 
 public class GameView extends AppMenu {
     private final GameController controller;
+    FarmingController farmingController;
+    ToolsController toolsController;
+    ShopController shopController;
 
     public GameView(Game game) {
         this.controller = new GameController(game);
+        this.farmingController =  controller.getFarmingController();
+        this.toolsController = controller.getToolsController();
+        this.shopController = controller.getShopController();
     }
 
     @Override
@@ -128,21 +133,17 @@ public class GameView extends AppMenu {
 
             // ----- Farming View -----
             else if (command.matches(GameCommands.CRAFT_INFO.getRegex())) {
-                FarmingController controller = new FarmingController(); // TODO It will fix in GameController
-
                 Pattern pattern = Pattern.compile(GameCommands.CRAFT_INFO.getRegex());
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
                     String craftName = matcher.group("craftName").trim();
 
-                    Result result = controller.showCraftInfo(craftName);
+                    Result result = farmingController.showCraftInfo(craftName);
                     showMessage(result.message());
                 }
             }
             else if (command.matches(GameCommands.PLANT.getRegex())) {
-                FarmingController controller = new FarmingController(); // TODO It will fix in GameController
-
                 Pattern pattern = Pattern.compile(GameCommands.PLANT.getRegex());
                 Matcher matcher = pattern.matcher(command);
 
@@ -150,13 +151,11 @@ public class GameView extends AppMenu {
                     String seed = matcher.group("seed").trim();
                     String direction = matcher.group("direction").trim();
 
-                    Result result = controller.plant(seed, direction);
+                    Result result = farmingController.plant(seed, direction);
                     showMessage(result.message());
                 }
             }
             else if (command.matches(GameCommands.SHOW_PLANT.getRegex())) {
-                FarmingController controller = new FarmingController(); // TODO It will fix in GameController
-
                 Pattern pattern = Pattern.compile(GameCommands.SHOW_PLANT.getRegex());
                 Matcher matcher = pattern.matcher(command);
 
@@ -164,13 +163,11 @@ public class GameView extends AppMenu {
                     int x = Integer.parseInt(matcher.group("x").trim());
                     int y = Integer.parseInt(matcher.group("y").trim());
 
-                    Result result = controller.showPlant(x, y);
+                    Result result = farmingController.showPlant(x, y);
                     showMessage(result.message());
                 }
             }
             else if (command.matches(GameCommands.FERTILIZE.getRegex())) {
-                FarmingController controller = new FarmingController(); // TODO It will fix in GameController
-
                 Pattern pattern = Pattern.compile(GameCommands.FERTILIZE.getRegex());
                 Matcher matcher = pattern.matcher(command);
 
@@ -178,67 +175,55 @@ public class GameView extends AppMenu {
                     String fertilizer = matcher.group("fertilizer").trim();
                     String direction = matcher.group("direction").trim();
 
-                    Result result = controller.fertilize(fertilizer, direction);
+                    Result result = farmingController.fertilize(fertilizer, direction);
                     showMessage(result.message());
                 }
             }
             else if (command.matches(GameCommands.HOW_MUCH_WATER.getRegex())) {
-                FarmingController controller = new FarmingController(); // TODO It will fix in GameController
-
-                Result result = controller.showAmountOfWater();
+                Result result = farmingController.showAmountOfWater();
                 showMessage(result.message());
             }
             // ------------------------
 
             // ----- Tools View -----
             else if (command.matches(GameCommands.TOOLS_EQUIP.getRegex())) {
-                ToolsController controller = new ToolsController(); // TODO It will fix in GameController
-
                 Pattern pattern = Pattern.compile(GameCommands.TOOLS_EQUIP.getRegex());
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
                     String toolName = matcher.group("toolName").trim();
 
-                    Result result = controller.toolsEquip(toolName);
+                    Result result = toolsController.toolsEquip(toolName);
                     showMessage(result.message());
                 }
             }
             else if (command.matches(GameCommands.SHOW_CURRENT_TOOLS.getRegex())) {
-                ToolsController controller = new ToolsController(); // TODO It will fix in GameController
-
-                Result result = controller.showCurrentTools();
+                Result result = toolsController.showCurrentTools();
                 showMessage(result.message());
             }
             else if (command.matches(GameCommands.SHOW_AVAILABLE_TOOLS.getRegex())) {
-                ToolsController controller = new ToolsController(); // TODO It will fix in GameController
-
-                Result result = controller.showAvailableTools();
+                Result result = toolsController.showAvailableTools();
                 showMessage(result.message());
             }
             else if (command.matches(GameCommands.TOOLS_UPGRADE.getRegex())) {
-                ToolsController controller = new ToolsController(); // TODO It will fix in GameController
-
                 Pattern pattern = Pattern.compile(GameCommands.TOOLS_UPGRADE.getRegex());
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
                     String toolName = matcher.group("toolName").trim();
 
-                    Result result = controller.toolsUpgrade(toolName);
+                    Result result = toolsController.toolsUpgrade(toolName);
                     showMessage(result.message());
                 }
             }
             else if (command.matches(GameCommands.TOOLS_USE.getRegex())) {
-                ToolsController controller = new ToolsController(); // TODO It will fix in GameController
-
                 Pattern pattern = Pattern.compile(GameCommands.TOOLS_USE.getRegex());
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
                     String direction = matcher.group("direction").trim();
 
-                    Result result = controller.toolUse(direction);
+                    Result result = toolsController.toolUse(direction);
                     showMessage(result.message());
                 }
             }
@@ -290,7 +275,7 @@ public class GameView extends AppMenu {
                     String buildingName = matcher.group("buildingName");
                     int x = Integer.parseInt(matcher.group("x"));
                     int y = Integer.parseInt(matcher.group("y"));
-
+                    // handle building animal's placement
                 }
             }
             else if (command.matches(GameCommands.BUY_ANIMAL.getRegex())) {
@@ -305,11 +290,11 @@ public class GameView extends AppMenu {
                 Matcher matcher = Pattern.compile(GameCommands.PET_ANIMAL.getRegex()).matcher(command);
                 if (matcher.matches()) {
                     String name = matcher.group("name");
-                    // handle pet animal
+                    showMessage(controller.petAnimal(name).message());
                 }
             }
             else if (command.matches(GameCommands.LIST_ANIMALS.getRegex())) {
-                // handle list animals
+                    showMessage(controller.listAnimals().message());
             }
             else if (command.matches(GameCommands.SHEPHERD_ANIMAL.getRegex())) {
                 Matcher matcher = Pattern.compile(GameCommands.SHEPHERD_ANIMAL.getRegex()).matcher(command);
@@ -317,31 +302,31 @@ public class GameView extends AppMenu {
                     String animalName = matcher.group("animalName");
                     int x = Integer.parseInt(matcher.group("x"));
                     int y = Integer.parseInt(matcher.group("y"));
-                    // handle shepherd animal
+                    showMessage(controller.shepherdAnimal(animalName, x, y).message());
                 }
             }
             else if (command.matches(GameCommands.FEED_ANIMAL.getRegex())) {
                 Matcher matcher = Pattern.compile(GameCommands.FEED_ANIMAL.getRegex()).matcher(command);
                 if (matcher.matches()) {
                     String animalName = matcher.group("animalName");
-                    // handle feed animal
+                    showMessage(controller.feedAnimal(animalName).message());
                 }
             }
             else if (command.matches(GameCommands.SHOW_PRODUCTS.getRegex())) {
-                // handle show products
+                showMessage(controller.showProducts().message());
             }
             else if (command.matches(GameCommands.COLLECT_PRODUCTS.getRegex())) {
                 Matcher matcher = Pattern.compile(GameCommands.COLLECT_PRODUCTS.getRegex()).matcher(command);
                 if (matcher.matches()) {
                     String animalName = matcher.group("animalName");
-                    // handle collect product
+                    showMessage(controller.collectProduct(animalName).message());
                 }
             }
             else if (command.matches(GameCommands.SELL_ANIMAL.getRegex())) {
                 Matcher matcher = Pattern.compile(GameCommands.SELL_ANIMAL.getRegex()).matcher(command);
                 if (matcher.matches()) {
                     String animalName = matcher.group("animalName");
-                    // handle sell animal
+                    showMessage(controller.sellAnimal(animalName).message());
                 }
             }
 
@@ -350,7 +335,7 @@ public class GameView extends AppMenu {
                 Matcher matcher = Pattern.compile(GameCommands.START_FISHING.getRegex()).matcher(command);
                 if (matcher.matches()) {
                     String fishingPole = matcher.group("fishingPole");
-                    // handle start fishing
+
                 }
             }
 
@@ -378,33 +363,25 @@ public class GameView extends AppMenu {
 
             // ----- Shop View -----
             else if (command.matches(GameCommands.SHOW_ALL_PRODUCTS.getRegex())) {
-                ShopController controller = new ShopController(); // TODO It will fix in GameController
-
-                Result result = controller.showAllProducts();
+                Result result = shopController.showAllProducts();
                 showMessage(result.message());
             }
             else if (command.matches(GameCommands.SHOW_AVAILABLE_PRODUCTS.getRegex())) {
-                ShopController controller = new ShopController(); // TODO It will fix in GameController
-
-                Result result = controller.showAvailableProducts();
+                Result result = shopController.showAvailableProducts();
                 showMessage(result.message());
             }
             else if (command.matches(GameCommands.PURCHASE.getRegex())) {
-                ShopController controller = new ShopController(); // TODO It will fix in GameController
-
                 Pattern pattern = Pattern.compile(GameCommands.PURCHASE.getRegex());
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
                     String productName = matcher.group("productName").trim();
 
-                    Result result = controller.purchase(productName, 1);
+                    Result result = shopController.purchase(productName, 1);
                     showMessage(result.message());
                 }
             }
             else if (command.matches(GameCommands.PURCHASE_WITH_COUNT.getRegex())) {
-                ShopController controller = new ShopController(); // TODO It will fix in GameController
-
                 Pattern pattern = Pattern.compile(GameCommands.PURCHASE_WITH_COUNT.getRegex());
                 Matcher matcher = pattern.matcher(command);
 
@@ -412,7 +389,7 @@ public class GameView extends AppMenu {
                     String productName = matcher.group("productName").trim();
                     int count = Integer.parseInt(matcher.group("count").trim());
 
-                    Result result = controller.purchase(productName, count);
+                    Result result = shopController.purchase(productName, count);
                     showMessage(result.message());
                 }
             }

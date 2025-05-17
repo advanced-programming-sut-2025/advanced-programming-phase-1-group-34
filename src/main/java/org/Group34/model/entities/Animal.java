@@ -92,7 +92,18 @@ public class Animal {
         return selectedProduct;
     }
 
-    public void setOutside(boolean outside) {
-        isOutside = outside;
+    public boolean setOutside() {
+        if (this.getAnimalType() == AnimalType.PIG ||
+        this.getAnimalType() == AnimalType.COW ||
+        this.getAnimalType() == AnimalType.GOAT ||
+        this.getAnimalType() == AnimalType.SHEEP) {
+            this.isOutside = true;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isCollected() {
+        return daysSinceLastProduce >= type.getRequiredDays() || daysSinceLastProduce <= 0;
     }
 }
