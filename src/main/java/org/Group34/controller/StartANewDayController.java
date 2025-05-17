@@ -156,4 +156,9 @@ public class StartANewDayController {
     public void randomPlacementOfForagingMinerals() {
         // TODO
     }
+
+    // ----- Check animals status -----
+    public void checkAnimalStatus() {
+
+    }
 }

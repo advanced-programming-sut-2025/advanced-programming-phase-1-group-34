@@ -1,6 +1,5 @@
 package org.Group34.controller;
 
-import org.Group34.model.Result;
 import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Player;
 import org.Group34.model.enums.animals.AnimalType;
@@ -32,6 +31,7 @@ public class AnimalController {
         if (animal == null || animal.isFed()) return false;
 
         animal.feed();
+        animal.increaseFriendship(20);
         return true;
     }
 
@@ -66,6 +66,7 @@ public class AnimalController {
             }
         }
 
+        animal.increaseFriendship(5);
         return product;
     }
 
@@ -99,20 +100,21 @@ public class AnimalController {
         return result;
     }
 
-    public boolean setOutside(String name, boolean outside) {
+    public boolean setOutside(String name) {
         Animal animal = animals.get(name);
         if (animal == null) return false;
-        animal.setOutside(outside);
-        return true;
+        if (animal.setOutside()) {
+            animal.feed();
+            animal.increaseFriendship(8);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
-    public boolean isAnimalFed(String name) {
+    public void sellAnimal(String name) {
         Animal animal = animals.get(name);
-        return animal != null && animal.isFed();
-    }
-
-    public int getFriendship(String name) {
-        Animal animal = animals.get(name);
-        return animal != null ? animal.getFriendship() : -1;
+        animals.remove(animal.getName());
     }
 }

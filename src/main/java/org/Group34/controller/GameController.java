@@ -4,11 +4,15 @@ import org.Group34.model.App;
 import org.Group34.model.Game;
 import org.Group34.model.Result;
 import org.Group34.model.User;
+import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.GreenHouse;
+import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.enums.Color;
 import org.Group34.model.enums.WeatherCondition;
+import org.Group34.model.enums.animals.Product;
+import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.map.MapBuilder;
 import org.Group34.view.menu.GameMenu;
 
@@ -21,9 +25,26 @@ public class GameController {
     private final int mainUser = 0;
     private int currentUser = 0;
     private final ArrayList<Boolean> forceTerminating = new ArrayList<>();
-    public final AnimalController animalController = new AnimalController();
+    private final AnimalController animalController = new AnimalController();
     public final GreenHouse greenhouse = new GreenHouse();
     public final GreenHouseController greenHouseController = new GreenHouseController(greenhouse);
+    private final FishingController fishingController = new FishingController();
+    private final FarmingController farmingController = new FarmingController();
+    private final ToolsController toolsController = new ToolsController();
+
+    public ShopController getShopController() {
+        return shopController;
+    }
+
+    private final ShopController shopController = new ShopController();
+
+    public FarmingController getFarmingController() {
+        return farmingController;
+    }
+
+    public ToolsController getToolsController() {
+        return toolsController;
+    }
 
     public GameController(Game game){
         this.game = game;
@@ -271,8 +292,96 @@ public class GameController {
         return greenHouseController.repairGreenhouse(game.players().get(orderOfPlay.get(currentUser)));
     }
 
-    public Result buildAnimalPlacement() {
-        return animalController.
+    // ==================== Animals ===================
+    public Result petAnimal(String name) {
+        if (animalController.petAnimal(name)) {
+            return new Result(true, "You have been pet animal\nYour friendship increased by 15");
+        }
+        else {
+            return new Result(false, "No animal found");
+        }
     }
+
+    public Result listAnimals() {
+        List<Animal> animals = animalController.getAllAnimals();
+        StringBuilder result = new StringBuilder();
+        for (Animal animal : animals) {
+            result.append(animal.getName()).append(": ").append(animal.getFriendship()).append("\n");
+        }
+
+        return new Result(true, result.toString());
+    }
+
+    public Result shepherdAnimal(String name, int x, int y) {
+        if (x > 100 || y > 100 || x < 0 || y < 0) {
+            return new Result(false, "Invalid coordinates");
+        }
+        else if (animalController.getAnimal(name) == null) {
+            return new Result(false, "No animal found");
+        }
+        else if (animalController.setOutside(name)){
+            return new Result(true, "Operation successful.\nAnimal is now fed and your friendship was increased.");
+        }
+        else {
+            return new Result(false, "This animal cannot be shepherd");
+        }
+    }
+
+    public Result feedAnimal(String name) {
+        Player player = game.players().get(orderOfPlay.get(currentUser));
+        if (player.getAmountOfItem(Ingredient.MAHOGANY_SEED) >= 1 &&
+                animalController.feedAnimal(name)) {
+            player.removeFromInventory(Ingredient.MAHOGANY_SEED, 1);
+            return new Result(true, "Animal have been fed and your friendship was increased!");
+        }
+        else {
+            return new Result(false, "No animal found or animal is already fed.");
+        }
+    }
+
+    public Result collectProduct(String name) {
+        Player player = game.players().get(orderOfPlay.get(currentUser));
+        Product product = animalController.collectProduct(name, player);
+        if (product == null) {
+            return new Result(false, "No product found");
+        }
+        else {
+            player.addToInventory(product.getType(), 1);
+            return new Result(true, "You have been collected one" + product.getType());
+        }
+    }
+
+    public Result showProducts() {
+        List<Animal> animals = animalController.getAllAnimals();
+
+        StringBuilder result = new StringBuilder();
+        for (Animal animal : animals) {
+            if (animal.isCollected()) {
+                result.append(animal.getName()).append(": ").append(animal.getAnimalType().getPossibleProducts()).append("\n");
+            }
+        }
+        return new Result(true, result.toString());
+    }
+
+    public Result sellAnimal(String name) {
+        Player player = game.players().get(orderOfPlay.get(currentUser));
+        Animal animal = animalController.getAnimal(name);
+        if (animalController.getAllAnimals().contains(animal)) {
+            player.addMoney((int)(((double) animal.getFriendship() / 1000) + 0.3) * animal.getAnimalType().getPrice());
+            animalController.sellAnimal(name);
+            return new Result(true, "You sold this animal");
+        }
+        else {
+            return new Result(false, "No animal found");
+        }
+    }
+
+//    public Result startFishing() {
+//        Player player = game.players().get(orderOfPlay.get(currentUser));
+//        fishingController.startFishing(player, game.time().getSeason(),
+//                game.weatherSystem().getTodayCondition(), player.)
+//    }
+
+    // ================================================
 
 }
