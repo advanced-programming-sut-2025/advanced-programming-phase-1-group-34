@@ -49,6 +49,7 @@ public class GameController {
     private final ToolsController toolsController = new ToolsController();
     private final StartANewDayController startANewDayController = new StartANewDayController();
     private final ShopController shopController = new ShopController();
+    private final LevelUpController levelUpController = new LevelUpController();
     private final List<NPC> npcs = npcLoader();
 
     public ShopController getShopController() {
@@ -570,7 +571,7 @@ public class GameController {
         return toolsController.showAvailableTools();
     }
     public Result toolUse(String direction) {
-        return toolsController.toolUse(direction, farmingController, fishingController, animalController, getPlayer(), game.time(), game.weatherSystem());
+        return toolsController.toolUse(direction, farmingController, fishingController, animalController, getPlayer(), game.time(), game.weatherSystem(), levelUpController);
     }
     // ==========================================================
 

@@ -19,10 +19,9 @@ import org.Group34.model.map.Space;
 import org.Group34.model.Time;
 
 import java.util.Random;
+import java.util.logging.Level;
 
 public class FarmingController {
-    private LevelUpController levelUpController = new LevelUpController(); // TODO It will fix in GameController
-
     public Result showCraftInfo(String craftName) {
         Entity plant = getPlantByCraftName(craftName);
 
@@ -144,7 +143,7 @@ public class FarmingController {
         return new Result(true, "The plowed land has disappeared.");
     }
 
-    public Result useAxe(String direction, int enoughEnergy, Player currentPlayer) {
+    public Result useAxe(String direction, int enoughEnergy, Player currentPlayer, LevelUpController levelUpController) {
         Space currentSpace = currentPlayer.getCurrentSpace();
 
         int x = getLocationOfDirectionX(direction, currentPlayer);
@@ -200,7 +199,7 @@ public class FarmingController {
         return new Result(false, "You can not use Watering Can here.");
     }
 
-    public Result useScythe(String direction, int enoughEnergy, Player currentPlayer, Time time) {
+    public Result useScythe(String direction, int enoughEnergy, Player currentPlayer, Time time, LevelUpController levelUpController) {
         Space currentSpace = currentPlayer.getCurrentSpace();
 
         int x = getLocationOfDirectionX(direction, currentPlayer);
@@ -210,9 +209,9 @@ public class FarmingController {
         currentPlayer.decreaseEnergy(enoughEnergy);
 
         if (desiredTile instanceof Crop crop) {
-            return harvestTheCrop(crop, x, y, currentPlayer, time);
+            return harvestTheCrop(crop, x, y, currentPlayer, time, levelUpController);
         } else if (desiredTile instanceof Tree tree) {
-            return harvestTheTree(tree, x, y, currentPlayer, time);
+            return harvestTheTree(tree, x, y, currentPlayer, time, levelUpController);
         }
 
         return new Result(false, "You can not use Scythe here.");
@@ -381,6 +380,7 @@ public class FarmingController {
             case "Deluxe Retaining Soil" -> Fertilizer.DELUXE_RETAINING_SOIL;
             case "Basic Retaining Soil" -> Fertilizer.BASIC_RETAINING_SOIL;
             case "Quality Retaining Soil" -> Fertilizer.QUALITY_RETAINING_SOIL;
+            case "Speed Gro" -> Fertilizer.SPEED_GROW;
             default -> null;
         };
     }
@@ -721,7 +721,7 @@ public class FarmingController {
             return CropCreator.POWDERMELON.createInstance();
         }
     }
-    private Result harvestTheCrop(Crop crop, int x, int y, Player currentPlayer, Time time) {
+    private Result harvestTheCrop(Crop crop, int x, int y, Player currentPlayer, Time time, LevelUpController levelUpController) {
         Space currentSpace = currentPlayer.getCurrentSpace();
 
         if (crop.isGiant()) {
@@ -768,7 +768,7 @@ public class FarmingController {
             }
         }
     }
-    private Result harvestTheTree(Tree tree, int x, int y, Player currentPlayer, Time time) {
+    private Result harvestTheTree(Tree tree, int x, int y, Player currentPlayer, Time time, LevelUpController levelUpController) {
         Space currentSpace = currentPlayer.getCurrentSpace();
 
         if (tree.isBurned()) {

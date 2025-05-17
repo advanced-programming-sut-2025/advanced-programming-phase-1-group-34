@@ -299,6 +299,9 @@ public class Tree implements Entity, PlantAble {
     public void useFertilizer(Fertilizer fertilizer) {
         isGivenFertilizer = true;
         this.fertilizer = fertilizer;
+        if (fertilizer == Fertilizer.SPEED_GROW) {
+            age++;
+        }
     }
 
     public void harvest() {
