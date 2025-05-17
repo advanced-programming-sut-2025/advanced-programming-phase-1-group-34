@@ -18,6 +18,7 @@ import org.Group34.model.enums.animals.Product;
 import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.map.MapBuilder;
 import org.Group34.view.menu.GameMenu;
+import org.Group34.view.menu.MainMenu;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class GameController {
     private final FishingController fishingController = new FishingController();
     private final FarmingController farmingController = new FarmingController();
     private final ToolsController toolsController = new ToolsController();
+    private final StartANewDayController startANewDayController = new StartANewDayController();
     private final List<NPC> npcs = npcLoader();
 
     public ShopController getShopController() {
@@ -88,8 +90,7 @@ public class GameController {
 
         game.save();
         App.setCurrentGame(null);
-        //TODO change it to main menu after completing game.save()
-        App.setAppMenu(new GameMenu());
+        App.setAppMenu(new MainMenu());
         return new Result(true, "Game saved. Returning to menu.");
     }
 
@@ -132,15 +133,31 @@ public class GameController {
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
         nextUser();
-        if (currentUser == 0) game.time().addHours(1);
+        if (currentUser == 0){
+            game.time().addHours(1);
 
-        // TODO from here we should call StartANewDayController
-        // TODO remember when all players passedOut we have to jump to next day
+            if (game.time().getHour() == 9){
+                startANewDayController.ManageAllTasks();
+                currentUser = 0;
+                return new Result(true, "New day have been started. " + orderOfPlay.get(currentUser).getNickname() + " turn.");
+            }
+        }
 
-        while (game.players().get(orderOfPlay.get(currentUser)).isPassedOut())
+        int placeHolder = currentUser;
+        while (game.players().get(orderOfPlay.get(currentUser)).isPassedOut()){
             nextUser();
+            if (currentUser == placeHolder){
+                game.time().addHours(23 - game.time().getHour());
+                startANewDayController.ManageAllTasks();
+                currentUser = 0;
+                return new Result(true,
+                        "All players passed out and new day have been started. " + orderOfPlay.get(currentUser).getNickname() + " turn.");
+            }
+        }
 
-        return new Result(true, orderOfPlay.get(currentUser) + " turn.");
+
+
+        return new Result(true, orderOfPlay.get(currentUser).getNickname() + " turn.");
     }
 
     private void nextUser(){
