@@ -491,6 +491,47 @@ public class GameView extends AppMenu {
                     showMessage(result.message());
                 }
             }
+            else if (command.matches(GameCommands.SHOW_RECIPES.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.SHOW_RECIPES.getRegex());
+                showMessage(controller.showRecipes().message());
+
+            }
+            else if (command.matches(GameCommands.CRAFT_ITEM.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.CRAFT_ITEM.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String itemName = matcher.group("item_name").trim();
+
+                    Result result = controller.craftItem(itemName);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.ARTISAN_GET.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.ARTISAN_GET.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String itemName = matcher.group("artisan_name").trim();
+
+                    Result result = controller.artisanUse(itemName);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.ARTISAN_USE.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.ARTISAN_USE.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String itemName = matcher.group("artisan_name").trim();
+                    String item_1 = matcher.group("item1_name").trim();
+                    String item_2 = matcher.group("item2_neme").trim();
+
+
+                    Result result = controller.artisanGet(itemName, item_1, item_2);
+                    showMessage(result.message());
+                }
+            }
             // ---------------------
 
             else {
