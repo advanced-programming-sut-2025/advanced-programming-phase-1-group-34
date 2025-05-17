@@ -562,13 +562,13 @@ public class GameController {
 
     // ==================== Tools Controller ====================
     public Result toolsEquip(String toolName) {
-        return toolsController.toolsEquip(toolName);
+        return toolsController.toolsEquip(toolName, getPlayer());
     }
     public Result showCurrentTools() {
-        return toolsController.showCurrentTools();
+        return toolsController.showCurrentTools(getPlayer());
     }
     public Result showAvailableTools() {
-        return toolsController.showAvailableTools();
+        return toolsController.showAvailableTools(getPlayer());
     }
     public Result toolUse(String direction) {
         return toolsController.toolUse(direction, farmingController, fishingController, animalController, getPlayer(), game.time(), game.weatherSystem(), levelUpController);

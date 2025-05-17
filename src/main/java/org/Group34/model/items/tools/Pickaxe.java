@@ -1,8 +1,6 @@
 package org.Group34.model.items.tools;
 
-import org.Group34.model.items.Item;
-
-public class Pickaxe implements Item {
+public class Pickaxe extends Tool {
     private ToolType type;
 
     public Pickaxe(ToolType type) {

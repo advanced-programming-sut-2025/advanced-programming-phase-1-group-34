@@ -20,7 +20,9 @@ public enum UpgradeTools implements Item {
     TRAINING_FISHING_POLE("Training Fishing Pole", null, 25),
     BAMBOO_FISHING_POLE("Bamboo Fishing Pole", null, 500),
     FIBERGLASS_FISHING_POLE("Fiberglass Fishing Pole", null, 1800),
-    IRIDIUM_FISHING_POLE("Iridium Fishing Pole", null, 7500);
+    IRIDIUM_FISHING_POLE("Iridium Fishing Pole", null, 7500),
+
+    SHIPPING_BIN("Shipping Bin", null, 250);
 
 
 
