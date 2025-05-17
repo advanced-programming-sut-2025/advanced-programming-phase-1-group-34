@@ -6,6 +6,7 @@ import org.Group34.model.items.Item;
 import org.Group34.model.items.Recipe;
 import org.Group34.model.items.crafting.Craft;
 import org.Group34.model.items.crafting.PlacingCraft;
+import org.Group34.model.items.crafting.ProcessorCraft;
 import org.Group34.model.map.Space;
 
 import java.util.ArrayList;
@@ -18,13 +19,22 @@ public class HouseMenuController {
         String message = "Your Recipes:";
 
         for (Recipe recipe: player.getLearnedRecipes()){
-            Map<Item, Integer> ingredients = recipe.getProduct().getIngredients();
+            Map<Item, Integer> ingredients = getProduct(recipe).getIngredients();
 
             message += "\n" + recipe.getName();
             if (canMake(player, ingredients) != null) message += ":     can make";
             else message += ":      -";
         }
         return new Result(true, message);
+    }
+
+    private Craft getProduct(Recipe recipe) {
+        for (Craft item: PlacingCraft.values())
+            if (item.getRecipe().equals(recipe))
+                return item;
+        for (Craft item: ProcessorCraft.values())
+            if (item.getRecipe().equals(recipe))
+                return item;
     }
 
 
