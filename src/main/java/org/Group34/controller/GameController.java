@@ -1,18 +1,22 @@
 package org.Group34.controller;
 
 import org.Group34.model.*;
-import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.entities.npcs.quests.Quest;
 import org.Group34.model.entities.npcs.quests.QuestLoader;
-import org.Group34.model.enums.Color;
-import org.Group34.model.items.Item;
-import org.Group34.model.items.PlantingSource;
-import org.Group34.model.items.foods.Fruit;
+import org.Group34.model.enums.FishType;
+import org.Group34.model.enums.animals.AnimalType;
+import org.Group34.model.enums.animals.BarnType;
+import org.Group34.model.enums.animals.Product;
+import org.Group34.model.items.*;
+import org.Group34.model.items.crafting.Craft;
+import org.Group34.model.items.crafting.Ingredient;
+import org.Group34.model.items.crafting.PlacingCraft;
+import org.Group34.model.items.crafting.ProcessorCraft;
+import org.Group34.model.items.foods.*;
 import org.Group34.model.items.tools.*;
-import org.Group34.model.map.MapBuilder;
 import org.Group34.view.menu.GameMenu;
 import org.Group34.view.menu.MainMenu;
 
@@ -37,6 +41,8 @@ public class GameController {
     private final List<NPC> npcs = npcLoader();
     private final ShopController shopController = new ShopController();
     private final InventoryController inventoryController = new InventoryController();
+    private final HouseMenuController houseMenuController = new HouseMenuController();
+    private final ArtisanController artisanController = new ArtisanController();
 
     public FarmingController getFarmingController() {
         return farmingController;
@@ -389,6 +395,69 @@ public class GameController {
         return new Result(false, "No NPC found");
     }
 
+    private Item getItemByName(String itemName) {
+
+       for (Item item: ProcessorCraft.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: PlacingCraft.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: PlantingSource.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: CookedFood.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: CropProduct.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: Fruit.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: Fungi.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: OtherFarmingProduct.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: Vegetable.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: ProcessorCraft.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: Mineral.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: Product.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: Recipe.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: Ingredient.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: AnimalType.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: BarnType.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: Fertilizer.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: FishType.values())
+            if (item.getName().equals(itemName))
+                return item;
+        for (Item item: Recipe.values())
+            if (item.getName().equals(itemName))
+                return item;
+
+        return null;
+    }
+
     public Result listAvailableQuests() {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
@@ -519,15 +588,7 @@ public class GameController {
 
     // ==================== Inventory Controller ====================
     public Result cheatAddItem(String itemName, int count) {
-        Item item = null;
-        if (itemName.equals("Copper Axe"))
-            item = new Axe(ToolType.COPPER_AXE);
-        if (itemName.equals("Beet Seed"))
-            item = PlantingSource.BEET_SEEDS;
-        if (itemName.equals("Orange"))
-            item = Fruit.ORANGE;
-        if (itemName.equals("Banana"))
-            item = Fruit.BANANA;
+        Item item = getItemByName(itemName);
         return inventoryController.cheatAddItem(getPlayer(), item, count);
     }
 
@@ -542,5 +603,42 @@ public class GameController {
     public Result inventoryShow() {
         return inventoryController.showInventory(getPlayer().getInventory());
     }
+
     // =========================================================
+
+    // ==================== Crafting Controller ====================
+    public Result showRecipes() {
+        return houseMenuController.showRecipes(getPlayer());
+    }
+
+    public Result craftItem(String itemName) {
+        Item item = this.getItemByName(itemName);
+        if (item instanceof Craft)
+            return houseMenuController.craftItem(getPlayer(), (Craft) item);
+        if (item == null)
+            return new Result(false, "This Item doesn't exist.");
+        return new Result(false, "This Item can not be crafted");
+    }
+
+    // =========================================================
+
+    // ==================== Artisan Controller ====================
+
+    public Result artisanUse(String itemName) {
+        Item item = getItemByName(itemName);
+        if (item instanceof ProcessorCraft)
+            return new Result(false, "This Item can not be used like that");
+        if (item == null)
+            return new Result(false, "This Item doesn't exist.");
+        return artisanController.getArtisan((ProcessorCraft) item, getPlayer(), game.time());
+    }
+
+    public Result artisanGet(String itemName, String item_1, String item_2) {
+        Item item = getItemByName(itemName);
+        if (item instanceof ProcessorCraft)
+            return new Result(false, "This Item can not be used like that");
+        if (item == null)
+            return new Result(false, "This Item doesn't exist.");
+        return artisanController.useArtisan((ProcessorCraft) item, getPlayer(), game.time(), getItemByName(item_1), getItemByName(item_2));
+    }
 }
