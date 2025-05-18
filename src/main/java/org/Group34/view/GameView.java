@@ -46,6 +46,12 @@ public class GameView extends AppMenu {
                     showMessage("You can't build a Barn here.");
                 }
             }
+            else if (command.matches(GameCommands.BUILD_LOCATION_ERROR.getRegex())) {
+                showMessage("Invalid location");
+            }
+            else if (command.matches(GameCommands.BUILD_PLACE_ERROR.getRegex())) {
+                showMessage("Invalid building");
+            }
             else if (command.matches(GameCommands.BUILD_ANIMALS_PLACEMENT_SUCCESS.getRegex())) {
                 showMessage("Barn built at <15, 9>\nRemaining money: 99500G");
             }

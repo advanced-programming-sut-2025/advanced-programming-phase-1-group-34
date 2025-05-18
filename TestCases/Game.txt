@@ -16,10 +16,16 @@ game map 2
 menu enter main menu
 menu enter game menu
 load game
+
+####### build animal placement Errors ######
+build -a Barn -l <200, 200>
+build -a sth -l <50, 80>
 build -a Barn -l <50, 80>
 cheat add money 100000
 build -a Barn -l <50, 80>
 build -a Barn -l <15, 9>
+
+###### collect product ######
 buy animal -a COW -n aaa
 tools equip Milk Pail
 collect product -n aaa
@@ -30,9 +36,12 @@ cheat advance date 1d
 shepherd animals -n aaa -l <10, 10>
 collect produce -n aaa
 
+###### meet npc, location checking ######
 meet NPC sebastian
 walk -l <20, 25>
 meet NPC Sebastian
+
+###### level 3 of friendship, random gifts everyday ######
 cheat advance date 1d
 cheat set friendship Sebastian 800
 cheat advance date 1d

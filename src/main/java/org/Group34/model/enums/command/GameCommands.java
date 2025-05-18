@@ -105,6 +105,8 @@ public enum GameCommands implements Command {
     // -------------------------
 
     BUILD_ANIMALS_PLACEMENT_ERROR("build -a Barn -l <50, 80>"),
+    BUILD_LOCATION_ERROR("build -a Barn -l <200, 200>"),
+    BUILD_PLACE_ERROR("build -a sth -l <50, 80>"),
     BUILD_ANIMALS_PLACEMENT_SUCCESS("build -a Barn -l <15, 9>"),
     COLLECT_PRODUCTS_ERROR("collect product -n aaa"),
     COLLECT_PRODUCTS_SUCCESS("collect produce -n aaa"),
