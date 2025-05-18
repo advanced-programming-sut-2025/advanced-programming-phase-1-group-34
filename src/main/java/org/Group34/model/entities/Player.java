@@ -108,8 +108,10 @@ public class  Player implements Entity {
     }
 
     public int getAmountOfItem(Item item) {
-        return inventory.get(item);
+        Integer amount = inventory.get(item);
+        return amount != null ? amount : 0;
     }
+
 
     public String getName() {
         return name;

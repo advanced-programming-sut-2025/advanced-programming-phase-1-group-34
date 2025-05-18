@@ -119,4 +119,12 @@ public class Animal {
     public void setHasPet(boolean hasPet) {
         this.hasPet = hasPet;
     }
+
+    public boolean isOutside() {
+        return isOutside;
+    }
+
+    public void setFed(boolean fed) {
+        isFed = fed;
+    }
 }

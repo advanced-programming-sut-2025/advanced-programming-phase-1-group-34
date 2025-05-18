@@ -16,6 +16,7 @@ import java.util.*;
 
 public class AnimalController {
     private final Map<String, Animal> animals = new HashMap<>();
+    private int barn = 0;
 
     public boolean addAnimal(String name, AnimalType type) {
         if (animals.containsKey(name)) return false;
@@ -58,6 +59,14 @@ public class AnimalController {
         return true;
     }
 
+    public int getBarn() {
+        return barn;
+    }
+
+    public void setBarn(int barn) {
+        this.barn = barn;
+    }
+
     public void passDay() {
         for (Animal animal : animals.values()) {
             animal.addDaysSinceLastProduce();
@@ -74,8 +83,14 @@ public class AnimalController {
         AnimalType type = animal.getAnimalType();
         Product product = animal.collectProduct();
 
-        if (product != null && product.getType() == type) {
+        if (requiresTool(type) && !hasTool(player, type)) {
+            System.out.println("You don't have tool for this animal");
+            return null;
+        }
+
+        if (product != null) {
             if (requiresTool(type) && !hasTool(player, type)) {
+                System.out.println("You don't have tool for this animal");
                 return null;
             }
             player.decreaseEnergy(4);
@@ -168,13 +183,14 @@ public class AnimalController {
     }
 
     public Result feedAnimal(String name, Player player){
-        if (player.getAmountOfItem(Ingredient.MAHOGANY_SEED) >= 1 &&
-                this.canFeedAnimal(name)) {
-            player.removeFromInventory(Ingredient.MAHOGANY_SEED, 1);
+        if (!this.canFeedAnimal(name))
+            return new Result(false, "Animal is already fed.");
+        else if (player.getAmountOfItem(Ingredient.SHEEP_FABRIC) >= 1) {
+            player.removeFromInventory(Ingredient.SHEEP_FABRIC, 1);
             return new Result(true, "Animal have been fed and your friendship was increased!");
         }
         else {
-            return new Result(false, "No animal found or animal is already fed.");
+            return new Result(false, "Not enough resources.");
         }
     }
 
@@ -209,6 +225,7 @@ public class AnimalController {
 
         if (player.getMoney() >= targetAnimal.getPrice()) {
             if (this.addAnimal(animalName, targetAnimal)) {
+                player.addMoney(-targetAnimal.getPrice());
                 return new Result(true, "You have bought a " + animal);
             }
             else {

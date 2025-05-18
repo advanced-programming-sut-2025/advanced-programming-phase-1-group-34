@@ -1,6 +1,7 @@
 package org.Group34.controller;
 
 import org.Group34.model.*;
+import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.entities.npcs.NPC;
@@ -182,6 +183,15 @@ public class GameController {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
+        for (Animal animal : animalController.getAllAnimals()) {
+            if (!animal.isCollected() || !animal.isFed() || !animal.isHasPet() || animal.isOutside()) {
+                animal.decreaseFriendship(15);
+            }
+
+            animal.setHasPet(false);
+            animal.setFed(false);
+        }
+
         return game.time().cheatAdvanceTime(getInt(days));
     }
 
@@ -276,6 +286,11 @@ public class GameController {
     }
 
     // ==================== Animals ===================
+    public Result buildAnimalPlacement() {
+        animalController.setBarn(animalController.getBarn() + 1);
+        return new Result(true, "");
+    }
+
     public Result petAnimal(String name) {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");

@@ -176,6 +176,7 @@ public class StartANewDayController {
 
     // ----- Check animals status -----
     private void checkAnimalStatus() {
+
     }
 
     private void reStartShops(Blacksmith blacksmith,

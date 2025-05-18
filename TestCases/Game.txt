@@ -16,27 +16,19 @@ game map 2
 menu enter main menu
 menu enter game menu
 load game
-
-
-weather
-weather forecast
-time
-date
-datetime
-season
-day of week
-cheat advance time 2h
-datetime
-cheat advance time 12h
-datetime
-cheat advance date 29d
-date
-weather
-cheat change weather storm
-weather
-enter greenhouse
-greenhouse build
-
+cheat add money 100000
+build -a Barn -l <20, 20>
+buy animal -a COW -n aaa
+sell animal -n aaa
+buy animal -a COW -n aaa
+cheat set friendship -n aaa -c 100
+animals
+shepherd animals -n aaa -l <10, 10>
+feed hay -n aaa
+cheat advance date 10d
+produces
+animals
+collect produce -n aaa
 
 ## Inventory
 inventory show 

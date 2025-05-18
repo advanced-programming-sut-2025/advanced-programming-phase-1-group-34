@@ -273,7 +273,9 @@ public class GameView extends AppMenu {
                     String buildingName = matcher.group("buildingName");
                     int x = Integer.parseInt(matcher.group("x"));
                     int y = Integer.parseInt(matcher.group("y"));
-                    showMessage("Building " + buildingName + " at " + x + ", " + y + "built.");
+
+                    controller.buildAnimalPlacement();
+                    showMessage("Building " + buildingName + " at <" + x + ", " + y + ">");
                 }
             }
             else if (command.matches(GameCommands.BUY_ANIMAL.getRegex())) {
@@ -366,6 +368,11 @@ public class GameView extends AppMenu {
                 if (matcher.matches()) {
                     String npcName = matcher.group("npcName");
                     String itemName = matcher.group("itemName");
+                    if (itemName.equals("Axe") || itemName.equals("Fishingpole")
+                            || itemName.equals("Hoe") || itemName.equals("Milkpail")
+                            || itemName.equals("Scythe") || itemName.equals("Shear")) {
+                        showMessage("You can't send tools as gift!");
+                    }
                     showMessage(controller.sendGift(npcName, itemName).message());
                 }
             }
@@ -501,7 +508,7 @@ public class GameView extends AppMenu {
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
-                    String itemName = matcher.group("item_name").trim();
+                    String itemName = matcher.group("itemName").trim();
 
                     Result result = controller.craftItem(itemName);
                     showMessage(result.message());
@@ -512,7 +519,7 @@ public class GameView extends AppMenu {
                 Matcher matcher = pattern.matcher(command);
 
                 if (matcher.find()) {
-                    String itemName = matcher.group("artisan_name").trim();
+                    String itemName = matcher.group("artisanName").trim();
 
                     Result result = controller.artisanUse(itemName);
                     showMessage(result.message());

@@ -70,16 +70,16 @@ public enum GameCommands implements Command {
     // -------------------------
 
     // ----- Animals Commands -----
-    BUILD_ANIMALS_PLACEMENT("\\s*build\\s+-a\\s+(?<buildingName>.+)\\s+-l\\s+(?<x>\\d+)\\s+,\\s+(?<y>\\d+)\\s*"),
+    BUILD_ANIMALS_PLACEMENT("\\s*build\\s+-a\\s+(?<buildingName>.+)\\s+-l\\s+<(?<x>\\d+),\\s+(?<y>\\d+)>\\s*"),
     BUY_ANIMAL("\\s*buy\\s+animal\\s+-a\\s+(?<animal>.+)\\s+-n\\s+(?<name>.+)\\s*"),
     PET_ANIMAL("\\s*pet\\s+-n\\s+(?<name>.+)\\s*"),
     LIST_ANIMALS("\\s*animals\\s*"),
-    SHEPHERD_ANIMAL("\\s*shepherd\\s+animals\\s+-n\\s+(?<animalName>.+)\\s+-l\\s+(?<x>\\d+)\\s+,\\s+(?<y>\\d+)\\s*"),
+    SHEPHERD_ANIMAL("\\s*shepherd\\s+animals\\s+-n\\s+(?<animalName>.+)\\s+-l\\s+<(?<x>\\d+),\\s+(?<y>\\d+)>\\s*"),
     FEED_ANIMAL("\\s*feed\\s+hay\\s+-n\\s+(?<animalName>.+)\\s*"),
     SHOW_PRODUCTS("\\s*produces\\s*"),
     COLLECT_PRODUCTS("\\s*collect\\s+produce\\s+-n\\s+(?<animalName>.+)\\s*"),
     SELL_ANIMAL("\\s*sell\\s+animal\\s+-n\\s+(?<animalName>.+)\\s*"),
-    CHEAT_SET_FRIENDSHIP("\\s*cheat\\s+set\\s+friendship\\s+-n\\s+(?<animalName>.+)\\s+-c\\s+(<amount>\\d+)\\s*"),
+    CHEAT_SET_FRIENDSHIP("\\s*cheat\\s+set\\s+friendship\\s+-n\\s+(?<animalName>.+)\\s+-c\\s+(?<amount>\\d+)\\s*"),
     // -------------------------
 
     // ----- Fishing Commands -----
