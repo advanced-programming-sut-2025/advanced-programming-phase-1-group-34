@@ -75,10 +75,10 @@ public class Animal {
         }
 
         if (selectedProduct == null) return null;
-
+        double randomFactor = 0.5 + Math.random();
         if (selectedProduct.getRequiredFriendship() > 0) {
-            double randomFactor = 0.5 + Math.random();
-            double probability = (friendship + (150 * randomFactor)) / 1500;
+            double probability = (randomFactor + (150 * randomFactor)) / 1500;
+
             if (probability < 0.6) {
                 Product lowerProduct = null;
                 for (Product product : possibleProducts) {
@@ -93,6 +93,10 @@ public class Animal {
                 }
             }
         }
+        double Q = (randomFactor * 0.5) + (0.5 * (randomFactor / 1000));
+        int quality = determineQuality(Q);
+        int price = selectedProduct.getBasePrice() * quality;
+        selectedProduct.setPrice(price);
 
         return selectedProduct;
     }
@@ -126,5 +130,12 @@ public class Animal {
 
     public void setFed(boolean fed) {
         isFed = fed;
+    }
+
+    private int determineQuality(double Q) {
+        if (Q < 0.5) return 1;
+        if (Q < 0.7) return 2;
+        if (Q < 0.9) return 3;
+        return 4;
     }
 }

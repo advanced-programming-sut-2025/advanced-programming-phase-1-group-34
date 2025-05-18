@@ -41,6 +41,8 @@ public enum Product implements Item {
         this.basePrice = basePrice;
         this.requiredFriendship = requiredFriendship;
     }
+    
+    
 
     public AnimalType getType() {
         return type;
@@ -57,5 +59,9 @@ public enum Product implements Item {
     @Override
     public String getName() {
         return null;
+    }
+
+    public void setPrice(int price) {
+
     }
 }
