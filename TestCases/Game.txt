@@ -45,3 +45,6 @@ meet NPC Sebastian
 cheat advance date 1d
 cheat set friendship Sebastian 800
 cheat advance date 1d
+
+###### send gift error ######
+send gift Sebastian Milk Pail

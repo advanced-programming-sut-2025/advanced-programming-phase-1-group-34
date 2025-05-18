@@ -68,6 +68,9 @@ public class GameView extends AppMenu {
                 controller.isThirdLevel = true;
                 showMessage("Cheat code activated: (Friendship: 800)");
             }
+            else if (command.matches(GameCommands.SEND_GIFT_ERROR.getRegex())) {
+                showMessage("You can't send tools or backpack as a gift");
+            }
             else if (command.matches(GameCommands.DELETE_GAME.getRegex())) {
                 Result result = controller.deleteGame();
                 showMessage(result.message());

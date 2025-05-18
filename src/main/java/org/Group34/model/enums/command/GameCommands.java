@@ -111,7 +111,8 @@ public enum GameCommands implements Command {
     COLLECT_PRODUCTS_ERROR("collect product -n aaa"),
     COLLECT_PRODUCTS_SUCCESS("collect produce -n aaa"),
     MEET_NPC_ERROR("meet NPC sebastian"),
-    CHEAT_SET_NPC_FRIENDSHIP("cheat set friendship Sebastian 800");
+    CHEAT_SET_NPC_FRIENDSHIP("cheat set friendship Sebastian 800"),
+    SEND_GIFT_ERROR("send gift Sebastian Milk Pail");
     // Regex: ---------- END -------------
 
     private final String regex;
