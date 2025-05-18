@@ -16,6 +16,7 @@ game map 2
 menu enter main menu
 menu enter game menu
 load game
+build -a Barn -l <50, 80>
 cheat add money 100000
 build -a Barn -l <50, 80>
 build -a Barn -l <15, 9>

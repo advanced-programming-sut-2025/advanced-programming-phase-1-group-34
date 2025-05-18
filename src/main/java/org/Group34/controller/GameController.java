@@ -46,6 +46,7 @@ public class GameController {
     private final ArtisanController artisanController = new ArtisanController();
 
     public boolean isThirdLevel = false;
+    public boolean flag = false;
 
     public FarmingController getFarmingController() {
         return farmingController;

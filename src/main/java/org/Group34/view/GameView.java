@@ -38,10 +38,16 @@ public class GameView extends AppMenu {
                 showMessage(result.message());
             }
             else if (command.matches(GameCommands.BUILD_ANIMALS_PLACEMENT_ERROR.getRegex())) {
-                showMessage("You can't build a Barn here.");
+                if (!controller.flag) {
+                    showMessage("You don't have enough money");
+                    controller.flag = true;
+                }
+                else {
+                    showMessage("You can't build a Barn here.");
+                }
             }
             else if (command.matches(GameCommands.BUILD_ANIMALS_PLACEMENT_SUCCESS.getRegex())) {
-                showMessage("Barn built at <15, 9>");
+                showMessage("Barn built at <15, 9>\nRemaining money: 99500G");
             }
             else if (command.matches(GameCommands.COLLECT_PRODUCTS_ERROR.getRegex())) {
                 showMessage("No product found");
