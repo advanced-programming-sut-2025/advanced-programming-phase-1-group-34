@@ -45,6 +45,8 @@ public class GameController {
     private final HouseMenuController houseMenuController = new HouseMenuController();
     private final ArtisanController artisanController = new ArtisanController();
 
+    public boolean isThirdLevel = false;
+
     public FarmingController getFarmingController() {
         return farmingController;
     }
@@ -192,7 +194,11 @@ public class GameController {
             animal.setFed(false);
         }
 
-        return game.time().cheatAdvanceTime(getInt(days));
+        if (isThirdLevel) {
+            System.out.println("Sebastian has sent you a Gift!");
+        }
+
+        return game.time().cheatAdvanceTime(getInt(days) * 13);
     }
 
     public Result cheatChangeWeather(String weather) {

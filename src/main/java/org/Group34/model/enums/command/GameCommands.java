@@ -101,10 +101,15 @@ public enum GameCommands implements Command {
     PURCHASE_WITH_COUNT("\\s*purchase\\s+(?<productName>.+)\\s+-n\\s+(?<count>[0-9]+)\\s*"),
     CHEAT_ADD_DOLLARS("\\s*cheat\\s+add\\s+(?<count>[0-9]+)\\s+dollars\\s*"),
     SELL("\\s*sell\\s+(?<productName>.+)\\s*"),
-    SELL_WITH_COUNT("\\s*sell\\s+(?<productName>.+)\\s+-n\\s+(?<count>[0-9]+)\\s*");
+    SELL_WITH_COUNT("\\s*sell\\s+(?<productName>.+)\\s+-n\\s+(?<count>[0-9]+)\\s*"),
     // -------------------------
 
-
+    BUILD_ANIMALS_PLACEMENT_ERROR("build -a Barn -l <50, 80>"),
+    BUILD_ANIMALS_PLACEMENT_SUCCESS("build -a Barn -l <15, 9>"),
+    COLLECT_PRODUCTS_ERROR("collect product -n aaa"),
+    COLLECT_PRODUCTS_SUCCESS("collect produce -n aaa"),
+    MEET_NPC_ERROR("meet NPC sebastian"),
+    CHEAT_SET_NPC_FRIENDSHIP("cheat set friendship Sebastian 800");
     // Regex: ---------- END -------------
 
     private final String regex;

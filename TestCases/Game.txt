@@ -17,40 +17,17 @@ menu enter main menu
 menu enter game menu
 load game
 cheat add money 100000
-build -a Barn -l <20, 20>
+build -a Barn -l <50, 80>
+build -a Barn -l <15, 9>
 buy animal -a COW -n aaa
-sell animal -n aaa
-buy animal -a COW -n aaa
-cheat set friendship -n aaa -c 100
-animals
+collect product -n aaa
 shepherd animals -n aaa -l <10, 10>
-feed hay -n aaa
-cheat advance date 10d
-produces
-animals
+cheat advance date 1d
+shepherd animals -n aaa -l <10, 10>
 collect produce -n aaa
-
-## Inventory
-inventory show 
-cheat add item -n Beet Seed add -c 10
-cheat add item -n Orange -c 50
-inventory trash -i Beet Seed -n 10
-inventory place item -n Beat Seed -d Up
-
-
-
-## Farming
-craftinfo -n Carrot
-craftinfo -n Garlic
-craftinfo -n Corn
-craftinfo -n Poppy
-craftinfo -n Tomato
-craftinfo -n Cherry
-craftinfo -n Apple
-craftinfo -n Pine
-craftinfo -n Apricot
-
-tools equip Hoe
-tools show current
-tools show available
-
+meet NPC sebastian
+walk -l <20, 25>
+meet NPC Sebastian
+cheat advance date 1d
+cheat set friendship Sebastian 800
+cheat advance date 1d

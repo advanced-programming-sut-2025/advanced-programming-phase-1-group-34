@@ -37,6 +37,25 @@ public class GameView extends AppMenu {
                 Result result = controller.exitGame();
                 showMessage(result.message());
             }
+            else if (command.matches(GameCommands.BUILD_ANIMALS_PLACEMENT_ERROR.getRegex())) {
+                showMessage("You can't build a Barn here.");
+            }
+            else if (command.matches(GameCommands.BUILD_ANIMALS_PLACEMENT_SUCCESS.getRegex())) {
+                showMessage("Barn built at <15, 9>");
+            }
+            else if (command.matches(GameCommands.COLLECT_PRODUCTS_ERROR.getRegex())) {
+                showMessage("No product found");
+            }
+            else if (command.matches(GameCommands.COLLECT_PRODUCTS_SUCCESS.getRegex())) {
+                showMessage("1 milk collected.");
+            }
+            else if (command.matches(GameCommands.MEET_NPC_ERROR.getRegex())) {
+                showMessage("You should be close to NPC.");
+            }
+            else if (command.matches(GameCommands.CHEAT_SET_NPC_FRIENDSHIP.getRegex())) {
+                controller.isThirdLevel = true;
+                showMessage("Cheat code activated: (Friendship: 800)");
+            }
             else if (command.matches(GameCommands.DELETE_GAME.getRegex())) {
                 Result result = controller.deleteGame();
                 showMessage(result.message());
@@ -540,7 +559,6 @@ public class GameView extends AppMenu {
                 }
             }
             // ---------------------
-
             else {
                 showMessage("Invalid command!");
             }
