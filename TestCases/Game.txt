@@ -20,11 +20,15 @@ cheat add money 100000
 build -a Barn -l <50, 80>
 build -a Barn -l <15, 9>
 buy animal -a COW -n aaa
+tools equip Milk Pail
 collect product -n aaa
 shepherd animals -n aaa -l <10, 10>
 cheat advance date 1d
 shepherd animals -n aaa -l <10, 10>
+cheat advance date 1d
+shepherd animals -n aaa -l <10, 10>
 collect produce -n aaa
+
 meet NPC sebastian
 walk -l <20, 25>
 meet NPC Sebastian

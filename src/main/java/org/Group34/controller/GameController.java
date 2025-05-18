@@ -198,7 +198,7 @@ public class GameController {
             System.out.println("Sebastian has sent you a Gift!");
         }
 
-        return game.time().cheatAdvanceTime(getInt(days) * 13);
+        return game.time().cheatAdvanceTime(getInt(days) * 14);
     }
 
     public Result cheatChangeWeather(String weather) {
