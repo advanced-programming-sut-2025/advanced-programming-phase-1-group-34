@@ -1,0 +1,173 @@
+package org.Group34.controller;
+
+import org.Group34.model.Result;
+import org.Group34.model.entities.Player;
+import org.Group34.model.interactions.Gift;
+import org.Group34.model.items.Item;
+
+
+public class InteractionController {
+    public Result talk(String username, String message, Player player) {
+        Player desiredPlayer = player.getOtherPlayerByName(username);
+
+        if (desiredPlayer == null) {
+            return new Result(false, "This user does not exist.");
+        }
+
+        player.getInteractionByPlayer(desiredPlayer).addMessage(message, false, false);
+        desiredPlayer.getInteractionByPlayer(player).addMessage(message, true, true);
+
+        player.getInteractionByPlayer(desiredPlayer).increaseXp(20);
+        desiredPlayer.getInteractionByPlayer(player).increaseXp(20);
+
+        return new Result(true, "Your message has been sent successfully.");
+    }
+
+    public Result talkHistory(String username, Player player) {
+        Player desiredPlayer = player.getOtherPlayerByName(username);
+
+        if (desiredPlayer == null) {
+            return new Result(false, "This user does not exist.");
+        }
+
+        return new Result(true, player.getInteractionByPlayer(desiredPlayer).talkHistory());
+    }
+
+    public Result gift(String username, String item, int amount, Player player) {
+        Player desiredPlayer = player.getOtherPlayerByName(username);
+
+        if (desiredPlayer == null) {
+            return new Result(false, "This user does not exist.");
+        }
+        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 1) {
+            return new Result(false, "You have not reached the level of friendship necessary for giving gifts.");
+        }
+        else if (!haveEnoughItem(item, player, amount)) {
+            return new Result(false, "You do not have enough of this item.");
+        }
+
+        Item desiredItem = player.getItemFromInventoryByName(item);
+
+        player.removeFromInventory(desiredItem, amount);
+        desiredPlayer.addToInventory(desiredItem, amount);
+
+        player.getInteractionByPlayer(desiredPlayer).addGift(desiredItem, amount, false, false, desiredPlayer);
+        desiredPlayer.getInteractionByPlayer(player).addGift(desiredItem, amount, true, true, desiredPlayer);
+
+        return new Result(true, "Your gift has been successfully sent.");
+    }
+    public Result giftList(Player player) {
+        return new Result(true, player.getGiftList());
+    }
+    public Result giftRate(int giftNumber, int rate, Player player) {
+        if (!isRateValid(rate)) {
+            return new Result(false, "The score must be between 0 and 5.");
+        }
+        else if (player.getGiftByNumber(giftNumber) == null) {
+            return new Result(false, "This gift does not exist.");
+        }
+        Gift gift = player.getGiftByNumber(giftNumber);
+
+        gift.setRate(rate);
+        Player desiredPlayer = gift.getPlayer();
+        int xp = ((rate - 3) * 30) + 15;
+
+        player.getInteractionByPlayer(desiredPlayer).increaseXp(xp);
+        desiredPlayer.getInteractionByPlayer(player).increaseXp(xp);
+
+        return new Result(true, "The desired gift has been successfully rated.");
+    }
+    public Result giftHistory(String username, Player player) {
+        Player desiredPlayer = player.getOtherPlayerByName(username);
+
+        if (desiredPlayer == null) {
+            return new Result(false, "This user does not exist.");
+        }
+
+        return new Result(true, player.getInteractionByPlayer(desiredPlayer).giftHistory());
+    }
+    public Result hug(String username, Player player) {
+        Player desiredPlayer = player.getOtherPlayerByName(username);
+
+        if (desiredPlayer == null) {
+            return new Result(false, "This user does not exist.");
+        }
+        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 2) {
+            return new Result(false, "You have not reached the level of friendship necessary for giving gifts.");
+        }
+
+
+        player.getInteractionByPlayer(desiredPlayer).increaseXp(60);
+        desiredPlayer.getInteractionByPlayer(player).increaseXp(60);
+
+        return new Result(true, "The desired player has been successfully hugged.");
+    }
+    public Result flower(String username, Player player) {
+        Player desiredPlayer = player.getOtherPlayerByName(username);
+
+        if (desiredPlayer == null) {
+            return new Result(false, "This user does not exist.");
+        }
+        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 2) {
+            return new Result(false, "You have not reached the level of friendship necessary for giving gifts.");
+        }
+        else if (!player.isExistInInventory("Flower")) {
+            return new Result(false, "You Do not have any Flower");
+        }
+
+
+        player.getInteractionByPlayer(desiredPlayer).setLevel(3);
+        desiredPlayer.getInteractionByPlayer(player).setLevel(3);
+
+        player.removeFromInventory(player.getItemFromInventoryByName("Flower"), 1);
+        desiredPlayer.addToInventory(player.getItemFromInventoryByName("Flower"), 1);
+
+        return new Result(true, "The desired player has been successfully hugged.");
+    }
+    public Result askMarriage(String username, String ring, Player player) {
+        Player desiredPlayer = player.getOtherPlayerByName(username);
+
+        if (desiredPlayer == null) {
+            return new Result(false, "This user does not exist.");
+        }
+        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 3) {
+            return new Result(false, "You have not reached the level of friendship necessary for giving gifts.");
+        }
+        else if (!player.isExistInInventory(ring)) {
+            return new Result(false, "You Do not have this Ring");
+        }
+        //        else if (!She Accepted) {}
+
+        player.getInteractionByPlayer(desiredPlayer).setLevel(4);
+        desiredPlayer.getInteractionByPlayer(player).setLevel(4);
+
+        player.removeFromInventory(player.getItemFromInventoryByName("Ring"), 1);
+
+        return new Result(true, "The desired player has been successfully hugged.");
+    }
+
+
+
+
+
+
+    private boolean haveEnoughItem(String item, Player player, int amount) {
+        if (!player.isExistInInventory(item)) {
+            return false;
+        }
+
+        Item desiredItem = player.getItemFromInventoryByName(item);
+        if (!(player.getAmountOfItem(desiredItem) > amount)) {
+            return false;
+        }
+
+        return true;
+    }
+    private boolean isRateValid(int rate) {
+        if (rate > 5 || rate <= 0) {
+            return false;
+        }
+        return true;
+    }
+
+}

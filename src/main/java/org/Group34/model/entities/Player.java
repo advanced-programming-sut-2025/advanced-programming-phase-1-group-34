@@ -1,8 +1,14 @@
 package org.Group34.model.entities;
 
+import org.Group34.model.User;
 import org.Group34.model.enums.LevelType;
+import org.Group34.model.interactions.Gift;
+import org.Group34.model.interactions.Interaction;
+import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.Item;
+import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.Recipe;
+import org.Group34.model.items.foods.Fruit;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
 
@@ -23,6 +29,8 @@ public class  Player implements Entity {
     private HashMap<LevelType, Integer> levelUnit = createInitialLevelMap();
     private HashMap<LevelType, Integer> level = createInitialLevelMap();
 
+    private HashMap<Player, Interaction> interactions = new HashMap<>();
+
     private Item currentTool;
 
     {
@@ -33,6 +41,10 @@ public class  Player implements Entity {
         inventory.put(new Scythe(), 1);
         inventory.put(new Backpack(ToolType.BASIC_BACKPACK), 1);
         inventory.put(new TrashCan(ToolType.PLASTIC_TRASH_CAN), 1);
+        inventory.put(PlantingSource.JAZZ_SEEDS, 20);
+        inventory.put(Fertilizer.SPEED_GROW, 10);
+        inventory.put(new MilkPail(), 1);
+        inventory.put(Fruit.APPLE, 20);
     }
 
 
@@ -143,6 +155,15 @@ public class  Player implements Entity {
         }
     }
 
+    public boolean isExistInInventory(String name) {
+        for (Item item : inventory.keySet()) {
+            if (item.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Item getItemFromInventoryByName(String name) {
         for (Item item : inventory.keySet()) {
             if (item.getName().equals(name)) {
@@ -204,5 +225,80 @@ public class  Player implements Entity {
     @Override
     public String toString() {
         return "P";
+    }
+
+    public void setInteractions(HashMap<User, Player> allPlayers) {
+        for (User user : allPlayers.keySet()) {
+            allPlayers.get(user).setName(user.getUsername());
+        }
+        for (User user : allPlayers.keySet()) {
+            if (allPlayers.get(user) != this) {
+                interactions.put(allPlayers.get(user), new Interaction());
+            }
+        }
+    }
+
+    public String showFriendships() {
+        StringBuilder result = new StringBuilder();
+        result.append(" ===== Friendships =====\n");
+
+        for (Player player : interactions.keySet()) {
+            result
+                    .append("Name: " + player.getName() + "\n")
+                    .append("xp: " + interactions.get(player).getXp() + "\n")
+                    .append("Friendship Level: " + interactions.get(player).getLevel() + "\n\n");
+        }
+
+        return result.toString();
+    }
+
+    public Player getOtherPlayerByName(String username) {
+        for (Player player : interactions.keySet()) {
+            if (player.getName().equals(username)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public Interaction getInteractionByPlayer(Player player) {
+        for (Player player1 : interactions.keySet()) {
+            if (player1.equals(player)) {
+                return interactions.get(player1);
+            }
+        }
+        return null;
+    }
+
+    public String getGiftList() {
+        StringBuilder result = new StringBuilder();
+        int index = 1;
+        result.append(" ===== Gift List =====\n");
+
+        for (Interaction value : interactions.values()) {
+            for (Gift gift : value.getGifts()) {
+                if (gift.isReceived()) {
+                    result
+                            .append("Number: " + gift.getNumber() + "\n")
+                            .append("item: " + gift.getItem().getName() + "\n")
+                            .append("Amount: " + gift.getAmount() + "\n\n");
+                }
+                gift.setNumber(index);
+                index++;
+            }
+        }
+
+        return result.toString();
+    }
+
+    public Gift getGiftByNumber(int number) {
+        for (Interaction value : interactions.values()) {
+            for (Gift gift : value.getGifts()) {
+                if (gift.getNumber() == number) {
+                    return gift;
+                }
+            }
+        }
+        return null;
     }
 }
