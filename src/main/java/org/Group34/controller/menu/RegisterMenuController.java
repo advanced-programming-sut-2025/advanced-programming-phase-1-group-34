@@ -68,7 +68,6 @@ public class RegisterMenuController {
                 }
             }
         }
-        showSecurityQuestions();
         User newUser = new User(username, password, nickname, email, gender);
         App.addUser(newUser);
         App.setCurrentUser(newUser);
@@ -110,7 +109,6 @@ public class RegisterMenuController {
             }
         }
 
-        showSecurityQuestions();
         User newUser = new User(username, password, nickname, email, gender);
         App.addUser(newUser);
         App.setCurrentUser(newUser);
@@ -149,13 +147,8 @@ public class RegisterMenuController {
         return password.matches("[a-zA-Z0-9!@#$%^&*()_\\-+=\\[\\]{};:'\",.<>/?\\\\|]+");
     }
 
-    private void showSecurityQuestions() {
-        ArrayList<String> securityQuestions = new ArrayList<>(App.getSecurityQuestions());
-        System.out.println("Please pick a question");
-        System.out.println("Security Questions:");
-        for (int i=0; i<7; i++) {
-            System.out.println((i+1) + ". " + securityQuestions.get(i));
-        }
+    public ArrayList<String> getSecurityQuestions() {
+        return new ArrayList<>(App.getSecurityQuestions());
     }
 
     private String generateRandomPassword() {

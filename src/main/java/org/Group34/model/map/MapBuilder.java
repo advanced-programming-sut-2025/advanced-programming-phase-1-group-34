@@ -55,7 +55,7 @@ public class MapBuilder {
     }
 
     /**
-     * After setting all Players FarmType we will call this function to make a Map for Game
+     * After setting all Players FarmType we will call this function to make a Map for MyGame
      */
     public Map generate() {
         HashMap<Player, Space> playerFarms = new HashMap<>();

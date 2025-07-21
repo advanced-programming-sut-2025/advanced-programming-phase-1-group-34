@@ -5,7 +5,7 @@ import org.Group34.controller.GameController;
 import org.Group34.controller.ShopController;
 import org.Group34.controller.ToolsController;
 import org.Group34.model.App;
-import org.Group34.model.Game;
+import org.Group34.model.MyGame;
 import org.Group34.model.Result;
 import org.Group34.model.enums.Menu;
 import org.Group34.model.enums.command.GameCommands;
@@ -21,8 +21,8 @@ public class GameView extends AppMenu {
     ToolsController toolsController;
     ShopController shopController;
 
-    public GameView(Game game) {
-        this.controller = new GameController(game);
+    public GameView(MyGame myGame) {
+        this.controller = new GameController(myGame);
         this.farmingController =  controller.getFarmingController();
         this.toolsController = controller.getToolsController();
         this.shopController = controller.getShopController();

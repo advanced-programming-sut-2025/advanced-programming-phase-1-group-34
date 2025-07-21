@@ -1,7 +1,6 @@
 package org.Group34.view;
 
 import org.Group34.model.App;
-import org.Group34.model.Game;
 import org.Group34.view.menu.*;
 
 import java.util.Scanner;

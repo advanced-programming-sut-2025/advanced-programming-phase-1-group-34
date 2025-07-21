@@ -1,15 +1,23 @@
 plugins {
-    id 'java'
+    id 'application'
 }
 
 group = "org.Group34"
 version = "1.0-SNAPSHOT"
+
+ext {
+    gdxVersion = '1.12.0'
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
     testImplementation 'org.mockito:mockito-core:5.3.1'
@@ -19,4 +27,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+application {
+    mainClass = 'org.Group34.AppLauncher'
 }

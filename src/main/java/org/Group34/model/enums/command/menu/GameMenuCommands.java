@@ -3,7 +3,7 @@ package org.Group34.model.enums.command.menu;
 import org.Group34.model.enums.command.Command;
 
 /**
- * Game menu specified commands regex
+ * MyGame menu specified commands regex
  */
 
 public enum GameMenuCommands implements Command {

@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 
 
-public record Game(User creator, HashMap<User, Player> players, Map map, Time time, WeatherSystem weatherSystem) {
+public record MyGame(User creator, HashMap<User, Player> players, Map map, Time time, WeatherSystem weatherSystem) {
 
-    public static Game load(String userName){
+    public static MyGame load(String userName){
         //TODO reads json file and returns null if there is no game
         return null;
     }

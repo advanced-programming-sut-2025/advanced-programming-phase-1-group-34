@@ -13,7 +13,6 @@ import org.Group34.view.GameView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class GameMenuController {
     private int usersChoosingMap = 0;
@@ -74,12 +73,12 @@ public class GameMenuController {
         if (usersChoosingMap > 0) {
             return new Result(true, "Map '" + map + "' selected. " + usersChoosingMap + " players still need to choose.");
         } else {
-            Game game = generateGame();
+            MyGame myGame = generateGame();
 
             for (User u: users)
-                u.setGame(game);
+                u.setGame(myGame);
 
-            return new Result(true, "Map '" + map + "' selected. All players have chosen. Game is starting!");
+            return new Result(true, "Map '" + map + "' selected. All players have chosen. MyGame is starting!");
         }
     }
 
@@ -88,15 +87,15 @@ public class GameMenuController {
             return new Result(false, "Each player must choose a map first!");
         }
 
-        Game game = App.getCurrentUser().getGame();
-        if (game == null)
-            return new Result(false, "You don't have an active game.");
+        MyGame myGame = App.getCurrentUser().getGame();
+        if (myGame == null)
+            return new Result(false, "You don't have an active myGame.");
 
         App.setCurrentMenu(Menu.GAME);
-        App.setCurrentGame(game);
-        App.setAppMenu(new GameView(game));
+        App.setCurrentGame(myGame);
+        App.setAppMenu(new GameView(myGame));
 
-        return new Result(true, "Game loaded successfully.");
+        return new Result(true, "MyGame loaded successfully.");
     }
 
     public Result showMenu() {
@@ -113,12 +112,12 @@ public class GameMenuController {
         return null;
     }
 
-    private Game generateGame(){
+    private MyGame generateGame(){
         HashMap<User, Player> players = new HashMap<>();
         for (User user: users)
             players.put(user, new Player(PLAYER_INITIAL_LOCATION));
 
-        return new Game(App.getCurrentUser(), players, generateMap(players.values()), new Time(), new WeatherSystem());
+        return new MyGame(App.getCurrentUser(), players, generateMap(players.values()), new Time(), new WeatherSystem());
     }
 
     private Map generateMap(Collection<Player> players){

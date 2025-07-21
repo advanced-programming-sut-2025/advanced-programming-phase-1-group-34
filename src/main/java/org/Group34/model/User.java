@@ -2,7 +2,7 @@
 package org.Group34.model;
 
 /**
- * Represents a user in the game system
+ * Represents a user in the myGame system
  * Only essential fields for Main menu and Profile menu are added
  * Make sure to complete it
  */
@@ -15,7 +15,7 @@ public class User {
     private String gender;
     private String securityQuestion;
     private String securityAnswer;
-    private Game game = null;
+    private MyGame myGame = null;
 
     private int highestMoney;
 
@@ -101,13 +101,13 @@ public class User {
         this.securityAnswer = securityAnswer;
     }
 
-    public Game getGame() {
-        if (game == null)
-            game = Game.load(username);
-        return game;
+    public MyGame getGame() {
+        if (myGame == null)
+            myGame = MyGame.load(username);
+        return myGame;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
+    public void setGame(MyGame myGame) {
+        this.myGame = myGame;
     }
 }

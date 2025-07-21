@@ -22,7 +22,7 @@ public class App {
 
     private static Menu currentMenu = Menu.REGISTER_MENU;
     private static AppMenu appMenu = new RegisterMenu();
-    private static Game currentGame = null;
+    private static MyGame currentMyGame = null;
 
     private static ArrayList<String> securityQuestions = new ArrayList<>();
 
@@ -90,11 +90,11 @@ public class App {
         App.appMenu = appMenu;
     }
 
-    public static Game getCurrentGame() {
-        return currentGame;
+    public static MyGame getCurrentGame() {
+        return currentMyGame;
     }
 
-    public static void setCurrentGame(Game currentGame) {
-        App.currentGame = currentGame;
+    public static void setCurrentGame(MyGame currentMyGame) {
+        App.currentMyGame = currentMyGame;
     }
 }

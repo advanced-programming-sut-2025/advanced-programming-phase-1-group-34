@@ -1,6 +1,6 @@
 package org.Group34.controller;
 
-import org.Group34.model.Game;
+import org.Group34.model.MyGame;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.shops.*;
@@ -21,13 +21,13 @@ import java.util.*;
 public class StartANewDayController {
 
     private final static int MAX_ENERGY = 200;
-    private Game currentGame;
+    private MyGame currentMyGame;
     private ArrayList<Space> spaces;
     private Time time;
 
 
-    public StartANewDayController(Game currentGame, ArrayList<Space> spaces, Time time) {
-        this.currentGame = currentGame;
+    public StartANewDayController(MyGame currentMyGame, ArrayList<Space> spaces, Time time) {
+        this.currentMyGame = currentMyGame;
         this.spaces = spaces;
         this.time = time;
     }
@@ -37,14 +37,14 @@ public class StartANewDayController {
       to perform tasks to start a new day
      * */
     public void ManageAllTasks() {
-        currentGame.weatherSystem().advanceWeather(currentGame.time());
+        currentMyGame.weatherSystem().advanceWeather(currentMyGame.time());
         iterateWholeMap();
         resetPlayersEnergy();
     }
 
 
     private void resetPlayersEnergy() {
-        for (Player player: currentGame.players().values()){
+        for (Player player: currentMyGame.players().values()){
             if (player.isPassedOut()){
                 player.setEnergy(MAX_ENERGY * 3 /4);
                 player.setPassedOut(false);
@@ -89,7 +89,7 @@ public class StartANewDayController {
     }
 
     private void lightningStrike(Space space) {
-        WeatherSystem weather = currentGame.weatherSystem();
+        WeatherSystem weather = currentMyGame.weatherSystem();
         Entity[][] entities = space.entities();
 
         for (int[] coordinate: weather.generateLightningStrikes()){

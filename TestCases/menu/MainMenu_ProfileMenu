@@ -11,7 +11,7 @@ change password -p NewP@ss123 -o Pass1234
 user info
 menu enter main menu
 show current menu
-menu enter game menu
+menu enter myGame menu
 menu enter main menu
 user logout
 menu exit
