@@ -104,6 +104,19 @@ public enum GameCommands implements Command {
     SELL_WITH_COUNT("\\s*sell\\s+(?<productName>.+)\\s+-n\\s+(?<count>[0-9]+)\\s*"),
     // -------------------------
 
+    // ----- Interaction -----
+    FRIENDSHIPS("\\s*friendships\\s*"),
+    TALK("\\s*talk\\s+-u\\s+(?<username>.+)\\s+-m\\s+(?<message>.+)\\s*"),
+    TALK_HISTORY("\\s*talk\\s+history\\s+-u\\s+(?<username>.+)\\s*"),
+    GIFT("\\s*gift\\s+-u\\s+(?<username>\\S+)\\s+-i\\s+(?<item>\\S+)\\s+-a\\s+(?<amount>[0-9]+)\\s*"),
+    GIFT_LIST("\\s*gift\\s+list\\s*"),
+    GIFT_RATE("\\s*gift\\s+rate\\s+-i\\s+(?<giftNumber>[0-9]+)\\s+-r\\s+(?<rate>\\d+)\\s*"),
+    GIFT_HISTORY("\\s*gift\\s+history\\s+-u\\s+(?<username>.+)\\s*"),
+    HUG("\\s*hug\\s+-u\\s+(?<username>.+)\\s*"),
+    FLOWER("\\s*flower\\s+-u\\s+(?<username>.+)\\s*"),
+    ASK_MARRIAGE("\\s*ask\\s+marriage\\s+-u\\s+(?<username>.+)\\s+-r\\s+(?<ring>.+)\\s*"),
+    // -----------------------
+
     BUILD_ANIMALS_PLACEMENT_ERROR("build -a Barn -l <50, 80>"),
     BUILD_LOCATION_ERROR("build -a Barn -l <200, 200>"),
     BUILD_PLACE_ERROR("build -a sth -l <50, 80>"),

@@ -117,6 +117,10 @@ public class GameMenuController {
         for (User user: users)
             players.put(user, new Player(PLAYER_INITIAL_LOCATION));
 
+        for (User user : players.keySet()) {
+            players.get(user).setInteractions(players);
+        }
+
         return new MyGame(App.getCurrentUser(), players, generateMap(players.values()), new Time(), new WeatherSystem());
     }
 

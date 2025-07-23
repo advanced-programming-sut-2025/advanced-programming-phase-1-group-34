@@ -44,6 +44,7 @@ public class GameController {
     private final InventoryController inventoryController = new InventoryController();
     private final HouseMenuController houseMenuController = new HouseMenuController();
     private final ArtisanController artisanController = new ArtisanController();
+    private final InteractionController interactionController = new InteractionController();
 
     public boolean isThirdLevel = false;
     public boolean flag = false;
@@ -662,5 +663,42 @@ public class GameController {
         if (item == null)
             return new Result(false, "This Item doesn't exist.");
         return artisanController.useArtisan((ProcessorCraft) item, getPlayer(), myGame.time(), getItemByName(item_1), getItemByName(item_2));
+    }
+
+    // ----- Interaction -----
+    public Result showFriendships() {
+        return new Result(true, getPlayer().showFriendships());
+    }
+    public Result talk(String username, String message) {
+        return interactionController.talk(username, message, getPlayer());
+    }
+    public Result talkHistory(String username) {
+        return interactionController.talkHistory(username, getPlayer());
+    }
+    public Result gift(String username, String item, int amount) {
+        return interactionController.gift(username, item, amount, getPlayer());
+    }
+    public Result giftList() {
+        return interactionController.giftList(getPlayer());
+    }
+    public Result giftRate(int giftNumber, int rate) {
+        return interactionController.giftRate(giftNumber, rate, getPlayer());
+    }
+    public Result giftHistory(String username) {
+        return interactionController.giftHistory(username, getPlayer());
+    }
+    public Result hug(String username) {
+        return interactionController.hug(username, getPlayer());
+    }
+    public Result flower(String username) {
+        return interactionController.flower(username, getPlayer());
+    }
+    public Result askMarriage(String username, String ring) {
+        return interactionController.askMarriage(username, ring, getPlayer());
+    }
+
+
+    public Result test() {
+        return new Result(true, getPlayer().getName());
     }
 }

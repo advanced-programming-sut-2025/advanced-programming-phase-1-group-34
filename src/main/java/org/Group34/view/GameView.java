@@ -573,6 +573,112 @@ public class GameView extends AppMenu {
                     showMessage(result.message());
                 }
             }
+
+            // ----- Interaction -----
+            else if (command.matches(GameCommands.FRIENDSHIPS.getRegex())) {
+                Result result = controller.showFriendships();
+                showMessage(result.message());
+            }
+            else if (command.matches(GameCommands.TALK.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.TALK.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String username = matcher.group("username").trim();
+                    String message = matcher.group("message").trim();
+
+                    Result result = controller.talk(username, message);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.TALK_HISTORY.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.TALK_HISTORY.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String username = matcher.group("username").trim();
+
+                    Result result = controller.talkHistory(username);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.GIFT.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.GIFT.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String username = matcher.group("username").trim();
+                    String item = matcher.group("item").trim();
+                    int amount = Integer.parseInt(matcher.group("amount").trim());
+
+                    Result result = controller.gift(username, item, amount);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.GIFT_RATE.getRegex())) {
+                Result result = controller.giftList();
+                showMessage(result.message());
+            }
+            else if (command.matches(GameCommands.GIFT_RATE.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.GIFT_RATE.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    int giftNumber = Integer.parseInt(matcher.group("giftNumber").trim());
+                    int rate = Integer.parseInt(matcher.group("amount").trim());
+
+                    Result result = controller.giftRate(giftNumber, rate);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.GIFT_HISTORY.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.GIFT_HISTORY.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String username = matcher.group("username").trim();
+
+                    Result result = controller.giftHistory(username);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.HUG.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.HUG.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String username = matcher.group("username").trim();
+
+                    Result result = controller.hug(username);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.FLOWER.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.FLOWER.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String username = matcher.group("username").trim();
+
+                    Result result = controller.flower(username);
+                    showMessage(result.message());
+                }
+            }
+            else if (command.matches(GameCommands.ASK_MARRIAGE.getRegex())) {
+                Pattern pattern = Pattern.compile(GameCommands.ASK_MARRIAGE.getRegex());
+                Matcher matcher = pattern.matcher(command);
+
+                if (matcher.find()) {
+                    String username = matcher.group("username").trim();
+                    String ring = matcher.group("ring").trim();
+
+                    Result result = controller.askMarriage(username, ring);
+                    showMessage(result.message());
+                }
+            }
+
+            // -----------------------
+
             // ---------------------
             else {
                 showMessage("Invalid command!");
