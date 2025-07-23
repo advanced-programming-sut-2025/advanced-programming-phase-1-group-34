@@ -1,22 +1,28 @@
 package org.Group34.model.items.foods;
 
+import com.badlogic.gdx.graphics.Texture;
+import org.Group34.model.gameAssetManagers.CropAssetManager;
+import org.Group34.model.gameAssetManagers.TreeAssetManager;
+
 public enum Fungi implements FarmingProduct{
     // Fungi
-    COMMON_MUSHROOM("Common Mushroom", 40, true, 38, 17),
-    RHUBARB("Rhubarb", 220, false, 0, 0);
+    COMMON_MUSHROOM("Common Mushroom", 40, true, 38, 17, TreeAssetManager.getCommonMushroom()),
+    RHUBARB("Rhubarb", 220, false, 0, 0, CropAssetManager.getRhubarb());
 
     private String name;
     private int baseSellPrice;
     private boolean isEdible;
     private int energy;
     private int health;
+    private Texture texture;
 
-    Fungi(String name, int price, boolean isEdible, int energy, int health) {
+    Fungi(String name, int price, boolean isEdible, int energy, int health, Texture texture) {
         this.name = name;
         this.baseSellPrice = price;
         this.isEdible = isEdible;
         this.energy = energy;
         this.health = health;
+        this.texture = texture;
     }
 
     @Override
@@ -58,5 +64,10 @@ public enum Fungi implements FarmingProduct{
     @Override
     public int getHealth() {
         return health;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return texture;
     }
 }

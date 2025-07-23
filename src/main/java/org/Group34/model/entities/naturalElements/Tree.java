@@ -1,5 +1,6 @@
 package org.Group34.model.entities.naturalElements;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Color;
 import org.Group34.model.enums.Season;
@@ -23,6 +24,7 @@ public class Tree implements Entity, PlantAble {
     private FarmingProduct farmingProduct;
     private int fruitHarvestCycle;
     private ArrayList<Season> seasons;
+    private Texture[] stageTexture;
 
     private int age = 0;
     private int growthLevel = 0;
@@ -37,8 +39,7 @@ public class Tree implements Entity, PlantAble {
     private Fertilizer fertilizer = null;
 
 
-
-    public Tree(String name, PlantingSource source, int[] stages, int totalHarvestTime, FarmingProduct farmingProduct, String[] seasons) {
+    public Tree(String name, PlantingSource source, int[] stages, int totalHarvestTime, FarmingProduct farmingProduct, String[] seasons, Texture[] stageTexture) {
         this.name = name;
         this.source = source;
         this.stages = stages;
@@ -46,6 +47,7 @@ public class Tree implements Entity, PlantAble {
         this.needWater = true;
         this.maxLevel = stages.length;
         this.seasons = new ArrayList<>();
+        this.stageTexture = stageTexture;
 
         for (String season : seasons) {
             if (season.equals("Spring")) {
@@ -66,6 +68,7 @@ public class Tree implements Entity, PlantAble {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -73,6 +76,7 @@ public class Tree implements Entity, PlantAble {
     public PlantingSource getSource() {
         return source;
     }
+
     public void setSource(PlantingSource source) {
         this.source = source;
     }
@@ -80,6 +84,7 @@ public class Tree implements Entity, PlantAble {
     public int[] getStages() {
         return stages;
     }
+
     public void setStages(int[] stages) {
         this.stages = stages;
     }
@@ -87,6 +92,7 @@ public class Tree implements Entity, PlantAble {
     public int getTotalHarvestTime() {
         return totalHarvestTime;
     }
+
     public void setTotalHarvestTime(int totalHarvestTime) {
         this.totalHarvestTime = totalHarvestTime;
     }
@@ -94,6 +100,7 @@ public class Tree implements Entity, PlantAble {
     public FarmingProduct getFruit() {
         return farmingProduct;
     }
+
     public void setFruit(FarmingProduct farmingProduct) {
         this.farmingProduct = farmingProduct;
     }
@@ -101,6 +108,7 @@ public class Tree implements Entity, PlantAble {
     public int getFruitHarvestCycle() {
         return fruitHarvestCycle;
     }
+
     public void setFruitHarvestCycle(int fruitHarvestCycle) {
         this.fruitHarvestCycle = fruitHarvestCycle;
     }
@@ -108,6 +116,7 @@ public class Tree implements Entity, PlantAble {
     public ArrayList<Season> getSeason() {
         return seasons;
     }
+
     public void setSeason(ArrayList<Season> season) {
         this.seasons = season;
     }
@@ -115,6 +124,7 @@ public class Tree implements Entity, PlantAble {
     public boolean getNeedWater() {
         return needWater;
     }
+
     public void setNeedWater(boolean needWater) {
         this.needWater = needWater;
     }
@@ -122,6 +132,7 @@ public class Tree implements Entity, PlantAble {
     public int getAge() {
         return age;
     }
+
     public void setAge(int age) {
         this.age = age;
     }
@@ -129,6 +140,7 @@ public class Tree implements Entity, PlantAble {
     public int getGrowthLevel() {
         return growthLevel;
     }
+
     public void setGrowthLevel(int growthLevel) {
         this.growthLevel = growthLevel;
     }
@@ -136,6 +148,7 @@ public class Tree implements Entity, PlantAble {
     public boolean getHarvested() {
         return harvested;
     }
+
     public void setHarvested(boolean harvested) {
         this.harvested = harvested;
     }
@@ -143,6 +156,7 @@ public class Tree implements Entity, PlantAble {
     public int getMaxLevel() {
         return maxLevel;
     }
+
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
     }
@@ -150,6 +164,7 @@ public class Tree implements Entity, PlantAble {
     public boolean isBurned() {
         return isBurned;
     }
+
     public void setBurned(boolean isBurned) {
         this.isBurned = isBurned;
     }
@@ -157,6 +172,7 @@ public class Tree implements Entity, PlantAble {
     public boolean isAttackedByCrow() {
         return isAttackedByCrow;
     }
+
     public void setAttackedByCrow(boolean isAttackedByCrow) {
         this.isAttackedByCrow = isAttackedByCrow;
     }
@@ -164,6 +180,7 @@ public class Tree implements Entity, PlantAble {
     public boolean isGivenFertilizer() {
         return isGivenFertilizer;
     }
+
     public void setGivenFertilizer(boolean isGivenFertilizer) {
         this.isGivenFertilizer = isGivenFertilizer;
     }
@@ -171,6 +188,7 @@ public class Tree implements Entity, PlantAble {
     public Fertilizer getFertilizer() {
         return fertilizer;
     }
+
     public void setFertilizer(Fertilizer fertilizer) {
         this.fertilizer = fertilizer;
     }
@@ -178,9 +196,15 @@ public class Tree implements Entity, PlantAble {
     public int getNumberOfDaysNeedWater() {
         return numberOfDaysNeedWater;
     }
+
     public void setNumberOfDaysNeedWater(int number) {
         this.numberOfDaysNeedWater = number;
     }
+
+    public Texture[] getStageTexture() {
+        return stageTexture;
+    }
+
     // ---------------------------
 
     public String getStructuralInformation() {
@@ -221,7 +245,7 @@ public class Tree implements Entity, PlantAble {
 
         result
                 .append("Name: " + name + "\n")
-                .append("Time Remaining Until Bears Fruit: " );
+                .append("Time Remaining Until Bears Fruit: ");
 
         if (harvested) {
             if (age >= fruitHarvestCycle) {
@@ -266,14 +290,13 @@ public class Tree implements Entity, PlantAble {
             needWater = true;
         }
     }
+
     private void checkAgeAndGrow() {
         if (harvested) {
             if (age == fruitHarvestCycle && !isAttackedByCrow) {
                 growthLevel = maxLevel;
             }
-        }
-
-        else {
+        } else {
             for (int i = 0; i < maxLevel; i++) {
                 if (growthLevel == i) {
                     int levelUpTime = 0;
@@ -292,6 +315,7 @@ public class Tree implements Entity, PlantAble {
     public void lightningStrike() {
         isBurned = true;
     }
+
     public void crowInvasion() {
         isAttackedByCrow = true;
     }

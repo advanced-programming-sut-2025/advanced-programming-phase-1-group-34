@@ -1,5 +1,6 @@
 package org.Group34.model.entities.naturalElements;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Color;
 import org.Group34.model.enums.Season;
@@ -20,6 +21,7 @@ public class Crop implements Entity, PlantAble {
     private FarmingProduct farmingProduct;
     private ArrayList<Season> seasons;
     private boolean canBecomeGiant;
+    private Texture[] stageTexture;
 
     private boolean isGiant = false;
     private int age = 0;
@@ -33,7 +35,7 @@ public class Crop implements Entity, PlantAble {
     private int numberOfDaysNeedWater = 0;
 
     public Crop(String name, PlantingSource source, int[] stage, int totalHarvestTime, boolean isOneTime,
-                int regrowthTime, FarmingProduct farmingProduct, String[] seasons, boolean canBecomeGiant) {
+                int regrowthTime, FarmingProduct farmingProduct, String[] seasons, boolean canBecomeGiant, Texture[] stageTexture) {
         this.name = name;
         this.source = source;
         this.stages = stage;
@@ -43,6 +45,7 @@ public class Crop implements Entity, PlantAble {
         this.farmingProduct = farmingProduct;
         this.canBecomeGiant = canBecomeGiant;
         this.seasons = new ArrayList<>();
+        this.stageTexture = stageTexture;
 
         this.maxLevel = stage.length;
 

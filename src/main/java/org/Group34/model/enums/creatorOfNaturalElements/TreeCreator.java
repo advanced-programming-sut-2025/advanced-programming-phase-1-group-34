@@ -1,6 +1,8 @@
 package org.Group34.model.enums.creatorOfNaturalElements;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.naturalElements.Tree;
+import org.Group34.model.gameAssetManagers.TreeAssetManager;
 import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.foods.*;
 
@@ -8,23 +10,23 @@ import org.Group34.model.items.foods.*;
  * Enum for creating trees, now using PlantingSource instead of raw source strings.
  */
 public enum TreeCreator {
-    APRICOT_TREE("Apricot Tree", PlantingSource.APRICOT_SAPLING, new int[]{7,7,7,7}, 28, Fruit.APRICOT, new String[]{"Spring"}),
-    CHERRY_TREE("Cherry Tree", PlantingSource.CHERRY_SAPLING, new int[]{7,7,7,7}, 28, Fruit.CHERRY, new String[]{"Spring"}),
+    APRICOT_TREE("Apricot Tree", PlantingSource.APRICOT_SAPLING, new int[]{7,7,7,7}, 28, Fruit.APRICOT, new String[]{"Spring"}, new Texture[]{TreeAssetManager.getApricotStage1(), TreeAssetManager.getApricotStage2(), TreeAssetManager.getApricotStage3(), TreeAssetManager.getApricotStage4()}),
+    CHERRY_TREE("Cherry Tree", PlantingSource.CHERRY_SAPLING, new int[]{7,7,7,7}, 28, Fruit.CHERRY, new String[]{"Spring"}, new Texture[]{TreeAssetManager.getCherryStage1(), TreeAssetManager.getCherryStage2(), TreeAssetManager.getCherryStage3(), TreeAssetManager.getCherryStage4()}),
 
-    BANANA_TREE("Banana Tree", PlantingSource.BANANA_SAPLING, new int[]{7,7,7,7}, 28, Fruit.BANANA, new String[]{"Summer"}),
-    MANGO_TREE("Mango Tree", PlantingSource.MANGO_SAPLING, new int[]{7,7,7,7}, 28, Fruit.MANGO, new String[]{"Summer"}),
-    ORANGE_TREE("Orange Tree", PlantingSource.ORANGE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.ORANGE, new String[]{"Summer"}),
-    PEACH_TREE("Peach Tree", PlantingSource.PEACH_SAPLING, new int[]{7,7,7,7}, 28, Fruit.PEACH, new String[]{"Summer"}),
+    BANANA_TREE("Banana Tree", PlantingSource.BANANA_SAPLING, new int[]{7,7,7,7}, 28, Fruit.BANANA, new String[]{"Summer"}, new Texture[]{TreeAssetManager.getBananaStage1(), TreeAssetManager.getBananaStage2(), TreeAssetManager.getBananaStage3(), TreeAssetManager.getBananaStage4()}),
+    MANGO_TREE("Mango Tree", PlantingSource.MANGO_SAPLING, new int[]{7,7,7,7}, 28, Fruit.MANGO, new String[]{"Summer"}, new Texture[]{TreeAssetManager.getMangoStage1(), TreeAssetManager.getMangoStage2(), TreeAssetManager.getMangoStage3(), TreeAssetManager.getMangoStage4()}),
+    ORANGE_TREE("Orange Tree", PlantingSource.ORANGE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.ORANGE, new String[]{"Summer"}, new Texture[]{TreeAssetManager.getOrangeStage1(), TreeAssetManager.getOrangeStage2(), TreeAssetManager.getOrangeStage3(), TreeAssetManager.getOrangeStage4()}),
+    PEACH_TREE("Peach Tree", PlantingSource.PEACH_SAPLING, new int[]{7,7,7,7}, 28, Fruit.PEACH, new String[]{"Summer"}, new Texture[]{TreeAssetManager.getPeachStage1(), TreeAssetManager.getPeachStage2(), TreeAssetManager.getPeachStage3(), TreeAssetManager.getPeachStage4()}),
 
-    APPLE_TREE("Apple Tree", PlantingSource.APPLE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.APPLE, new String[]{"Autumn"}),
-    POMEGRANATE_TREE("Pomegranate Tree", PlantingSource.POMEGRANATE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.POMEGRANATE, new String[]{"Autumn"}),
+    APPLE_TREE("Apple Tree", PlantingSource.APPLE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.APPLE, new String[]{"Autumn"}, new Texture[]{TreeAssetManager.getAppleStage1(), TreeAssetManager.getAppleStage2(), TreeAssetManager.getAppleStage3(), TreeAssetManager.getAppleStage4()}),
+    POMEGRANATE_TREE("Pomegranate Tree", PlantingSource.POMEGRANATE_SAPLING, new int[]{7,7,7,7}, 28, Fruit.POMEGRANATE, new String[]{"Autumn"}, new Texture[]{TreeAssetManager.getPomegranateStage1(), TreeAssetManager.getPomegranateStage2(), TreeAssetManager.getPomegranateStage3(), TreeAssetManager.getPomegranateStage4()}),
 
-    OAK_TREE("Oak Tree", PlantingSource.OAK_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.OAK_RESIN, new String[]{"Spring","Summer","Autumn","Winter"}),
-    MAPLE_TREE("Maple Tree", PlantingSource.MAPLE_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.MAPLE_SYRUP, new String[]{"Spring","Summer","Autumn","Winter"}),
-    PINE_TREE("Pine Tree", PlantingSource.PINE_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.PINE_TAR, new String[]{"Spring","Summer","Autumn","Winter"}),
-    MAHOGANY_TREE("Mahogany Tree", PlantingSource.MAHOGANY_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.SAP, new String[]{"Spring","Summer","Autumn","Winter"}),
-    MUSHROOM_TREE("Mushroom Tree", PlantingSource.MUSHROOM_SAPLING, new int[]{7,7,7,7}, 28, Fungi.COMMON_MUSHROOM, new String[]{"Spring","Summer","Autumn","Winter"}),
-    MYSTIC_TREE("Mystic Tree", PlantingSource.MYSTIC_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.MYSTIC_SYRUP, new String[]{"Spring","Summer","Autumn","Winter"});
+    OAK_TREE("Oak Tree", PlantingSource.OAK_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.OAK_RESIN, new String[]{"Spring","Summer","Autumn","Winter"}, new Texture[]{TreeAssetManager.getOakStage1(), TreeAssetManager.getOakStage2(), TreeAssetManager.getOakStage3(), TreeAssetManager.getOakStage4()}),
+    MAPLE_TREE("Maple Tree", PlantingSource.MAPLE_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.MAPLE_SYRUP, new String[]{"Spring","Summer","Autumn","Winter"}, new Texture[]{TreeAssetManager.getMapleStage1(), TreeAssetManager.getMapleStage2(), TreeAssetManager.getMapleStage3(), TreeAssetManager.getMapleStage4()}),
+    PINE_TREE("Pine Tree", PlantingSource.PINE_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.PINE_TAR, new String[]{"Spring","Summer","Autumn","Winter"}, new Texture[]{TreeAssetManager.getPineStage1(), TreeAssetManager.getPineStage2(), TreeAssetManager.getPineStage3(), TreeAssetManager.getPineStage4()}),
+    MAHOGANY_TREE("Mahogany Tree", PlantingSource.MAHOGANY_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.SAP, new String[]{"Spring","Summer","Autumn","Winter"}, new Texture[]{TreeAssetManager.getMahoganyStage1(), TreeAssetManager.getMahoganyStage2(), TreeAssetManager.getMahoganyStage3(), TreeAssetManager.getMahoganyStage4()}),
+    MUSHROOM_TREE("Mushroom Tree", PlantingSource.MUSHROOM_SAPLING, new int[]{7,7,7,7}, 28, Fungi.COMMON_MUSHROOM, new String[]{"Spring","Summer","Autumn","Winter"}, new Texture[]{TreeAssetManager.getMushroomStage1(), TreeAssetManager.getMushroomStage2(), TreeAssetManager.getMushroomStage3(), TreeAssetManager.getMushroomStage4()}),
+    MYSTIC_TREE("Mystic Tree", PlantingSource.MYSTIC_SAPLING, new int[]{7,7,7,7}, 28, OtherFarmingProduct.MYSTIC_SYRUP, new String[]{"Spring","Summer","Autumn","Winter"}, new Texture[]{TreeAssetManager.getMysticStage1(), TreeAssetManager.getMysticStage2(), TreeAssetManager.getMysticStage3(), TreeAssetManager.getMysticStage4()});
 
     private final String name;
     private final PlantingSource source;
@@ -32,19 +34,22 @@ public enum TreeCreator {
     private final int totalHarvestTime;
     private final FarmingProduct farmingProduct;
     private final String[] seasons;
+    private final Texture[] stageTexture;
 
     TreeCreator(String name,
                 PlantingSource source,
                 int[] stages,
                 int totalHarvestTime,
                 FarmingProduct farmingProduct,
-                String[] seasons) {
+                String[] seasons,
+                Texture[] stageTexture) {
         this.name = name;
         this.source = source;
         this.stages = stages;
         this.totalHarvestTime = totalHarvestTime;
         this.farmingProduct = farmingProduct;
         this.seasons = seasons;
+        this.stageTexture = stageTexture;
     }
 
     /**
@@ -57,7 +62,8 @@ public enum TreeCreator {
                 stages,
                 totalHarvestTime,
                 farmingProduct,
-                seasons
+                seasons,
+                stageTexture
         );
     }
 }

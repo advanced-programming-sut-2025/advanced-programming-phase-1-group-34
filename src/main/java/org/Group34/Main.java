@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
         Thread graphicThread = new Thread(() -> {
             Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
             config.setTitle("Stardew Valley - Graphic Mode");

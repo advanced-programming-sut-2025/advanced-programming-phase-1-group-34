@@ -34,13 +34,13 @@ public class  Player implements Entity {
     private Item currentTool;
 
     {
-        inventory.put(new Hoe(ToolType.PLASTIC_HOE), 1);
-        inventory.put(new Pickaxe(ToolType.PLASTIC_PICKAXE), 1);
-        inventory.put(new Axe(ToolType.PLASTIC_AXE), 1);
-        inventory.put(new WateringCan(ToolType.PLASTIC_WATERING_CAN), 1);
+        inventory.put(new Hoe(ToolType.BASIC_HOE), 1);
+        inventory.put(new Pickaxe(ToolType.BASIC_PICKAXE), 1);
+        inventory.put(new Axe(ToolType.BASIC_AXE), 1);
+        inventory.put(new WateringCan(ToolType.BASIC_WATERING_CAN), 1);
         inventory.put(new Scythe(), 1);
         inventory.put(new Backpack(ToolType.BASIC_BACKPACK), 1);
-        inventory.put(new TrashCan(ToolType.PLASTIC_TRASH_CAN), 1);
+        inventory.put(new TrashCan(ToolType.BASIC_TRASH_CAN), 1);
         inventory.put(PlantingSource.JAZZ_SEEDS, 20);
         inventory.put(Fertilizer.SPEED_GROW, 10);
         inventory.put(new MilkPail(), 1);
