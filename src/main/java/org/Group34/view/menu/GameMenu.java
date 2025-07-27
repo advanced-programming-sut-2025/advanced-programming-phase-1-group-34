@@ -43,8 +43,8 @@ public class GameMenu extends AppMenu{
                 if (matcher.find()) {
                     String map = matcher.group("mapNumber");
 
-                    Result result = controller.gameMap(map);
-                    showMessage(result.message());
+                    //Result result = controller.gameMap(map);
+                    //showMessage(result.message());
                 }
             }
 

@@ -21,17 +21,13 @@ public class GameMenuController {
     private static final int MAX_PLAYERS = 3;
     private static final int[] PLAYER_INITIAL_LOCATION = new int[]{72, 10};
 
-
     public Result gameNew(String[] usernames) {
         if (App.getCurrentUser().getGame() != null)
             return new Result(false, "You're already in another game");
-        if (usersChoosingMap > 0)
-            return new Result(false, "Each player must choose a map first!");
         if (usernames == null || usernames.length == 0)
             return new Result(false, "At least one username must be provided after '-u'.");
         if (usernames.length > MAX_PLAYERS)
             return new Result(false, "A maximum of " + MAX_PLAYERS + " usernames is allowed.");
-
 
         for (String u : usernames) {
             User user = getUser(u);
@@ -48,38 +44,33 @@ public class GameMenuController {
             users.add(user);
         }
 
-
-        usersChoosingMap = 3;
-        return new Result(true, "New game created with users: " + String.join(", ", usernames) + ". Please choose maps.");
+        return new Result(true, "New game created with users: " + String.join(", ", usernames));
     }
 
-    public Result gameMap(String map) {
-        Integer farmNumber = getInt(map);
+    public Result gameMap(String[] maps) {
+        if (users.isEmpty())
+            return new Result(false, "No players in game - create game first");
+        if (maps.length != users.size())
+            return new Result(false, "Number of maps must match number of players");
 
-        if (usersChoosingMap <= 0)
-            return new Result(false, "No new game in setup or all players have chosen a map.");
-        if (map == null || map.trim().isEmpty())
-            return new Result(false, "Map cannot be empty.");
-        if (farmNumber == null)
-            return new Result(false, "Map should be a number");
+        farmTypes.clear();
+        for (String map : maps) {
+            Integer farmNumber = getInt(map);
+            if (farmNumber == null)
+                return new Result(false, "Map should be a number");
 
-        FarmType farmType = FarmType.getFarm(farmNumber);
-        if (farmType == null)
-            return new Result(false, "No map found with number " + farmNumber);
+            FarmType farmType = FarmType.getFarm(farmNumber);
+            if (farmType == null)
+                return new Result(false, "No map found with number " + farmNumber);
 
-        farmTypes.add(farmType);
-        usersChoosingMap--;
-
-        if (usersChoosingMap > 0) {
-            return new Result(true, "Map '" + map + "' selected. " + usersChoosingMap + " players still need to choose.");
-        } else {
-            MyGame myGame = generateGame();
-
-            for (User u: users)
-                u.setGame(myGame);
-
-            return new Result(true, "Map '" + map + "' selected. All players have chosen. MyGame is starting!");
+            farmTypes.add(farmType);
         }
+
+        MyGame myGame = generateGame();
+        for (User u: users)
+            u.setGame(myGame);
+
+        return new Result(true, "Game started with selected maps!");
     }
 
     public Result loadGame() {

@@ -13,9 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.menu.GameMenuController;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import org.Group34.model.App;
 import org.Group34.model.Result;
 import org.Group34.view.graphic.menuScreen.MainMenuScreen;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GameMenuScreen extends ScreenAdapter {
     private final Stage stage;
@@ -25,6 +30,11 @@ public class GameMenuScreen extends ScreenAdapter {
     private final Texture backgroundTexture;
     private final Image backgroundImage;
     private Label statusLabel;
+
+    private String[] selectedPlayers;
+    private List<Integer> playerMapChoices;
+    private String selectedMap;
+    private Dialog currentDialog; // Track current dialog
 
     public GameMenuScreen(Skin skin, Game game) {
         this.skin = skin;
@@ -44,75 +54,47 @@ public class GameMenuScreen extends ScreenAdapter {
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 
-        // === Players Row ===
-        Label player1Label = new Label("Player 1:", skin);
+        // Player input fields
         TextField player1Field = new TextField("", skin);
-
-        Label player2Label = new Label("Player 2:", skin);
+        player1Field.setMessageText("Player 1 (required)");
         TextField player2Field = new TextField("", skin);
-
-        Label player3Label = new Label("Player 3:", skin);
+        player2Field.setMessageText("Player 2 (optional)");
         TextField player3Field = new TextField("", skin);
+        player3Field.setMessageText("Player 3 (optional)");
 
+        // Layout for player inputs
         Table playersRow = new Table();
-        playersRow.add(player1Label).padRight(5);
-        playersRow.add(player1Field).width(300).padRight(20);
-        playersRow.add(player2Label).padRight(5);
-        playersRow.add(player2Field).width(300).padRight(20);
-        playersRow.add(player3Label).padRight(5);
-        playersRow.add(player3Field).width(300);
+        playersRow.add(new Label("Players:", skin)).padRight(10);
+        playersRow.add(player1Field).width(250).padRight(10);
+        playersRow.add(player2Field).width(250).padRight(10);
+        playersRow.add(player3Field).width(250);
+        mainTable.add(playersRow).padTop(150).row();
 
-        mainTable.add(playersRow).padTop(230).row();
-
-        // === Map Row ===
-        Label mapLabel = new Label("Map:", skin);
-        Texture map1Texture = new Texture(Gdx.files.internal("images/map1.png"));
-        Texture map2Texture = new Texture(Gdx.files.internal("images/map2.png"));
-
-        ImageButton.ImageButtonStyle map1Style = new ImageButton.ImageButtonStyle();
-        map1Style.imageUp = new Image(map1Texture).getDrawable();
-        ImageButton map1Button = new ImageButton(map1Style);
-
-        ImageButton.ImageButtonStyle map2Style = new ImageButton.ImageButtonStyle();
-        map2Style.imageUp = new Image(map2Texture).getDrawable();
-        ImageButton map2Button = new ImageButton(map2Style);
-
-        Table mapRow = new Table();
-        mapRow.add(mapLabel).padRight(20);
-        mapRow.add(map1Button).size(120, 120).padRight(20);
-        mapRow.add(map2Button).size(120, 120);
-
-        mainTable.add(mapRow).padTop(30).row();
-
-        // === Start New Game & Load Game ===
+        // Action buttons
         TextButton newGameButton = new TextButton("Start New Game", skin);
         TextButton loadGameButton = new TextButton("Load Game", skin);
+        TextButton backButton = new TextButton("Back to Main Menu", skin);
 
-        Table gameButtonsRow = new Table();
-        gameButtonsRow.add(newGameButton).padRight(50);
-        gameButtonsRow.add(loadGameButton);
+        Table buttonTable = new Table();
+        buttonTable.add(newGameButton).padRight(30);
+        buttonTable.add(loadGameButton).padRight(30);
+        buttonTable.add(backButton);
+        mainTable.add(buttonTable).padTop(50).row();
 
-        mainTable.add(gameButtonsRow).padTop(50).row();
-
-        // === Back to Main Menu (Bottom with Big Space) ===
-        TextButton backToMainMenuButton = new TextButton("Back to Main Menu", skin);
-        mainTable.add(backToMainMenuButton).padTop(100);
-
-        // === Status Label Bottom ===
+        // Status label
         statusLabel = new Label("", skin);
         statusLabel.setColor(Color.RED);
-        mainTable.row();
         mainTable.add(statusLabel).padTop(20);
 
-        // === Add to Stage ===
+        // Add everything to stage
         stage.addActor(backgroundImage);
         stage.addActor(mainTable);
 
-        // === Listeners ===
+        // Button listeners
         newGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                java.util.List<String> usernamesList = new java.util.ArrayList<>();
+                List<String> usernamesList = new ArrayList<>();
                 if (!player1Field.getText().trim().isEmpty()) usernamesList.add(player1Field.getText().trim());
                 if (!player2Field.getText().trim().isEmpty()) usernamesList.add(player2Field.getText().trim());
                 if (!player3Field.getText().trim().isEmpty()) usernamesList.add(player3Field.getText().trim());
@@ -122,25 +104,9 @@ public class GameMenuScreen extends ScreenAdapter {
                     return;
                 }
 
-                String[] usernames = usernamesList.toArray(new String[0]);
-                Result result = controller.gameNew(usernames);
-                showStatus(result);
-            }
-        });
-
-        map1Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Result result = controller.gameMap("1");
-                showStatus(result);
-            }
-        });
-
-        map2Button.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Result result = controller.gameMap("2");
-                showStatus(result);
+                selectedPlayers = usernamesList.toArray(new String[0]);
+                playerMapChoices = new ArrayList<>(Collections.nCopies(selectedPlayers.length, -1));
+                showPlayerMapSelectionWindow();
             }
         });
 
@@ -149,24 +115,198 @@ public class GameMenuScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 Result result = controller.loadGame();
                 showStatus(result);
+                if (result.success()) {
+                    // Transition to game screen would go here
+                }
             }
         });
 
-        backToMainMenuButton.addListener(new ClickListener() {
+        backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                App.setCurrentMenu(App.getCurrentMenu().MAIN_MENU);
                 game.setScreen(new MainMenuScreen(skin, game));
                 dispose();
             }
         });
     }
 
+    private void showPlayerMapSelectionWindow() {
+        if (currentDialog != null) currentDialog.hide();
+
+        Dialog selectionDialog = new Dialog("", skin);
+        currentDialog = selectionDialog;
+        selectionDialog.getContentTable().pad(20);
+
+        // Add title with colspan
+        Table contentTable = selectionDialog.getContentTable();
+        Label titleLabel = new Label("Each player choose their preferred map:", skin);
+        contentTable.add(titleLabel).colspan(3).row();
+
+        // Create map selection for each player
+        for (int i = 0; i < selectedPlayers.length; i++) {
+            final int playerIndex = i;
+            Label playerLabel = new Label(selectedPlayers[i] + ":", skin);
+
+            // Map 1 button
+            TextButton map1Button = new TextButton("Map 1", skin);
+            map1Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    playerMapChoices.set(playerIndex, 1);
+                    updateButtonStates(selectionDialog);
+                }
+            });
+
+            // Map 2 button
+            TextButton map2Button = new TextButton("Map 2", skin);
+            map2Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    playerMapChoices.set(playerIndex, 2);
+                    updateButtonStates(selectionDialog);
+                }
+            });
+
+            contentTable.add(playerLabel).padRight(10);
+            contentTable.add(map1Button).padRight(20);
+            contentTable.add(map2Button).row();
+        }
+
+        // Build Map button
+        TextButton buildMapButton = new TextButton("Build Map", skin);
+        buildMapButton.setDisabled(true);
+        buildMapButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                selectionDialog.hide();
+                showCombinedMapPreview();
+            }
+        });
+
+        // Cancel button
+        TextButton cancelButton = new TextButton("Cancel", skin);
+        cancelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                selectionDialog.hide();
+                currentDialog = null;
+            }
+        });
+
+        selectionDialog.getButtonTable().add(cancelButton).padRight(20);
+        selectionDialog.getButtonTable().add(buildMapButton).colspan(3).padTop(20);
+        selectionDialog.show(stage);
+    }
+
+    private void updateButtonStates(Dialog dialog) {
+        boolean allSelected = !playerMapChoices.contains(-1);
+
+        // Find the build button (last button in the table)
+        Table buttonTable = dialog.getButtonTable();
+        TextButton buildButton = (TextButton) buttonTable.getCells().get(buttonTable.getCells().size - 1).getActor();
+        buildButton.setDisabled(!allSelected);
+
+        Table contentTable = dialog.getContentTable();
+        // Skip the first row (title label)
+        for (int i = 1; i < contentTable.getCells().size; i += 3) {
+            // Get the buttons (cells at i+1 and i+2 positions)
+            if (i+2 >= contentTable.getCells().size) break;
+
+            Actor map1Actor = contentTable.getCells().get(i+1).getActor();
+            Actor map2Actor = contentTable.getCells().get(i+2).getActor();
+
+            if (map1Actor instanceof TextButton && map2Actor instanceof TextButton) {
+                TextButton map1Btn = (TextButton) map1Actor;
+                TextButton map2Btn = (TextButton) map2Actor;
+
+                int playerIndex = (i - 1) / 3; // Calculate player index
+                if (playerMapChoices.get(playerIndex) == 1) {
+                    map1Btn.setColor(Color.GRAY);
+                    map2Btn.setColor(Color.WHITE);
+                } else if (playerMapChoices.get(playerIndex) == 2) {
+                    map1Btn.setColor(Color.WHITE);
+                    map2Btn.setColor(Color.GRAY);
+                }
+            }
+        }
+    }
+
+    private void showCombinedMapPreview() {
+        if (currentDialog != null) currentDialog.hide();
+
+        Dialog previewDialog = new Dialog("", skin);
+        currentDialog = previewDialog;
+        previewDialog.getContentTable().pad(20);
+
+        // Add title with colspan
+        Table contentTable = previewDialog.getContentTable();
+        contentTable.add(new Label("Map Composition:", skin)).colspan(selectedPlayers.length).row();
+
+        // Horizontal layout for maps
+        Table mapsTable = new Table();
+        for (int i = 0; i < selectedPlayers.length; i++) {
+            Texture mapTexture = new Texture(Gdx.files.internal("images/map" + playerMapChoices.get(i) + ".png"));
+            Image mapImage = new Image(mapTexture);
+
+            // Smaller map previews (150x150) arranged horizontally
+            mapsTable.add(new Label(selectedPlayers[i], skin)).padRight(10);
+            mapsTable.add(mapImage).size(150, 150).padRight(20);
+        }
+
+        contentTable.add(mapsTable).colspan(selectedPlayers.length).row();
+
+        // Action buttons
+        TextButton startGameButton = new TextButton("Start Game", skin);
+        startGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                previewDialog.hide();
+                currentDialog = null;
+                startNewGameWithSelectedMaps();
+            }
+        });
+
+        TextButton cancelButton = new TextButton("Cancel", skin);
+        cancelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                previewDialog.hide();
+                currentDialog = null;
+                showPlayerMapSelectionWindow();
+            }
+        });
+
+        previewDialog.getButtonTable().add(cancelButton).padRight(20);
+        previewDialog.getButtonTable().add(startGameButton);
+        previewDialog.show(stage);
+    }
+
+    private void startNewGameWithSelectedMaps() {
+        // Convert map choices to string array
+        String[] maps = new String[playerMapChoices.size()];
+        for (int i = 0; i < playerMapChoices.size(); i++) {
+            maps[i] = String.valueOf(playerMapChoices.get(i));
+        }
+
+        // First create the game with players
+        Result result = controller.gameNew(selectedPlayers);
+        showStatus(result);
+        if (!result.success()) return;
+
+        // Then set all maps at once
+        result = controller.gameMap(maps);
+        showStatus(result);
+
+        if (result.success()) {
+            // Transition to game screen would go here
+        }
+    }
+
     private void showStatus(Result result) {
         statusLabel.setText(result.message());
         statusLabel.clearActions();
         statusLabel.addAction(Actions.sequence(
-                Actions.delay(1.5f),
+                Actions.delay(3f),
                 Actions.run(() -> statusLabel.setText(""))
         ));
     }
