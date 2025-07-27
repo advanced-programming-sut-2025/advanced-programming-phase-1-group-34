@@ -1,4 +1,4 @@
-package org.Group34.view.graphic;
+package org.Group34.view.graphic.menuScreen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import org.Group34.view.graphic.GameMenuScreen;
 
 public class MainMenuScreen extends ScreenAdapter {
     private final Game game;
@@ -22,7 +23,7 @@ public class MainMenuScreen extends ScreenAdapter {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
-        backgroundTexture = new Texture(Gdx.files.internal("images/background-mainmenu.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-mainmenu.png"));
         backgroundImage = new Image(backgroundTexture);
         backgroundImage.setFillParent(true);
 

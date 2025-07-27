@@ -1,4 +1,4 @@
-package org.Group34.view.graphic;
+package org.Group34.view.graphic.menuScreen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -32,7 +32,7 @@ public class LoginScreen extends ScreenAdapter {
         this.stage = new Stage(new ScreenViewport());
         this.controller = new LoginMenuController();
 
-        backgroundTexture = new Texture(Gdx.files.internal("images/background-register.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-register.png"));
         backgroundImage = new Image(backgroundTexture);
         backgroundImage.setFillParent(true);
 

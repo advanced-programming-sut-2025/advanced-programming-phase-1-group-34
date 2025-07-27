@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.menu.GameMenuController;
 import org.Group34.model.App;
 import org.Group34.model.Result;
+import org.Group34.view.graphic.menuScreen.MainMenuScreen;
 
 public class GameMenuScreen extends ScreenAdapter {
     private final Stage stage;
@@ -31,7 +32,7 @@ public class GameMenuScreen extends ScreenAdapter {
         this.stage = new Stage(new ScreenViewport());
         this.controller = new GameMenuController();
 
-        backgroundTexture = new Texture(Gdx.files.internal("images/background-gamemenu.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-gamemenu.png"));
         backgroundImage = new Image(backgroundTexture);
         backgroundImage.setFillParent(true);
 

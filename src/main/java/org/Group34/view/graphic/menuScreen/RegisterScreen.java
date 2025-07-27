@@ -1,4 +1,4 @@
-package org.Group34.view.graphic;
+package org.Group34.view.graphic.menuScreen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -32,7 +32,7 @@ public class RegisterScreen extends ScreenAdapter {
         this.stage = new Stage(new ScreenViewport());
         this.controller = new RegisterMenuController();
 
-        backgroundTexture = new Texture(Gdx.files.internal("images/background-register.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-register.png"));
         backgroundImage = new Image(backgroundTexture);
         backgroundImage.setFillParent(true);
 
@@ -41,35 +41,42 @@ public class RegisterScreen extends ScreenAdapter {
     }
 
     private void createUI() {
-        // Main table
         Table mainTable = new Table();
         mainTable.setFillParent(true);
 
-        // Left table
         Table formTable = new Table();
-
-        // Right table
         Table statusTable = new Table();
         statusTable.setFillParent(true);
         statusTable.top().right();
         statusTable.padTop(400).padRight(200);
 
-        // Fields
         TextField usernameField = new TextField("", skin);
         TextField passwordField = new TextField("", skin);
         passwordField.setPasswordMode(true);
+
         TextField confirmPasswordField = new TextField("", skin);
         confirmPasswordField.setPasswordMode(true);
+
         TextField nicknameField = new TextField("", skin);
         TextField emailField = new TextField("", skin);
         SelectBox<String> genderSelect = new SelectBox<>(skin);
         genderSelect.setItems("Male", "Female");
 
-        // Status label
         statusLabel = new Label("", skin);
         statusLabel.setColor(Color.RED);
 
-        // Register
+        // random password button
+        TextButton randomPassButton = new TextButton("?", skin);
+        randomPassButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String randomPassword = generateRandomPassword();
+                passwordField.setText(randomPassword);
+                confirmPasswordField.setText(randomPassword);
+            }
+        });
+
+        // register button
         TextButton registerButton = new TextButton("Register", skin);
         registerButton.addListener(new ClickListener() {
             @Override
@@ -86,59 +93,93 @@ public class RegisterScreen extends ScreenAdapter {
 
                 statusLabel.setText(result.message());
                 statusLabel.clearActions();
-                statusLabel.addAction(
-                        Actions.sequence(
-                                Actions.delay(1f),
-                                Actions.run(() -> statusLabel.setText(""))
-                        )
-                );
+                statusLabel.addAction(Actions.sequence(
+                        Actions.delay(1f),
+                        Actions.run(() -> statusLabel.setText(""))
+                ));
 
                 if (result.success()) {
                     showSecurityQuestionDialog();
-                } else {
-                    statusLabel.setText(result.message());
                 }
             }
         });
 
-        // Go to Log in
         TextButton goToLoginButton = new TextButton("Go to Login", skin);
         goToLoginButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("Go to login clicked");
                 game.setScreen(new LoginScreen(skin, game));
             }
         });
 
-        // Fields
         formTable.padLeft(300).left();
         formTable.add(new Label("Username:", skin)).left().padBottom(10);
         formTable.add(usernameField).left().width(400).padLeft(10).padBottom(10).row();
+
+        // password row with random button
+        Table passwordRow = new Table();
+        passwordRow.add(passwordField).width(400).padRight(20);
+        passwordRow.add(randomPassButton).width(100);
+
         formTable.add(new Label("Password:", skin)).left().padBottom(10);
-        formTable.add(passwordField).left().width(400).padLeft(10).padBottom(10).row();
+        formTable.add(passwordRow).left().padBottom(10).padLeft(10).row();
+
         formTable.add(new Label("Confirm:", skin)).left().padBottom(10);
         formTable.add(confirmPasswordField).left().width(400).padLeft(10).padBottom(10).row();
+
         formTable.add(new Label("Nickname:", skin)).left().padBottom(10);
         formTable.add(nicknameField).left().width(400).padLeft(10).padBottom(10).row();
+
         formTable.add(new Label("Email:", skin)).left().padBottom(10);
         formTable.add(emailField).left().width(400).padLeft(10).padBottom(10).row();
+
         formTable.add(new Label("Gender:", skin)).left().padBottom(20);
         formTable.add(genderSelect).left().width(400).padLeft(10).padBottom(10).row();
 
-        // Buttons
         Table buttonTable = new Table();
         buttonTable.add(registerButton).padRight(50);
         buttonTable.add(goToLoginButton);
         formTable.add(buttonTable).colspan(2).padTop(10).row();
 
-        // Status label
         statusTable.add(statusLabel).right();
 
         stage.addActor(backgroundImage);
         stage.addActor(mainTable);
         mainTable.add(formTable).expand().left();
         stage.addActor(statusTable);
+    }
+
+    private String generateRandomPassword() {
+        StringBuilder password = new StringBuilder();
+        java.util.Random rand = new java.util.Random();
+
+        String LOWER = "abcdefghijklmnopqrstuvwxyz";
+        String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String DIGITS = "0123456789";
+        String SPECIAL = "?><,\"';:\\/|][}{+=)(*&^%$#!";
+
+        password.append(LOWER.charAt(rand.nextInt(LOWER.length())));
+        password.append(UPPER.charAt(rand.nextInt(UPPER.length())));
+        password.append(DIGITS.charAt(rand.nextInt(DIGITS.length())));
+        password.append(SPECIAL.charAt(rand.nextInt(SPECIAL.length())));
+
+        String allChars = LOWER + UPPER + DIGITS + SPECIAL;
+        for (int i = 4; i < 10; i++) {
+            password.append(allChars.charAt(rand.nextInt(allChars.length())));
+        }
+
+        java.util.List<Character> passwordChars = new java.util.ArrayList<>();
+        for (char c : password.toString().toCharArray()) {
+            passwordChars.add(c);
+        }
+        java.util.Collections.shuffle(passwordChars);
+
+        StringBuilder finalPassword = new StringBuilder();
+        for (char c : passwordChars) {
+            finalPassword.append(c);
+        }
+
+        return finalPassword.toString();
     }
 
     private void showSecurityQuestionDialog() {

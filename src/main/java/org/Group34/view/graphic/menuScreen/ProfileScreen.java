@@ -1,4 +1,4 @@
-package org.Group34.view.graphic;
+package org.Group34.view.graphic.menuScreen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -32,7 +32,7 @@ public class ProfileScreen extends ScreenAdapter {
         this.stage = new Stage(new ScreenViewport());
         this.controller = new ProfileMenuController();
 
-        backgroundTexture = new Texture(Gdx.files.internal("images/background-profile.png"));
+        backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-profile.png"));
         backgroundImage = new Image(backgroundTexture);
         backgroundImage.setFillParent(true);
 
@@ -49,7 +49,7 @@ public class ProfileScreen extends ScreenAdapter {
         statusTable.setFillParent(true);
         statusTable.top().right().padTop(400).padRight(100);
 
-        // Fields
+        // === fields ===
         TextField usernameField = new TextField("", skin);
         usernameField.setMessageText("New Username");
 
@@ -68,23 +68,61 @@ public class ProfileScreen extends ScreenAdapter {
         TextField emailField = new TextField("", skin);
         emailField.setMessageText("New Email");
 
-        // Status label
+        // === status label ===
         statusLabel = new Label("", skin);
         statusLabel.setColor(Color.RED);
 
-        // Buttons
+        // === buttons ===
         TextButton changeUsernameButton = new TextButton("Change", skin);
         TextButton changePasswordButton = new TextButton("Change", skin);
         TextButton changeNicknameButton = new TextButton("Change", skin);
         TextButton changeEmailButton = new TextButton("Change", skin);
+        TextButton changeAvatarButton = new TextButton("Save Avatar", skin); // NEW
         TextButton showInfoButton = new TextButton("Show Info", skin);
         TextButton backToMainMenuButton = new TextButton("Back to Main Menu", skin);
 
-        // Button listeners
+        // === avatar setup ===
+        User currentUser = App.getCurrentUser();
+        String gender = currentUser.getGender().toLowerCase(); // "male" or "female"
+
+        // Initialize avatar based on user's saved avatar
+        final boolean[] isFirstAvatar = {currentUser.getAvatar() == 1}; // MODIFIED
+        final Texture avatarTexture = new Texture(Gdx.files.internal(
+                "playerAvatars/" + gender + "_avatar" + currentUser.getAvatar() + ".png")); // MODIFIED
+        final Image avatarImage = new Image(avatarTexture);
+
+        avatarImage.setSize(150, 150);
+
+        avatarImage.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                isFirstAvatar[0] = !isFirstAvatar[0];
+                String avatarPath = "playerAvatars/" + gender + "_" +
+                        (isFirstAvatar[0] ? "avatar1.png" : "avatar2.png");
+                avatarImage.setDrawable(new Image(new Texture(Gdx.files.internal(avatarPath))).getDrawable());
+            }
+        });
+
+        // NEW: Change Avatar Button Listener
+        changeAvatarButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int newAvatar = isFirstAvatar[0] ? 1 : 2;
+                currentUser.setAvatar(newAvatar);
+                statusLabel.setText("Avatar changed successfully!");
+                statusLabel.clearActions();
+                statusLabel.addAction(Actions.sequence(
+                        Actions.delay(1.5f),
+                        Actions.run(() -> statusLabel.setText(""))
+                ));
+            }
+        });
+
+        // === button listeners ===
         changeUsernameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Result result = controller.changeUsername(usernameField.getText().trim(), App.getCurrentUser());
+                Result result = controller.changeUsername(usernameField.getText().trim(), currentUser);
                 showStatus(result);
             }
         });
@@ -95,7 +133,7 @@ public class ProfileScreen extends ScreenAdapter {
                 Result result = controller.changePassword(
                         newPasswordField.getText().trim(),
                         oldPasswordField.getText().trim(),
-                        App.getCurrentUser()
+                        currentUser
                 );
                 showStatus(result);
             }
@@ -104,7 +142,7 @@ public class ProfileScreen extends ScreenAdapter {
         changeNicknameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Result result = controller.changeNickname(nicknameField.getText().trim(), App.getCurrentUser());
+                Result result = controller.changeNickname(nicknameField.getText().trim(), currentUser);
                 showStatus(result);
             }
         });
@@ -112,7 +150,7 @@ public class ProfileScreen extends ScreenAdapter {
         changeEmailButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Result result = controller.changeEmail(emailField.getText().trim(), App.getCurrentUser());
+                Result result = controller.changeEmail(emailField.getText().trim(), currentUser);
                 showStatus(result);
             }
         });
@@ -120,16 +158,14 @@ public class ProfileScreen extends ScreenAdapter {
         showInfoButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                User user = App.getCurrentUser();
                 showUserInfoDialog(
-                        user.getUsername(),
-                        user.getNickname(),
-                        user.getHighestMoney(),
-                        user.getPlayedGamesCount()
+                        currentUser.getUsername(),
+                        currentUser.getNickname(),
+                        currentUser.getHighestMoney(),
+                        currentUser.getPlayedGamesCount()
                 );
             }
         });
-
 
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
@@ -139,7 +175,7 @@ public class ProfileScreen extends ScreenAdapter {
             }
         });
 
-        // Layout fields
+        // === layout left side (form) ===
         formTable.padLeft(50).left();
         formTable.add(new Label("Change Username:", skin)).left().padBottom(10);
         formTable.add(usernameField).width(400).padLeft(10).padBottom(10);
@@ -162,12 +198,24 @@ public class ProfileScreen extends ScreenAdapter {
 
         formTable.add(showInfoButton).colspan(3).padTop(20).row();
         formTable.add(backToMainMenuButton).colspan(3).padTop(10);
+        formTable.padLeft(50).left();
+
+        Table avatarTable = new Table();
+        avatarTable.add(avatarImage).size(150).row();
+        avatarTable.add(changeAvatarButton).padTop(10);
 
         statusTable.add(statusLabel).right();
 
+        // === add all to main table ===
         stage.addActor(backgroundImage);
         stage.addActor(mainTable);
-        mainTable.add(formTable).expand().left();
+
+        // left form + right avatar
+        Table contentTable = new Table();
+        contentTable.add(formTable).expand().left().padRight(100);
+        contentTable.add(avatarTable).right().top().padTop(50).padRight(230);
+
+        mainTable.add(contentTable).expand().fill();
         stage.addActor(statusTable);
     }
 

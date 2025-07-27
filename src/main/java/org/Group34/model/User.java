@@ -16,6 +16,7 @@ public class User {
     private String securityQuestion;
     private String securityAnswer;
     private MyGame myGame = null;
+    private int avatar;
 
     private int highestMoney;
 
@@ -27,6 +28,7 @@ public class User {
         this.nickname = nickname;
         this.email = email;
         this.gender = gender;
+        this.avatar = 1;
     }
 
     public String getUsername() {
@@ -109,5 +111,12 @@ public class User {
 
     public void setGame(MyGame myGame) {
         this.myGame = myGame;
+    }
+
+    public int getAvatar() {
+        return avatar;
+    }
+    public void setAvatar(int avatar) {
+        this.avatar = avatar;
     }
 }
