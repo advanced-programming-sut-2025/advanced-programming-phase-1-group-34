@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import org.Group34.view.graphic.GameMenuScreen;
 
 public class MainMenuScreen extends ScreenAdapter {
     private final Game game;

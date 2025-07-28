@@ -1,4 +1,4 @@
-package org.Group34.view.graphic;
+package org.Group34.view.graphic.menuScreen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -15,8 +15,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.menu.GameMenuController;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import org.Group34.model.App;
+import org.Group34.model.MyGame;
 import org.Group34.model.Result;
-import org.Group34.view.graphic.menuScreen.MainMenuScreen;
+import org.Group34.view.graphic.GameScreen;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -298,7 +299,15 @@ public class GameMenuScreen extends ScreenAdapter {
         showStatus(result);
 
         if (result.success()) {
-            // Transition to game screen would go here
+            // Get the created game instance
+            MyGame myGame = App.getCurrentUser().getGame();
+            if (myGame != null) {
+                // Transition to the actual game screen
+                game.setScreen(new GameScreen(skin, game, myGame));
+                dispose();
+            } else {
+                showStatus(new Result(false, "Failed to start game"));
+            }
         }
     }
 

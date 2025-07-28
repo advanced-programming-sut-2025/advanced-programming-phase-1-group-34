@@ -14,7 +14,7 @@ public class CropAssetManager {
     private final static Texture carrotSeeds = new Texture("crops/Carrot_Seeds.png");
     private final static Texture carrotStage1 = new Texture("crops/Carrot_Stage_1.png");
     private final static Texture carrotStage2 = new Texture("crops/Carrot_Stage_2.png");
-    private final static Texture carrotStage3 = new Texture("crops/Carrot_Stage_4.png.png");
+    private final static Texture carrotStage3 = new Texture("crops/Carrot_Stage_4.png");
 
     private final static Texture cauliflower = new Texture("crops/Cauliflower.png");
     private final static Texture cauliflowerSeeds = new Texture("crops/Cauliflower_Seeds.png");
@@ -109,7 +109,7 @@ public class CropAssetManager {
 
     private final static Texture corn = new Texture("crops/Corn.png");
     private final static Texture cornSeeds = new Texture("crops/Corn_Seeds.png");
-    private final static Texture cornStage1 = new Texture("crops/crops/Corn_Stage_1.png");
+    private final static Texture cornStage1 = new Texture("crops/Corn_Stage_1.png");
     private final static Texture cornStage2 = new Texture("crops/Corn_Stage_3.png");
     private final static Texture cornStage3 = new Texture("crops/Corn_Stage_4.png");
     private final static Texture cornStage4 = new Texture("crops/Corn_Stage_5.png");
