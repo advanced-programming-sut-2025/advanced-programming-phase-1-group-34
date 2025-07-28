@@ -260,7 +260,7 @@ public class GameController {
 
     }
 
-    private Player getPlayer() {
+    public Player getPlayer() {
         return myGame.players().get(orderOfPlay.get(currentUser));
     }
 

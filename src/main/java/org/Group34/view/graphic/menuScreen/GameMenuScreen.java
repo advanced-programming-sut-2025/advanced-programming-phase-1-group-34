@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import org.Group34.controller.GameController;
 import org.Group34.controller.menu.GameMenuController;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import org.Group34.model.App;
@@ -246,7 +247,7 @@ public class GameMenuScreen extends ScreenAdapter {
         // Horizontal layout for maps
         Table mapsTable = new Table();
         for (int i = 0; i < selectedPlayers.length; i++) {
-            Texture mapTexture = new Texture(Gdx.files.internal("images/map" + playerMapChoices.get(i) + ".png"));
+            Texture mapTexture = new Texture(Gdx.files.internal("mapIcons/map" + playerMapChoices.get(i) + ".png"));
             Image mapImage = new Image(mapTexture);
 
             // Smaller map previews (150x150) arranged horizontally
@@ -303,7 +304,7 @@ public class GameMenuScreen extends ScreenAdapter {
             MyGame myGame = App.getCurrentUser().getGame();
             if (myGame != null) {
                 // Transition to the actual game screen
-                game.setScreen(new GameScreen(skin, game, myGame));
+                game.setScreen(new GameScreen(skin, game, myGame, new GameController(myGame)));
                 dispose();
             } else {
                 showStatus(new Result(false, "Failed to start game"));
