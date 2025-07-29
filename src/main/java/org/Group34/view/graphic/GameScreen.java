@@ -41,8 +41,11 @@ public class GameScreen extends ScreenAdapter {
 
     // Map rendering constants
     private static final int TILE_SIZE = 32;
-    private static final int VIEWPORT_WIDTH = 20;
-    private static final int VIEWPORT_HEIGHT = 15;
+    private static final int VIEWPORT_WIDTH = 50;
+    private static final int VIEWPORT_HEIGHT = 20;
+
+    private float moveTimer = 0;
+    private static final float MOVE_INTERVAL = 0.15f;
 
     // Textures
     private final Texture grassTexture;
@@ -100,52 +103,61 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        handleInput();
-
+        handleInput(delta);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         updateCamera();
-
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         renderMap();
         renderPlayer();
         batch.end();
-
         stage.act(delta);
         stage.draw();
     }
 
-    private void handleInput() {
-        boolean moved = false;
+    private void handleInput(float delta) {
+        boolean keyUp = Gdx.input.isKeyPressed(Input.Keys.UP);
+        boolean keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
+        boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+
+        if (keyUp || keyDown || keyLeft || keyRight) {
+            moveTimer += delta;
+
+            if (moveTimer < 0) {
+                attemptMove(keyUp, keyDown, keyLeft, keyRight);
+                moveTimer = 0;
+            }
+            else if (moveTimer >= MOVE_INTERVAL) {
+                attemptMove(keyUp, keyDown, keyLeft, keyRight);
+                moveTimer = 0;
+            }
+        }
+        else {
+            moveTimer = -MOVE_INTERVAL;
+        }
+    }
+
+    private void attemptMove(boolean keyUp, boolean keyDown, boolean keyLeft, boolean keyRight) {
         int[] playerLocation = player.getLocation();
         int newX = playerLocation[0];
         int newY = playerLocation[1];
 
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+        if (keyUp) {
             newY++;
-            moved = true;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+        } else if (keyDown) {
             newY--;
-            moved = true;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        } else if (keyLeft) {
             newX--;
-            moved = true;
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        } else if (keyRight) {
             newX++;
-            moved = true;
         }
 
-        if (moved) {
-            if (newX >= 0 && newX < gameMap.getCurrentPlayerFarm(player).width() &&
-                    newY >= 0 && newY < gameMap.getCurrentPlayerFarm(player).height()) {
-
-                Entity entity = gameMap.getCurrentPlayerFarm(player).getEntityByLocation(newX, newY);
-                if (entity == null || entity instanceof WalkAble) {
-                    gameMap.movePlayer(player, newX, newY);
-                }
+        if (newX >= 0 && newX < gameMap.getCurrentPlayerFarm(player).width() &&
+                newY >= 0 && newY < gameMap.getCurrentPlayerFarm(player).height()) {
+            Entity entity = gameMap.getCurrentPlayerFarm(player).getEntityByLocation(newX, newY);
+            if (entity == null || entity instanceof WalkAble) {
+                gameMap.movePlayer(player, newX, newY);
             }
         }
     }
