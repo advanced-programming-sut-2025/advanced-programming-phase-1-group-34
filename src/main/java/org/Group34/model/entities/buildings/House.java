@@ -2,6 +2,7 @@ package org.Group34.model.entities.buildings;
 
 import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.enums.Color;
+import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
 import org.Group34.model.map.Space;
 
 public class House implements Building{
@@ -12,6 +13,6 @@ public class House implements Building{
 
     @Override
     public Texture getTexture() {
-        return null;
+        return BuildingsAssetManager.house;
     }
 }

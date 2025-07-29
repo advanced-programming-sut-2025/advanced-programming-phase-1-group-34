@@ -31,6 +31,6 @@ public class Quarry implements WalkAble {
     }
 
     public Texture getTexture() {
-        return null;
+        return new Texture("rock/Quarry_Boulder.png");
     }
 }
