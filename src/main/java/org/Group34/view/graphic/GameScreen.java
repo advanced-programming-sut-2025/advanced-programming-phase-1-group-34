@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -34,6 +35,7 @@ public class GameScreen extends ScreenAdapter {
     private final Stage stage;
     private final Skin skin;
     private final Game game;
+    private final MyGame myGame;
     private final GameController gameController;
     private final Player player;
     private final Map gameMap;
@@ -48,17 +50,36 @@ public class GameScreen extends ScreenAdapter {
     private float moveTimer = 0;
     private static final float MOVE_INTERVAL = 0.13f;
 
-    // Time and Money
+    // Time
+    private Label dateLabel;
     private Label timeLabel;
-    private Label moneyLabel;
+    private Label weatherLabel;
+    private Label seasonLabel;
+
+    // Color effects
+    private boolean shouldDarken = false;
+    private final Color darkTint = new Color(0.6f, 0.6f, 0.7f, 1f);
+    private Color fallTint = new Color(1.0f, 0.8f, 0.4f, 1.0f);
+    private Color winterTint = new Color(0.9f, 0.9f, 1.0f, 1.0f);
+
+    // Weather effects
+    private boolean isRaining = false;
+    private boolean isSnowing = false;
+    private boolean isStormy = false;
+    private float weatherTimer = 0;
+    private static final float WEATHER_INTERVAL = 0.05f;
 
     // Textures
     private final Texture[] grassTextures;
     private final int[][] grassPattern;
 
+    private ToolsGraphic toolsGraphic;
+    private GameMenuGraphic gameMenuGraphic;
+
     public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController) {
         this.skin = skin;
         this.game = game;
+        this.myGame = myGame;
         this.gameController = gameController;
         this.gameMap = myGame.map();
         this.batch = new SpriteBatch();
@@ -72,6 +93,9 @@ public class GameScreen extends ScreenAdapter {
         else {
             this.player = myGame.players().values().iterator().next();
         }
+
+        this.toolsGraphic = new ToolsGraphic(batch, player);
+        this.gameMenuGraphic = new GameMenuGraphic(batch, player);
 
         // Load grass texture
         grassTextures = new Texture[6];
@@ -90,14 +114,22 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
-        // Time and Money setup
+        // Time
+        dateLabel = new Label("", skin);
+        dateLabel.setPosition(20, Gdx.graphics.getHeight() - 30);
+        stage.addActor(dateLabel);
+
         timeLabel = new Label("", skin);
-        timeLabel.setPosition(Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 30);
+        timeLabel.setPosition(20, Gdx.graphics.getHeight() - 60);
         stage.addActor(timeLabel);
 
-        moneyLabel = new Label("", skin);
-        moneyLabel.setPosition(Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60);
-        stage.addActor(moneyLabel);
+        weatherLabel = new Label("", skin);
+        weatherLabel.setPosition(20, Gdx.graphics.getHeight() - 90);
+        stage.addActor(weatherLabel);
+
+        seasonLabel = new Label("", skin);
+        seasonLabel.setPosition(20, Gdx.graphics.getHeight() - 120);
+        stage.addActor(seasonLabel);
 
         // Set up camera
         camera.setToOrtho(false, VIEWPORT_WIDTH * TILE_SIZE, VIEWPORT_HEIGHT * TILE_SIZE);
@@ -122,18 +154,63 @@ public class GameScreen extends ScreenAdapter {
         stage.addActor(backButton);
     }
 
+    private void updateUI() {
+        Result timeResult = gameController.displayTime("datetime");
+        if (timeResult.success()) {
+            String[] timeParts = timeResult.message().split(" ");
+            if (timeParts.length >= 3) {
+                seasonLabel.setText("Season: " + timeParts[0]);
+                dateLabel.setText("Date: " + timeParts[1]);
+                timeLabel.setText("Time: " + timeParts[2]);
+
+                try {
+                    String timeStr = timeParts[2];
+                    String[] hourMinute = timeStr.split(":");
+                    int hour = Integer.parseInt(hourMinute[0]);
+                    shouldDarken = (hour >= 17);
+                } catch (Exception e) {
+                    Gdx.app.error("GameScreen", "Error parsing time: " + e.getMessage());
+                }
+            }
+        }
+
+        String weather = myGame.weatherSystem().getTodayCondition().toString();
+        weatherLabel.setText("Weather: " + weather.toLowerCase());
+
+        isRaining = weather.equalsIgnoreCase("RAIN");
+        isSnowing = weather.equalsIgnoreCase("SNOW");
+        isStormy = weather.equalsIgnoreCase("STORM");
+
+        if (isRaining || isStormy) {
+            shouldDarken = true;
+            darkTint.set(0.6f, 0.6f, 0.7f, 1.0f);
+        }
+
+        String season = myGame.weatherSystem().getSeason().getName();
+        if (season.equalsIgnoreCase("FALL")) {
+            shouldDarken = true;
+            darkTint.set(1.0f, 0.8f, 0.4f, 1.0f);
+        } else if (season.equalsIgnoreCase("WINTER")) {
+            shouldDarken = true;
+            darkTint.set(0.9f, 0.9f, 1.0f, 1.0f);
+        }
+    }
+
     @Override
     public void render(float delta) {
         handleInput(delta);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         updateCamera();
         batch.setProjectionMatrix(camera.combined);
-
-        updateTimeLabel();
-
+        updateUI();
         batch.begin();
         renderMap();
         renderPlayer();
+
+        if (isRaining || isSnowing || isStormy) {
+            renderWeatherEffects(delta);
+        }
+
         batch.end();
         stage.act(delta);
         stage.draw();
@@ -145,9 +222,16 @@ public class GameScreen extends ScreenAdapter {
         boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+            myGame.time().cheatAdvanceTime(1);
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
+            myGame.time().cheatAdvanceDate(1, myGame);
+        }
+
         if (keyUp || keyDown || keyLeft || keyRight) {
             moveTimer += delta;
-
             if (moveTimer < 0) {
                 attemptMove(keyUp, keyDown, keyLeft, keyRight);
                 moveTimer = 0;
@@ -205,39 +289,110 @@ public class GameScreen extends ScreenAdapter {
         startX = Math.min(currentSpace.width() - VIEWPORT_WIDTH, startX);
         startY = Math.min(currentSpace.height() - VIEWPORT_HEIGHT, startY);
 
+        Color originalColor = batch.getColor().cpy();
+        String season = myGame.weatherSystem().getSeason().getName();
+        String weather = myGame.weatherSystem().getTodayCondition().toString().toLowerCase();
+
+        if (season.equalsIgnoreCase("WINTER")) {
+            if (isSnowing) {
+                batch.setColor(0.9f, 0.9f, 1.0f, 1.0f);
+            } else {
+                batch.setColor(0.95f, 0.95f, 1.0f, 1.0f);
+            }
+        } else if (shouldDarken) {
+            batch.setColor(darkTint);
+        }
+
         for (int x = startX; x < startX + VIEWPORT_WIDTH; x++) {
             for (int y = startY; y < startY + VIEWPORT_HEIGHT; y++) {
                 int grassType = grassPattern[x][y];
-                batch.draw(grassTextures[grassType], x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
 
-                Entity entity = currentSpace.getEntityByLocation(x, y);
-                if (entity != null) {
-                    Texture texture = entity.getTexture();
-                    if (texture != null) {
-                        batch.draw(texture, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                if (season.equalsIgnoreCase("WINTER")) {
+                    int winterGrassType = 5;
+                    batch.draw(grassTextures[winterGrassType], x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+                    if (isSnowing && Math.random() < 0.3) {
+                        batch.setColor(1, 1, 1, 0.7f);
+                        batch.draw(grassTextures[winterGrassType], x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                        batch.setColor(originalColor);
                     }
+                }
+                else {
+                    batch.draw(grassTextures[grassType], x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
             }
         }
+
+        batch.setColor(originalColor);
+        for (int x = startX; x < startX + VIEWPORT_WIDTH; x++) {
+            for (int y = startY; y < startY + VIEWPORT_HEIGHT; y++) {
+                Entity entity = currentSpace.getEntityByLocation(x, y);
+                if (entity != null && entity.getTexture() != null) {
+                    if (season.equalsIgnoreCase("WINTER")) {
+                        batch.setColor(0.9f, 0.9f, 1.0f, 1.0f);
+                    }
+                    batch.draw(entity.getTexture(), x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                    batch.setColor(originalColor);
+                }
+            }
+        }
+
+        batch.setColor(originalColor);
     }
 
     private void renderPlayer() {
         int[] pos = player.getLocation();
         Texture playerTexture = PlayerAvatarManager.female_player1;
-        if (playerTexture != null) {
-            batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-        } else {
-            Gdx.app.error("Rendering", "Player texture not loaded!");
-        }
+        batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+        otherRender();
     }
 
-    private void updateTimeLabel() {
-        Result timeResult = gameController.displayTime("full");
-        if (timeResult.success()) {
-            timeLabel.setText(timeResult.message());
-        }
+    private void otherRender() {
+        toolsGraphic.update(TILE_SIZE);
+        gameMenuGraphic.update(camera);
+    }
 
-        moneyLabel.setText("Money: " + player.getMoney());
+    private void renderWeatherEffects(float delta) {
+        weatherTimer += delta;
+        if (weatherTimer >= WEATHER_INTERVAL) {
+            weatherTimer = 0;
+            Random random = new Random();
+
+            if (isRaining) {
+                batch.setColor(0.5f, 0.5f, 0.8f, 0.7f);
+                for (int i = 0; i < 150; i++) {
+                    float x = random.nextInt(Gdx.graphics.getWidth());
+                    float y = random.nextInt(Gdx.graphics.getHeight());
+                    float length = random.nextFloat() * 15 + 10;
+                    batch.draw(grassTextures[0], x, y, 2, length);
+                }
+                batch.setColor(1, 1, 1, 1);
+            }
+
+            if (isSnowing) {
+                batch.setColor(1, 1, 1, 0.8f);
+                for (int i = 0; i < 200; i++) {
+                    float x = random.nextInt(Gdx.graphics.getWidth());
+                    float y = random.nextInt(Gdx.graphics.getHeight());
+                    float size = random.nextFloat() * 4 + 2;
+                    batch.draw(grassTextures[0], x, y, size, size);
+                }
+                batch.setColor(1, 1, 1, 1);
+            }
+
+            if (isStormy) {
+                batch.setColor(0.4f, 0.4f, 0.4f, 0.6f);
+                for (int i = 0; i < 250; i++) {
+                    float x = random.nextInt(Gdx.graphics.getWidth());
+                    float y = random.nextInt(Gdx.graphics.getHeight());
+                    float length = random.nextFloat() * 20 + 15;
+                    // رسم خطوط ضخیم‌تر برای طوفان
+                    batch.draw(grassTextures[0], x, y, 3, length);
+                }
+                batch.setColor(1, 1, 1, 1);
+            }
+        }
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.Group34.model.entities.buildings;
 import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.enums.Color;
+import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
 
 public class GreenHouse implements Building {
     private static final int REPAIR_WOOD = 500;
@@ -100,6 +101,6 @@ public class GreenHouse implements Building {
 
     @Override
     public Texture getTexture() {
-        return null;
+        return BuildingsAssetManager.greenhouse;
     }
 }

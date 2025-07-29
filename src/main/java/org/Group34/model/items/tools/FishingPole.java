@@ -1,5 +1,6 @@
 package org.Group34.model.items.tools;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.items.Item;
 
 public class FishingPole extends Tool {
@@ -28,6 +29,11 @@ public class FishingPole extends Tool {
 
     public ToolType getType() {
         return type;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return type.getTexture();
     }
 
     public void setType(ToolType type) {

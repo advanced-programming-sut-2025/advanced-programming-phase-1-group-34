@@ -1,6 +1,5 @@
 package org.Group34.model.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.User;
 import org.Group34.model.enums.LevelType;
@@ -12,6 +11,7 @@ import org.Group34.model.items.Item;
 import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.Recipe;
 import org.Group34.model.items.foods.Fruit;
+import org.Group34.model.items.foods.Vegetable;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
 
@@ -34,7 +34,8 @@ public class  Player implements Entity {
 
     private HashMap<Player, Interaction> interactions = new HashMap<>();
 
-    private Item currentTool;
+    private Item currentTool = new Hoe(ToolType.GOLD_HOE);
+    private String currentGameMenu = null;
 
     {
         inventory.put(new Hoe(ToolType.BASIC_HOE), 1);
@@ -45,9 +46,45 @@ public class  Player implements Entity {
         inventory.put(new Backpack(ToolType.BASIC_BACKPACK), 1);
         inventory.put(new TrashCan(ToolType.BASIC_TRASH_CAN), 1);
         inventory.put(PlantingSource.JAZZ_SEEDS, 20);
-        inventory.put(Fertilizer.SPEED_GROW, 10);
+//        inventory.put(Fertilizer.SPEED_GROW, 10);
         inventory.put(new MilkPail(), 1);
         inventory.put(Fruit.APPLE, 20);
+        inventory.put(Fruit.ANCIENT_FRUIT, 10);
+        inventory.put(Fruit.APRICOT, 20);
+        inventory.put(Fruit.BLUEBERRY, 20);
+        inventory.put(Fruit.BANANA, 20);
+        inventory.put(Fruit.CRANBERRIES, 20);
+        inventory.put(Fruit.CHERRY, 20);
+        inventory.put(Fruit.POWDERMELON, 20);
+        inventory.put(Fruit.MELON, 20);
+        inventory.put(Fruit.MANGO, 20);
+        inventory.put(Fruit.ORANGE, 20);
+        inventory.put(Fruit.STARFRUIT, 20);
+        inventory.put(Fruit.SWEET_GEM_BERRY, 20);
+        inventory.put(Fruit.GRAPE, 20);
+        inventory.put(Fruit.PEACH, 20);
+        inventory.put(Vegetable.AMARANTH, 20);
+        inventory.put(Vegetable.ARTICHOKE, 20);
+        inventory.put(Vegetable.CARROT, 20);
+        inventory.put(Vegetable.CAULIFLOWER, 20);
+        inventory.put(Vegetable.KALE, 20);
+        inventory.put(Vegetable.GARLIC, 20);
+        inventory.put(Vegetable.EGGPLANT, 20);
+        inventory.put(Vegetable.GREEN_BEAN, 20);
+        inventory.put(Vegetable.PARSNIP, 20);
+        inventory.put(Vegetable.POTATO, 20);
+        inventory.put(Vegetable.RADISH, 20);
+        inventory.put(Vegetable.RED_CABBAGE, 20);
+        inventory.put(Vegetable.SUMMER_SQUASH, 20);
+        inventory.put(Vegetable.TOMATO, 20);
+        inventory.put(Vegetable.YAM, 20);
+        inventory.put(Vegetable.BEET, 20);
+        inventory.put(Vegetable.BROCCOLI, 20);
+        inventory.put(Vegetable.BOK_CHOY, 20);
+        inventory.put(Vegetable.CORN, 20);
+        inventory.put(Vegetable.PUMPKIN, 20);
+        inventory.put(Vegetable.HOT_PEPPER, 20);
+
     }
 
 
@@ -307,5 +344,13 @@ public class  Player implements Entity {
 
     public Texture getTexture() {
         return PlayerAvatarManager.female_player1;
+    }
+
+    public String getCurrentGameMenu() {
+        return currentGameMenu;
+    }
+
+    public void setCurrentGameMenu(String currentGameMenu) {
+        this.currentGameMenu = currentGameMenu;
     }
 }

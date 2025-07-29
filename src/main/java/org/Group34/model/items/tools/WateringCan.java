@@ -1,5 +1,7 @@
 package org.Group34.model.items.tools;
 
+import com.badlogic.gdx.graphics.Texture;
+
 public class WateringCan extends Tool {
     private ToolType type;
     private int amountOfWater = 0;
@@ -35,6 +37,11 @@ public class WateringCan extends Tool {
 
     public ToolType getType() {
         return type;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return type.getTexture();
     }
 
     public void setType(ToolType type) {
