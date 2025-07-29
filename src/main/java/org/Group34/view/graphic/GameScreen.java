@@ -16,7 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.GameController;
+import org.Group34.model.App;
 import org.Group34.model.MyGame;
+import org.Group34.model.User;
 import org.Group34.model.entities.Player;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
@@ -53,11 +55,18 @@ public class GameScreen extends ScreenAdapter {
         this.skin = skin;
         this.game = game;
         this.gameController = gameController;
-        this.player = gameController.getPlayer();
         this.gameMap = myGame.map();
         this.batch = new SpriteBatch();
         this.camera = new OrthographicCamera();
         this.stage = new Stage(new ScreenViewport());
+
+        User currentUser = App.getCurrentUser();
+        if (currentUser != null) {
+            this.player = myGame.players().get(currentUser);
+        }
+        else {
+            this.player = myGame.players().values().iterator().next();
+        }
 
         // Load textures
         this.grassTexture = new Texture(Gdx.files.internal("tiles/grass.png"));
@@ -68,7 +77,6 @@ public class GameScreen extends ScreenAdapter {
 
         // Set up camera
         camera.setToOrtho(false, VIEWPORT_WIDTH * TILE_SIZE, VIEWPORT_HEIGHT * TILE_SIZE);
-
         Gdx.input.setInputProcessor(stage);
         createUI();
     }
