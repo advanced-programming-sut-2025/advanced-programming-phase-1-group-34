@@ -31,6 +31,6 @@ public class Quarry implements WalkAble {
     }
 
     public Texture getTexture() {
-        return new Texture(Gdx.files.internal("player/.png"));
+        return null;
     }
 }

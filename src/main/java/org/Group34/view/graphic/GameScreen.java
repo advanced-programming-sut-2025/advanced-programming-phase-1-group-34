@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.GameController;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
+import org.Group34.model.Result;
 import org.Group34.model.User;
 import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
@@ -46,6 +47,10 @@ public class GameScreen extends ScreenAdapter {
 
     private float moveTimer = 0;
     private static final float MOVE_INTERVAL = 0.13f;
+
+    // Time and Money
+    private Label timeLabel;
+    private Label moneyLabel;
 
     // Textures
     private final Texture[] grassTextures;
@@ -85,6 +90,15 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
+        // Time and Money setup
+        timeLabel = new Label("", skin);
+        timeLabel.setPosition(Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 30);
+        stage.addActor(timeLabel);
+
+        moneyLabel = new Label("", skin);
+        moneyLabel.setPosition(Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 60);
+        stage.addActor(moneyLabel);
+
         // Set up camera
         camera.setToOrtho(false, VIEWPORT_WIDTH * TILE_SIZE, VIEWPORT_HEIGHT * TILE_SIZE);
         Gdx.input.setInputProcessor(stage);
@@ -92,7 +106,7 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void createUI() {
-        Label gameLabel = new Label("Game is running!", skin);
+        Label gameLabel = new Label("", skin);
         gameLabel.setPosition(100, Gdx.graphics.getHeight() - 50);
         stage.addActor(gameLabel);
 
@@ -114,6 +128,9 @@ public class GameScreen extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         updateCamera();
         batch.setProjectionMatrix(camera.combined);
+
+        updateTimeLabel();
+
         batch.begin();
         renderMap();
         renderPlayer();
@@ -206,7 +223,21 @@ public class GameScreen extends ScreenAdapter {
 
     private void renderPlayer() {
         int[] pos = player.getLocation();
-        batch.draw(PlayerAvatarManager.female_player1, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        Texture playerTexture = PlayerAvatarManager.female_player1;
+        if (playerTexture != null) {
+            batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        } else {
+            Gdx.app.error("Rendering", "Player texture not loaded!");
+        }
+    }
+
+    private void updateTimeLabel() {
+        Result timeResult = gameController.displayTime("full");
+        if (timeResult.success()) {
+            timeLabel.setText(timeResult.message());
+        }
+
+        moneyLabel.setText("Money: " + player.getMoney());
     }
 
     @Override
