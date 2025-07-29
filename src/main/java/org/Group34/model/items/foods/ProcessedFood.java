@@ -1,5 +1,7 @@
 package org.Group34.model.items.foods;
 
+import com.badlogic.gdx.graphics.Texture;
+
 public enum ProcessedFood implements Food {
     HONEY("Honey", "It's a sweet syrup produced by bees.", 75, 350),
     CLOTH("Cloth", "A bolt of fine wool cloth.", 0, 470),
@@ -175,5 +177,10 @@ public enum ProcessedFood implements Food {
 
     public int getPrice() {
         return price;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

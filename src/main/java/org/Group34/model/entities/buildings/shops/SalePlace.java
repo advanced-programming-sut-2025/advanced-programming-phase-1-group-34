@@ -1,5 +1,6 @@
 package org.Group34.model.entities.buildings.shops;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.buildings.Building;
 import org.Group34.model.entities.buildings.shops.products.ShippingBin;
 import org.Group34.model.enums.Color;
@@ -35,5 +36,10 @@ public class SalePlace implements Building {
     @Override
     public String toString() {
         return Color.YELLOW + "S" + Color.RESET;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

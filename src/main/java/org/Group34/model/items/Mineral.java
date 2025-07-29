@@ -1,5 +1,7 @@
 package org.Group34.model.items;
 
+import com.badlogic.gdx.graphics.Texture;
+
 public enum Mineral implements Item {
     QUARTZ("Quartz", "A clear crystal commonly found in caves and mines.", 25),
     EARTH_CRYSTAL("Earth Crystal", "A resinous substance found near the surface.", 50),
@@ -40,5 +42,10 @@ public enum Mineral implements Item {
 
     public int getSellPrice() {
         return sellPrice;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

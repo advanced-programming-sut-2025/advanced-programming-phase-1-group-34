@@ -1,5 +1,7 @@
 package org.Group34.model.items;
 
+import com.badlogic.gdx.graphics.Texture;
+
 public enum Fertilizer implements Item {
     BASIC_RETAINING_SOIL("Basic Retaining Soil", "This soil has a chance of staying watered overnight. Mix into tilled soil.", 100),
     QUALITY_RETAINING_SOIL("Quality Retaining Soil", "This soil has a good chance of staying watered overnight. Mix into tilled soil.", 150),
@@ -27,5 +29,10 @@ public enum Fertilizer implements Item {
 
     public int getPrice() {
         return price;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

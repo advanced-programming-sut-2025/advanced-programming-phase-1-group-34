@@ -335,4 +335,9 @@ public class Tree implements Entity, PlantAble {
         age = 0;
         growthLevel = maxLevel - 1;
     }
+
+    @Override
+    public Texture getTexture() {
+        return null;
+    }
 }

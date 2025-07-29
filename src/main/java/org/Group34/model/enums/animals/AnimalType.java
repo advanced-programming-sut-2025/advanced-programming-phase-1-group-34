@@ -1,6 +1,7 @@
 package org.Group34.model.enums.animals;
 
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.items.Item;
 
 import java.util.List;
@@ -65,5 +66,10 @@ public enum AnimalType implements Item {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

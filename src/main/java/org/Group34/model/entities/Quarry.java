@@ -1,5 +1,7 @@
 package org.Group34.model.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.buildings.Building;
 import org.Group34.model.enums.Color;
 import org.Group34.model.items.Item;
@@ -26,5 +28,9 @@ public class Quarry implements WalkAble {
         } else {
             items.put(item, amount);
         }
+    }
+
+    public Texture getTexture() {
+        return new Texture(Gdx.files.internal("player/.png"));
     }
 }

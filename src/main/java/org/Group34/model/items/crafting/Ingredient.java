@@ -1,5 +1,6 @@
 package org.Group34.model.items.crafting;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.items.Item;
 
@@ -44,5 +45,10 @@ public enum Ingredient implements Item, Entity {
 
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

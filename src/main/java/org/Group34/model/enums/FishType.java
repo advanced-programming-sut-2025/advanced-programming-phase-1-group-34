@@ -1,5 +1,6 @@
 package org.Group34.model.enums;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.foods.ProcessedFood;
 
@@ -54,5 +55,10 @@ public enum FishType implements Item {
 
     public ProcessedFood getSmokedForm() {
         return smokedForm;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

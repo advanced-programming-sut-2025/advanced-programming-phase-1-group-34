@@ -311,4 +311,9 @@ public class Crop implements Entity, PlantAble {
     public String toString() {
         return Color.GREEN + "C" + Color.RESET;
     }
+
+    @Override
+    public Texture getTexture() {
+        return null;
+    }
 }

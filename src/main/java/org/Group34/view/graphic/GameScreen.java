@@ -20,17 +20,14 @@ import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.User;
 import org.Group34.model.entities.Player;
-import org.Group34.model.entities.Quarry;
-import org.Group34.model.entities.buildings.GreenHouse;
-import org.Group34.model.entities.naturalElements.ForagingCrop;
+import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
 import org.Group34.model.entities.Entity;
-import org.Group34.model.entities.buildings.House;
-import org.Group34.model.entities.buildings.Lake;
-import org.Group34.model.entities.naturalElements.Tree;
 import org.Group34.view.graphic.menuScreen.MainMenuScreen;
 import org.Group34.model.entities.WalkAble;
+
+import java.util.Random;
 
 public class GameScreen extends ScreenAdapter {
     private final Stage stage;
@@ -44,22 +41,15 @@ public class GameScreen extends ScreenAdapter {
 
     // Map rendering constants
     private static final int TILE_SIZE = 32;
-    private static final int VIEWPORT_WIDTH = 50;
-    private static final int VIEWPORT_HEIGHT = 20;
+    private static final int VIEWPORT_WIDTH = 30;
+    private static final int VIEWPORT_HEIGHT = 15;
 
     private float moveTimer = 0;
-    private static final float MOVE_INTERVAL = 0.15f;
+    private static final float MOVE_INTERVAL = 0.13f;
 
     // Textures
-    private final Texture grassTexture;
-    private final Texture houseTexture;
-    private final Texture treeTexture;
-    private final Texture waterTexture;
-    private final Texture playerTexture;
-    private final Texture quarryTexture;
-    private final Texture greenhouseTexture;
-    private final Texture stoneTexture;
-    private final Texture obstacleTexture;
+    private final Texture[] grassTextures;
+    private final int[][] grassPattern;
 
     public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController) {
         this.skin = skin;
@@ -78,16 +68,22 @@ public class GameScreen extends ScreenAdapter {
             this.player = myGame.players().values().iterator().next();
         }
 
-        // Load textures
-        this.grassTexture = new Texture(Gdx.files.internal("tiles/grass.png"));
-        this.houseTexture = new Texture(Gdx.files.internal("tiles/home.png"));
-        this.treeTexture = new Texture(Gdx.files.internal("tiles/tree.png"));
-        this.waterTexture = new Texture(Gdx.files.internal("tiles/water.png"));
-        this.playerTexture = new Texture(Gdx.files.internal("player/female_player1.png"));
-        this.quarryTexture = new Texture(Gdx.files.internal("tiles/quarry.png"));
-        this.greenhouseTexture = new Texture(Gdx.files.internal("tiles/greenhouse.png"));
-        this.stoneTexture = new Texture(Gdx.files.internal("tiles/stone.png"));
-        this.obstacleTexture = new Texture(Gdx.files.internal("tiles/obstacle.png"));
+        // Load grass texture
+        grassTextures = new Texture[6];
+        for (int i = 0; i < 6; i++) {
+            grassTextures[i] = new Texture(Gdx.files.internal("tiles/grass_" + i + ".png"));
+        }
+
+        int mapWidth = myGame.map().getCurrentPlayerFarm(player).width();
+        int mapHeight = myGame.map().getCurrentPlayerFarm(player).height();
+        grassPattern = new int[mapWidth][mapHeight];
+
+        Random random = new Random();
+        for (int x = 0; x < mapWidth; x++) {
+            for (int y = 0; y < mapHeight; y++) {
+                grassPattern[x][y] = random.nextInt(6);
+            }
+        }
 
         // Set up camera
         camera.setToOrtho(false, VIEWPORT_WIDTH * TILE_SIZE, VIEWPORT_HEIGHT * TILE_SIZE);
@@ -194,7 +190,9 @@ public class GameScreen extends ScreenAdapter {
 
         for (int x = startX; x < startX + VIEWPORT_WIDTH; x++) {
             for (int y = startY; y < startY + VIEWPORT_HEIGHT; y++) {
-                batch.draw(grassTexture, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                int grassType = grassPattern[x][y];
+                batch.draw(grassTextures[grassType], x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
                 Entity entity = currentSpace.getEntityByLocation(x, y);
                 if (entity != null) {
                     Texture texture = entity.getTexture();
@@ -208,22 +206,16 @@ public class GameScreen extends ScreenAdapter {
 
     private void renderPlayer() {
         int[] pos = player.getLocation();
-        batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        batch.draw(PlayerAvatarManager.female_player1, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 
     @Override
     public void dispose() {
+        for (Texture tex : grassTextures) {
+            tex.dispose();
+        }
         stage.dispose();
         batch.dispose();
-        grassTexture.dispose();
-        houseTexture.dispose();
-        treeTexture.dispose();
-        waterTexture.dispose();
-        playerTexture.dispose();
-        quarryTexture.dispose();
-        greenhouseTexture.dispose();
-        stoneTexture.dispose();
-        obstacleTexture.dispose();
     }
 
     @Override

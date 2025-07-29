@@ -1,5 +1,6 @@
 package org.Group34.model.entities.buildings.shops.products;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.items.Item;
 
 public class ShippingBin implements Item {
@@ -41,5 +42,10 @@ public class ShippingBin implements Item {
 
     public int getAmountOfItem() {
         return amountOfItem;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

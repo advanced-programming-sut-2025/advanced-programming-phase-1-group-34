@@ -1,5 +1,6 @@
 package org.Group34.model.enums.animals;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.items.Item;
 
 public enum BarnType implements Item {
@@ -61,5 +62,10 @@ public enum BarnType implements Item {
 
     public int getSizeY() {
         return sizeY;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

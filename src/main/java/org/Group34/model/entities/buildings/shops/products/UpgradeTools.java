@@ -1,5 +1,6 @@
 package org.Group34.model.entities.buildings.shops.products;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.Ingredient;
 
@@ -46,5 +47,10 @@ public enum UpgradeTools implements Item {
 
     public int getPrice() {
         return price;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

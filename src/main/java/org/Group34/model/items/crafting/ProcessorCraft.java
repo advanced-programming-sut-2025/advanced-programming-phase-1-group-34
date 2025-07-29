@@ -1,5 +1,6 @@
 package org.Group34.model.items.crafting;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
 import org.Group34.model.enums.Color;
@@ -130,4 +131,10 @@ public enum ProcessorCraft implements Craft, Entity {
     @Override
     public String toString(){
         return Color.RED + "D" + Color.RESET;
-    }}
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
+    }
+}

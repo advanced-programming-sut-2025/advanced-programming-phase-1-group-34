@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.User;
 import org.Group34.model.enums.LevelType;
+import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
 import org.Group34.model.interactions.Gift;
 import org.Group34.model.interactions.Interaction;
 import org.Group34.model.items.Fertilizer;
@@ -305,6 +306,6 @@ public class  Player implements Entity {
     }
 
     public Texture getTexture() {
-        return new Texture(Gdx.files.internal("player/female_player1.png"));
+        return PlayerAvatarManager.female_player1;
     }
 }

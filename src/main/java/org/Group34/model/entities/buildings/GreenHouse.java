@@ -1,5 +1,6 @@
 package org.Group34.model.entities.buildings;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.enums.Color;
 
@@ -95,5 +96,10 @@ public class GreenHouse implements Building {
     @Override
     public String toString() {
         return Color.YELLOW + "G" + Color.RESET;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

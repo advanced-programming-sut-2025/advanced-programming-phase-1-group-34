@@ -1,5 +1,6 @@
 package org.Group34.model.items;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.items.crafting.Craft;
 import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.items.crafting.ProcessorCraft;
@@ -129,5 +130,10 @@ public enum Recipe implements Item {
 
             default: throw new IllegalArgumentException("No craft associated with this recipe");
         }
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }

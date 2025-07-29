@@ -1,5 +1,6 @@
 package org.Group34.model.items.foods;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.enums.FishType;
 import org.Group34.model.enums.animals.Product;
 import org.Group34.model.items.Item;
@@ -76,6 +77,11 @@ public enum CookedFood implements Craft, Food {
 
     @Override
     public String getSource() {
+        return null;
+    }
+
+    @Override
+    public Texture getTexture() {
         return null;
     }
 }

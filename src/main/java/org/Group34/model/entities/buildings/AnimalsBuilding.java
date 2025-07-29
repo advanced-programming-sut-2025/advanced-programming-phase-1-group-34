@@ -1,5 +1,6 @@
 package org.Group34.model.entities.buildings;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Animal;
 
@@ -33,5 +34,10 @@ public class AnimalsBuilding implements Entity {
 
     public void upgrade() {
         //TODO Implement upgrade logic if needed
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }
