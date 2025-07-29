@@ -1,5 +1,7 @@
 package org.Group34.model.entities;
 
+import com.badlogic.gdx.graphics.Texture;
+
 /**
 * Anything that can be displayed on the map is an entity
  * Each Entity has a location related to its Space which is in it
@@ -7,4 +9,5 @@ package org.Group34.model.entities;
  */
 
 public interface Entity {
+    public Texture getTexture();
 }

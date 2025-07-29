@@ -1,5 +1,7 @@
 package org.Group34.model.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.User;
 import org.Group34.model.enums.LevelType;
 import org.Group34.model.interactions.Gift;
@@ -300,5 +302,9 @@ public class  Player implements Entity {
             }
         }
         return null;
+    }
+
+    public Texture getTexture() {
+        return new Texture(Gdx.files.internal("player/female_player1.png"));
     }
 }
