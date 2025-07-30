@@ -2,7 +2,7 @@ package org.Group34.model.gameAssetManagers;
 
 import com.badlogic.gdx.graphics.Texture;
 
-public class InventoryAssetManager {
+public class ToolAssetManager {
     private final static Texture basicAxe = new Texture("tools/Axe/Axe.png");
     private final static Texture copperAxe = new Texture("tools/Axe/Copper_Axe.png");
     private final static Texture ironAxe = new Texture("tools/Axe/Steel_Axe.png");

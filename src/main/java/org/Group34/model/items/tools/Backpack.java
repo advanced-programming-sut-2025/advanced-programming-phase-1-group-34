@@ -1,5 +1,6 @@
 package org.Group34.model.items.tools;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.items.Item;
 
 import java.util.ArrayList;
@@ -31,6 +32,11 @@ public class Backpack extends Tool { // TODO This class must be filled.
 
     public ToolType getType() {
         return type;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return type.getTexture();
     }
 
     public void setType(ToolType type) {
