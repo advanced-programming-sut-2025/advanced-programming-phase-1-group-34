@@ -51,6 +51,7 @@ import org.Group34.model.entities.Player;
 import org.Group34.model.enums.FarmType;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.MapBuilder;
+import org.Group34.view.graphic.mapScreen.GameScreen;
 
 import java.util.HashMap;
 
