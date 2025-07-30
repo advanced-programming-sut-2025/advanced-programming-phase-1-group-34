@@ -25,6 +25,8 @@ import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
+import org.Group34.view.graphic.GameMenuGraphic;
+import org.Group34.view.graphic.ToolsGraphic;
 import org.Group34.view.graphic.dialogs.GreenhouseRepairDialog;
 
 public class GameScreen extends ScreenAdapter {
@@ -54,6 +56,10 @@ public class GameScreen extends ScreenAdapter {
     // Game state
     private float moveTimer = 0;
 
+    // Other items
+    private ToolsGraphic toolsGraphic;
+    private GameMenuGraphic gameMenuGraphic;
+
     public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController) {
         this.skin = skin;
         this.game = game;
@@ -71,6 +77,10 @@ public class GameScreen extends ScreenAdapter {
         } else {
             this.player = myGame.players().values().iterator().next();
         }
+
+        // Initialize other items
+        toolsGraphic = new ToolsGraphic(batch, player);
+        gameMenuGraphic = new GameMenuGraphic(batch, player);
 
         // Initialize sub-components
         this.uiManager = new UIManager(skin, game, stage);
@@ -99,6 +109,7 @@ public class GameScreen extends ScreenAdapter {
         // Render game world
         mapRenderer.render(batch, camera, environmentManager);
         renderPlayer();
+        renderOtherItems();
         batch.end();
 
         // Render weather effects on top of everything
@@ -243,6 +254,11 @@ public class GameScreen extends ScreenAdapter {
         int[] pos = player.getLocation();
         Texture playerTexture = PlayerAvatarManager.female_player1;
         batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
+
+    private void renderOtherItems() {
+        toolsGraphic.update(TILE_SIZE);
+        gameMenuGraphic.update(camera);
     }
 
     @Override

@@ -3,7 +3,6 @@ package org.Group34.model.gameAssetManagers;
 import com.badlogic.gdx.graphics.Texture;
 
 public class CropAssetManager {
-    // hello
     private final static Texture blueJazz = new Texture("crops/Blue_Jazz.png");
     private final static Texture blueJazzSeeds = new Texture("crops/Jazz_Seeds.png");
     private final static Texture blueJazzStage1 = new Texture("crops/Blue_Jazz_Stage_1.png");
