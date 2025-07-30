@@ -18,7 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.Result;
-import org.Group34.view.graphic.GameScreen;
+import org.Group34.view.graphic.mapScreen.GameScreen;
 
 import java.util.ArrayList;
 import java.util.Collections;
