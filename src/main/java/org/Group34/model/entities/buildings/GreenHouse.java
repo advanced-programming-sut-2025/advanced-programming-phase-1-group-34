@@ -4,11 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.naturalElements.Crop;
 import org.Group34.model.enums.Color;
 import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
+import org.Group34.model.entities.WalkAble; // Make sure to import this
 
 public class GreenHouse implements Building {
     private static final int REPAIR_WOOD = 500;
     private static final int REPAIR_MONEY = 1000;
-
     private boolean isRepaired;
     private Plot[][] plots;
     private final int waterTankCapacity = 100;
@@ -34,12 +34,10 @@ public class GreenHouse implements Building {
 
     public void dailyUpdate() {
         if (!isRepaired) return;
-
         for (Plot[] row : plots) {
             for (Plot plot : row) {
                 if (plot.hasCrop()) {
                     //plot.getCrop().grow();
-
                     if (!plot.isWatered()) {
                         //plot.getCrop().wither();
                     }
@@ -96,11 +94,11 @@ public class GreenHouse implements Building {
 
     @Override
     public String toString() {
-        return Color.YELLOW + "G" + Color.RESET;
+        return isRepaired ? Color.GREEN + "G" + Color.RESET : Color.YELLOW + "G" + Color.RESET;
     }
 
     @Override
     public Texture getTexture() {
-        return BuildingsAssetManager.greenhouse;
+        return isRepaired ? BuildingsAssetManager.greenhouse_repaired : BuildingsAssetManager.greenhouse;
     }
 }

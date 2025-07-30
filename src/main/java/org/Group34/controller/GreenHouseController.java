@@ -14,16 +14,17 @@ public class GreenHouseController {
     }
 
     public Result repairGreenhouse(Player player) {
-        if (player.isExistInInventory(Ingredient.WOOD) &&
-                player.getAmountOfItem(Ingredient.WOOD) >= greenhouse.getRepairWood() &&
-                player.getMoney() >= greenhouse.getRepairMoney()) {
+        if (greenhouse.isRepaired()) {
+            return new Result(false, "greenhouse is already repaired.");
+        }
 
-            player.removeFromInventory(Ingredient.WOOD, greenhouse.getRepairWood());
+        if (player.getMoney() >= greenhouse.getRepairMoney()) {
+
+//            player.removeFromInventory(Ingredient.WOOD, greenhouse.getRepairWood());
             player.addMoney(-greenhouse.getRepairMoney());
             greenhouse.repair();
 
-            return new Result(true, "Greenhouse repaired!\n Gold: " + player.getMoney() +
-                                                                         "\nWood: " + player.getAmountOfItem(Ingredient.WOOD));
+            return new Result(true, "Greenhouse repaired!\n Gold: " + player.getMoney());
         }
         return new Result(false, "Not enough resources.");
     }

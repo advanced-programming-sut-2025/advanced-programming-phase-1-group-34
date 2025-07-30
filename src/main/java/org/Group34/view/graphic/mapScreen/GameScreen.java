@@ -6,16 +6,26 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.GameController;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.User;
+import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.WalkAble;
+import org.Group34.model.entities.buildings.GreenHouse;
+import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
 import org.Group34.model.map.Map;
+import org.Group34.model.map.Space;
+import org.Group34.view.graphic.dialogs.GreenhouseRepairDialog;
 
 public class GameScreen extends ScreenAdapter {
     // Constants
@@ -38,7 +48,7 @@ public class GameScreen extends ScreenAdapter {
     // Sub-components
     private final UIManager uiManager;
     private final EnvironmentManager environmentManager;
-    private final MapRenderer mapRenderer;
+    private MapRenderer mapRenderer;
     private final WeatherRenderer weatherRenderer;
 
     // Game state
@@ -89,7 +99,6 @@ public class GameScreen extends ScreenAdapter {
         // Render game world
         mapRenderer.render(batch, camera, environmentManager);
         renderPlayer();
-
         batch.end();
 
         // Render weather effects on top of everything
@@ -116,6 +125,15 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
             myGame.time().cheatAdvanceDate(1, myGame);
         }
+        // Money increase cheat
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            player.addMoney(1000);
+        }
+
+        // Greenhouse interaction
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
+            handleGreenhouseInteraction();
+        }
 
         // Player movement
         if (keyUp || keyDown || keyLeft || keyRight) {
@@ -136,18 +154,78 @@ public class GameScreen extends ScreenAdapter {
         int[] playerLocation = player.getLocation();
         int newX = playerLocation[0];
         int newY = playerLocation[1];
-
         if (keyUp) newY++;
         else if (keyDown) newY--;
         else if (keyLeft) newX--;
         else if (keyRight) newX++;
-
         if (newX >= 0 && newX < gameMap.getCurrentPlayerFarm(player).width() &&
                 newY >= 0 && newY < gameMap.getCurrentPlayerFarm(player).height()) {
-            org.Group34.model.entities.Entity entity = gameMap.getCurrentPlayerFarm(player).getEntityByLocation(newX, newY);
-            if (entity == null || entity instanceof org.Group34.model.entities.WalkAble) {
+            Entity entity = gameMap.getCurrentPlayerFarm(player).getEntityByLocation(newX, newY);
+            // Allow movement if:
+            // - No entity
+            // - Entity is WalkAble
+            // - Entity is a repaired greenhouse
+            if (entity == null ||
+                    entity instanceof WalkAble ||
+                    (entity instanceof GreenHouse && gameController.greenhouse.isRepaired())) {
                 gameMap.movePlayer(player, newX, newY);
             }
+        }
+    }
+
+    private void handleGreenhouseInteraction() {
+        Space currentSpace = gameMap.getCurrentPlayerFarm(player);
+        GreenHouse greenhouse = null;
+        // Search for greenhouse in player's current farm
+        for (int x = 0; x < currentSpace.width(); x++) {
+            for (int y = 0; y < currentSpace.height(); y++) {
+                Entity entity = currentSpace.getEntityByLocation(x, y);
+                if (entity instanceof GreenHouse) {
+                    greenhouse = (GreenHouse) entity;
+                    break;
+                }
+            }
+            if (greenhouse != null) break;
+        }
+        if (greenhouse != null) {
+            if (!greenhouse.isRepaired()) {
+                GreenhouseRepairDialog dialog = new GreenhouseRepairDialog(
+                        "",
+                        skin,
+                        gameController,
+                        greenhouse.getRepairWood(),
+                        greenhouse.getRepairMoney()
+                );
+                dialog.show(stage);
+                // Add listener to refresh after dialog closes
+                dialog.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeListener.ChangeEvent event, Actor actor) {
+                        // Force a refresh of the game state
+                        // This will ensure the greenhouse becomes walkable and texture changes
+                        Gdx.app.postRunnable(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Refresh the map renderer to update textures
+                                mapRenderer.dispose();
+                                mapRenderer = new MapRenderer(gameMap, player, TILE_SIZE, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+                            }
+                        });
+                    }
+                });
+            } else {
+                // Greenhouse is already repaired
+                Dialog infoDialog = new Dialog("", skin);
+                infoDialog.text("The greenhouse is already repaired and ready to use!");
+                infoDialog.button("OK");
+                infoDialog.show(stage);
+            }
+        } else {
+            // No greenhouse found in the farm
+            Dialog infoDialog = new Dialog("", skin);
+            infoDialog.text("No greenhouse found in your farm. You need to build one first!");
+            infoDialog.button("OK");
+            infoDialog.show(stage);
         }
     }
 
@@ -163,7 +241,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void renderPlayer() {
         int[] pos = player.getLocation();
-        com.badlogic.gdx.graphics.Texture playerTexture = org.Group34.model.gameAssetManagers.PlayerAvatarManager.female_player1;
+        Texture playerTexture = PlayerAvatarManager.female_player1;
         batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
     }
 

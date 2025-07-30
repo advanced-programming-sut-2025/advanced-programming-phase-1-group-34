@@ -80,4 +80,5 @@ public class EnvironmentManager {
     public String getCurrentWeather() { return currentWeather; }
     public String getCurrentDate() { return currentDate; }
     public String getCurrentTime() { return currentTime; }
+    public GameController getGameController() { return gameController; }
 }
