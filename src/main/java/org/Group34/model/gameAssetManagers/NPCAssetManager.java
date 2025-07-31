@@ -36,8 +36,8 @@ public class NPCAssetManager {
                 Texture texture = new Texture(Gdx.files.internal(texturePath));
 
                 Random random = new Random();
-                int x = random.nextInt(mapWidth - 10) + 5; // بین 5 تا mapWidth-5
-                int y = random.nextInt(mapHeight - 10) + 5; // بین 5 تا mapHeight-5
+                int x = random.nextInt(mapWidth - 10) + 5;
+                int y = random.nextInt(mapHeight - 10) + 5;
 
                 npcOnMaps.add(new NPCOnMap(npc, texture, x, y));
             }

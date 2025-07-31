@@ -25,6 +25,7 @@ import org.Group34.model.entities.WalkAble;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.enums.Season;
+import org.Group34.model.gameAssetManagers.NPCDialogueManager;
 import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
@@ -57,7 +58,8 @@ public class GameScreen extends ScreenAdapter {
     private final WeatherRenderer weatherRenderer;
 
     // NPCs
-    private boolean npcsInitialized = false;
+    private boolean NPCsInitialized = false;
+    private NPCDialogueManager npcDialogueManager;
 
     // Game state
     private float moveTimer = 0;
@@ -94,6 +96,9 @@ public class GameScreen extends ScreenAdapter {
         this.mapRenderer = new MapRenderer(gameMap, player, TILE_SIZE, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         this.weatherRenderer = new WeatherRenderer();
 
+        // Initialize NPC dialogue manager
+        this.npcDialogueManager = new NPCDialogueManager();
+
         // Set up camera
         camera.setToOrtho(false, VIEWPORT_WIDTH * TILE_SIZE, VIEWPORT_HEIGHT * TILE_SIZE);
         Gdx.input.setInputProcessor(stage);
@@ -109,22 +114,25 @@ public class GameScreen extends ScreenAdapter {
         environmentManager.update();
         uiManager.update(environmentManager);
 
-        if (!npcsInitialized) {
+        // Update NPCs dialogue system
+        if (!NPCsInitialized) {
             Space currentSpace = gameMap.getCurrentPlayerFarm(player);
             environmentManager.initializeNPCs(currentSpace);
-
             for (NPCOnMap npcOnMap : environmentManager.getNpcManager().getNpcOnMaps()) {
                 currentSpace.placingEntity(npcOnMap.getX(), npcOnMap.getY(), npcOnMap);
             }
-
-            npcsInitialized = true;
+            NPCsInitialized = true;
         }
+
+        // Update NPC dialogue manager
+        int[] playerPos = player.getLocation();
+        npcDialogueManager.update(delta, environmentManager.getNpcManager().getNpcOnMaps(), playerPos);
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
         // Render game world
-        mapRenderer.render(batch, camera, environmentManager);
+        mapRenderer.render(batch, camera, environmentManager, npcDialogueManager);
         renderPlayer();
         renderOtherItems();
         batch.end();
@@ -166,6 +174,11 @@ public class GameScreen extends ScreenAdapter {
         // NPCs
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             handleNPCInteraction();
+        }
+
+        // Handle S key for dialogue
+        if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+            handleNPCDialogue();
         }
 
         // Player movement
@@ -297,6 +310,46 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
+    private void handleNPCDialogue() {
+        int[] playerPos = player.getLocation();
+        Space currentSpace = gameMap.getCurrentPlayerFarm(player);
+
+        int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        for (int[] dir : directions) {
+            int checkX = playerPos[0] + dir[0];
+            int checkY = playerPos[1] + dir[1];
+
+            if (checkX >= 0 && checkX < currentSpace.width() &&
+                    checkY >= 0 && checkY < currentSpace.height()) {
+
+                Entity entity = currentSpace.getEntityByLocation(checkX, checkY);
+                if (entity instanceof NPCOnMap) {
+                    NPCOnMap npcOnMap = (NPCOnMap) entity;
+
+                    if (npcDialogueManager.isDialogueIconVisible(npcOnMap)) {
+                        NPC npc = npcOnMap.getNpc();
+
+                        String seasonStr = environmentManager.getCurrentSeason();
+                        Season season = Season.valueOf(seasonStr.toUpperCase());
+
+                        String dialogue = npc.getDialogueBySeason(season);
+
+                        Dialog dialog = new Dialog(npc.getName(), skin);
+                        dialog.text(dialogue);
+                        dialog.button("OK");
+                        dialog.show(stage);
+
+                        npc.increaseFriendship(20);
+
+                        npcDialogueManager.activateDialogue(npcOnMap);
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     private void updateCamera() {
         int[] playerPos = player.getLocation();
         camera.position.set(
@@ -322,6 +375,7 @@ public class GameScreen extends ScreenAdapter {
     public void dispose() {
         mapRenderer.dispose();
         weatherRenderer.dispose();
+        npcDialogueManager.dispose();
         stage.dispose();
         batch.dispose();
     }

@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.model.entities.NPCOnMap;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
+import org.Group34.model.gameAssetManagers.NPCDialogueManager;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
 import org.Group34.model.entities.Entity;
@@ -54,7 +55,7 @@ public class MapRenderer {
         }
     }
 
-    public void render(SpriteBatch batch, OrthographicCamera camera, EnvironmentManager environmentManager) {
+    public void render(SpriteBatch batch, OrthographicCamera camera, EnvironmentManager environmentManager, NPCDialogueManager npcDialogueManager) {
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
         // Calculate visible area based on camera position
         int startX = (int)(camera.position.x / tileSize) - viewportWidth / 2;
@@ -102,6 +103,13 @@ public class MapRenderer {
 
                 // Restore original color
                 batch.setColor(originalColor);
+
+                // Render dialogue icon if visible
+                if (npcDialogueManager.isDialogueIconVisible(npcOnMap)) {
+                    batch.draw(npcDialogueManager.getDialogueIconTexture(),
+                            npcX * tileSize, (npcY + 1) * tileSize,
+                            tileSize / 2, tileSize / 2);
+                }
             }
         }
 
