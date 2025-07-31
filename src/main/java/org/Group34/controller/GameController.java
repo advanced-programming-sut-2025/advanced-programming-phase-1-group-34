@@ -18,6 +18,7 @@ import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.items.crafting.ProcessorCraft;
 import org.Group34.model.items.foods.*;
 import org.Group34.model.items.tools.*;
+import org.Group34.model.map.Space;
 import org.Group34.view.menu.GameMenu;
 import org.Group34.view.menu.MainMenu;
 
@@ -31,7 +32,7 @@ public class GameController {
     private final int mainUser = 0;
     private int currentUser = 0;
     private final ArrayList<Boolean> forceTerminating = new ArrayList<>();
-    private final AnimalController animalController = new AnimalController();
+    private final AnimalController animalController;
     public final GreenHouse greenhouse = new GreenHouse();
     public final GreenHouseController greenHouseController = new GreenHouseController(greenhouse);
     private final FishingController fishingController = new FishingController();
@@ -64,6 +65,7 @@ public class GameController {
     public GameController(MyGame myGame){
         this.myGame = myGame;
         this.startANewDayController = new StartANewDayController(myGame, myGame.map().getSpaces(), myGame.time());
+        this.animalController = new AnimalController(new AnimalBuildingController(), myGame.map().getSpaces().get(mainUser));
         setOrderOfPlay();
         myGame.weatherSystem().initializeWeather(myGame.time());
     }

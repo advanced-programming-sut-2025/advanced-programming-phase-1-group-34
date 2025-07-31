@@ -3,6 +3,7 @@ package org.Group34.controller;
 import org.Group34.model.Result;
 import org.Group34.model.entities.Animal;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.buildings.AnimalsBuilding;
 import org.Group34.model.enums.animals.AnimalType;
 import org.Group34.model.enums.animals.BarnType;
 import org.Group34.model.enums.animals.Product;
@@ -11,18 +12,49 @@ import org.Group34.model.items.Recipe;
 import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.tools.MilkPail;
 import org.Group34.model.items.tools.Shear;
+import org.Group34.model.map.Space;
 
 import java.util.*;
 
 public class AnimalController {
     private final Map<String, Animal> animals = new HashMap<>();
     private int barn = 0;
+    private final AnimalBuildingController buildingController;
+    private final Space space;
+
+    public AnimalController(AnimalBuildingController buildingController, Space space) {
+        this.buildingController = buildingController;
+        this.space = space;
+    }
+
 
     public boolean addAnimal(String name, AnimalType type) {
         if (animals.containsKey(name)) return false;
 
-        animals.put(name, new Animal(name, type));
-        return true;
+        Animal animal = new Animal(name, type);
+        animals.put(name, animal);
+
+        // Find appropriate building
+        BarnType requiredType = type.getRequiredBuilding();
+        for (AnimalsBuilding building : buildingController.getBuildings()) {
+            if (BarnType.valueOf(building.type) == requiredType &&
+                    building.getAnimalCount() < building.capacity) {
+
+                // Add to building
+                building.addAnimal(animal);
+
+                // Place animal in building (at building's position)
+                animal.setX(building.getX());
+                animal.setY(building.getY());
+                space.placingEntity(animal.getX(), animal.getY(), animal);
+
+                return true;
+            }
+        }
+
+        // No suitable building found
+        animals.remove(name);
+        return false;
     }
 
     public Animal getAnimal(String name) {
@@ -171,15 +203,36 @@ public class AnimalController {
         if (x > 100 || y > 100 || x < 0 || y < 0) {
             return new Result(false, "Invalid coordinates");
         }
-        else if (this.getAnimal(name) == null) {
+
+        Animal animal = animals.get(name);
+        if (animal == null) {
             return new Result(false, "No animal found");
         }
-        else if (this.setOutside(name)){
-            return new Result(true, "Operation successful.\nAnimal is now fed and your friendship was increased.");
+
+        // Check if animal can be outside
+        if (!animal.setOutside()) {
+            return new Result(false, "This animal cannot be outside");
         }
-        else {
-            return new Result(false, "This animal cannot be shepherd");
+
+        // Remove from current building if inside
+        for (AnimalsBuilding building : buildingController.getBuildings()) {
+            if (building.getAnimals().contains(animal)) {
+                building.getAnimals().remove(animal);
+                break;
+            }
         }
+
+        // Update position on map
+        space.placingEntity(animal.getX(), animal.getY(), null); // Remove from old position
+        animal.setX(x);
+        animal.setY(y);
+        space.placingEntity(x, y, animal); // Place at new position
+
+        // Feed and increase friendship
+        animal.feed();
+        animal.increaseFriendship(8);
+
+        return new Result(true, "Animal is now outside and fed");
     }
 
     public Result feedAnimal(String name, Player player){

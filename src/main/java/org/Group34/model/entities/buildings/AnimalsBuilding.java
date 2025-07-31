@@ -10,7 +10,9 @@ import java.util.List;
 public class AnimalsBuilding implements Entity {
     public int capacity = 10;
     protected final List<Animal> animals = new ArrayList<>();
-    protected String type;
+    public String type;
+    protected int x;
+    protected int y;
 
     public boolean addAnimal(Animal animal) {
         if (animals.size() < capacity) {
@@ -35,6 +37,12 @@ public class AnimalsBuilding implements Entity {
     public void upgrade() {
         //TODO Implement upgrade logic if needed
     }
+
+    public int getX() { return x; }
+    public void setX(int x) { this.x = x; }
+    public int getY() { return y; }
+    public void setY(int y) { this.y = y; }
+
 
     @Override
     public Texture getTexture() {
