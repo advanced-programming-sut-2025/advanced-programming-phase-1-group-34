@@ -19,9 +19,12 @@ import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.User;
 import org.Group34.model.entities.Entity;
+import org.Group34.model.entities.NPCOnMap;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.WalkAble;
 import org.Group34.model.entities.buildings.GreenHouse;
+import org.Group34.model.entities.npcs.NPC;
+import org.Group34.model.enums.Season;
 import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
@@ -52,6 +55,9 @@ public class GameScreen extends ScreenAdapter {
     private final EnvironmentManager environmentManager;
     private MapRenderer mapRenderer;
     private final WeatherRenderer weatherRenderer;
+
+    // NPCs
+    private boolean npcsInitialized = false;
 
     // Game state
     private float moveTimer = 0;
@@ -103,6 +109,17 @@ public class GameScreen extends ScreenAdapter {
         environmentManager.update();
         uiManager.update(environmentManager);
 
+        if (!npcsInitialized) {
+            Space currentSpace = gameMap.getCurrentPlayerFarm(player);
+            environmentManager.initializeNPCs(currentSpace);
+
+            for (NPCOnMap npcOnMap : environmentManager.getNpcManager().getNpcOnMaps()) {
+                currentSpace.placingEntity(npcOnMap.getX(), npcOnMap.getY(), npcOnMap);
+            }
+
+            npcsInitialized = true;
+        }
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
@@ -144,6 +161,11 @@ public class GameScreen extends ScreenAdapter {
         // Greenhouse interaction
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
             handleGreenhouseInteraction();
+        }
+
+        // NPCs
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            handleNPCInteraction();
         }
 
         // Player movement
@@ -237,6 +259,41 @@ public class GameScreen extends ScreenAdapter {
             infoDialog.text("No greenhouse found in your farm. You need to build one first!");
             infoDialog.button("OK");
             infoDialog.show(stage);
+        }
+    }
+
+    private void handleNPCInteraction() {
+        int[] playerPos = player.getLocation();
+        Space currentSpace = gameMap.getCurrentPlayerFarm(player);
+
+        int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        for (int[] dir : directions) {
+            int checkX = playerPos[0] + dir[0];
+            int checkY = playerPos[1] + dir[1];
+
+            if (checkX >= 0 && checkX < currentSpace.width() &&
+                    checkY >= 0 && checkY < currentSpace.height()) {
+
+                Entity entity = currentSpace.getEntityByLocation(checkX, checkY);
+                if (entity instanceof NPCOnMap) {
+                    NPCOnMap npcOnMap = (NPCOnMap) entity;
+                    NPC npc = npcOnMap.getNpc();
+
+                    String seasonStr = environmentManager.getCurrentSeason();
+                    Season season = Season.valueOf(seasonStr.toUpperCase());
+
+                    String dialogue = npc.getDialogueBySeason(season);
+
+                    Dialog dialog = new Dialog(npc.getName(), skin);
+                    dialog.text(dialogue);
+                    dialog.button("OK");
+                    dialog.show(stage);
+
+                    npc.increaseFriendship(20);
+
+                    break;
+                }
+            }
         }
     }
 

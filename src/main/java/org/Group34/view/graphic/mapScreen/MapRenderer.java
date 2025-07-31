@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.Group34.model.entities.NPCOnMap;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
 import org.Group34.model.map.Map;
@@ -62,16 +63,48 @@ public class MapRenderer {
         startY = Math.max(0, startY);
         startX = Math.min(currentSpace.width() - viewportWidth, startX);
         startY = Math.min(currentSpace.height() - viewportHeight, startY);
+
         // Apply environment tint
         batch.setColor(environmentManager.getEnvironmentTint());
+
         // Render grass with seasonal variations
         for (int x = startX; x < startX + viewportWidth; x++) {
             for (int y = startY; y < startY + viewportHeight; y++) {
                 renderGrassTile(batch, x, y, environmentManager);
             }
         }
+
         // Get player position
         int[] playerPos = player.getLocation();
+
+        // Render NPCs
+        for (NPCOnMap npcOnMap : environmentManager.getNpcManager().getNpcOnMaps()) {
+            // Get NPC position
+            int npcX = npcOnMap.getX();
+            int npcY = npcOnMap.getY();
+
+            // Only render NPCs in visible area
+            if (npcX >= startX && npcX < startX + viewportWidth &&
+                    npcY >= startY && npcY < startY + viewportHeight) {
+
+                // Check if player is on this tile
+                boolean playerOnThisTile = (npcX == playerPos[0] && npcY == playerPos[1]);
+
+                // Save original color
+                Color originalColor = new Color(batch.getColor());
+
+                // If player is on this tile, add some transparency
+                if (playerOnThisTile) {
+                    batch.setColor(1, 1, 1, 0.7f);
+                }
+
+                batch.draw(npcOnMap.getTexture(), npcX * tileSize, npcY * tileSize, tileSize, tileSize);
+
+                // Restore original color
+                batch.setColor(originalColor);
+            }
+        }
+
         // Render entities
         for (int x = startX; x < startX + viewportWidth; x++) {
             for (int y = startY; y < startY + viewportHeight; y++) {
@@ -79,24 +112,19 @@ public class MapRenderer {
                 if (entity != null) {
                     // Check if player is on this tile
                     boolean playerOnThisTile = (x == playerPos[0] && y == playerPos[1]);
-
                     if (entity instanceof GreenHouse) {
                         // Get the greenhouse at this specific location
                         GreenHouse greenhouse = environmentManager.getGameController().greenhouse;
                         Texture texture = greenhouse.isRepaired() ?
                                 BuildingsAssetManager.greenhouse_repaired :
                                 BuildingsAssetManager.greenhouse;
-
                         // Save original color
                         Color originalColor = new Color(batch.getColor());
-
                         // If player is on this tile, draw with partial transparency
                         if (playerOnThisTile) {
                             batch.setColor(1, 1, 1, 0.7f); // 70% opacity so greenhouse is still visible
                         }
-
                         batch.draw(texture, x * tileSize, y * tileSize, tileSize, tileSize);
-
                         // Restore original color
                         batch.setColor(originalColor);
                     }
@@ -106,6 +134,7 @@ public class MapRenderer {
                 }
             }
         }
+
         // Reset color
         batch.setColor(Color.WHITE);
     }

@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import org.Group34.model.MyGame;
 import org.Group34.model.Result;
 import org.Group34.controller.GameController;
+import org.Group34.model.gameAssetManagers.NPCAssetManager;
+import org.Group34.model.map.Space;
 
 public class EnvironmentManager {
     private final MyGame myGame;
@@ -13,6 +15,8 @@ public class EnvironmentManager {
     private String currentDate = "";
     private String currentTime = "";
     private boolean shouldDarken = false;
+
+    private final NPCAssetManager npcAssetManager;
 
     // Color tints for different environments
     private final Color normalTint = new Color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -25,6 +29,7 @@ public class EnvironmentManager {
     public EnvironmentManager(MyGame myGame, GameController gameController) {
         this.myGame = myGame;
         this.gameController = gameController;
+        this.npcAssetManager = new NPCAssetManager();
     }
 
     public void update() {
@@ -73,6 +78,14 @@ public class EnvironmentManager {
         return currentWeather.equalsIgnoreCase("RAIN") ||
                 currentWeather.equalsIgnoreCase("SNOW") ||
                 currentWeather.equalsIgnoreCase("STORM");
+    }
+
+    public NPCAssetManager getNpcManager() {
+        return npcAssetManager;
+    }
+
+    public void initializeNPCs(Space currentSpace) {
+        npcAssetManager.initializeNPCs(currentSpace);
     }
 
     // Getters for UI

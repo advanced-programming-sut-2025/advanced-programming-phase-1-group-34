@@ -1,0 +1,26 @@
+{
+  "npc": [
+    {
+      "name": "Alice",
+      "likedItems": ["Flower", "Cake"],
+      "quests": [],
+      "dialogues": [
+        "Hello! Spring is my favorite season!",
+        "It's so hot in summer, isn't it?",
+        "I love the colors of fall!",
+        "Winter makes me want to stay inside."
+      ]
+    },
+    {
+      "name": "Bob",
+      "likedItems": ["Fish", "Vegetable"],
+      "quests": [],
+      "dialogues": [
+        "Spring flowers are beautiful!",
+        "Let's go swimming this summer!",
+        "The harvest in fall is amazing!",
+        "I like building snowmen in winter."
+      ]
+    }
+  ]
+}
