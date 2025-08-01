@@ -33,15 +33,15 @@ public class UIManager {
         stage.addActor(seasonLabel);
 
         // Create back button
-        TextButton backButton = new TextButton("Back to Main Menu", skin);
-        backButton.setPosition(100, 50);
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new org.Group34.view.graphic.menuScreen.MainMenuScreen(skin, game));
-            }
-        });
-        stage.addActor(backButton);
+//        TextButton backButton = new TextButton("Back to Main Menu", skin);
+//        backButton.setPosition(100, 50);
+//        backButton.addListener(new ClickListener() {
+//            @Override
+//            public void clicked(InputEvent event, float x, float y) {
+//                game.setScreen(new org.Group34.view.graphic.menuScreen.MainMenuScreen(skin, game));
+//            }
+//        });
+//        stage.addActor(backButton);
     }
 
     public void update(EnvironmentManager environmentManager) {

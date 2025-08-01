@@ -1,19 +1,25 @@
 package org.Group34.model.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.enums.animals.AnimalType;
 import org.Group34.model.enums.animals.Product;
 
 import java.util.List;
 
-public class Animal {
+public class Animal implements Entity {
     private final String name;
     private final AnimalType type;
     private int friendship = 0;
-    private boolean hasPet = false ;
+    private boolean hasPet = false;
     private boolean isFed = false;
     private int daysSinceLastProduce = 0;
     private boolean isOutside = false;
     private final List<Product> possibleProducts;
+
+    // position
+    private int x;
+    private int y;
+
 
     public Animal(String name, AnimalType type) {
         this.name = name;
@@ -56,6 +62,12 @@ public class Animal {
     public void addDaysSinceLastProduce() {
         daysSinceLastProduce++;
     }
+
+    // position getters and setters
+    public int getX() { return x; }
+    public void setX(int x) { this.x = x; }
+    public int getY() { return y; }
+    public void setY(int y) { this.y = y; }
 
     public Product collectProduct() {
         if (!isFed) return null;
@@ -103,9 +115,9 @@ public class Animal {
 
     public boolean setOutside() {
         if (this.getAnimalType() == AnimalType.PIG ||
-        this.getAnimalType() == AnimalType.COW ||
-        this.getAnimalType() == AnimalType.GOAT ||
-        this.getAnimalType() == AnimalType.SHEEP) {
+                this.getAnimalType() == AnimalType.COW ||
+                this.getAnimalType() == AnimalType.GOAT ||
+                this.getAnimalType() == AnimalType.SHEEP) {
             this.isOutside = true;
             return true;
         }
@@ -137,5 +149,10 @@ public class Animal {
         if (Q < 0.7) return 2;
         if (Q < 0.9) return 3;
         return 4;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return null;
     }
 }
