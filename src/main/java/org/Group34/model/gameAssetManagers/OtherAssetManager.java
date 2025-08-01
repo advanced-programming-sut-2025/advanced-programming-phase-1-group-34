@@ -9,6 +9,8 @@ public class OtherAssetManager {
     private final static Texture faceIcon = new Texture("other/Haley_Icon.png");
     private final static Texture hearthIcon = new Texture("other/Emojis046.png");
     private final static Texture forestIcon = new Texture("other/Forester.png");
+    private final static Texture bigBoard = new Texture("other/bigBoard.png");
+    private final static Texture SmileIcon = new Texture("other/Achievement_A_New_Friend.jpg");
 
     // ----- getters -----
 
@@ -34,6 +36,14 @@ public class OtherAssetManager {
 
     public static Texture getForestIcon() {
         return forestIcon;
+    }
+
+    public static Texture getBigBoard() {
+        return bigBoard;
+    }
+
+    public static Texture getSmileIcon() {
+        return SmileIcon;
     }
 
     // -------------------

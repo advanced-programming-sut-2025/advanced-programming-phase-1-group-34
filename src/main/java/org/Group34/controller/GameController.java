@@ -580,11 +580,12 @@ public class GameController {
 
         return toolsController.showAvailableTools(getPlayer());
     }
-    public Result toolUse(String direction) {
+    public Result toolUse(String direction, Player player) {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return toolsController.toolUse(direction, farmingController, fishingController, animalController, getPlayer(), myGame.time(), myGame.weatherSystem(), levelUpController);
+//        return toolsController.toolUse(direction, farmingController, fishingController, animalController, getPlayer(), myGame.time(), myGame.weatherSystem(), levelUpController);
+        return toolsController.toolUse(direction, farmingController, fishingController, animalController, player, myGame.time(), myGame.weatherSystem(), levelUpController);
     }
 
     // ==========================================================

@@ -223,9 +223,9 @@ public class FarmingController {
         int playerLocation = currentPlayer.getLocation()[0];
         int location;
 
-        if (direction.equals("Up") || direction.equals("UpRight") || direction.equals("UpLeft")) {
+        if (direction.equals("Left") || direction.equals("UpLeft") || direction.equals("DownLeft")) {
             location = playerLocation - 1;
-        } else if (direction.equals("Down") || direction.equals("DownRight") || direction.equals("DownLeft")) {
+        } else if (direction.equals("Right") || direction.equals("UpRight") || direction.equals("DownRight")) {
             location = playerLocation + 1;
         } else {
             location = playerLocation;
@@ -237,10 +237,10 @@ public class FarmingController {
         int playerLocation = currentPlayer.getLocation()[1];
         int location;
 
-        if (direction.equals("Left") || direction.equals("UpLeft") || direction.equals("DownLeft")) {
-            location = playerLocation - 1;
-        } else if (direction.equals("Right") || direction.equals("UpRight") || direction.equals("DownRight")) {
+        if (direction.equals("Up") || direction.equals("UpRight") || direction.equals("UpLeft")) {
             location = playerLocation + 1;
+        } else if (direction.equals("Down") || direction.equals("DownRight") || direction.equals("DownLeft")) {
+            location = playerLocation - 1;
         } else {
             location = playerLocation;
         }

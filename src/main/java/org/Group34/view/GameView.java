@@ -255,7 +255,8 @@ public class GameView extends AppMenu {
                 if (matcher.find()) {
                     String direction = matcher.group("direction").trim();
 
-                    Result result = controller.toolUse(direction);
+                    //Result result = controller.toolUse(direction);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }

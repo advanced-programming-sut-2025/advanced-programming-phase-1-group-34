@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.WalkAble;
 import org.Group34.model.enums.Color;
+import org.Group34.model.gameAssetManagers.FlooringAssetManager;
 
 public class PloughedLand implements Entity, WalkAble {
     @Override
@@ -13,6 +14,6 @@ public class PloughedLand implements Entity, WalkAble {
     }
 
     public Texture getTexture() {
-        return new Texture(Gdx.files.internal("tiles/ploughedLand.png"));
+        return FlooringAssetManager.getPloughedLand();
     }
 }

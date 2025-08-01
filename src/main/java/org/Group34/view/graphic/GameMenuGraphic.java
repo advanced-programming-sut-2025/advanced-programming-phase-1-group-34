@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.TreeAssetManager;
 import org.Group34.view.graphic.gameMenu.InventoryMenu;
+import org.Group34.view.graphic.gameMenu.NPCMenu;
 
 public class GameMenuGraphic {
     private SpriteBatch batch;
@@ -27,6 +28,8 @@ public class GameMenuGraphic {
             } else if (menu.equals("skill")) {
             } else if (menu.equals("social")) {
             } else if (menu.equals("map")) {
+            } else if (menu.equals("npc")) {
+                NPCMenu.draw(batch, player, camera);
             }
         }
         else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {

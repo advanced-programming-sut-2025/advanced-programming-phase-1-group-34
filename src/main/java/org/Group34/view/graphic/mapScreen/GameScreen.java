@@ -79,7 +79,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         // Initialize other items
-        toolsGraphic = new ToolsGraphic(batch, player);
+        toolsGraphic = new ToolsGraphic(batch, player, gameController);
         gameMenuGraphic = new GameMenuGraphic(batch, player);
 
         // Initialize sub-components
