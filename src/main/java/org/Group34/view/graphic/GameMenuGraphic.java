@@ -9,6 +9,7 @@ import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.TreeAssetManager;
 import org.Group34.view.graphic.gameMenu.InventoryMenu;
 import org.Group34.view.graphic.gameMenu.NPCMenu;
+import org.Group34.view.graphic.gameMenu.SettingMenu;
 
 public class GameMenuGraphic {
     private SpriteBatch batch;
@@ -30,10 +31,11 @@ public class GameMenuGraphic {
             } else if (menu.equals("map")) {
             } else if (menu.equals("npc")) {
                 NPCMenu.draw(batch, player, camera);
+            } else if (menu.equals("setting")) {
+                SettingMenu.draw(batch, player, camera);
             }
         }
         else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            //player.setCurrentGameMenu("inventory");
         }
     }
 }

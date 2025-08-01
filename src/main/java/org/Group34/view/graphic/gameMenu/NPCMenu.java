@@ -18,6 +18,7 @@ public class NPCMenu {
     private final static Sprite socialSymbol = new Sprite(OtherAssetManager.getHearthIcon());
     private final static Sprite mapSymbol = new Sprite(OtherAssetManager.getForestIcon());
     private final static Sprite NPCSymbol = new Sprite(OtherAssetManager.getSmileIcon());
+    private final static Sprite settingSymbol = new Sprite(OtherAssetManager.getSettingIcon());
 
     static {
         bigBoard.setSize(chest.getWidth(), 413);
@@ -27,6 +28,7 @@ public class NPCMenu {
         socialSymbol.setSize((float) (socialSymbol.getWidth() * 0.4), (float) (socialSymbol.getHeight() * 0.4));
         mapSymbol.setSize((float) (mapSymbol.getWidth() * 0.6), (float) (mapSymbol.getHeight() * 0.6));
         NPCSymbol.setSize((float) (NPCSymbol.getWidth() * 0.8), (float) (NPCSymbol.getHeight() * 0.8));
+        settingSymbol.setSize((float) (settingSymbol.getWidth() * 0.05), (float) (settingSymbol.getHeight() * 0.05));
     }
 
     public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera) {
@@ -61,6 +63,9 @@ public class NPCMenu {
         smallBoard.setPosition(x + 206, y + 203);
         smallBoard.draw(batch);
 
+        smallBoard.setPosition(x + 250, y + 210);
+        smallBoard.draw(batch);
+
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
 
@@ -75,6 +80,9 @@ public class NPCMenu {
 
         NPCSymbol.setPosition(x + 206 + 10, y + 203 + 5);
         NPCSymbol.draw(batch);
+
+        settingSymbol.setPosition(x + 250 + 13, y + 210 + 8);
+        settingSymbol.draw(batch);
     }
 
     public static void handleInput(Player player) {
@@ -89,6 +97,8 @@ public class NPCMenu {
             player.setCurrentGameMenu("social");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 542 && x < 613 && y < 110 && y > 30) {
             player.setCurrentGameMenu("map");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 688 && x < 759 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("setting");
         }
     }
 
