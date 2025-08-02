@@ -4,8 +4,8 @@
       "name": "Alice",
       "likedItems": ["Carrot", "Flower"],
       "quests": [
-        { "title": "Find the Flower", "type": "delivery", "requiredFriendship": 1 },
-        { "title": "Bake a Cake", "type": "delivery", "requiredFriendship": 2 },
+        { "title": "Deliver Blackberry", "type": "delivery", "requiredFriendship": 1 },
+        { "title": "Bake a Carrot Cake", "type": "delivery", "requiredFriendship": 2 },
         { "title": "Spring Festival", "type": "event", "requiredFriendship": 3 }
       ],
       "dialogues": [
@@ -19,9 +19,9 @@
       "name": "Bob",
       "likedItems": ["1000$", "Wood"],
       "quests": [
-        { "title": "Catch a Fish", "type": "delivery", "requiredFriendship": 1 },
-        { "title": "Harvest Vegetables", "type": "delivery", "requiredFriendship": 2 },
-        { "title": "Build a Snowman", "type": "event", "requiredFriendship": 3 }
+        { "title": "Lend 10,000$", "type": "delivery", "requiredFriendship": 1 },
+        { "title": "Build a chair with Wood", "type": "delivery", "requiredFriendship": 2 },
+        { "title": "Read a book", "type": "event", "requiredFriendship": 3 }
       ],
       "dialogues": [
         "Spring flowers are beautiful!",
