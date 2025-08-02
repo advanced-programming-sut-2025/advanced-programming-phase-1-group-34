@@ -5,11 +5,17 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.Group34.model.entities.NPCOnMap;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.gameAssetManagers.TreeAssetManager;
 import org.Group34.view.graphic.gameMenu.InventoryMenu;
 import org.Group34.view.graphic.gameMenu.NPCMenu;
 import org.Group34.view.graphic.gameMenu.SettingMenu;
+import org.Group34.view.graphic.mapScreen.EnvironmentManager;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameMenuGraphic {
     private SpriteBatch batch;
@@ -20,7 +26,7 @@ public class GameMenuGraphic {
         this.player = player;
     }
 
-    public void update(OrthographicCamera camera) {
+    public void update(OrthographicCamera camera, EnvironmentManager environmentManager) {
         String menu = player.getCurrentGameMenu();
 
         if (menu != null) {
@@ -30,6 +36,12 @@ public class GameMenuGraphic {
             } else if (menu.equals("social")) {
             } else if (menu.equals("map")) {
             } else if (menu.equals("npc")) {
+                List<NPC> npcs = environmentManager.getNpcManager().getNpcOnMaps().stream()
+                        .map(NPCOnMap::getNpc)
+                        .collect(Collectors.toList());
+
+                // Set the NPCs in the menu
+                NPCMenu.setNPCs(npcs);
                 NPCMenu.draw(batch, player, camera);
             } else if (menu.equals("setting")) {
                 SettingMenu.draw(batch, player, camera);

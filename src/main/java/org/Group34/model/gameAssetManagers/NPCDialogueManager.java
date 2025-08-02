@@ -13,7 +13,6 @@ public class NPCDialogueManager {
     private final Map<NPCOnMap, Float> npcDialogueIconVisibleTime = new HashMap<>();
     private final Texture dialogueIconTexture;
 
-    // ثابت‌های زمانی
     private static final float TIME_TO_SHOW_ICON = 2.0f;
 
     public NPCDialogueManager() {

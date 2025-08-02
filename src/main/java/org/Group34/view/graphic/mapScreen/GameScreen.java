@@ -171,11 +171,6 @@ public class GameScreen extends ScreenAdapter {
             handleGreenhouseInteraction();
         }
 
-        // NPCs
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            handleNPCInteraction();
-        }
-
         // Handle S key for dialogue
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             handleNPCDialogue();
@@ -275,41 +270,6 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    private void handleNPCInteraction() {
-        int[] playerPos = player.getLocation();
-        Space currentSpace = gameMap.getCurrentPlayerFarm(player);
-
-        int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-        for (int[] dir : directions) {
-            int checkX = playerPos[0] + dir[0];
-            int checkY = playerPos[1] + dir[1];
-
-            if (checkX >= 0 && checkX < currentSpace.width() &&
-                    checkY >= 0 && checkY < currentSpace.height()) {
-
-                Entity entity = currentSpace.getEntityByLocation(checkX, checkY);
-                if (entity instanceof NPCOnMap) {
-                    NPCOnMap npcOnMap = (NPCOnMap) entity;
-                    NPC npc = npcOnMap.getNpc();
-
-                    String seasonStr = environmentManager.getCurrentSeason();
-                    Season season = Season.valueOf(seasonStr.toUpperCase());
-
-                    String dialogue = npc.getDialogueBySeason(season);
-
-                    Dialog dialog = new Dialog(npc.getName(), skin);
-                    dialog.text(dialogue);
-                    dialog.button("OK");
-                    dialog.show(stage);
-
-                    npc.increaseFriendship(20);
-
-                    break;
-                }
-            }
-        }
-    }
-
     private void handleNPCDialogue() {
         int[] playerPos = player.getLocation();
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
@@ -368,7 +328,7 @@ public class GameScreen extends ScreenAdapter {
 
     private void renderOtherItems() {
         toolsGraphic.update(TILE_SIZE);
-        gameMenuGraphic.update(camera);
+        gameMenuGraphic.update(camera, environmentManager);
     }
 
     @Override
