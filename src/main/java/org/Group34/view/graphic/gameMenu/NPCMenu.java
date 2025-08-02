@@ -8,11 +8,17 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.entities.npcs.quests.Quest;
+import org.Group34.model.gameAssetManagers.NPCAssetManager;
 import org.Group34.model.gameAssetManagers.OtherAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
+import org.Group34.model.items.Item;
+import org.Group34.model.items.crafting.Ingredient;
+import org.Group34.model.items.foods.Vegetable;
+
 import java.util.List;
 
 public class NPCMenu {
@@ -98,22 +104,25 @@ public class NPCMenu {
         float sectionHeight = 180;
         float startY = y + 100;
 
-        for (int i = 0; i < npcs.size() && i < 2; i++) {
+        for (int i = 0; i < 2; i++) {
             NPC npc = npcs.get(i);
 
             float baseY = startY - i * sectionHeight;
             float leftX = x + 30;
-            float rightX = x + 300;  // محل کویست‌ها
+            float rightX = x + 300;
 
-            // بکگراند عکس
-            batch.setColor(Color.LIGHT_GRAY);
-            batch.draw(smallBoard, leftX, baseY - 30, 80, 120);
-            batch.setColor(Color.WHITE);
+            if (i == 1) {
+                batch.draw(NPCAssetManager.bob, leftX, baseY - 30, 80, 120);
+                batch.draw(NPCAssetManager.gift, leftX + 15, baseY - 75, 50, 50);
+            }
+            else {
+                batch.draw(NPCAssetManager.alice, leftX, baseY - 30, 80, 120);
+                batch.draw(NPCAssetManager.gift, leftX + 15, baseY - 75, 50, 50);
+            }
 
-            // مشخصات سمت چپ
             font.draw(batch, "Name: " + npc.getName(), leftX + 90, baseY + 70);
             int friendshipLevel = getFriendshipLevel(npc.getFriendshipPoints());
-            font.draw(batch, "Friendship: Level " + friendshipLevel, leftX + 90, baseY + 45);
+            font.draw(batch, "Friendship: Level " + friendshipLevel + " (" + npc.getFriendshipPoints() + ")", leftX + 90, baseY + 45);
 
             font.draw(batch, "Liked Items:", leftX + 90, baseY + 20);
             float itemY = baseY - 5;
@@ -122,30 +131,35 @@ public class NPCMenu {
                 itemY -= 20;
             }
 
-            // کویست‌ها روبه‌رو
             font.draw(batch, "Quests:", rightX, baseY + 70);
             float questY = baseY + 50;
             List<Quest> quests = npc.getQuests();
 
-            if (quests == null || quests.isEmpty()) {
-                font.setColor(Color.GRAY);
-                font.draw(batch, "No quests available", rightX + 10, questY);
-                font.setColor(Color.BLACK);
-            } else {
-                for (Quest quest : quests) {
+            for (int j = 0; j < 3; j++) {
+                if (quests != null && j < quests.size()) {
+                    Quest quest = quests.get(j);
                     boolean questAvailable = isQuestAvailable(quest, friendshipLevel);
+
                     if (questAvailable) {
                         font.setColor(Color.BLACK);
-                        font.draw(batch, (quests.indexOf(quest) + 1) + ". " + quest.getTitle(), rightX + 10, questY);
+                        font.draw(batch, (j + 1) + ". " + quest.getTitle(), rightX + 10, questY);
                         font.draw(batch, "[" + (quest.isCompleted() ? "Completed" : "Delivery") + "]", rightX + 220, questY);
                     } else {
                         font.setColor(Color.GRAY);
-                        font.draw(batch, (quests.indexOf(quest) + 1) + ". Locked (Level " + quest.getLevel() + ")", rightX + 10, questY);
+                        font.draw(batch, (j + 1) + ". ???", rightX + 10, questY);
+                        font.draw(batch, "[Locked]", rightX + 220, questY);
                     }
-                    questY -= 25;
+                } else {
+                    // No quest in this slot → ??? + [Locked]
+                    font.setColor(Color.GRAY);
+                    font.draw(batch, (j + 1) + ". ???", rightX + 10, questY);
+                    font.draw(batch, "[Locked]", rightX + 220, questY);
                 }
-                font.setColor(Color.BLACK);
+
+                questY -= 25;
             }
+
+            font.setColor(Color.BLACK);
         }
     }
 
@@ -208,6 +222,48 @@ public class NPCMenu {
                 }
             }
         }
+
+        float giftX = 375;
+        float giftWidth = 70;
+        float giftHeight = 70;
+
+        for (int i = 0; i < 2; i++) {
+            int giftY;
+            if (i == 0) {
+                giftY = 400;
+            }
+            else {
+                giftY = 700;
+            }
+
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
+                    x > giftX && x < giftX + giftWidth &&
+                    y > giftY && y < giftY + giftHeight) {
+
+                NPC npc = npcs.get(i);
+
+                if (i == 0) {
+                    if (player.getAmountOfItem(Vegetable.CARROT) > 1) {
+                        npc.increaseFriendship(50);
+                        player.removeFromInventory(Vegetable.CARROT, 1);
+                    }
+                    else {
+
+                    }
+                }
+
+                else {
+                    if (player.getMoney() > 100) {
+                        npc.increaseFriendship(50);
+                        player.addMoney(-100);
+                    }
+                    else {
+
+                    }
+                }
+            }
+        }
+
     }
 
     private static void handleQuestInteraction(Player player, NPC npc, Quest quest) {

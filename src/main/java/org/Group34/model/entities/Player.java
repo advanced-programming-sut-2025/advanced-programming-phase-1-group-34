@@ -35,7 +35,7 @@ public class  Player implements Entity {
     private HashMap<Player, Interaction> interactions = new HashMap<>();
 
     private Item currentTool = new Pickaxe(ToolType.IRIDIUM_PICKAXE);
-    private String currentGameMenu = null;
+    private String currentGameMenu = "npc";
 
     {
         inventory.put(new Hoe(ToolType.BASIC_HOE), 1);

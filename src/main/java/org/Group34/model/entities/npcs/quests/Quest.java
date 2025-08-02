@@ -10,6 +10,8 @@ public class Quest {
     private int rewardGold;
     private RewardItem rewardItem;
     private boolean isCompleted = false;
+    private String type;
+    private int requiredFriendship;
 
     @JsonCreator
     public Quest(
@@ -56,6 +58,17 @@ public class Quest {
 
     public void completeQuest() {
         isCompleted = true;
+    }
+
+    public String getType() { return type; }
+    public void setType(String type) { this.type = type; }
+
+    public int getRequiredFriendship() {
+        return requiredFriendship;
+    }
+
+    public void setRequiredFriendship(int requiredFriendship) {
+        this.requiredFriendship = requiredFriendship;
     }
 
     @Override

@@ -14,6 +14,10 @@ import java.util.List;
 import java.util.Random;
 
 public class NPCAssetManager {
+    public final static Texture alice = new Texture(Gdx.files.internal("npcs/alice.png"));
+    public final static Texture bob = new Texture(Gdx.files.internal("npcs/bob.png"));
+    public final static Texture gift = new Texture(Gdx.files.internal("npcs/gift.png"));
+
     private final List<NPCOnMap> npcOnMaps = new ArrayList<>();
 
     public NPCAssetManager() {

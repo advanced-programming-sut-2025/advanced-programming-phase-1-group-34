@@ -2,8 +2,12 @@
   "npc": [
     {
       "name": "Alice",
-      "likedItems": ["Flower", "Cake"],
-      "quests": [],
+      "likedItems": ["Carrot", "Cake"],
+      "quests": [
+        { "title": "Find the Flower", "type": "delivery", "requiredFriendship": 1 },
+        { "title": "Bake a Cake", "type": "delivery", "requiredFriendship": 2 },
+        { "title": "Spring Festival", "type": "event", "requiredFriendship": 3 }
+      ],
       "dialogues": [
         "Hello! Spring is my favorite season!",
         "It's so hot in summer, isn't it?",
@@ -13,8 +17,12 @@
     },
     {
       "name": "Bob",
-      "likedItems": ["Fish", "Vegetable"],
-      "quests": [],
+      "likedItems": ["100$ money", "Wood"],
+      "quests": [
+        { "title": "Catch a Fish", "type": "delivery", "requiredFriendship": 1 },
+        { "title": "Harvest Vegetables", "type": "delivery", "requiredFriendship": 2 },
+        { "title": "Build a Snowman", "type": "event", "requiredFriendship": 3 }
+      ],
       "dialogues": [
         "Spring flowers are beautiful!",
         "Let's go swimming this summer!",
