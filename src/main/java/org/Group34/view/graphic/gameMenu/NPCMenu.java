@@ -225,10 +225,12 @@ public class NPCMenu {
                             font.setColor(Color.GREEN);
                             font.draw(batch, "[Available]", rightX + 220, questY);
                             font.setColor(Color.BLACK);
+                            font.draw(batch, "[R]", rightX + 190, questY);
                         } else {
                             font.setColor(Color.RED);
                             font.draw(batch, "[Need Item]", rightX + 220, questY);
-                            font.setColor(Color.BLACK);
+                            font.setColor(Color.GRAY);
+                            font.draw(batch, "[R]", rightX + 190, questY);
                         }
                     } else {
                         font.setColor(Color.GRAY);
