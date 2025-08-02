@@ -27,6 +27,7 @@ public class NPCMenu {
     private final static Sprite mapSymbol = new Sprite(OtherAssetManager.getForestIcon());
     private final static Sprite NPCSymbol = new Sprite(OtherAssetManager.getSmileIcon());
     private final static Sprite settingSymbol = new Sprite(OtherAssetManager.getSettingIcon());
+    private final static Sprite exitIcon = new Sprite(OtherAssetManager.getExitIcon());
 
     private static boolean giftDialogOpen = false;
     private static int selectedNPCIndex = -1;
@@ -57,6 +58,7 @@ public class NPCMenu {
         mapSymbol.setSize((float) (mapSymbol.getWidth() * 0.6), (float) (mapSymbol.getHeight() * 0.6));
         NPCSymbol.setSize((float) (NPCSymbol.getWidth() * 0.8), (float) (NPCSymbol.getHeight() * 0.8));
         settingSymbol.setSize((float) (settingSymbol.getWidth() * 0.05), (float) (settingSymbol.getHeight() * 0.05));
+        exitIcon.setSize((float) (exitIcon.getWidth() * 0.2), (float) (exitIcon.getHeight() * 0.2));
 
         font = new BitmapFont();
         font.setColor(Color.BLACK);
@@ -110,30 +112,45 @@ public class NPCMenu {
     private static void drawBoard(SpriteBatch batch, float x, float y) {
         bigBoard.setPosition(x, y - 200);
         bigBoard.draw(batch);
+
         smallBoard.setPosition(x + 30, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 74, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 118, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 162, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 206, y + 203);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 250, y + 210);
         smallBoard.draw(batch);
+
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
+
         skillSymbol.setPosition(x + 74 + 9, y + 210 + 5);
         skillSymbol.draw(batch);
+
         socialSymbol.setPosition(x + 118 + 9, y + 210 + 5);
         socialSymbol.draw(batch);
+
         mapSymbol.setPosition(x + 162 + 11, y + 210 + 3);
         mapSymbol.draw(batch);
+
         NPCSymbol.setPosition(x + 206 + 10, y + 203 + 5);
         NPCSymbol.draw(batch);
+
         settingSymbol.setPosition(x + 250 + 13, y + 210 + 8);
         settingSymbol.draw(batch);
+
+        exitIcon.setPosition(x + 608, y + 190);
+        exitIcon.draw(batch);
     }
 
     private static void drawNPCInfo(SpriteBatch batch, float x, float y, Player player) {
@@ -407,6 +424,8 @@ public class NPCMenu {
             player.setCurrentGameMenu("map");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 688 && x < 759 && y < 110 && y > 30) {
             player.setCurrentGameMenu("setting");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
+            player.setCurrentGameMenu(null);
         }
 
         if (npcs != null && !npcs.isEmpty()) {

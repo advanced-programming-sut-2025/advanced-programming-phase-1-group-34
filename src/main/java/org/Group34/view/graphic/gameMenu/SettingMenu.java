@@ -19,6 +19,7 @@ public class SettingMenu {
     private final static Sprite mapSymbol = new Sprite(OtherAssetManager.getForestIcon());
     private final static Sprite NPCSymbol = new Sprite(OtherAssetManager.getSmileIcon());
     private final static Sprite settingSymbol = new Sprite(OtherAssetManager.getSettingIcon());
+    private final static Sprite exitIcon = new Sprite(OtherAssetManager.getExitIcon());
 
     static {
         bigBoard.setSize(chest.getWidth(), 413);
@@ -29,6 +30,7 @@ public class SettingMenu {
         mapSymbol.setSize((float) (mapSymbol.getWidth() * 0.6), (float) (mapSymbol.getHeight() * 0.6));
         NPCSymbol.setSize((float) (NPCSymbol.getWidth() * 0.8), (float) (NPCSymbol.getHeight() * 0.8));
         settingSymbol.setSize((float) (settingSymbol.getWidth() * 0.05), (float) (settingSymbol.getHeight() * 0.05));
+        exitIcon.setSize((float) (exitIcon.getWidth() * 0.2), (float) (exitIcon.getHeight() * 0.2));
     }
 
     public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera) {
@@ -83,6 +85,9 @@ public class SettingMenu {
 
         settingSymbol.setPosition(x + 250 + 13, y + 203 + 8);
         settingSymbol.draw(batch);
+
+        exitIcon.setPosition(x + 608, y + 190);
+        exitIcon.draw(batch);
     }
 
     public static void handleInput(Player player) {
@@ -99,6 +104,8 @@ public class SettingMenu {
             player.setCurrentGameMenu("map");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 616 && x < 686 && y < 110 && y > 30) {
             player.setCurrentGameMenu("npc");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
+            player.setCurrentGameMenu(null);
         }
     }
 

@@ -30,7 +30,7 @@ import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
 import org.Group34.view.graphic.GameMenuGraphic;
-import org.Group34.view.graphic.ToolsGraphic;
+import org.Group34.view.graphic.ItemsGraphic;
 import org.Group34.view.graphic.dialogs.GreenhouseRepairDialog;
 
 public class GameScreen extends ScreenAdapter {
@@ -65,7 +65,7 @@ public class GameScreen extends ScreenAdapter {
     private float moveTimer = 0;
 
     // Other items
-    private ToolsGraphic toolsGraphic;
+    private ItemsGraphic toolsGraphic;
     private GameMenuGraphic gameMenuGraphic;
 
     public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController) {
@@ -87,7 +87,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         // Initialize other items
-        toolsGraphic = new ToolsGraphic(batch, player, gameController);
+        toolsGraphic = new ItemsGraphic(batch, player, gameController);
         gameMenuGraphic = new GameMenuGraphic(batch, player);
 
         // Initialize sub-components
@@ -174,6 +174,11 @@ public class GameScreen extends ScreenAdapter {
         // Handle S key for dialogue
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             handleNPCDialogue();
+        }
+
+        // Open Menu
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            player.setCurrentGameMenu("inventory");
         }
 
         // Player movement

@@ -6,16 +6,15 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.controller.GameController;
 import org.Group34.model.entities.Player;
-import org.Group34.model.entities.naturalElements.PloughedLand;
+import org.Group34.model.items.Item;
 import org.Group34.model.items.tools.Tool;
-import org.Group34.model.map.Map;
 
-public class ToolsGraphic {
+public class ItemsGraphic {
     private SpriteBatch batch;
     private Player player;
     private GameController gameController;
 
-    public ToolsGraphic(SpriteBatch batch, Player player, GameController gameController) {
+    public ItemsGraphic(SpriteBatch batch, Player player, GameController gameController) {
         this.batch = batch;
         this.player = player;
         this.gameController = gameController;
@@ -26,6 +25,14 @@ public class ToolsGraphic {
         if (tool != null) {
             Sprite sprite = new Sprite(tool.getTexture());
             sprite.setSize((float) (sprite.getWidth() * 0.5), (float) (sprite.getHeight() * 0.5));
+            sprite.setPosition(player.getLocation()[0] * tileSize + 20, player.getLocation()[1] * tileSize + 10);
+            sprite.draw(batch);
+        }
+
+        Item item = player.getCurrentItem();
+        if (item != null) {
+            Sprite sprite = new Sprite(item.getTexture());
+            sprite.setSize(18, 18);
             sprite.setPosition(player.getLocation()[0] * tileSize + 20, player.getLocation()[1] * tileSize + 10);
             sprite.draw(batch);
         }

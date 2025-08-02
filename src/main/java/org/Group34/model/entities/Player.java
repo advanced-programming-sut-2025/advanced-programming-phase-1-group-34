@@ -11,6 +11,7 @@ import org.Group34.model.items.Item;
 import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.Recipe;
 import org.Group34.model.items.foods.Fruit;
+import org.Group34.model.items.foods.OtherFarmingProduct;
 import org.Group34.model.items.foods.Vegetable;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
@@ -34,8 +35,9 @@ public class  Player implements Entity {
 
     private HashMap<Player, Interaction> interactions = new HashMap<>();
 
-    private Item currentTool = new Pickaxe(ToolType.IRIDIUM_PICKAXE);
-    private String currentGameMenu = "npc";
+    private Item currentTool = new Pickaxe(ToolType.COPPER_PICKAXE);
+    private String currentGameMenu = "inventory";
+    private Item currentItem = null;
 
     {
         inventory.put(new Hoe(ToolType.BASIC_HOE), 1);
@@ -44,7 +46,7 @@ public class  Player implements Entity {
         inventory.put(new WateringCan(ToolType.BASIC_WATERING_CAN), 1);
         inventory.put(new Scythe(), 1);
         inventory.put(new Backpack(ToolType.BASIC_BACKPACK), 1);
-        inventory.put(new TrashCan(ToolType.BASIC_TRASH_CAN), 1);
+        inventory.put(new TrashCan(ToolType.IRIDIUM_TRASH_CAN), 1);
         inventory.put(PlantingSource.JAZZ_SEEDS, 20);
 //        inventory.put(Fertilizer.SPEED_GROW, 10);
         inventory.put(new MilkPail(), 1);
@@ -84,7 +86,7 @@ public class  Player implements Entity {
         inventory.put(Vegetable.CORN, 20);
         inventory.put(Vegetable.PUMPKIN, 20);
         inventory.put(Vegetable.HOT_PEPPER, 20);
-
+        inventory.put(OtherFarmingProduct.BLUE_JAZZ, 10);
     }
 
 
@@ -147,6 +149,9 @@ public class  Player implements Entity {
         if (inventory.containsKey(item)){
             int beforeAmount = inventory.get(item);
             inventory.put(item, beforeAmount - amount);
+            if ((beforeAmount - amount) <= 0) {
+                inventory.remove(item);
+            }
             return true;
         }
         return false;
@@ -352,5 +357,13 @@ public class  Player implements Entity {
 
     public void setCurrentGameMenu(String currentGameMenu) {
         this.currentGameMenu = currentGameMenu;
+    }
+
+    public Item getCurrentItem() {
+        return currentItem;
+    }
+
+    public void setCurrentItem(Item currentItem) {
+        this.currentItem = currentItem;
     }
 }
