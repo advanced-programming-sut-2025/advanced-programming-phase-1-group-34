@@ -12,6 +12,8 @@ public class OtherAssetManager {
     private final static Texture bigBoard = new Texture("other/bigBoard.png");
     private final static Texture smileIcon = new Texture("other/Achievement_A_New_Friend.jpg");
     private final static Texture settingIcon = new Texture("other/img.png");
+    private final static Texture coinIcon = new Texture("other/coin.png");
+    private final static Texture woodIcon = new Texture("trees/Wood.png");
 
     // ----- getters -----
 
@@ -49,6 +51,14 @@ public class OtherAssetManager {
 
     public static Texture getSettingIcon() {
         return settingIcon;
+    }
+
+    public static Texture getCoinIcon() {
+        return coinIcon;
+    }
+
+    public static Texture getWoodIcon() {
+        return woodIcon;
     }
 
     // -------------------

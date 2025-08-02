@@ -2,7 +2,7 @@
   "npc": [
     {
       "name": "Alice",
-      "likedItems": ["Carrot", "Cake"],
+      "likedItems": ["Carrot", "Flower"],
       "quests": [
         { "title": "Find the Flower", "type": "delivery", "requiredFriendship": 1 },
         { "title": "Bake a Cake", "type": "delivery", "requiredFriendship": 2 },
@@ -17,7 +17,7 @@
     },
     {
       "name": "Bob",
-      "likedItems": ["100$ money", "Wood"],
+      "likedItems": ["1000$", "Wood"],
       "quests": [
         { "title": "Catch a Fish", "type": "delivery", "requiredFriendship": 1 },
         { "title": "Harvest Vegetables", "type": "delivery", "requiredFriendship": 2 },
