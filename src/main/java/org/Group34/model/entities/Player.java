@@ -26,7 +26,7 @@ public class  Player implements Entity {
     private int money;
     private int[] location;
     private Space currentSpace;
-    private int energy = 200;
+    private int energy = 500;
     private boolean passedOut = false;
     private final HashMap<Item, Integer> inventory = new HashMap<>();
     private final ArrayList<Recipe> learnedRecipes = new ArrayList<>();

@@ -13,10 +13,10 @@ public class UIManager {
     private final Label timeLabel;
     private final Label weatherLabel;
     private final Label seasonLabel;
-    private final Label moneyLabel;  // Added money label
+    private final Label moneyLabel;
+    private final Label energyLabel;
 
     public UIManager(Skin skin, Game game, Stage stage) {
-        // Create labels
         dateLabel = new Label("", skin);
         dateLabel.setPosition(20, stage.getViewport().getScreenHeight() - 30);
         stage.addActor(dateLabel);
@@ -29,25 +29,25 @@ public class UIManager {
         weatherLabel.setPosition(20, stage.getViewport().getScreenHeight() - 90);
         stage.addActor(weatherLabel);
 
-        // Added money label below weather
         moneyLabel = new Label("", skin);
         moneyLabel.setPosition(20, stage.getViewport().getScreenHeight() - 120);
         stage.addActor(moneyLabel);
 
-        // Adjusted season label position
+        energyLabel = new Label("", skin);
+        energyLabel.setPosition(20, stage.getViewport().getScreenHeight() - 150);
+        stage.addActor(energyLabel);
+
         seasonLabel = new Label("", skin);
-        seasonLabel.setPosition(20, stage.getViewport().getScreenHeight() - 150);
+        seasonLabel.setPosition(20, stage.getViewport().getScreenHeight() - 180);
         stage.addActor(seasonLabel);
     }
 
     public void update(EnvironmentManager environmentManager, Player player) {
-        // Update labels with environment information
         seasonLabel.setText("Season: " + environmentManager.getCurrentSeason());
         dateLabel.setText("Date: " + environmentManager.getCurrentDate());
         timeLabel.setText("Time: " + environmentManager.getCurrentTime());
         weatherLabel.setText("Weather: " + environmentManager.getCurrentWeather().toLowerCase());
-
-        // Update money label with player's money
         moneyLabel.setText("Money: " + player.getMoney());
+        energyLabel.setText("Energy: " + player.getEnergy());
     }
 }

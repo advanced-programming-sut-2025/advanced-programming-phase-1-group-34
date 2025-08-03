@@ -1,5 +1,4 @@
 package org.Group34.view.graphic.mapScreen;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -42,6 +41,8 @@ public class GameScreen extends ScreenAdapter {
     private static final int VIEWPORT_HEIGHT = 15;
     private static final float MOVE_INTERVAL = 0.13f;
     private static final float MESSAGE_DURATION = 3f;
+    private static final float PASSOUT_DURATION = 3f;
+    private static final float PASSOUT_ROTATION = 90f;
 
     private final Stage stage;
     private final Skin skin;
@@ -61,10 +62,17 @@ public class GameScreen extends ScreenAdapter {
     private float moveTimer = 0;
     private ItemsGraphic toolsGraphic;
     private GameMenuGraphic gameMenuGraphic;
-
     private BitmapFont messageFont;
     private String currentMessage = "";
     private float messageTimer = 0;
+    private Texture mapOverviewTexture;
+    private boolean showMapOverview = false;
+    private boolean isPassingOut = false;
+    private float passoutTimer = 0;
+    private float currentRotation = 0;
+    private int[] passoutStartLocation;
+    private boolean passoutCompleted = false;
+    private boolean hidePlayerDuringRender = false;
 
     public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController) {
         this.skin = skin;
@@ -75,14 +83,12 @@ public class GameScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.camera = new OrthographicCamera();
         this.stage = new Stage(new ScreenViewport());
-
         User currentUser = App.getCurrentUser();
         if (currentUser != null) {
             this.player = myGame.players().get(currentUser);
         } else {
             this.player = myGame.players().values().iterator().next();
         }
-
         toolsGraphic = new ItemsGraphic(batch, player, gameController);
         gameMenuGraphic = new GameMenuGraphic(batch, player);
         this.uiManager = new UIManager(skin, game, stage);
@@ -90,19 +96,25 @@ public class GameScreen extends ScreenAdapter {
         this.mapRenderer = new MapRenderer(gameMap, player, TILE_SIZE, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
         this.weatherRenderer = new WeatherRenderer();
         this.npcDialogueManager = new NPCDialogueManager();
-
         messageFont = new BitmapFont();
         messageFont.setColor(Color.WHITE);
-
+        mapOverviewTexture = new Texture(Gdx.files.internal("other/mapOverView.png"));
         camera.setToOrtho(false, VIEWPORT_WIDTH * TILE_SIZE, VIEWPORT_HEIGHT * TILE_SIZE);
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void render(float delta) {
-        handleInput(delta);
+        if (!isPassingOut) {
+            handleInput(delta);
+        }
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        updateCamera();
+
+        // Only update camera if not in the middle of passout animation
+        if (!isPassingOut || passoutCompleted) {
+            updateCamera();
+        }
 
         environmentManager.update();
         uiManager.update(environmentManager, player);
@@ -121,7 +133,19 @@ public class GameScreen extends ScreenAdapter {
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        mapRenderer.render(batch, camera, environmentManager, npcDialogueManager);
+
+        // Temporarily hide player from the map during passout animation
+        if (isPassingOut) {
+            int[] originalLocation = player.getLocation();
+            // Move player to a temporary location outside the visible area
+            player.setLocation(new int[]{-1, -1});
+            mapRenderer.render(batch, camera, environmentManager, npcDialogueManager);
+            // Restore player location
+            player.setLocation(originalLocation);
+        } else {
+            mapRenderer.render(batch, camera, environmentManager, npcDialogueManager);
+        }
+
         renderPlayer();
         renderOtherItems();
         batch.end();
@@ -141,6 +165,38 @@ public class GameScreen extends ScreenAdapter {
 
         stage.act(delta);
         stage.draw();
+
+        if (showMapOverview) {
+            batch.setProjectionMatrix(stage.getCamera().combined);
+            batch.begin();
+            batch.draw(mapOverviewTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            batch.end();
+        }
+
+        if (isPassingOut) {
+            passoutTimer += delta;
+            currentRotation = (passoutTimer / PASSOUT_DURATION) * PASSOUT_ROTATION;
+
+            if (passoutTimer >= PASSOUT_DURATION) {
+                // Move player to initial location
+                int[] initialLocation = {72, 10};
+                gameMap.movePlayer(player, initialLocation[0], initialLocation[1]);
+                gameController.cheatAdvanceDate("1");
+                player.setEnergy(500);
+
+                // Reset passout state
+                isPassingOut = false;
+                passoutTimer = 0;
+                currentRotation = 0;
+                passoutCompleted = true;
+
+                // Force camera update to new position
+                updateCamera();
+            }
+        } else if (passoutCompleted) {
+            // Reset the flag after rendering is complete
+            passoutCompleted = false;
+        }
     }
 
     private void handleInput(float delta) {
@@ -152,31 +208,50 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             myGame.time().cheatAdvanceTime(1);
         }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
             myGame.time().cheatAdvanceDate(1, myGame);
         }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
             player.addMoney(1000);
         }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
+            player.setEnergy(player.getEnergy() + 100);
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F6)) {
+            player.setEnergy(player.getEnergy() - 100);
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
             handleGreenhouseInteraction();
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
-            gameController.nextTurn();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F7)) {
+            //gameController.nextTurn();
             currentMessage = "Next turn started!";
             messageTimer = MESSAGE_DURATION;
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F6)) {
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F8)) {
             gameController.exitGame();
             currentMessage = "Game saved successfully!";
             messageTimer = MESSAGE_DURATION;
             game.setScreen(new MainMenuScreen(skin, game));
         }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             handleNPCDialogue();
         }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             player.setCurrentGameMenu("inventory");
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+            showMapOverview = !showMapOverview;
         }
 
         if (keyUp || keyDown || keyLeft || keyRight) {
@@ -210,6 +285,14 @@ public class GameScreen extends ScreenAdapter {
                     entity instanceof WalkAble ||
                     (entity instanceof GreenHouse && gameController.greenhouse.isRepaired())) {
                 gameMap.movePlayer(player, newX, newY);
+                if (player.getEnergy() > 0) {
+                    player.decreaseEnergy(1);
+                } else {
+                    // Start passout sequence
+                    isPassingOut = true;
+                    passoutTimer = 0;
+                    passoutStartLocation = playerLocation.clone();
+                }
             }
         }
     }
@@ -308,9 +391,38 @@ public class GameScreen extends ScreenAdapter {
     }
 
     private void renderPlayer() {
-        int[] pos = player.getLocation();
+        int[] pos;
+
+        if (isPassingOut) {
+            // Use the passout start location during animation
+            pos = passoutStartLocation;
+        } else {
+            // Use current player location
+            pos = player.getLocation();
+        }
+
         Texture playerTexture = PlayerAvatarManager.female_player1;
-        batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+
+        if (isPassingOut) {
+            batch.draw(playerTexture,
+                    pos[0] * TILE_SIZE,
+                    pos[1] * TILE_SIZE,
+                    TILE_SIZE / 2f,
+                    TILE_SIZE / 2f,
+                    TILE_SIZE,
+                    TILE_SIZE,
+                    1,
+                    1,
+                    currentRotation,
+                    0,
+                    0,
+                    playerTexture.getWidth(),
+                    playerTexture.getHeight(),
+                    false,
+                    false);
+        } else {
+            batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        }
     }
 
     private void renderOtherItems() {
@@ -326,6 +438,9 @@ public class GameScreen extends ScreenAdapter {
         stage.dispose();
         batch.dispose();
         messageFont.dispose();
+        if (mapOverviewTexture != null) {
+            mapOverviewTexture.dispose();
+        }
     }
 
     @Override
