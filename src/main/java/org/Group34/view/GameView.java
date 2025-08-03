@@ -194,7 +194,8 @@ public class GameView extends AppMenu {
                     String seed = matcher.group("seed").trim();
                     String direction = matcher.group("direction").trim();
 
-                    Result result = controller.plant(seed, direction);
+//                    Result result = controller.plant(seed, direction);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }

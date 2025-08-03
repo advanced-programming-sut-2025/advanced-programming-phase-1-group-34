@@ -314,6 +314,6 @@ public class Crop implements Entity, PlantAble {
 
     @Override
     public Texture getTexture() {
-        return null;
+        return stageTexture[growthLevel];
     }
 }

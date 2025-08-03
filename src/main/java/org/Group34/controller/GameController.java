@@ -534,11 +534,12 @@ public class GameController {
         return farmingController.showCraftInfo(craftName);
     }
 
-    public Result plant(String seedName, String direction) {
+    public Result plant(String seedName, String direction, Player player) {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return farmingController.plant(seedName, direction, getPlayer(), myGame.time());
+//        return farmingController.plant(seedName, direction, getPlayer(), myGame.time());
+        return farmingController.plant(seedName, direction, player, myGame.time());
     }
 
     public Result showPlant(int x, int y) {

@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.model.entities.NPCOnMap;
 import org.Group34.model.entities.buildings.GreenHouse;
+import org.Group34.model.entities.naturalElements.Crop;
+import org.Group34.model.entities.naturalElements.PloughedLand;
 import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
 import org.Group34.model.gameAssetManagers.NPCDialogueManager;
 import org.Group34.model.map.Map;
@@ -137,6 +139,9 @@ public class MapRenderer {
                         batch.setColor(originalColor);
                     }
                     else if (entity.getTexture() != null) {
+                        if (entity instanceof Crop) {
+                            batch.draw(new PloughedLand().getTexture(), x * tileSize, y * tileSize, tileSize, tileSize);
+                        }
                         batch.draw(entity.getTexture(), x * tileSize, y * tileSize, tileSize, tileSize);
                     }
                 }
