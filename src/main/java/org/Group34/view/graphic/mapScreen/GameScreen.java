@@ -105,7 +105,7 @@ public class GameScreen extends ScreenAdapter {
         updateCamera();
 
         environmentManager.update();
-        uiManager.update(environmentManager);
+        uiManager.update(environmentManager, player);
 
         if (!NPCsInitialized) {
             Space currentSpace = gameMap.getCurrentPlayerFarm(player);
