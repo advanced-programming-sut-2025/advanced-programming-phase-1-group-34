@@ -16,6 +16,8 @@ public class OtherAssetManager {
     private final static Texture greenRect = new Texture("other/1f7e9.png");
     private final static Texture coinIcon = new Texture("other/coin.png");
     private final static Texture woodIcon = new Texture("trees/Wood.png");
+    private final static Texture rightIcon = new Texture("other/right.png");
+    private final static Texture leftIcon = new Texture("other/left.png");
     private final static Texture exitGameIcon = new Texture("other/exitGameIcon.png");
     private final static Texture deletePlayerIcon = new Texture("other/deletePlayer.png");
 
@@ -71,6 +73,14 @@ public class OtherAssetManager {
 
     public static Texture getWoodIcon() {
         return woodIcon;
+    }
+
+    public static Texture getRightIcon() {
+        return rightIcon;
+    }
+
+    public static Texture getLeftIcon() {
+        return leftIcon;
     }
 
     public static Texture getExitGameIcon() {

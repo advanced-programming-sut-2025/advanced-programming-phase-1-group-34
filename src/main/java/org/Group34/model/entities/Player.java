@@ -35,9 +35,9 @@ public class  Player implements Entity {
 
     private HashMap<Player, Interaction> interactions = new HashMap<>();
 
-    private Item currentTool = new Pickaxe(ToolType.COPPER_PICKAXE);
+    private Item currentTool = null;
     private String currentGameMenu = "inventory";
-    private Item currentItem = null;
+    private Item currentItem = Vegetable.SUMMER_SQUASH;
 
     {
         inventory.put(new Hoe(ToolType.BASIC_HOE), 1);

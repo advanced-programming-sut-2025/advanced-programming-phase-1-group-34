@@ -11,6 +11,7 @@ import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.OtherAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
 import org.Group34.model.items.Item;
+import org.Group34.model.items.tools.Tool;
 import org.Group34.model.items.tools.TrashCan;
 
 import java.lang.reflect.Array;
@@ -29,6 +30,8 @@ public class InventoryMenu {
     private final static Sprite exitIcon = new Sprite(OtherAssetManager.getExitIcon());
 
     private final static Sprite greenRect = new Sprite(OtherAssetManager.getGreenRect());
+    private final static Sprite rightIcon = new Sprite(OtherAssetManager.getRightIcon());
+    private final static Sprite leftIcon = new Sprite(OtherAssetManager.getLeftIcon());
     private static int scrollNumber = 0;
 
     static {
@@ -71,7 +74,9 @@ public class InventoryMenu {
                 greenRect.draw(batch);
             }
 
-            font.draw(batch, String.valueOf(player.getInventory().get(item)), sprite.getX() - 5, sprite.getY() + 3);
+            font.getData().setScale(0.5f);
+            font.draw(batch, String.valueOf(player.getInventory().get(item)), sprite.getX() - 5, sprite.getY() + 5);
+            font.draw(batch, item.getName(), sprite.getX() - 5, sprite.getY() - 3);
             sprite.setSize(35, 33);
             sprite.draw(batch);
             index++;
@@ -171,12 +176,40 @@ public class InventoryMenu {
             }
         }
 
-        handleSelectInventory(player, inventory, x, y);
-    }
+        int current = 0;
+        if (player.getCurrentTool() != null) {
+            current = inventory.indexOf(player.getCurrentTool());
+        } else if (player.getCurrentItem() != null) {
+            current = inventory.indexOf(player.getCurrentItem());
+        }
 
-    private static void handleSelectInventory(Player player, ArrayList<Item> inventory, int x, int y) {
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 320 && x < 400 && y > 177 && y < 264) {
-            player.setCurrentGameMenu(null);
+        Item newSelect;
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 562 && x < 612 && y > 757 && y < 817) {
+            if (current - 1 == -1) {
+                current = inventory.size();
+            }
+
+            newSelect = inventory.get(current - 1);
+
+            player.setCurrentTool(null);
+            player.setCurrentItem(null);
+
+            if (newSelect instanceof Tool) {
+                player.setCurrentTool(newSelect);
+            } else {
+                player.setCurrentItem(newSelect);
+            }
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 620 && x < 670 && y > 757 && y < 817) {
+            newSelect = inventory.get((current + 1) % inventory.size());
+
+            player.setCurrentTool(null);
+            player.setCurrentItem(null);
+
+            if (newSelect instanceof Tool) {
+                player.setCurrentTool(newSelect);
+            } else {
+                player.setCurrentItem(newSelect);
+            }
         }
     }
 
@@ -193,14 +226,37 @@ public class InventoryMenu {
         trashcan.setSize(100, 100);
         trashcan.draw(batch);
 
-        Sprite playerSprite = new Sprite(player.getTexture());
-        playerSprite.setPosition(x + 80, y - 170);
-        playerSprite.setSize(100, 150);
-        playerSprite.draw(batch);
-
         BitmapFont font = new BitmapFont();
         font.setColor(Color.BLACK);
-        font.draw(batch, "Negin", x + 250, y - 50);
-        font.draw(batch, "Energy: 2000", x + 250, y - 80);
+        font.draw(batch, "Select Item", x + 50, y - 50);
+
+        board.setSize(chest.getWidth() / 4, chest.getHeight() / 4);
+        board.setPosition(x + 90, y - 130);
+        board.draw(batch);
+        font.getData().setScale(0.8f);
+
+        if (player.getCurrentTool() != null) {
+            Sprite sprite = new Sprite(player.getCurrentTool().getTexture());
+            sprite.setSize(48, 48);
+            sprite.setPosition(x + 93, y - 127);
+            sprite.draw(batch);
+
+            font.draw(batch, player.getCurrentTool().getName(), x + 145, y - 97);
+        } else if (player.getCurrentItem() != null) {
+            Sprite sprite = new Sprite(player.getCurrentItem().getTexture());
+            sprite.setSize(48, 48);
+            sprite.setPosition(x + 93, y - 127);
+            sprite.draw(batch);
+
+            font.draw(batch, player.getCurrentItem().getName(), x + 145, y - 97);
+        }
+
+        leftIcon.setPosition(x + 175, y - 165);
+        leftIcon.setSize(30, 30);
+        leftIcon.draw(batch);
+
+        rightIcon.setPosition(x + 210, y - 165);
+        rightIcon.setSize(30, 30);
+        rightIcon.draw(batch);
     }
 }
