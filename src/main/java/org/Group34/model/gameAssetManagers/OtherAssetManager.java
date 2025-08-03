@@ -20,6 +20,7 @@ public class OtherAssetManager {
     private final static Texture leftIcon = new Texture("other/left.png");
     private final static Texture exitGameIcon = new Texture("other/exitGameIcon.png");
     private final static Texture deletePlayerIcon = new Texture("other/deletePlayer.png");
+    private final static Texture animalIcon = new Texture("other/Brown_Chicken.png");
 
     // ----- getters -----
 
@@ -89,6 +90,10 @@ public class OtherAssetManager {
 
     public static Texture getDeletePlayerIcon() {
         return deletePlayerIcon;
+    }
+
+    public static Texture getAnimalIcon() {
+        return animalIcon;
     }
 
     // -------------------

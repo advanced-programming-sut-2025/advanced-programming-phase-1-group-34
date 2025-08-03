@@ -22,6 +22,7 @@ public class SettingMenu {
     private final static Sprite NPCSymbol = new Sprite(OtherAssetManager.getSmileIcon());
     private final static Sprite settingSymbol = new Sprite(OtherAssetManager.getSettingIcon());
     private final static Sprite exitIcon = new Sprite(OtherAssetManager.getExitIcon());
+    private final static Sprite animalIcon = new Sprite(OtherAssetManager.getAnimalIcon());
 
     // Added new sprites for exit game and delete player options
     private final static Sprite exitGameIcon = new Sprite(OtherAssetManager.getExitGameIcon());
@@ -40,6 +41,7 @@ public class SettingMenu {
         NPCSymbol.setSize((float) (NPCSymbol.getWidth() * 0.8), (float) (NPCSymbol.getHeight() * 0.8));
         settingSymbol.setSize((float) (settingSymbol.getWidth() * 0.05), (float) (settingSymbol.getHeight() * 0.05));
         exitIcon.setSize((float) (exitIcon.getWidth() * 0.2), (float) (exitIcon.getHeight() * 0.2));
+        animalIcon.setSize((float) (animalIcon.getWidth() * 0.5), (float) (animalIcon.getHeight() * 0.5));
 
         // Set sizes for new icons
         exitGameIcon.setSize((float) (exitGameIcon.getWidth() * 0.15), (float) (exitGameIcon.getHeight() * 0.15));
@@ -74,6 +76,8 @@ public class SettingMenu {
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 250, y + 203);
         smallBoard.draw(batch);
+        smallBoard.setPosition(x + 294, y + 210);
+        smallBoard.draw(batch);
 
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
@@ -90,6 +94,9 @@ public class SettingMenu {
 
         exitIcon.setPosition(x + 608, y + 190);
         exitIcon.draw(batch);
+
+        animalIcon.setPosition(x + 294 + 10, y + 210 + 5);
+        animalIcon.draw(batch);
 
         // New options with text labels
         // Save and Exit option
@@ -114,40 +121,28 @@ public class SettingMenu {
         float baseX = camera.position.x - chest.getWidth() / 2;
         float baseY = camera.position.y - 30;
 
+        int x = Gdx.input.getX();
+        int y = Gdx.input.getY();
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 324 && x < 395 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("inventory");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 397 && x < 468 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("skill");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 470 && x < 541 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("social");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 542 && x < 613 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("map");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 615 && x < 686 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("npc");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 761 && x < 832 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("animal");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
+            player.setCurrentGameMenu(null);
+        }
         // Check top menu items
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-            // Inventory button
-            if (mousePos.x > baseX + 30 && mousePos.x < baseX + 30 + smallBoard.getWidth() &&
-                    mousePos.y > baseY + 210 && mousePos.y < baseY + 210 + smallBoard.getHeight()) {
-                player.setCurrentGameMenu("inventory");
-            }
-            // Skill button
-            else if (mousePos.x > baseX + 74 && mousePos.x < baseX + 74 + smallBoard.getWidth() &&
-                    mousePos.y > baseY + 210 && mousePos.y < baseY + 210 + smallBoard.getHeight()) {
-                player.setCurrentGameMenu("skill");
-            }
-            // Social button
-            else if (mousePos.x > baseX + 118 && mousePos.x < baseX + 118 + smallBoard.getWidth() &&
-                    mousePos.y > baseY + 210 && mousePos.y < baseY + 210 + smallBoard.getHeight()) {
-                player.setCurrentGameMenu("social");
-            }
-            // Map button
-            else if (mousePos.x > baseX + 162 && mousePos.x < baseX + 162 + smallBoard.getWidth() &&
-                    mousePos.y > baseY + 210 && mousePos.y < baseY + 210 + smallBoard.getHeight()) {
-                player.setCurrentGameMenu("map");
-            }
-            // NPC button
-            else if (mousePos.x > baseX + 206 && mousePos.x < baseX + 206 + smallBoard.getWidth() &&
-                    mousePos.y > baseY + 210 && mousePos.y < baseY + 210 + smallBoard.getHeight()) {
-                player.setCurrentGameMenu("npc");
-            }
-            // Exit button
-            else if (mousePos.x > baseX + 608 && mousePos.x < baseX + 608 + exitIcon.getWidth() &&
-                    mousePos.y > baseY + 190 && mousePos.y < baseY + 190 + exitIcon.getHeight()) {
-                player.setCurrentGameMenu(null);
-            }
             // Save and Exit button
-            else if (mousePos.x > baseX + 30 && mousePos.x < baseX + 30 + smallBoard.getWidth() + 150 &&
+            if (mousePos.x > baseX + 30 && mousePos.x < baseX + 30 + smallBoard.getWidth() + 150 &&
                     mousePos.y > baseY + 150 && mousePos.y < baseY + 150 + smallBoard.getHeight()) {
                 // Exit game option - implement game exit logic
                 Gdx.app.exit(); // This will close the game

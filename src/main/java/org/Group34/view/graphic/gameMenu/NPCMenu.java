@@ -28,6 +28,7 @@ public class NPCMenu {
     private final static Sprite NPCSymbol = new Sprite(OtherAssetManager.getSmileIcon());
     private final static Sprite settingSymbol = new Sprite(OtherAssetManager.getSettingIcon());
     private final static Sprite exitIcon = new Sprite(OtherAssetManager.getExitIcon());
+    private final static Sprite animalIcon = new Sprite(OtherAssetManager.getAnimalIcon());
 
     private static boolean giftDialogOpen = false;
     private static int selectedNPCIndex = -1;
@@ -59,6 +60,7 @@ public class NPCMenu {
         NPCSymbol.setSize((float) (NPCSymbol.getWidth() * 0.8), (float) (NPCSymbol.getHeight() * 0.8));
         settingSymbol.setSize((float) (settingSymbol.getWidth() * 0.05), (float) (settingSymbol.getHeight() * 0.05));
         exitIcon.setSize((float) (exitIcon.getWidth() * 0.2), (float) (exitIcon.getHeight() * 0.2));
+        animalIcon.setSize((float) (animalIcon.getWidth() * 0.5), (float) (animalIcon.getHeight() * 0.5));
 
         font = new BitmapFont();
         font.setColor(Color.BLACK);
@@ -131,6 +133,9 @@ public class NPCMenu {
         smallBoard.setPosition(x + 250, y + 210);
         smallBoard.draw(batch);
 
+        smallBoard.setPosition(x + 294, y + 210);
+        smallBoard.draw(batch);
+
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
 
@@ -151,6 +156,9 @@ public class NPCMenu {
 
         exitIcon.setPosition(x + 608, y + 190);
         exitIcon.draw(batch);
+
+        animalIcon.setPosition(x + 294 + 10, y + 210 + 5);
+        animalIcon.draw(batch);
     }
 
     private static void drawNPCInfo(SpriteBatch batch, float x, float y, Player player) {
@@ -424,6 +432,8 @@ public class NPCMenu {
             player.setCurrentGameMenu("map");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 688 && x < 759 && y < 110 && y > 30) {
             player.setCurrentGameMenu("setting");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 761 && x < 832 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("animal");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);
         }

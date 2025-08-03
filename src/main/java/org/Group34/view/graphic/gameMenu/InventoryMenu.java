@@ -28,6 +28,7 @@ public class InventoryMenu {
     private final static Sprite NPCSymbol = new Sprite(OtherAssetManager.getSmileIcon());
     private final static Sprite settingSymbol = new Sprite(OtherAssetManager.getSettingIcon());
     private final static Sprite exitIcon = new Sprite(OtherAssetManager.getExitIcon());
+    private final static Sprite animalIcon = new Sprite(OtherAssetManager.getAnimalIcon());
 
     private final static Sprite greenRect = new Sprite(OtherAssetManager.getGreenRect());
     private final static Sprite rightIcon = new Sprite(OtherAssetManager.getRightIcon());
@@ -44,6 +45,8 @@ public class InventoryMenu {
         NPCSymbol.setSize((float) (NPCSymbol.getWidth() * 0.8), (float) (NPCSymbol.getHeight() * 0.8));
         settingSymbol.setSize((float) (settingSymbol.getWidth() * 0.05), (float) (settingSymbol.getHeight() * 0.05));
         exitIcon.setSize((float) (exitIcon.getWidth() * 0.2), (float) (exitIcon.getHeight() * 0.2));
+        animalIcon.setSize((float) (animalIcon.getWidth() * 0.5), (float) (animalIcon.getHeight() * 0.5));
+
         greenRect.setSize(45, 45);
     }
 
@@ -113,6 +116,9 @@ public class InventoryMenu {
         smallBoard.setPosition(x + 250, y + 210);
         smallBoard.draw(batch);
 
+        smallBoard.setPosition(x + 294, y + 210);
+        smallBoard.draw(batch);
+
         inventorySymbol.setPosition(x + 30 + 5, y + 203 + 2);
         inventorySymbol.draw(batch);
 
@@ -130,6 +136,9 @@ public class InventoryMenu {
 
         settingSymbol.setPosition(x + 250 + 13, y + 210 + 8);
         settingSymbol.draw(batch);
+
+        animalIcon.setPosition(x + 294 + 10, y + 210 + 5);
+        animalIcon.draw(batch);
 
         exitIcon.setPosition(x + 608, y + 190);
         exitIcon.draw(batch);
@@ -153,6 +162,9 @@ public class InventoryMenu {
             scrollNumber = 0;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 688 && x < 759 && y < 110 && y > 30) {
             player.setCurrentGameMenu("setting");
+            scrollNumber = 0;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 761 && x < 832 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("animal");
             scrollNumber = 0;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);
