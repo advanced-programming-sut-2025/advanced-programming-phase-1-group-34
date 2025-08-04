@@ -1,6 +1,5 @@
 package org.Group34.network.server;
 
-import org.Group34.network.client.ClientHandler;
 import org.Group34.network.lobby.LobbyManager;
 
 import java.io.IOException;

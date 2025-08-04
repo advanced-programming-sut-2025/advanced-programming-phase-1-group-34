@@ -1,4 +1,4 @@
-package org.Group34.network.client;
+package org.Group34.network.server;
 
 import org.Group34.network.lobby.Lobby;
 import org.Group34.network.lobby.LobbyManager;
