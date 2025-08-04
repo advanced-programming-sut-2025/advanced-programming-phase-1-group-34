@@ -32,6 +32,7 @@ import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
 import org.Group34.view.graphic.GameMenuGraphic;
+import org.Group34.view.graphic.GraphicAppView;
 import org.Group34.view.graphic.ItemsGraphic;
 import org.Group34.view.graphic.dialogs.GreenhouseRepairDialog;
 import org.Group34.view.graphic.menuScreen.MainMenuScreen;
@@ -75,7 +76,9 @@ public class GameScreen extends ScreenAdapter {
     private boolean passoutCompleted = false;
     private boolean hidePlayerDuringRender = false;
 
-    public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController) {
+    private final GraphicAppView app;
+
+    public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController, GraphicAppView app) {
         this.skin = skin;
         this.game = game;
         this.myGame = myGame;
@@ -84,6 +87,9 @@ public class GameScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.camera = new OrthographicCamera();
         this.stage = new Stage(new ScreenViewport());
+
+        this.app = app;
+
         User currentUser = App.getCurrentUser();
         if (currentUser != null) {
             this.player = myGame.players().get(currentUser);
@@ -240,7 +246,7 @@ public class GameScreen extends ScreenAdapter {
             gameController.exitGame();
             currentMessage = "Game saved successfully!";
             messageTimer = MESSAGE_DURATION;
-            game.setScreen(new MainMenuScreen(skin, game));
+            game.setScreen(new MainMenuScreen(skin, game, app));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {

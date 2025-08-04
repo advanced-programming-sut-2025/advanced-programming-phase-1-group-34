@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import org.Group34.view.graphic.GraphicAppView;
 
 public class MainMenuScreen extends ScreenAdapter {
     private final Game game;
@@ -17,10 +18,14 @@ public class MainMenuScreen extends ScreenAdapter {
     private final Texture backgroundTexture;
     private final Image backgroundImage;
 
-    public MainMenuScreen(Skin skin, Game game) {
+    private final GraphicAppView app;
+
+    public MainMenuScreen(Skin skin, Game game, GraphicAppView app) {
         this.skin = skin;
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
+
+        this.app = app;
 
         backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-mainmenu.png"));
         backgroundImage = new Image(backgroundTexture);
@@ -42,7 +47,7 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 System.out.println("Switch to Profile Menu");
-                game.setScreen(new ProfileScreen(skin, game));
+                game.setScreen(new ProfileScreen(skin, game, app));
             }
         });
 
@@ -50,7 +55,7 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 System.out.println("Switch to MyGame Menu");
-                game.setScreen(new GameMenuScreen(skin, game));
+                game.setScreen(new GameMenuScreen(skin, game, app));
             }
         });
 
@@ -58,7 +63,7 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 System.out.println("Logout: back to Login");
-                game.setScreen(new LoginScreen(skin, game));
+                game.setScreen(new LoginScreen(skin, game, app));
             }
         });
 

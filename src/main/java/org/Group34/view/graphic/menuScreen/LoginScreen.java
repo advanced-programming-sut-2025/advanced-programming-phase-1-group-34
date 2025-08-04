@@ -16,6 +16,7 @@ import org.Group34.controller.menu.LoginMenuController;
 import org.Group34.model.Result;
 import org.Group34.model.User;
 import org.Group34.model.App;
+import org.Group34.view.graphic.GraphicAppView;
 
 public class LoginScreen extends ScreenAdapter {
     private final Stage stage;
@@ -26,11 +27,15 @@ public class LoginScreen extends ScreenAdapter {
     private final Game game;
     private Label statusLabel;
 
-    public LoginScreen(Skin skin, Game game) {
+    private final GraphicAppView app;
+
+    public LoginScreen(Skin skin, Game game, GraphicAppView app) {
         this.skin = skin;
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
         this.controller = new LoginMenuController();
+
+        this.app = app;
 
         backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-register.png"));
         backgroundImage = new Image(backgroundTexture);
@@ -100,7 +105,7 @@ public class LoginScreen extends ScreenAdapter {
         goToRegisterButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new RegisterScreen(skin, game));
+                game.setScreen(new RegisterScreen(skin, game, app));
                 dispose();
             }
         });
@@ -138,7 +143,7 @@ public class LoginScreen extends ScreenAdapter {
         ));
 
         if (result.success()) {
-            game.setScreen(new MainMenuScreen(skin, game));
+            game.setScreen(new MainMenuScreen(skin, game, app));
             dispose();
         }
     }
