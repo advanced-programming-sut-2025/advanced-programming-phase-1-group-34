@@ -211,7 +211,8 @@ public class RegisterScreen extends ScreenAdapter {
                     );
                     if (res.success()) {
                         System.out.println("Registered successfully!");
-                        app.switchToLobbyMenu();
+                        game.setScreen(new MainMenuScreen(skin, game, app));
+                        //app.switchToLobbyMenu();
                         dispose();
                     } else {
                         System.out.println(res.message());
