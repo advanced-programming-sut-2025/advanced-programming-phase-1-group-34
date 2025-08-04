@@ -97,7 +97,7 @@ public class GameScreen extends ScreenAdapter {
             this.player = myGame.players().values().iterator().next();
         }
         toolsGraphic = new ItemsGraphic(batch, player, gameController);
-        gameMenuGraphic = new GameMenuGraphic(batch, player);
+        gameMenuGraphic = new GameMenuGraphic(batch, player, gameController);
         this.uiManager = new UIManager(skin, game, stage);
         this.environmentManager = new EnvironmentManager(myGame, gameController);
         this.mapRenderer = new MapRenderer(gameMap, player, TILE_SIZE, VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
@@ -253,7 +253,7 @@ public class GameScreen extends ScreenAdapter {
             handleNPCDialogue();
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             player.setCurrentGameMenu("inventory");
         }
 

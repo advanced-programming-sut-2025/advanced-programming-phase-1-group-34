@@ -50,6 +50,8 @@ public class  Player implements Entity {
         inventory.put(PlantingSource.JAZZ_SEEDS, 20);
 //        inventory.put(Fertilizer.SPEED_GROW, 10);
         inventory.put(new MilkPail(), 1);
+        inventory.put(new FishingPole(ToolType.TRAINING_FISHING_POLE), 1);
+        inventory.put(new Shear(), 1);
         inventory.put(Fruit.APPLE, 20);
         inventory.put(Fruit.ANCIENT_FRUIT, 10);
         inventory.put(Fruit.APRICOT, 20);

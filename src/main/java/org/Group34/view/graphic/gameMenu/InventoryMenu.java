@@ -7,10 +7,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.Group34.controller.GameController;
 import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.OtherAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
 import org.Group34.model.items.Item;
+import org.Group34.model.items.PlantingSource;
+import org.Group34.model.items.foods.*;
 import org.Group34.model.items.tools.Tool;
 import org.Group34.model.items.tools.TrashCan;
 
@@ -33,7 +36,9 @@ public class InventoryMenu {
     private final static Sprite greenRect = new Sprite(OtherAssetManager.getGreenRect());
     private final static Sprite rightIcon = new Sprite(OtherAssetManager.getRightIcon());
     private final static Sprite leftIcon = new Sprite(OtherAssetManager.getLeftIcon());
+    private final static Sprite bigBoard = new Sprite(OtherAssetManager.getBigBoard());
     private static int scrollNumber = 0;
+    private static int infoNumber = 0;
 
     static {
         board.setSize(chest.getWidth(), chest.getHeight());
@@ -50,7 +55,7 @@ public class InventoryMenu {
         greenRect.setSize(45, 45);
     }
 
-    public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera) {
+    public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera, GameController gameController) {
         float x = camera.position.x - chest.getWidth() / 2;
         float y = camera.position.y - 30;
 
@@ -85,7 +90,7 @@ public class InventoryMenu {
             index++;
         }
 
-        fullBoard(player, inventory, x, y, batch);
+        fullBoard(player, inventory, x, y, batch, gameController);
 
         handleInput(player, inventory);
     }
@@ -195,8 +200,9 @@ public class InventoryMenu {
             current = inventory.indexOf(player.getCurrentItem());
         }
 
+
         Item newSelect;
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 562 && x < 612 && y > 757 && y < 817) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 462 && x < 512 && y > 702 && y < 759) {
             if (current - 1 == -1) {
                 current = inventory.size();
             }
@@ -211,7 +217,7 @@ public class InventoryMenu {
             } else {
                 player.setCurrentItem(newSelect);
             }
-        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 620 && x < 670 && y > 757 && y < 817) {
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 520 && x < 570 && y > 702 && y < 759) {
             newSelect = inventory.get((current + 1) % inventory.size());
 
             player.setCurrentTool(null);
@@ -223,9 +229,27 @@ public class InventoryMenu {
                 player.setCurrentItem(newSelect);
             }
         }
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 855 && x < 888 && y > 543 && y < 580) {
+            infoNumber++;
+            if (infoNumber == getAllCrafts().size()) {
+                infoNumber = 0;
+            }
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 897 && x < 930 && y > 543 && y < 580) {
+            infoNumber--;
+            if (infoNumber == -1) {
+                infoNumber = getAllCrafts().size() - 1;
+            }
+        }
     }
 
-    private static void fullBoard(Player player, ArrayList<Item> inventory, float x, float y, SpriteBatch batch) {
+    private static void fullBoard(Player player, ArrayList<Item> inventory, float x, float y, SpriteBatch batch, GameController gameController) {
+        drawTrashcan(inventory, x, y, batch);
+        drawSelectState(batch, x, y, player);
+        drawCraftInfoState(batch, x, y, gameController);
+    }
+
+    private static void drawTrashcan(ArrayList<Item> inventory, float x, float y, SpriteBatch batch) {
         Item target = null;
         for (Item item : inventory) {
             if (item instanceof TrashCan) {
@@ -237,38 +261,125 @@ public class InventoryMenu {
         trashcan.setPosition(x + 440, y - 145);
         trashcan.setSize(100, 100);
         trashcan.draw(batch);
+    }
 
+    private static void drawSelectState(SpriteBatch batch, float x, float y, Player player) {
         BitmapFont font = new BitmapFont();
         font.setColor(Color.BLACK);
-        font.draw(batch, "Select Item", x + 50, y - 50);
+        font.draw(batch, "Select Item", x + 20, y - 20);
 
         board.setSize(chest.getWidth() / 4, chest.getHeight() / 4);
-        board.setPosition(x + 90, y - 130);
+        board.setPosition(x + 30, y - 100);
         board.draw(batch);
         font.getData().setScale(0.8f);
 
         if (player.getCurrentTool() != null) {
             Sprite sprite = new Sprite(player.getCurrentTool().getTexture());
             sprite.setSize(48, 48);
-            sprite.setPosition(x + 93, y - 127);
+            sprite.setPosition(x + 33, y - 97);
             sprite.draw(batch);
 
-            font.draw(batch, player.getCurrentTool().getName(), x + 145, y - 97);
+            font.draw(batch, player.getCurrentTool().getName(), x + 85, y - 67);
         } else if (player.getCurrentItem() != null) {
             Sprite sprite = new Sprite(player.getCurrentItem().getTexture());
             sprite.setSize(48, 48);
-            sprite.setPosition(x + 93, y - 127);
+            sprite.setPosition(x + 33, y - 97);
             sprite.draw(batch);
 
-            font.draw(batch, player.getCurrentItem().getName(), x + 145, y - 97);
+            font.draw(batch, player.getCurrentItem().getName(), x + 85, y - 67);
         }
 
-        leftIcon.setPosition(x + 175, y - 165);
+        leftIcon.setPosition(x + 115, y - 135);
         leftIcon.setSize(30, 30);
         leftIcon.draw(batch);
 
-        rightIcon.setPosition(x + 210, y - 165);
+        rightIcon.setPosition(x + 150, y - 135);
         rightIcon.setSize(30, 30);
         rightIcon.draw(batch);
+    }
+
+    private static void drawCraftInfoState(SpriteBatch batch, float x, float y, GameController gameController) {
+        BitmapFont font = new BitmapFont();
+        font.setColor(Color.BLACK);
+        font.draw(batch, "Craft Info", x + 220, y - 20);
+
+        board.setSize(170, 20);
+        board.setPosition(x + 230, y - 65);
+        board.draw(batch);
+
+        bigBoard.setSize(170, 120);
+        bigBoard.setPosition(x + 230, y - 180);
+        bigBoard.draw(batch);
+
+        leftIcon.setPosition(x + 350, y - 40);
+        leftIcon.setSize(20, 20);
+        leftIcon.draw(batch);
+
+        rightIcon.setPosition(x + 375, y - 40);
+        rightIcon.setSize(20, 20);
+        rightIcon.draw(batch);
+
+        font.getData().setScale(0.8f);
+        font.draw(batch, getAllCrafts().get(infoNumber),x + 240, y - 47);
+
+        font.getData().setScale(0.5f);
+        font.draw(batch, gameController.showCraftInfo(getAllCrafts().get(infoNumber)).message(), x + 240, y - 65);
+    }
+
+    private static ArrayList<String> getAllCrafts() {
+        ArrayList<String> crafts = new ArrayList<>();
+
+        crafts.add("Blue Jazz");
+        crafts.add("Carrot");
+        crafts.add("Cauliflower");
+        crafts.add("Coffee Bean");
+        crafts.add("Garlic");
+        crafts.add("Green Bean");
+        crafts.add("Kale");
+        crafts.add("Parsnip");
+        crafts.add("Potato");
+        crafts.add("Rhubarb");
+        crafts.add("Strawberry");
+        crafts.add("Tulip");
+        crafts.add("Unmilled Rice");
+        crafts.add("Blueberry");
+        crafts.add("Corn");
+        crafts.add("Hops");
+        crafts.add("Hot Pepper");
+        crafts.add("Melon");
+        crafts.add("Poppy");
+        crafts.add("Radish");
+        crafts.add("Red Cabbage");
+        crafts.add("Starfruit");
+        crafts.add("Summer Spangle");
+        crafts.add("Summer Squash");
+        crafts.add("Sunflower");
+        crafts.add("Tomato");
+        crafts.add("Wheat");
+        crafts.add("Amaranth");
+        crafts.add("Artichoke");
+        crafts.add("Beet");
+        crafts.add("Bok Choy");
+        crafts.add("Broccoli");
+        crafts.add("Cranberries");
+        crafts.add("Eggplant");
+        crafts.add("Fairy Rose");
+        crafts.add("Grape");
+        crafts.add("Pumpkin");
+        crafts.add("Yam");
+        crafts.add("Sweet Gem Berry");
+        crafts.add("Powdermelon");
+        crafts.add("Ancient Fruit");
+
+        crafts.add("Apricot");
+        crafts.add("Cherry");
+        crafts.add("Banana");
+        crafts.add("Mango");
+        crafts.add("Orange");
+        crafts.add("Peach");
+        crafts.add("Apple");
+        crafts.add("Pomegranate");
+
+        return crafts;
     }
 }
