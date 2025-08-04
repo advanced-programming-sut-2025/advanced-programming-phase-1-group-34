@@ -211,7 +211,7 @@ public class RegisterScreen extends ScreenAdapter {
                     );
                     if (res.success()) {
                         System.out.println("Registered successfully!");
-                        //app.switchToLobbyMenu();
+                        app.switchToLobbyMenu();
                         dispose();
                     } else {
                         System.out.println(res.message());

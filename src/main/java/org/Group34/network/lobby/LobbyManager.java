@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LobbyManager {
     public static final int MAX_LOBBY_CAPACITY = 4;
     private static final int LOBBY_TIMEOUT_MINUTES = 5;
-
     private final Map<String, Lobby> lobbies = new ConcurrentHashMap<>();
     private final Map<String, String> userToLobbyMap = new ConcurrentHashMap<>();
     private final Timer cleanupTimer = new Timer(true);
@@ -25,72 +24,75 @@ public class LobbyManager {
         if (userToLobbyMap.containsKey(adminUsername)) {
             throw new IllegalStateException("User is already in a lobby");
         }
-
         String lobbyId = UUID.randomUUID().toString().substring(0, 8);
         Lobby lobby = new Lobby(lobbyId, lobbyName, adminUsername, isPrivate, isVisible, password);
         lobbies.put(lobbyId, lobby);
         userToLobbyMap.put(adminUsername, lobbyId);
+        System.out.println("Created lobby: " + lobbyId + " by " + adminUsername);
         return lobby;
     }
 
     public synchronized boolean joinLobby(String username, String lobbyId, String password) {
         if (userToLobbyMap.containsKey(username)) {
+            System.out.println("User " + username + " already in a lobby");
             return false; // Already in a lobby
         }
-
         Lobby lobby = lobbies.get(lobbyId);
         if (lobby == null || lobby.isFull() ||
                 (lobby.isPrivate() && !lobby.checkPassword(password))) {
+            System.out.println("User " + username + " failed to join lobby: " + lobbyId);
             return false;
         }
-
         lobby.addPlayer(username);
         userToLobbyMap.put(username, lobbyId);
+        System.out.println("User " + username + " joined lobby: " + lobbyId);
         return true;
     }
 
     public synchronized boolean leaveLobby(String username) {
         String lobbyId = userToLobbyMap.get(username);
         if (lobbyId == null) {
+            System.out.println("User " + username + " not in any lobby");
             return false; // Not in any lobby
         }
-
         Lobby lobby = lobbies.get(lobbyId);
         if (lobby == null) {
             userToLobbyMap.remove(username);
             return false;
         }
-
         lobby.removePlayer(username);
         userToLobbyMap.remove(username);
+        System.out.println("User " + username + " left lobby: " + lobbyId);
 
         // Handle admin transfer or lobby deletion
         if (lobby.getAdmin().equals(username)) {
             if (lobby.getPlayers().isEmpty()) {
                 lobbies.remove(lobbyId);
+                System.out.println("Lobby " + lobbyId + " removed (empty)");
             } else {
                 // Transfer admin to next player
                 String newAdmin = lobby.getPlayers().get(0);
                 lobby.setAdmin(newAdmin);
+                System.out.println("Admin transferred to " + newAdmin + " in lobby " + lobbyId);
             }
         }
-
         return true;
     }
 
     public synchronized boolean startGame(String adminUsername) {
         String lobbyId = userToLobbyMap.get(adminUsername);
         if (lobbyId == null) {
+            System.out.println("User " + adminUsername + " not in any lobby");
             return false;
         }
-
         Lobby lobby = lobbies.get(lobbyId);
         if (lobby == null || !lobby.getAdmin().equals(adminUsername) || lobby.getPlayerCount() < 2) {
+            System.out.println("Failed to start game in lobby " + lobbyId + " by " + adminUsername);
             return false;
         }
-
         // Mark lobby as in-game (can't join anymore)
         lobby.setInGame(true);
+        System.out.println("Game started in lobby " + lobbyId + " by " + adminUsername);
         return true;
     }
 
@@ -118,6 +120,7 @@ public class LobbyManager {
         while (it.hasNext()) {
             Map.Entry<String, Lobby> entry = it.next();
             if (entry.getValue().getPlayerCount() == 0) {
+                System.out.println("Cleaning up empty lobby: " + entry.getKey());
                 it.remove();
             }
         }
