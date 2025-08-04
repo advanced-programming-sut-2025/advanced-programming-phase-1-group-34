@@ -6,21 +6,21 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.model.entities.Player;
-import org.Group34.model.gameAssetManagers.OtherAssetManager;
+import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
 
 public class AnimalMenu {
-    private final static Sprite chest = new Sprite(OtherAssetManager.getChest());
-    private final static Sprite bigBoard = new Sprite(OtherAssetManager.getBigBoard());
-    private final static Sprite smallBoard = new Sprite(OtherAssetManager.getSmallBoard());
+    private final static Sprite chest = new Sprite(GameMenuAssetManager.getChest());
+    private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getBigBoard());
+    private final static Sprite smallBoard = new Sprite(GameMenuAssetManager.getSmallBoard());
     private final static Sprite inventorySymbol = new Sprite(ToolAssetManager.getBasicBackpack());
-    private final static Sprite skillSymbol = new Sprite(OtherAssetManager.getFaceIcon());
-    private final static Sprite socialSymbol = new Sprite(OtherAssetManager.getHearthIcon());
-    private final static Sprite mapSymbol = new Sprite(OtherAssetManager.getForestIcon());
-    private final static Sprite NPCSymbol = new Sprite(OtherAssetManager.getSmileIcon());
-    private final static Sprite settingSymbol = new Sprite(OtherAssetManager.getSettingIcon());
-    private final static Sprite exitIcon = new Sprite(OtherAssetManager.getExitIcon());
-    private final static Sprite animalIcon = new Sprite(OtherAssetManager.getAnimalIcon());
+    private final static Sprite skillSymbol = new Sprite(GameMenuAssetManager.getFaceIcon());
+    private final static Sprite socialSymbol = new Sprite(GameMenuAssetManager.getHearthIcon());
+    private final static Sprite mapSymbol = new Sprite(GameMenuAssetManager.getForestIcon());
+    private final static Sprite NPCSymbol = new Sprite(GameMenuAssetManager.getSmileIcon());
+    private final static Sprite settingSymbol = new Sprite(GameMenuAssetManager.getSettingIcon());
+    private final static Sprite exitIcon = new Sprite(GameMenuAssetManager.getExitIcon());
+    private final static Sprite animalIcon = new Sprite(GameMenuAssetManager.getAnimalIcon());
 
     static {
         bigBoard.setSize(chest.getWidth(), 413);

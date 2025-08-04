@@ -9,34 +9,31 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.controller.GameController;
 import org.Group34.model.entities.Player;
-import org.Group34.model.gameAssetManagers.OtherAssetManager;
+import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
 import org.Group34.model.items.Item;
-import org.Group34.model.items.PlantingSource;
-import org.Group34.model.items.foods.*;
 import org.Group34.model.items.tools.Tool;
 import org.Group34.model.items.tools.TrashCan;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class InventoryMenu {
-    private final static Sprite chest = new Sprite(OtherAssetManager.getChest());
-    private final static Sprite board = new Sprite(OtherAssetManager.getBoard());
-    private final static Sprite smallBoard = new Sprite(OtherAssetManager.getSmallBoard());
+    private final static Sprite chest = new Sprite(GameMenuAssetManager.getChest());
+    private final static Sprite board = new Sprite(GameMenuAssetManager.getBoard());
+    private final static Sprite smallBoard = new Sprite(GameMenuAssetManager.getSmallBoard());
     private final static Sprite inventorySymbol = new Sprite(ToolAssetManager.getBasicBackpack());
-    private final static Sprite skillSymbol = new Sprite(OtherAssetManager.getFaceIcon());
-    private final static Sprite socialSymbol = new Sprite(OtherAssetManager.getHearthIcon());
-    private final static Sprite mapSymbol = new Sprite(OtherAssetManager.getForestIcon());
-    private final static Sprite NPCSymbol = new Sprite(OtherAssetManager.getSmileIcon());
-    private final static Sprite settingSymbol = new Sprite(OtherAssetManager.getSettingIcon());
-    private final static Sprite exitIcon = new Sprite(OtherAssetManager.getExitIcon());
-    private final static Sprite animalIcon = new Sprite(OtherAssetManager.getAnimalIcon());
+    private final static Sprite skillSymbol = new Sprite(GameMenuAssetManager.getFaceIcon());
+    private final static Sprite socialSymbol = new Sprite(GameMenuAssetManager.getHearthIcon());
+    private final static Sprite mapSymbol = new Sprite(GameMenuAssetManager.getForestIcon());
+    private final static Sprite NPCSymbol = new Sprite(GameMenuAssetManager.getSmileIcon());
+    private final static Sprite settingSymbol = new Sprite(GameMenuAssetManager.getSettingIcon());
+    private final static Sprite exitIcon = new Sprite(GameMenuAssetManager.getExitIcon());
+    private final static Sprite animalIcon = new Sprite(GameMenuAssetManager.getAnimalIcon());
 
-    private final static Sprite greenRect = new Sprite(OtherAssetManager.getGreenRect());
-    private final static Sprite rightIcon = new Sprite(OtherAssetManager.getRightIcon());
-    private final static Sprite leftIcon = new Sprite(OtherAssetManager.getLeftIcon());
-    private final static Sprite bigBoard = new Sprite(OtherAssetManager.getBigBoard());
+    private final static Sprite greenRect = new Sprite(GameMenuAssetManager.getGreenRect());
+    private final static Sprite rightIcon = new Sprite(GameMenuAssetManager.getRightIcon());
+    private final static Sprite leftIcon = new Sprite(GameMenuAssetManager.getLeftIcon());
+    private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getBigBoard());
     private static int scrollNumber = 0;
     private static int infoNumber = 0;
 

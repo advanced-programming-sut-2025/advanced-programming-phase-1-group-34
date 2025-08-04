@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.GameController;
-import org.Group34.controller.StartANewDayController;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.User;
@@ -105,7 +104,7 @@ public class GameScreen extends ScreenAdapter {
         this.npcDialogueManager = new NPCDialogueManager();
         messageFont = new BitmapFont();
         messageFont.setColor(Color.WHITE);
-        mapOverviewTexture = new Texture(Gdx.files.internal("other/mapOverView.png"));
+        mapOverviewTexture = new Texture(Gdx.files.internal("gameMenu/mapOverView.png"));
         camera.setToOrtho(false, VIEWPORT_WIDTH * TILE_SIZE, VIEWPORT_HEIGHT * TILE_SIZE);
         Gdx.input.setInputProcessor(stage);
     }

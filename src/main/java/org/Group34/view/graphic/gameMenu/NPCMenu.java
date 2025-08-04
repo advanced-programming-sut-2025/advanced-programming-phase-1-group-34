@@ -18,17 +18,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NPCMenu {
-    private final static Sprite chest = new Sprite(OtherAssetManager.getChest());
-    private final static Sprite bigBoard = new Sprite(OtherAssetManager.getBigBoard());
-    private final static Sprite smallBoard = new Sprite(OtherAssetManager.getSmallBoard());
+    private final static Sprite chest = new Sprite(GameMenuAssetManager.getChest());
+    private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getBigBoard());
+    private final static Sprite smallBoard = new Sprite(GameMenuAssetManager.getSmallBoard());
     private final static Sprite inventorySymbol = new Sprite(ToolAssetManager.getBasicBackpack());
-    private final static Sprite skillSymbol = new Sprite(OtherAssetManager.getFaceIcon());
-    private final static Sprite socialSymbol = new Sprite(OtherAssetManager.getHearthIcon());
-    private final static Sprite mapSymbol = new Sprite(OtherAssetManager.getForestIcon());
-    private final static Sprite NPCSymbol = new Sprite(OtherAssetManager.getSmileIcon());
-    private final static Sprite settingSymbol = new Sprite(OtherAssetManager.getSettingIcon());
-    private final static Sprite exitIcon = new Sprite(OtherAssetManager.getExitIcon());
-    private final static Sprite animalIcon = new Sprite(OtherAssetManager.getAnimalIcon());
+    private final static Sprite skillSymbol = new Sprite(GameMenuAssetManager.getFaceIcon());
+    private final static Sprite socialSymbol = new Sprite(GameMenuAssetManager.getHearthIcon());
+    private final static Sprite mapSymbol = new Sprite(GameMenuAssetManager.getForestIcon());
+    private final static Sprite NPCSymbol = new Sprite(GameMenuAssetManager.getSmileIcon());
+    private final static Sprite settingSymbol = new Sprite(GameMenuAssetManager.getSettingIcon());
+    private final static Sprite exitIcon = new Sprite(GameMenuAssetManager.getExitIcon());
+    private final static Sprite animalIcon = new Sprite(GameMenuAssetManager.getAnimalIcon());
 
     private static boolean giftDialogOpen = false;
     private static int selectedNPCIndex = -1;
@@ -347,7 +347,7 @@ public class NPCMenu {
         float dialogX = camera.position.x - dialogWidth / 2;
         float dialogY = camera.position.y - dialogHeight / 2;
 
-        Sprite dialogBackground = new Sprite(OtherAssetManager.getBigBoard());
+        Sprite dialogBackground = new Sprite(GameMenuAssetManager.getBigBoard());
         dialogBackground.setSize(dialogWidth, dialogHeight);
         dialogBackground.setPosition(dialogX, dialogY);
         dialogBackground.draw(batch);
@@ -387,10 +387,10 @@ public class NPCMenu {
             return new Sprite(CropAssetManager.getFairyRose());
         }
         else if (giftName.equals("1000$")) {
-            return new Sprite(OtherAssetManager.getCoinIcon());
+            return new Sprite(GameMenuAssetManager.getCoinIcon());
         }
         else if (giftName.equals("Wood")) {
-            return new Sprite(OtherAssetManager.getWoodIcon());
+            return new Sprite(GameMenuAssetManager.getWoodIcon());
         }
         return null;
     }
