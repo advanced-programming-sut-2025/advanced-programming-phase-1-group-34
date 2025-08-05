@@ -16,16 +16,7 @@ public class RegisterMenuController {
                            String nickname, String email, String gender) {
         if (App.getUserByUsername(username) != null) {
             System.out.println("this username is already taken!");
-            String suggestion = generateNewUsername(username);
-
-            System.out.println("Would you like to use this username instead? " + suggestion + " (yes/no)");
-            String choice = scanner.nextLine().trim().toLowerCase();
-            if (choice.equals("yes")) {
-                username = suggestion;
-            }
-            else {
-                return new Result(false, "Redirecting to the Register menu ...\n");
-            }
+            return new Result(false, "This username is already taken!\n");
         }
         if (!isUsernameValid(username)) {
             return new Result(false, "username format is invalid!\n");

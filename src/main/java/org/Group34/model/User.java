@@ -8,6 +8,7 @@ package org.Group34.model;
  */
 
 public class User {
+    private int id;
     private String username;
     private String password;
     private String email;
@@ -118,5 +119,13 @@ public class User {
     }
     public void setAvatar(int avatar) {
         this.avatar = avatar;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

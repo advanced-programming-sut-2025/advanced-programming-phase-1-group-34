@@ -2,6 +2,7 @@ package org.Group34;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
+import org.Group34.model.App;
 import org.Group34.network.server.GameServer;
 import org.Group34.view.AppView;
 import org.Group34.view.graphic.GraphicAppView;
@@ -37,5 +38,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         AppView appView = new AppView();
         appView.run(scanner);
+
+        App.shutdown();
     }
 }

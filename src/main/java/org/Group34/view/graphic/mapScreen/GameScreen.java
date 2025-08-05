@@ -82,7 +82,7 @@ public class GameScreen extends ScreenAdapter {
         this.game = game;
         this.myGame = myGame;
         this.gameController = gameController;
-        this.gameMap = myGame.map();
+        this.gameMap = myGame.getMap();
         this.batch = new SpriteBatch();
         this.camera = new OrthographicCamera();
         this.stage = new Stage(new ScreenViewport());
@@ -91,9 +91,9 @@ public class GameScreen extends ScreenAdapter {
 
         User currentUser = App.getCurrentUser();
         if (currentUser != null) {
-            this.player = myGame.players().get(currentUser);
+            this.player = myGame.getPlayers().get(currentUser);
         } else {
-            this.player = myGame.players().values().iterator().next();
+            this.player = myGame.getPlayers().values().iterator().next();
         }
         toolsGraphic = new ItemsGraphic(batch, player, gameController);
         gameMenuGraphic = new GameMenuGraphic(batch, player, gameController);
@@ -212,11 +212,11 @@ public class GameScreen extends ScreenAdapter {
         boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
-            myGame.time().cheatAdvanceTime(1);
+            myGame.getTime().cheatAdvanceTime(1);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
-            myGame.time().cheatAdvanceDate(1, myGame);
+            myGame.getTime().cheatAdvanceDate(1, myGame);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {

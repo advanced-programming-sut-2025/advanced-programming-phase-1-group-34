@@ -54,8 +54,8 @@ public class EnvironmentManager {
         }
 
         // Update weather and season
-        currentWeather = myGame.weatherSystem().getTodayCondition().toString();
-        currentSeason = myGame.weatherSystem().getSeason().getName();
+        currentWeather = myGame.getWeatherSystem().getTodayCondition().toString();
+        currentSeason = myGame.getWeatherSystem().getSeason().getName();
     }
 
     public Color getEnvironmentTint() {

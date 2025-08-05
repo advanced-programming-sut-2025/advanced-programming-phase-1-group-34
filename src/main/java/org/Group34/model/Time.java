@@ -83,8 +83,8 @@ public class Time implements  Comparable<Time> {
         try {
             if (d == null) return new Result(false, "you should give a number as days argument");
             this.addDays(d);
-            myGame.weatherSystem().initializeWeather(this);
-            myGame.weatherSystem().advanceWeather(this);
+            myGame.getWeatherSystem().initializeWeather(this);
+            myGame.getWeatherSystem().advanceWeather(this);
             return new Result(true, "Cheat Code Activated: (" + this + ")");
         }
         catch (Exception IllegalArgumentException){
