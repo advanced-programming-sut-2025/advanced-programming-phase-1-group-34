@@ -70,8 +70,4 @@ public class App {
     public static void setCurrentGame(MyGame currentMyGame) {
         App.currentMyGame = currentMyGame;
     }
-
-    public static void shutdown() {
-        DatabaseManager.closeAllConnections();
-    }
 }

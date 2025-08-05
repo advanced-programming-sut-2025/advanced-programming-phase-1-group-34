@@ -14,7 +14,7 @@ public class MyGame {
     private Map map;
     private Time time;
     private WeatherSystem weatherSystem;
-    private int id; // شناسه بازی در پایگاه داده
+    private int id;
 
     public MyGame(User creator, HashMap<User, Player> players, Map map, Time time, WeatherSystem weatherSystem) {
         this.creator = creator;
@@ -25,23 +25,18 @@ public class MyGame {
     }
 
     public static MyGame load(String userName) {
-        // بارگیری بازی از پایگاه داده
         return DatabaseManager.loadGame(userName);
     }
 
     public void save() {
-        // ذخیره بازی در پایگاه داده
         DatabaseManager.saveGame(this);
     }
 
     public void delete() {
-        // حذف بازی از پایگاه داده
-        // پیاده‌سازی حذف بازی
         for (User user : players.keySet())
             user.setGame(null);
     }
 
-    // متدهای getter و setter
     public User getCreator() {
         return creator;
     }
@@ -90,7 +85,6 @@ public class MyGame {
         this.id = id;
     }
 
-    // متدهای سریال‌سازی برای ذخیره در پایگاه داده
     public byte[] serialize() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {

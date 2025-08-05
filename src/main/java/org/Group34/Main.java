@@ -38,7 +38,5 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         AppView appView = new AppView();
         appView.run(scanner);
-
-        App.shutdown();
     }
 }

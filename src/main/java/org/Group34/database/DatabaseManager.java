@@ -12,7 +12,6 @@ public class DatabaseManager {
 
     static {
         try {
-            // بارگذاری درایور JDBC
             Class.forName("org.sqlite.JDBC");
             initializeDatabase();
         } catch (ClassNotFoundException | SQLException e) {
@@ -29,12 +28,10 @@ public class DatabaseManager {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
 
-            // تنظیمات برای بهبود عملکرد چند کاربره
             stmt.execute("PRAGMA journal_mode=WAL");
             stmt.execute("PRAGMA synchronous=NORMAL");
             stmt.execute("PRAGMA busy_timeout=5000");
 
-            // ایجاد جدول کاربران
             String createUserTable = "CREATE TABLE IF NOT EXISTS users ("
                     + "username TEXT PRIMARY KEY,"
                     + "password TEXT NOT NULL,"
@@ -49,7 +46,6 @@ public class DatabaseManager {
                     + ")";
             stmt.execute(createUserTable);
 
-            // ایجاد جدول بازی‌ها
             String createGameTable = "CREATE TABLE IF NOT EXISTS games ("
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + "creator_username TEXT NOT NULL,"
@@ -58,14 +54,12 @@ public class DatabaseManager {
                     + ")";
             stmt.execute(createGameTable);
 
-            // ایجاد جدول سوالات امنیتی
             String createSecurityQuestionsTable = "CREATE TABLE IF NOT EXISTS security_questions ("
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + "question TEXT NOT NULL UNIQUE"
                     + ")";
             stmt.execute(createSecurityQuestionsTable);
 
-            // درج سوالات امنیتی پیش‌فرض اگر وجود ندارند
             String[] defaultQuestions = {
                     "What was the name of your elementary school?",
                     "What is the name of the city where you were born?",
@@ -86,7 +80,6 @@ public class DatabaseManager {
         }
     }
 
-    // متدهای مدیریت کاربران
     public static void addUser(User user) {
         String sql = "INSERT INTO users(username, password, email, nickname, gender, security_question, security_answer, avatar, highest_money, played_games_count) VALUES(?,?,?,?,?,?,?,?,?,?)";
         try (Connection conn = getConnection();
@@ -168,17 +161,15 @@ public class DatabaseManager {
         }
     }
 
-    // متدهای مدیریت بازی‌ها
     public static void saveGame(MyGame game) {
-        // پیاده‌سازی ذخیره بازی
+        //TODO
     }
 
     public static MyGame loadGame(String username) {
-        // پیاده‌سازی بارگیری بازی
+        //TODO
         return null;
     }
 
-    // متدهای مدیریت سوالات امنیتی
     public static List<String> getSecurityQuestions() {
         List<String> questions = new ArrayList<>();
         String sql = "SELECT question FROM security_questions ORDER BY id";
@@ -223,9 +214,5 @@ public class DatabaseManager {
         user.setHighestMoney(rs.getInt("highest_money"));
         user.setPlayedGamesCount(rs.getInt("played_games_count"));
         return user;
-    }
-
-    public static void closeAllConnections() {
-        // در این پیاده‌سازی اتصالات به صورت خودکار بسته می‌شوند
     }
 }
