@@ -55,7 +55,8 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 System.out.println("Switch to MyGame Menu");
-                game.setScreen(new GameMenuScreen(skin, game, app));
+                //game.setScreen(new GameMenuScreen(skin, game, app));
+                game.setScreen(new LobbyMenuScreen(skin, game, app));
             }
         });
 

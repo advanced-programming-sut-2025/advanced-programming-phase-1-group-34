@@ -1,6 +1,6 @@
 package org.Group34.network.server;
 
-import org.Group34.network.lobby.LobbyManager;
+import org.Group34.network.LobbyManager;
 
 import java.io.IOException;
 import java.net.ServerSocket;
