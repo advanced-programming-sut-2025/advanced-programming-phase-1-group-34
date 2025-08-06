@@ -13,7 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.menu.RegisterMenuController;
+import org.Group34.model.App;
 import org.Group34.model.Result;
+import org.Group34.model.User;
 import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GraphicAppView;
 
@@ -214,6 +216,10 @@ public class RegisterScreen extends ScreenAdapter {
                     );
                     if (res.success()) {
                         System.out.println("Registered successfully!");
+                        User currentUser = App.getCurrentUser();
+                        if (currentUser != null) {
+                            client.sendUser(currentUser);
+                        }
                         game.setScreen(new MainMenuScreen(skin, game, app, client));
                         //app.switchToLobbyMenu();
                         dispose();

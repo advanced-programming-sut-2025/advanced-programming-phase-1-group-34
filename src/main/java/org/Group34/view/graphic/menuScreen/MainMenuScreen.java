@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import org.Group34.model.App;
+import org.Group34.model.User;
 import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GraphicAppView;
 
@@ -58,6 +60,10 @@ public class MainMenuScreen extends ScreenAdapter {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
                 System.out.println("Switch to MyGame Menu");
+                User currentUser = App.getCurrentUser();
+                if (currentUser != null) {
+                    client.sendUser(currentUser);
+                }
                 //game.setScreen(new GameMenuScreen(skin, game, app));
                 game.setScreen(new LobbyMenuScreen(skin, app, client, game));
             }

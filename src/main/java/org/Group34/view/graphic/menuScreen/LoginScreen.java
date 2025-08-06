@@ -146,6 +146,10 @@ public class LoginScreen extends ScreenAdapter {
         ));
 
         if (result.success()) {
+            User currentUser = App.getCurrentUser();
+            if (currentUser != null) {
+                client.sendUser(currentUser);
+            }
             game.setScreen(new MainMenuScreen(skin, game, app, client));
             dispose();
         }

@@ -1,13 +1,17 @@
 
 package org.Group34.model;
 
+import java.io.Serializable;
+
 /**
  * Represents a user in the myGame system
  * Only essential fields for Main menu and Profile menu are added
  * Make sure to complete it
  */
 
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private int id;
     private String username;
     private String password;

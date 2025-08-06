@@ -1,69 +1,61 @@
 package org.Group34.network.client;
+import org.Group34.model.User;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.function.Consumer;
 
 public class GameClient {
-    public interface MessageListener {
-        void onMessage(String msg);
-    }
+    private final Socket socket;
+    private final ObjectOutputStream out;
+    private final Consumer<String> messageHandler;
+    private final Thread receiveThread;
 
-    private Socket socket;
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
-    private final Thread reader;
-    private final MessageListener listener;
+    public GameClient(String host, int port, Consumer<String> messageHandler) throws IOException {
+        this.socket = new Socket(host, port);
+        this.out = new ObjectOutputStream(socket.getOutputStream());
+        this.messageHandler = messageHandler;
 
-    public GameClient(String host, int port, MessageListener listener) throws IOException {
-        this.listener = listener;
-        System.out.println("Connecting to " + host + ":" + port);
-
-        socket = new Socket(host, port);
-        out = new ObjectOutputStream(socket.getOutputStream());
-        out.flush();
-        in = new ObjectInputStream(socket.getInputStream());
-
-        reader = new Thread(this::readLoop, "Client-Reader");
-        reader.setDaemon(true);
-        reader.start();
-
-        System.out.println("Connected successfully");
-    }
-
-    public void send(String msg) {
-        try {
-            synchronized (out) {
-                System.out.println("Sending: " + msg);
-                out.writeObject(msg);
-                out.flush();
+        // Start receiving thread
+        this.receiveThread = new Thread(() -> {
+            try (ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+                while (true) {
+                    Object received = in.readObject();
+                    if (received instanceof String) {
+                        messageHandler.accept((String) received);
+                    }
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                System.err.println("Connection closed: " + e.getMessage());
             }
+        });
+        this.receiveThread.start();
+    }
+
+    public void send(String message) {
+        try {
+            out.writeObject(message);
+            out.flush();
         } catch (IOException e) {
             System.err.println("Failed to send message: " + e.getMessage());
         }
     }
 
-    private void readLoop() {
+    public void sendUser(User user) {
         try {
-            while (true) {
-                Object o = in.readObject();
-                if (o instanceof String s) {
-                    if (listener != null) {
-                        System.out.println("Received: " + s);
-                        listener.onMessage(s);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Disconnected from server.");
+            out.writeObject(user);
+            out.flush();
+        } catch (IOException e) {
+            System.err.println("Failed to send user: " + e.getMessage());
         }
     }
 
     public void close() {
         try {
-            System.out.println("Closing connection");
-            if (socket != null && !socket.isClosed()) {
-                socket.close();
-            }
-        } catch (IOException ignored) {}
+            receiveThread.interrupt();
+            socket.close();
+        } catch (IOException e) {
+            System.err.println("Error closing connection: " + e.getMessage());
+        }
     }
 }

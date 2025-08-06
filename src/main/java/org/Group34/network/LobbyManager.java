@@ -1,11 +1,11 @@
 package org.Group34.network;
-
+import org.Group34.model.User;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class LobbyManager {
     private final Map<String, Lobby> lobbies = new ConcurrentHashMap<>();
-    private final Map<String, String> userLobbyMap = new ConcurrentHashMap<>();
+    private final Map<User, String> userLobbyMap = new ConcurrentHashMap<>(); // Now maps User to lobby ID
     private final Random random = new Random();
     private final Timer cleanupTimer = new Timer();
 
@@ -19,89 +19,82 @@ public class LobbyManager {
         }, 60000, 60000); // Check every minute
     }
 
-    public synchronized String createLobby(String name, boolean isPrivate, String password) {
+    public synchronized String createLobby(String name, boolean isPrivate, boolean isVisible, String password, User creator) {
         String lobbyId = generateLobbyId();
-        Lobby lobby = new Lobby(lobbyId, name, isPrivate, password);
+        Lobby lobby = new Lobby(lobbyId, name, isPrivate, isVisible, password);
+        // Add creator as first player and admin
+        lobby.players.add(creator);
+        lobby.admin = creator;
+        userLobbyMap.put(creator, lobbyId);
         lobbies.put(lobbyId, lobby);
         return lobbyId;
     }
 
-    public synchronized String joinLobby(String userId, String lobbyId, String password) {
+    public synchronized String joinLobby(User user, String lobbyId, String password) {
         Lobby lobby = lobbies.get(lobbyId);
         if (lobby == null) {
             return "ERROR:Lobby not found";
         }
-
         if (lobby.isPrivate && !lobby.password.equals(password)) {
             return "ERROR:Invalid password";
         }
-
         if (lobby.players.size() >= lobby.maxPlayers) {
             return "ERROR:Lobby is full";
         }
-
         // Remove user from previous lobby if any
-        if (userLobbyMap.containsKey(userId)) {
-            leaveLobby(userId);
+        if (userLobbyMap.containsKey(user)) {
+            leaveLobby(user);
         }
-
-        lobby.players.add(userId);
-        userLobbyMap.put(userId, lobbyId);
+        lobby.players.add(user);
+        lobby.lastActivityTime = System.currentTimeMillis(); // Update activity time
+        userLobbyMap.put(user, lobbyId);
         return "JOINED_LOBBY:" + lobbyId;
     }
 
-    public synchronized void leaveLobby(String userId) {
-        String lobbyId = userLobbyMap.get(userId);
+    public synchronized void leaveLobby(User user) {
+        String lobbyId = userLobbyMap.get(user);
         if (lobbyId != null) {
             Lobby lobby = lobbies.get(lobbyId);
             if (lobby != null) {
-                lobby.players.remove(userId);
-                lobby.lastActivityTime = System.currentTimeMillis();
-
+                lobby.players.remove(user);
+                lobby.lastActivityTime = System.currentTimeMillis(); // Update activity time
                 // Transfer admin if the admin left
-                if (lobby.admin.equals(userId) && !lobby.players.isEmpty()) {
+                if (lobby.admin.equals(user) && !lobby.players.isEmpty()) {
                     lobby.admin = lobby.players.get(0);
                 }
-
-                // Remove lobby if empty
-                if (lobby.players.isEmpty()) {
-                    lobbies.remove(lobbyId);
-                }
             }
-            userLobbyMap.remove(userId);
+            userLobbyMap.remove(user);
         }
     }
 
     public synchronized String getLobbies() {
         StringBuilder sb = new StringBuilder("LOBBY_LIST:");
-
         for (Lobby lobby : lobbies.values()) {
             sb.append(lobby.id).append(",")
                     .append(lobby.name).append(",")
                     .append(lobby.players.size()).append(",")
                     .append(lobby.maxPlayers).append(",")
-                    .append(lobby.isPrivate).append("|");
+                    .append(lobby.isPrivate).append(",")
+                    .append(lobby.isVisible).append("|"); // Added visibility flag
         }
-
         return sb.toString();
     }
 
     public synchronized String searchLobby(String searchTerm) {
         StringBuilder sb = new StringBuilder("LOBBY_LIST:");
         boolean found = false;
-
         for (Lobby lobby : lobbies.values()) {
-            if (lobby.id.equals(searchTerm) ||
-                    (lobby.isVisible && lobby.name.toLowerCase().contains(searchTerm.toLowerCase()))) {
+            // Only show invisible lobbies if exact name match
+            if (lobby.isVisible || lobby.name.equalsIgnoreCase(searchTerm)) {
                 sb.append(lobby.id).append(",")
                         .append(lobby.name).append(",")
                         .append(lobby.players.size()).append(",")
                         .append(lobby.maxPlayers).append(",")
-                        .append(lobby.isPrivate).append("|");
+                        .append(lobby.isPrivate).append(",")
+                        .append(lobby.isVisible).append("|"); // Added visibility flag
                 found = true;
             }
         }
-
         return found ? sb.toString() : "LOBBY_LIST:";
     }
 
@@ -116,18 +109,13 @@ public class LobbyManager {
     private void cleanupInactiveLobbies() {
         long currentTime = System.currentTimeMillis();
         Iterator<Map.Entry<String, Lobby>> iterator = lobbies.entrySet().iterator();
-
         while (iterator.hasNext()) {
             Map.Entry<String, Lobby> entry = iterator.next();
             Lobby lobby = entry.getValue();
-
-            // Remove lobbies inactive for more than 5 minutes
-            if (currentTime - lobby.lastActivityTime > 300000) {
-                // Remove all users from this lobby
-                for (String userId : lobby.players) {
-                    userLobbyMap.remove(userId);
-                }
+            // Remove empty lobbies inactive for more than 5 minutes
+            if (lobby.players.isEmpty() && currentTime - lobby.lastActivityTime > 300000) {
                 iterator.remove();
+                System.out.println("Removed inactive lobby: " + lobby.id + " (" + lobby.name + ")");
             }
         }
     }
@@ -137,18 +125,19 @@ public class LobbyManager {
         final String name;
         final boolean isPrivate;
         final String password;
-        final List<String> players = new ArrayList<>();
-        String admin;
+        final List<User> players = new ArrayList<>(); // Now stores User objects
+        User admin; // Now a User object
         final int maxPlayers = 4;
-        boolean isVisible = true;
+        boolean isVisible;
         long lastActivityTime;
 
-        Lobby(String id, String name, boolean isPrivate, String password) {
+        Lobby(String id, String name, boolean isPrivate, boolean isVisible, String password) {
             this.id = id;
             this.name = name;
             this.isPrivate = isPrivate;
+            this.isVisible = isVisible;
             this.password = password;
-            this.admin = ""; // Will be set when first player joins
+            this.admin = null; // Will be set when first player joins
             this.lastActivityTime = System.currentTimeMillis();
         }
     }

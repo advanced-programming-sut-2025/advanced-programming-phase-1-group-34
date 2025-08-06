@@ -120,6 +120,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import org.Group34.model.App;
+import org.Group34.model.User;
 import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.menuScreen.LobbyMenuScreen;
 import org.Group34.view.graphic.menuScreen.RegisterScreen;
@@ -154,8 +156,12 @@ public class GraphicAppView extends Game {
         }
 
         // Start with register screen
-        //setScreen(new RegisterScreen(skin, this, this));
-        setScreen(new LobbyMenuScreen(skin, this, client,this));
+        setScreen(new RegisterScreen(skin, this, this, client));
+        User currentUser = App.getCurrentUser();
+        if (currentUser != null) {
+            client.sendUser(currentUser);
+        }
+        //setScreen(new LobbyMenuScreen(skin, this, client,this));
     }
 
     public void switchToLobbyMenu() {
