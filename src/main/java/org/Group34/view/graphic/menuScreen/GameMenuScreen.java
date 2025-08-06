@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.Result;
+import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GraphicAppView;
 import org.Group34.view.graphic.mapScreen.GameScreen;
 
@@ -35,19 +36,21 @@ public class GameMenuScreen extends ScreenAdapter {
     private Label statusLabel;
 
     private final GraphicAppView app;
+    private GameClient client;
 
     private String[] selectedPlayers;
     private List<Integer> playerMapChoices;
     private String selectedMap;
     private Dialog currentDialog; // Track current dialog
 
-    public GameMenuScreen(Skin skin, Game game, GraphicAppView app) {
+    public GameMenuScreen(Skin skin, Game game, GraphicAppView app, GameClient client) {
         this.skin = skin;
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
         this.controller = new GameMenuController();
 
         this.app = app;
+        this.client = client;
 
         backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-gamemenu.png"));
         backgroundImage = new Image(backgroundTexture);
@@ -131,7 +134,7 @@ public class GameMenuScreen extends ScreenAdapter {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(skin, game, app));
+                game.setScreen(new MainMenuScreen(skin, game, app, client));
                 dispose();
             }
         });
@@ -309,7 +312,7 @@ public class GameMenuScreen extends ScreenAdapter {
             MyGame myGame = App.getCurrentUser().getGame();
             if (myGame != null) {
                 // Transition to the actual game screen
-                game.setScreen(new GameScreen(skin, game, myGame, new GameController(myGame), app));
+                game.setScreen(new GameScreen(skin, game, myGame, new GameController(myGame), app, client));
                 dispose();
             } else {
                 showStatus(new Result(false, "Failed to start game"));

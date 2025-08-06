@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.menu.RegisterMenuController;
 import org.Group34.model.Result;
+import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GraphicAppView;
 
 import java.util.ArrayList;
@@ -28,14 +29,16 @@ public class RegisterScreen extends ScreenAdapter {
     private final Game game;
 
     private final GraphicAppView app;
+    private GameClient client;
 
-    public RegisterScreen(Skin skin, Game game, GraphicAppView app) {
+    public RegisterScreen(Skin skin, Game game, GraphicAppView app, GameClient client) {
         this.skin = skin;
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
         this.controller = new RegisterMenuController();
 
         this.app = app;
+        this.client = client;
 
         backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-register.png"));
         backgroundImage = new Image(backgroundTexture);
@@ -113,7 +116,7 @@ public class RegisterScreen extends ScreenAdapter {
         goToLoginButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new LoginScreen(skin, game, app));
+                game.setScreen(new LoginScreen(skin, game, app, client));
             }
         });
 
@@ -211,7 +214,7 @@ public class RegisterScreen extends ScreenAdapter {
                     );
                     if (res.success()) {
                         System.out.println("Registered successfully!");
-                        game.setScreen(new MainMenuScreen(skin, game, app));
+                        game.setScreen(new MainMenuScreen(skin, game, app, client));
                         //app.switchToLobbyMenu();
                         dispose();
                     } else {

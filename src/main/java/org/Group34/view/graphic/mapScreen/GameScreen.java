@@ -30,6 +30,7 @@ import org.Group34.model.gameAssetManagers.NPCDialogueManager;
 import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
+import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GameMenuGraphic;
 import org.Group34.view.graphic.GraphicAppView;
 import org.Group34.view.graphic.ItemsGraphic;
@@ -76,8 +77,9 @@ public class GameScreen extends ScreenAdapter {
     private boolean hidePlayerDuringRender = false;
 
     private final GraphicAppView app;
+    private GameClient client;
 
-    public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController, GraphicAppView app) {
+    public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController, GraphicAppView app, GameClient client) {
         this.skin = skin;
         this.game = game;
         this.myGame = myGame;
@@ -88,6 +90,7 @@ public class GameScreen extends ScreenAdapter {
         this.stage = new Stage(new ScreenViewport());
 
         this.app = app;
+        this.client = client;
 
         User currentUser = App.getCurrentUser();
         if (currentUser != null) {
@@ -245,7 +248,7 @@ public class GameScreen extends ScreenAdapter {
             gameController.exitGame();
             currentMessage = "Game saved successfully!";
             messageTimer = MESSAGE_DURATION;
-            game.setScreen(new MainMenuScreen(skin, game, app));
+            game.setScreen(new MainMenuScreen(skin, game, app, client));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {

@@ -38,23 +38,16 @@ public class LobbyMenuScreen extends ScreenAdapter {
     private final List<LobbyInfo> lobbyList = new ArrayList<>();
     private Timer refreshTimer;
 
-    public LobbyMenuScreen(Skin skin, Game game, GraphicAppView app) {
+    public LobbyMenuScreen(Skin skin, GraphicAppView app, GameClient client, Game game) {
         this.skin = skin;
+        this.app = app;
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
-        this.app = app;
         backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-lobby.png"));
         backgroundImage = new Image(backgroundTexture);
         backgroundImage.setFillParent(true);
+        this.client = client;
         Gdx.input.setInputProcessor(stage);
-
-        // Initialize client connection
-        try {
-            client = new GameClient("localhost", 12345, this::handleServerMessage);
-            client.send("GET_LOBBIES");
-        } catch (Exception e) {
-            System.err.println("Failed to connect to server: " + e.getMessage());
-        }
 
         createUI();
         startAutoRefresh();
@@ -71,7 +64,6 @@ public class LobbyMenuScreen extends ScreenAdapter {
         Label searchLabel = new Label("Search Lobbies:", skin);
         searchField = new TextField("", skin);
         searchField.setMessageText("Enter lobby ID or name...");
-
         TextButton searchButton = new TextButton("Search", skin);
         TextButton refreshButton = new TextButton("Refresh", skin);
 
@@ -195,7 +187,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(skin, game, app));
+                game.setScreen(new RegisterScreen(skin, game, app, client));
                 dispose();
             }
         });
@@ -267,7 +259,6 @@ public class LobbyMenuScreen extends ScreenAdapter {
         TextField passwordInput = new TextField("", skin);
         passwordInput.setPasswordCharacter('*');
         passwordInput.setPasswordMode(true);
-
         passwordDialog.getContentTable().add(passwordInput).width(200).pad(20);
 
         TextButton submitButton = new TextButton("Join", skin);
@@ -295,7 +286,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
         passwordDialog.show(stage);
     }
 
-    private void handleServerMessage(String message) {
+    public void handleServerMessage(String message) {
         Gdx.app.postRunnable(() -> {
             if (message.startsWith("LOBBY_LIST:")) {
                 updateLobbyListFromServer(message.substring("LOBBY_LIST:".length()));
@@ -317,10 +308,8 @@ public class LobbyMenuScreen extends ScreenAdapter {
     private void updateLobbyListFromServer(String lobbyData) {
         lobbyList.clear();
         String[] lobbies = lobbyData.split("\\|");
-
         for (String lobby : lobbies) {
             if (lobby.isEmpty()) continue;
-
             String[] parts = lobby.split(",");
             if (parts.length >= 5) {
                 String id = parts[0];
@@ -328,11 +317,9 @@ public class LobbyMenuScreen extends ScreenAdapter {
                 int currentPlayers = Integer.parseInt(parts[2]);
                 int maxPlayers = Integer.parseInt(parts[3]);
                 boolean isPrivate = Boolean.parseBoolean(parts[4]);
-
                 lobbyList.add(new LobbyInfo(id, name, currentPlayers, maxPlayers, isPrivate));
             }
         }
-
         updateLobbyList();
     }
 
@@ -360,9 +347,15 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(delta);
         stage.draw();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.Group34.controller.menu.ProfileMenuController;
 import org.Group34.model.App;
 import org.Group34.model.Result;
 import org.Group34.model.User;
+import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GraphicAppView;
 
 public class ProfileScreen extends ScreenAdapter {
@@ -28,14 +29,16 @@ public class ProfileScreen extends ScreenAdapter {
     private Label statusLabel;
 
     private final GraphicAppView app;
+    private GameClient client;
 
-    public ProfileScreen(Skin skin, Game game, GraphicAppView app) {
+    public ProfileScreen(Skin skin, Game game, GraphicAppView app, GameClient client) {
         this.skin = skin;
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
         this.controller = new ProfileMenuController();
 
         this.app = app;
+        this.client = client;
 
         backgroundTexture = new Texture(Gdx.files.internal("menuBackgrounds/background-profile.png"));
         backgroundImage = new Image(backgroundTexture);
@@ -175,7 +178,7 @@ public class ProfileScreen extends ScreenAdapter {
         backToMainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new MainMenuScreen(skin, game, app));
+                game.setScreen(new MainMenuScreen(skin, game, app, client));
                 dispose();
             }
         });

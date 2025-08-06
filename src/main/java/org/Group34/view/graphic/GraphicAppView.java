@@ -121,8 +121,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import org.Group34.network.client.GameClient;
+import org.Group34.view.graphic.menuScreen.LobbyMenuScreen;
 import org.Group34.view.graphic.menuScreen.RegisterScreen;
-import org.Group34.view.graphic.LobbyMenuScreen;
 
 import java.io.IOException;
 
@@ -154,7 +154,8 @@ public class GraphicAppView extends Game {
         }
 
         // Start with register screen
-        setScreen(new RegisterScreen(skin, this, this));
+        //setScreen(new RegisterScreen(skin, this, this));
+        setScreen(new LobbyMenuScreen(skin, this, client,this));
     }
 
     public void switchToLobbyMenu() {
