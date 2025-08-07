@@ -47,7 +47,7 @@ public enum Fruit implements FarmingProduct {
     }
 
     public String getName() { return name; }
-    public int getBaseSellPrice() { return baseSellPrice; }
+    public int getPrice() { return baseSellPrice; }
     public boolean isEdible() { return isEdible; }
     public int getEnergy() { return energy; }
     public int getHealth() { return health; }

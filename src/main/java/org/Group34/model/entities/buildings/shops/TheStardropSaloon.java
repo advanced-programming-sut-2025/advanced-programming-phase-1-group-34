@@ -1,6 +1,8 @@
 package org.Group34.model.entities.buildings.shops;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.enums.Color;
+import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.Recipe;
 import org.Group34.model.items.foods.CookedFood;
@@ -202,5 +204,10 @@ public class TheStardropSaloon extends Shop {
     @Override
     public String toString() {
         return Color.YELLOW + "T" + Color.RESET;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return BuildingsAssetManager.starDropShop;
     }
 }

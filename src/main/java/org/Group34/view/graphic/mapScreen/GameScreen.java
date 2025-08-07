@@ -24,6 +24,7 @@ import org.Group34.model.entities.NPCOnMap;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.WalkAble;
 import org.Group34.model.entities.buildings.GreenHouse;
+import org.Group34.model.entities.buildings.shops.*;
 import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.enums.Season;
 import org.Group34.model.gameAssetManagers.NPCDialogueManager;
@@ -219,7 +220,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
-            myGame.getTime().cheatAdvanceDate(1, myGame);
+            myGame.getTime().cheatAdvanceDate(1, myGame, player);
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
@@ -303,7 +304,20 @@ public class GameScreen extends ScreenAdapter {
                     passoutStartLocation = playerLocation.clone();
                 }
             }
+            handleGoToShop(entity, player);
         }
+    }
+
+    private void handleGoToShop(Entity entity, Player player) {
+        String menu = null;
+
+        if (entity instanceof Blacksmith) {
+            menu = "blacksmith";
+        } else if (entity instanceof SalePlace) {
+            menu = "salePlace";
+        }
+
+        player.setCurrentGameMenu(menu);
     }
 
     private void handleGreenhouseInteraction() {

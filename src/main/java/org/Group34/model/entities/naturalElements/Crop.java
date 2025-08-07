@@ -22,6 +22,7 @@ public class Crop implements Entity, PlantAble {
     private ArrayList<Season> seasons;
     private boolean canBecomeGiant;
     private Texture[] stageTexture;
+    private Texture giantTexture;
 
     private boolean isGiant = false;
     private int age = 0;
@@ -35,7 +36,7 @@ public class Crop implements Entity, PlantAble {
     private int numberOfDaysNeedWater = 0;
 
     public Crop(String name, PlantingSource source, int[] stage, int totalHarvestTime, boolean isOneTime,
-                int regrowthTime, FarmingProduct farmingProduct, String[] seasons, boolean canBecomeGiant, Texture[] stageTexture) {
+                int regrowthTime, FarmingProduct farmingProduct, String[] seasons, boolean canBecomeGiant, Texture[] stageTexture, Texture giantTexture) {
         this.name = name;
         this.source = source;
         this.stages = stage;
@@ -46,6 +47,7 @@ public class Crop implements Entity, PlantAble {
         this.canBecomeGiant = canBecomeGiant;
         this.seasons = new ArrayList<>();
         this.stageTexture = stageTexture;
+        this.giantTexture = giantTexture;
 
         this.maxLevel = stage.length;
 
@@ -200,7 +202,7 @@ public class Crop implements Entity, PlantAble {
         result.append("\n");
 
         result
-                .append("Base Sell Price: " + farmingProduct.getBaseSellPrice() + "\n")
+                .append("Base Sell Price: " + farmingProduct.getPrice() + "\n")
                 .append("Is Edible: " + farmingProduct.isEdible() + "\n")
                 .append("Base Energy: " + farmingProduct.getEnergy() + "\n")
                 .append("Base Health: " + farmingProduct.getHealth() + "\n")
@@ -255,11 +257,12 @@ public class Crop implements Entity, PlantAble {
 
         numberOfDaysNeedWater++;
         age++;
-        if (!needWater) {
-            numberOfDaysNeedWater = 0;
-            checkAgeAndGrow();
-        }
-
+//        if (!needWater) {
+//            numberOfDaysNeedWater = 0;
+//            checkAgeAndGrow();
+//        }
+        numberOfDaysNeedWater = 0;
+        checkAgeAndGrow();
         if (fertilizer == null) {
             needWater = true;
         } else if (fertilizer == Fertilizer.BASIC_RETAINING_SOIL && rand.nextInt(2) == 0) {
@@ -271,12 +274,12 @@ public class Crop implements Entity, PlantAble {
     private void checkAgeAndGrow() {
         if (harvested) {
             if (age == regrowthTime) {
-                growthLevel = maxLevel;
+                growthLevel = maxLevel - 1;
             }
         }
 
         else {
-            for (int i = 0; i < maxLevel; i++) {
+            for (int i = 0; i < maxLevel - 1; i++) {
                 if (growthLevel == i) {
                     int levelUpTime = 0;
                     for (int j = 0; j <= growthLevel; j++) {
@@ -304,7 +307,7 @@ public class Crop implements Entity, PlantAble {
             harvested = true;
         }
         age = 0;
-        growthLevel = maxLevel - 1;
+        growthLevel = maxLevel - 2;
     }
 
     @Override
@@ -314,6 +317,9 @@ public class Crop implements Entity, PlantAble {
 
     @Override
     public Texture getTexture() {
+        if (isGiant && growthLevel == maxLevel - 1) {
+            return giantTexture;
+        }
         return stageTexture[growthLevel];
     }
 }

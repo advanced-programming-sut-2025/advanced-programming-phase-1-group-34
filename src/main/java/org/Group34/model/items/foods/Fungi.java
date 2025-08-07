@@ -35,7 +35,7 @@ public enum Fungi implements FarmingProduct{
     }
 
     @Override
-    public int getBaseSellPrice() {
+    public int getPrice() {
         return baseSellPrice;
     }
 

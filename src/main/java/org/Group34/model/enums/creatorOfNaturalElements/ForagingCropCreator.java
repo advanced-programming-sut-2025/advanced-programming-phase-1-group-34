@@ -47,10 +47,7 @@ public enum ForagingCropCreator {
     }
 
     public ForagingCrop createInstance() {
-        //return new ForagingCrop(name, seasons, product);
-        //TODO change the return statement
-        // changed the return statement just for a test
-        return new ForagingCrop(name, seasons, 100, 5, texture);
+        return new ForagingCrop(name, seasons, product, 100, 5, texture);
     }
 
     public CropProduct getProduct() {

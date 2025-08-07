@@ -90,4 +90,9 @@ public enum ToolType implements Item {
     public Texture getTexture() {
         return texture;
     }
+
+    @Override
+    public int getPrice() {
+        return 0;
+    }
 }

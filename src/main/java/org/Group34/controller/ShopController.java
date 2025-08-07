@@ -500,6 +500,10 @@ public class ShopController {
     public Result sellWithCount(String productName, int count, Player player) {
         Entity playerTile = getSalePlace(player);
 
+        if (count == 0) {
+            return new Result(false, "You must choose a positive number.");
+        }
+
         if (!(playerTile instanceof SalePlace)) {
             return new Result(false, "You should go to the sales location first.");
         }

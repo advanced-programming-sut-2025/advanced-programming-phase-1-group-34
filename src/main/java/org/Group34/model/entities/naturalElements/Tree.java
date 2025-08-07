@@ -22,7 +22,7 @@ public class Tree implements Entity, PlantAble {
     private int[] stages;
     private int totalHarvestTime;
     private FarmingProduct farmingProduct;
-    private int fruitHarvestCycle;
+    private int fruitHarvestCycle = 5;
     private ArrayList<Season> seasons;
     private Texture[] stageTexture;
 
@@ -224,7 +224,7 @@ public class Tree implements Entity, PlantAble {
         result
                 .append("Total Harvest Time: " + totalHarvestTime + "\n")
                 .append("Fruit Harvest Cycle: " + fruitHarvestCycle + "\n")
-                .append("Base Sell Price: " + farmingProduct.getBaseSellPrice() + "\n")
+                .append("Base Sell Price: " + farmingProduct.getPrice() + "\n")
                 .append("Is Edible: " + farmingProduct.isEdible() + "\n")
                 .append("Base Energy: " + farmingProduct.getEnergy() + "\n")
                 .append("Base Health: " + farmingProduct.getHealth() + "\n")
@@ -277,10 +277,12 @@ public class Tree implements Entity, PlantAble {
         isAttackedByCrow = false;
         numberOfDaysNeedWater++;
 
-        if (!needWater) {
-            numberOfDaysNeedWater = 0;
-            checkAgeAndGrow();
-        }
+//        if (!needWater) {
+//            numberOfDaysNeedWater = 0;
+//            checkAgeAndGrow();
+//        }
+        numberOfDaysNeedWater = 0;
+        checkAgeAndGrow();
 
         if (fertilizer == null) {
             needWater = true;
@@ -293,11 +295,11 @@ public class Tree implements Entity, PlantAble {
 
     private void checkAgeAndGrow() {
         if (harvested) {
-            if (age == fruitHarvestCycle && !isAttackedByCrow) {
-                growthLevel = maxLevel;
+            if (age == fruitHarvestCycle - 1 && !isAttackedByCrow) {
+                growthLevel = maxLevel - 1;
             }
         } else {
-            for (int i = 0; i < maxLevel; i++) {
+            for (int i = 0; i < maxLevel - 1; i++) {
                 if (growthLevel == i) {
                     int levelUpTime = 0;
                     for (int j = 0; j <= growthLevel; j++) {
@@ -333,11 +335,11 @@ public class Tree implements Entity, PlantAble {
             harvested = true;
         }
         age = 0;
-        growthLevel = maxLevel - 1;
+        growthLevel = maxLevel - 2;
     }
 
     @Override
     public Texture getTexture() {
-        return null;
+        return stageTexture[growthLevel];
     }
 }

@@ -1,6 +1,8 @@
 package org.Group34.model.entities.buildings.shops.products;
 
 import com.badlogic.gdx.graphics.Texture;
+import org.Group34.model.entities.buildings.shops.SalePlace;
+import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
 import org.Group34.model.items.Item;
 
 public class ShippingBin implements Item {
@@ -24,7 +26,7 @@ public class ShippingBin implements Item {
         return description;
     }
 
-    public static int getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -46,6 +48,6 @@ public class ShippingBin implements Item {
 
     @Override
     public Texture getTexture() {
-        return null;
+        return BuildingsAssetManager.shippingBin;
     }
 }

@@ -1,11 +1,8 @@
 package org.Group34.model.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import org.Group34.model.entities.buildings.Building;
 import org.Group34.model.enums.Color;
-import org.Group34.model.items.Item;
-import org.Group34.model.map.Space;
+import org.Group34.model.items.Mineral;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,21 +13,28 @@ public class Quarry implements WalkAble {
         return Color.GRAY + "Q" + Color.RESET;
     }
 
-    private HashMap<Item, Integer> items = new HashMap<>();
+    private HashMap<Mineral, Integer> minerals = new HashMap<>();
+    private int numOfMinerals = -1;
 
-    public HashMap<Item, Integer> getItems() {
-        return items;
+    public HashMap<Mineral, Integer> getMinerals() {
+        return minerals;
     }
 
-    public void addItem(Item item, int amount) {
-        if (items.containsKey(item)) {
-            items.replace(item, items.get(item) + amount);
+    public void addItem(Mineral mineral, int amount) {
+        if (minerals.containsKey(mineral)) {
+            minerals.replace(mineral, minerals.get(mineral) + amount);
         } else {
-            items.put(item, amount);
+            minerals.put(mineral, amount);
         }
     }
 
     public Texture getTexture() {
+        numOfMinerals++;
+        numOfMinerals %= 81;
+        ArrayList<Mineral> stones = new ArrayList<>(minerals.keySet());
+        if (numOfMinerals < minerals.size()) {
+            return stones.get(numOfMinerals).getTexture();
+        }
         return new Texture("rock/Quarry_Boulder.png");
     }
 }

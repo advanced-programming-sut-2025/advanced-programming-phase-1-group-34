@@ -4,12 +4,13 @@ import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.buildings.Building;
 import org.Group34.model.entities.buildings.shops.products.ShippingBin;
 import org.Group34.model.enums.Color;
+import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
 import org.Group34.model.items.Item;
 
 import java.util.ArrayList;
 
 public class SalePlace implements Building {
-    private int numberOfShippingBins = 0;
+    private int numberOfShippingBins = 2;
     private ArrayList<ShippingBin> shippingBins = new ArrayList<>();
 
 
@@ -40,6 +41,6 @@ public class SalePlace implements Building {
 
     @Override
     public Texture getTexture() {
-        return null;
+        return BuildingsAssetManager.salePlace;
     }
 }

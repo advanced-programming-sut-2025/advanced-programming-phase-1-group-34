@@ -4,17 +4,21 @@ import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.enums.Color;
 import org.Group34.model.enums.Season;
+import org.Group34.model.enums.animals.Product;
+import org.Group34.model.items.Item;
 
 import java.util.ArrayList;
 
 public class ForagingTree implements Entity, Foraging {
     private String name;
-    private ArrayList<Season> seasons;
+    private ArrayList<Season> seasons = new ArrayList<>();
+    private Item product;
     private Texture texture;
 
-    public ForagingTree(String name, String[] seasons, Texture texture) {
+    public ForagingTree(String name, String[] seasons, Texture texture, Item product) {
         this.name = name;
         this.texture = texture;
+        this.product = product;
         for (String season : seasons) {
             if (season.equals("Spring")) {
                 this.seasons.add(Season.SPRING);
@@ -62,6 +66,10 @@ public class ForagingTree implements Entity, Foraging {
         result.append("\n");
 
         return result.toString();
+    }
+
+    public Item getProduct() {
+        return product;
     }
 
     @Override

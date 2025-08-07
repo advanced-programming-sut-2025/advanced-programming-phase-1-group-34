@@ -311,7 +311,14 @@ public class CropAssetManager {
     private final static Texture ancientFruitStage4 = new Texture("crops/Ancient_Fruit_Stage_5.png");
     private final static Texture ancientFruitStage5 = new Texture("crops/Ancient_Fruit_Stage_6.png");
 
+    private final static Texture cauliflowerGiant = new Texture("crops/Giant_Cauliflower.png");
+    private final static Texture melonGiant = new Texture("crops/Giant_Melon.png");
+    private final static Texture powdermelonGiant = new Texture("crops/Giant_Powdermelon.png");
+    private final static Texture pumpkinGiant = new Texture("crops/Giant_Pumpkin.png");
+
     private final static Texture mixedSeeds = new Texture("crops/Mixed_Seeds.png");
+    private final static Texture foragingCrop = new Texture("crops/Tea_Stage_4.png");
+    private final static Texture giantCrop = new Texture("crops/Giant_Qi_Fruit.png");
 
     // ----- getters -----
 
@@ -1385,6 +1392,30 @@ public class CropAssetManager {
 
     public static Texture getMixedSeeds() {
         return mixedSeeds;
+    }
+
+    public static Texture getForagingCrop() {
+        return foragingCrop;
+    }
+
+    public static Texture getGiantCrop() {
+        return giantCrop;
+    }
+
+    public static Texture getCauliflowerGiant() {
+        return cauliflowerGiant;
+    }
+
+    public static Texture getMelonGiant() {
+        return melonGiant;
+    }
+
+    public static Texture getPowdermelonGiant() {
+        return powdermelonGiant;
+    }
+
+    public static Texture getPumpkinGiant() {
+        return pumpkinGiant;
     }
 
     // -------------------

@@ -170,7 +170,7 @@ public class ToolsController { // TODO This class must be filled.
         }
 
 
-        return new Result(true, "");
+        return new Result(false, "");
     }
 
     private int getLocationOfDirectionX(String direction, Player player) {

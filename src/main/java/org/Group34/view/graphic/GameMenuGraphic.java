@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.controller.GameController;
 import org.Group34.model.entities.NPCOnMap;
 import org.Group34.model.entities.Player;
+import org.Group34.model.entities.buildings.shops.*;
 import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.gameAssetManagers.TreeAssetManager;
 import org.Group34.view.graphic.gameMenu.*;
@@ -51,9 +52,11 @@ public class GameMenuGraphic {
                 SettingMenu.draw(batch, player, camera);
             } else if (menu.equals("animal")) {
                 AnimalMenu.draw(batch, player, camera);
+            } else if (menu.equals("blacksmith")) {
+                BlacksmithMenu.draw(batch, player, camera, gameController);
+            } else if (menu.equals("salePlace")) {
+                SalePlaceMenu.draw(batch, player, camera, gameController);
             }
-        }
-        else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
         }
     }
 }

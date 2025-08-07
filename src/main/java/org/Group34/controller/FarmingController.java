@@ -9,11 +9,13 @@ import org.Group34.model.enums.LevelType;
 import org.Group34.model.enums.Season;
 import org.Group34.model.enums.creatorOfNaturalElements.CropCreator;
 import org.Group34.model.enums.creatorOfNaturalElements.TreeCreator;
+import org.Group34.model.gameAssetManagers.FertilizerAssetManager;
 import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.Mineral;
 import org.Group34.model.items.PlantingSource;
 import org.Group34.model.items.crafting.Ingredient;
+import org.Group34.model.items.foods.OtherFarmingProduct;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
 import org.Group34.model.Time;
@@ -105,6 +107,8 @@ public class FarmingController {
             Tree tree = (Tree) desiredPlant;
             tree.useFertilizer(getFertilizerByName(fertilizer));
         }
+
+        currentPlayer.removeFromInventory(getFertilizerByName(fertilizer), 1);
 
         return new Result(true, "The desired fertilizer was successfully given to the plant.");
     }
@@ -212,12 +216,21 @@ public class FarmingController {
             return harvestTheCrop(crop, x, y, currentPlayer, time, levelUpController);
         } else if (desiredTile instanceof Tree tree) {
             return harvestTheTree(tree, x, y, currentPlayer, time, levelUpController);
+        } else if (desiredTile instanceof ForagingCrop foragingCrop) {
+            currentPlayer.addToInventory(foragingCrop.getProduct(), 5);
+            currentSpace.placingEntity(x, y, null);
+            levelUpController.foragingLevelUp(currentPlayer, LevelType.FORAGING_LEVEL);
+            return new Result(true, "");
+        } else if (desiredTile instanceof ForagingTree foragingTree) {
+            currentPlayer.addToInventory(foragingTree.getProduct(), 5);
+            currentSpace.placingEntity(x, y, null);
+            levelUpController.foragingLevelUp(currentPlayer, LevelType.FORAGING_LEVEL);
+            return new Result(true, "");
         }
 
         return new Result(false, "You can not use Scythe here.");
     }
     // ---------------------
-
 
     private int getLocationOfDirectionX(String direction, Player currentPlayer) {
         int playerLocation = currentPlayer.getLocation()[0];
@@ -364,6 +377,7 @@ public class FarmingController {
             case "Mahogany Seeds" -> PlantingSource.MAHOGANY_SAPLING;
             case "Mushroom Tree Seeds" -> PlantingSource.MUSHROOM_SAPLING;
             case "Mystic Tree Seeds" -> PlantingSource.MYSTIC_SAPLING;
+            case "Mixed Seeds" -> PlantingSource.MIXED_SEEDS;
             default -> null;
         };
     }
@@ -380,7 +394,7 @@ public class FarmingController {
             case "Deluxe Retaining Soil" -> Fertilizer.DELUXE_RETAINING_SOIL;
             case "Basic Retaining Soil" -> Fertilizer.BASIC_RETAINING_SOIL;
             case "Quality Retaining Soil" -> Fertilizer.QUALITY_RETAINING_SOIL;
-            case "Speed Gro" -> Fertilizer.SPEED_GROW;
+            case "Speed Grow" -> Fertilizer.SPEED_GROW;
             default -> null;
         };
     }
@@ -448,7 +462,7 @@ public class FarmingController {
     private void placingPlantInSpace(int x, int y, Entity plant, Player currentPlayer) {
         Space currentSpace = currentPlayer.getCurrentSpace();
 
-        if (!(plant instanceof Tree)) {
+        if (plant instanceof Tree) {
             currentSpace.placingEntity(x, y, plant);
         } else {
             Crop crop = (Crop) plant;
@@ -725,7 +739,7 @@ public class FarmingController {
         Space currentSpace = currentPlayer.getCurrentSpace();
 
         if (crop.isGiant()) {
-            if (crop.getGrowthLevel() == crop.getMaxLevel()) {
+            if (crop.getGrowthLevel() == crop.getMaxLevel() - 1) {
                 if (!crop.getSeasons().contains(time.getSeason())) {
                     return new Result(false, "This product is not for this season.");
                 }
@@ -746,7 +760,7 @@ public class FarmingController {
             }
         }
         else {
-            if (crop.getGrowthLevel() == crop.getMaxLevel()) {
+            if (crop.getGrowthLevel() == crop.getMaxLevel() - 1) {
                 if (!crop.getSeasons().contains(time.getSeason())) {
                     return new Result(false, "This product is not for this season.");
 
@@ -778,7 +792,7 @@ public class FarmingController {
             levelUpController.farmingLevelUp(currentPlayer, LevelType.FARMING_LEVEL);
             return new Result(true, "The tree in question was burned due to being struck by lightning and coal was harvested.");
         }
-        else if (tree.getGrowthLevel() == tree.getMaxLevel()) {
+        else if (tree.getGrowthLevel() == tree.getMaxLevel() - 1  ) {
             if (!tree.getSeason().contains(time.getSeason())) {
                 return new Result(false, "This product is not for this season.");
             }

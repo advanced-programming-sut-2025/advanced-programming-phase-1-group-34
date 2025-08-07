@@ -12,4 +12,9 @@ public class Tool implements Item {
     public Texture getTexture() {
         return null;
     }
+
+    @Override
+    public int getPrice() {
+        return 0;
+    }
 }

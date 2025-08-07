@@ -219,7 +219,8 @@ public class GameView extends AppMenu {
                     String fertilizer = matcher.group("fertilizer").trim();
                     String direction = matcher.group("direction").trim();
 
-                    Result result = controller.fertilize(fertilizer, direction);
+//                    Result result = controller.fertilize(fertilizer, direction);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }
@@ -430,7 +431,8 @@ public class GameView extends AppMenu {
 
             // ----- Shop View -----
             else if (command.matches(GameCommands.SHOW_ALL_PRODUCTS.getRegex())) {
-                Result result = controller.showAllProducts();
+//                Result result = controller.showAllProducts();
+                Result result = new Result(true, "");
                 showMessage(result.message());
             }
             else if (command.matches(GameCommands.SHOW_AVAILABLE_PRODUCTS.getRegex())) {
@@ -444,7 +446,8 @@ public class GameView extends AppMenu {
                 if (matcher.find()) {
                     String productName = matcher.group("productName").trim();
 
-                    Result result = controller.purchase(productName, 1);
+//                    Result result = controller.purchase(productName, 1);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }
@@ -456,7 +459,8 @@ public class GameView extends AppMenu {
                     String productName = matcher.group("productName").trim();
                     int count = Integer.parseInt(matcher.group("count").trim());
 
-                    Result result = controller.purchase(productName, count);
+//                    Result result = controller.purchase(productName, count);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }
@@ -490,7 +494,8 @@ public class GameView extends AppMenu {
                     String productName = matcher.group("productName").trim();
                     int count = Integer.parseInt(matcher.group("count").trim());
 
-                    Result result = controller.sellWithCount(productName, count);
+//                    Result result = controller.sellWithCount(productName, count);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }

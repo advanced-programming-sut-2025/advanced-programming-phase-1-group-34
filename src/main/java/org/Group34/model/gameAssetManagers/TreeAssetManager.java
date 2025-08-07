@@ -102,6 +102,7 @@ public class TreeAssetManager {
     private final static Texture mysticStage4 = new Texture("trees/Mystic_Tree_Stage_5.png");
 
     private final static Texture acorn = new Texture("trees/Acorn.png");
+    private final static Texture foragingTree = new Texture("trees/Wild_Tree_Stage_4.png");
 
     // ----- getters -----
 
@@ -443,6 +444,10 @@ public class TreeAssetManager {
 
     public static Texture getAcorn() {
         return acorn;
+    }
+
+    public static Texture getForagingTree() {
+        return foragingTree;
     }
 
     // -------------------

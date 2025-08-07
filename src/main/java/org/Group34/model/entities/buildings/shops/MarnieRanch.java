@@ -1,7 +1,9 @@
 package org.Group34.model.entities.buildings.shops;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.enums.Color;
 import org.Group34.model.enums.animals.AnimalType;
+import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.tools.MilkPail;
 import org.Group34.model.items.tools.Shear;
@@ -223,5 +225,10 @@ public class MarnieRanch extends Shop {
     @Override
     public String toString() {
         return Color.YELLOW + "M" + Color.RESET;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return BuildingsAssetManager.marnieShop;
     }
 }

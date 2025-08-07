@@ -27,6 +27,10 @@ public class GameMenuAssetManager {
     private final static Texture miningSkillIcon = new Texture("gameMenu/Mining_Skill_Icon.png");
     private final static Texture redCircle = new Texture("gameMenu/bullet.png");
     private final static Texture grayCircle = new Texture("gameMenu/bulletGray.png");
+    private final static Texture upIcon = new Texture("gameMenu/up.png");
+    private final static Texture downIcon = new Texture("gameMenu/down.png");
+    private final static Texture buyIcon = new Texture("gameMenu/buy.png");
+    private final static Texture checkMark = new Texture("gameMenu/check.png");
 
     // ----- getters -----
 
@@ -124,6 +128,22 @@ public class GameMenuAssetManager {
 
     public static Texture getRedCircle() {
         return redCircle;
+    }
+
+    public static Texture getUpIcon() {
+        return upIcon;
+    }
+
+    public static Texture getDownIcon() {
+        return downIcon;
+    }
+
+    public static Texture getBuyIcon() {
+        return buyIcon;
+    }
+
+    public static Texture getCheckMark() {
+        return checkMark;
     }
 
     // -------------------

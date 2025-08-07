@@ -49,7 +49,7 @@ public enum Product implements Item {
         return type;
     }
 
-    public int getBasePrice() {
+    public int getPrice() {
         return basePrice;
     }
 

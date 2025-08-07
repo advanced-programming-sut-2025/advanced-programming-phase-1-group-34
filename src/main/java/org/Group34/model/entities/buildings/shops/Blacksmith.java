@@ -1,7 +1,9 @@
 package org.Group34.model.entities.buildings.shops;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
 import org.Group34.model.enums.Color;
+import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.crafting.Ingredient;
 
@@ -118,8 +120,8 @@ public class Blacksmith extends Shop {
                     .append("Price: " + item.getPrice() + "\n")
                     .append("Ingredient: " + item.getIngredient().getName() + "\n")
                     .append("Daily Limit: ");
-            if (getStockLimit(item) >= 0) {
-                result.append(getStockLimit(item) + "\n");
+            if (getUpgradeToolLimit(item) >= 0) {
+                result.append(getUpgradeToolLimit(item) + "\n");
             } else {
                 result.append("unlimited\n");
             }
@@ -200,5 +202,10 @@ public class Blacksmith extends Shop {
     @Override
     public String toString() {
         return Color.YELLOW + "B" + Color.RESET;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return BuildingsAssetManager.blacksmithShop;
     }
 }

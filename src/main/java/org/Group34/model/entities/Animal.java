@@ -107,7 +107,7 @@ public class Animal implements Entity {
         }
         double Q = (randomFactor * 0.5) + (0.5 * (randomFactor / 1000));
         int quality = determineQuality(Q);
-        int price = selectedProduct.getBasePrice() * quality;
+        int price = selectedProduct.getPrice() * quality;
         selectedProduct.setPrice(price);
 
         return selectedProduct;

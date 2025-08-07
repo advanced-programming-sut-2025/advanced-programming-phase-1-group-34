@@ -148,7 +148,7 @@ public class GameController {
             myGame.getTime().addHours(1);
 
             if (myGame.getTime().getHour() == 9){
-                startANewDayController.ManageAllTasks();
+                startANewDayController.ManageAllTasks(getPlayer());
                 currentUser = 0;
                 return new Result(true, "New day have been started. " + orderOfPlay.get(currentUser).getNickname() + " turn.");
             }
@@ -159,7 +159,7 @@ public class GameController {
             nextUser();
             if (currentUser == placeHolder){
                 myGame.getTime().addHours(23 - myGame.getTime().getHour());
-                startANewDayController.ManageAllTasks();
+                startANewDayController.ManageAllTasks(getPlayer());
                 currentUser = 0;
                 return new Result(true,
                         "All players passed out and new day have been started. " + orderOfPlay.get(currentUser).getNickname() + " turn.");
@@ -549,11 +549,12 @@ public class GameController {
         return farmingController.showPlant(x, y, getPlayer());
     }
 
-    public Result fertilize(String fertilizer, String direction) {
+    public Result fertilize(String fertilizer, String direction, Player player) {
         if (!forceTerminating.isEmpty())
             return new Result(false, "Force-terminate vote in progress; you can only vote now");
 
-        return farmingController.fertilize(fertilizer, direction, getPlayer());
+//        return farmingController.fertilize(fertilizer, direction, getPlayer());
+        return farmingController.fertilize(fertilizer, direction, player);
     }
 
     public Result showAmountOfWater() {
@@ -594,14 +595,16 @@ public class GameController {
     // ==========================================================
 
     // ==================== Shop Controller ====================
-    public Result showAllProducts() {
-        return shopController.showAllProducts(getPlayer());
+    public Result showAllProducts(Player player) {
+//        return shopController.showAllProducts(getPlayer());
+        return shopController.showAllProducts(player);
     }
     public Result showAvailableProducts() {
         return shopController.showAvailableProducts(getPlayer(), myGame.getTime());
     }
-    public Result purchase(String productName, int count) {
-        return shopController.purchase(productName, count, getPlayer(), myGame.getTime());
+    public Result purchase(String productName, int count, Player player) {
+//        return shopController.purchase(productName, count, getPlayer(), myGame.getTime());
+        return shopController.purchase(productName, count, player, myGame.getTime());
     }
     public Result cheatAddDollars(int count) {
         return shopController.cheatAddDollars(count, getPlayer());
@@ -609,8 +612,8 @@ public class GameController {
     public Result sell(String productName) {
         return shopController.sell(productName, getPlayer());
     }
-    public Result sellWithCount(String productName, int count) {
-        return shopController.sellWithCount(productName, count, getPlayer());
+    public Result sellWithCount(String productName, int count, Player player) {
+        return shopController.sellWithCount(productName, count, player);
     }
 
     // ==================== Inventory Controller ====================

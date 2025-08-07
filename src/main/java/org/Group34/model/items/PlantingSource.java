@@ -64,23 +64,23 @@ public enum PlantingSource implements Item {
 
     // Special – All Seasons
     ANCIENT_SEEDS("Ancient Seeds", () -> CropCreator.ANCIENT_FRUIT.createInstance(), Season.ALL, 500, 0, "Could these still grow?", CropAssetManager.getAncientFruitSeeds()),
-    MIXED_SEEDS("Mixed Seeds", null, Season.ALL, 0, 0, "", CropAssetManager.getMixedSeeds()),
+    MIXED_SEEDS("Mixed Seeds", null, Season.ALL, 100, 0, "", CropAssetManager.getMixedSeeds()),
 
     // Trees – All Seasons
     APRICOT_SAPLING("Apricot Sapling", () -> TreeCreator.APRICOT_TREE.createInstance(), Season.ALL, 2000, 0, "Takes 28 days to produce a mature Apricot tree. Bears fruit in the spring. Only grows if the 8 surrounding \"tiles\" are empty.", TreeAssetManager.getApricotSapling()),
     CHERRY_SAPLING("Cherry Sapling", () -> TreeCreator.CHERRY_TREE.createInstance(), Season.ALL, 3400, 0, "Takes 28 days to produce a mature Cherry tree. Bears fruit in the spring. Only grows if the 8 surrounding \"tiles\" are empty.", TreeAssetManager.getCherrySapling()),
-    BANANA_SAPLING("Banana Sapling", () -> TreeCreator.BANANA_TREE.createInstance(), Season.ALL, 0, 0, "", TreeAssetManager.getBananaSapling()),
-    MANGO_SAPLING("Mango Sapling", () -> TreeCreator.MANGO_TREE.createInstance(), Season.ALL, 0, 0, "", TreeAssetManager.getMangoSapling()),
+    BANANA_SAPLING("Banana Sapling", () -> TreeCreator.BANANA_TREE.createInstance(), Season.ALL, 4000, 0, "", TreeAssetManager.getBananaSapling()),
+    MANGO_SAPLING("Mango Sapling", () -> TreeCreator.MANGO_TREE.createInstance(), Season.ALL, 4000, 0, "", TreeAssetManager.getMangoSapling()),
     ORANGE_SAPLING("Orange Sapling", () -> TreeCreator.ORANGE_TREE.createInstance(), Season.ALL, 4000, 0, "Takes 28 days to produce a mature Orange tree. Bears fruit in the summer. Only grows if the 8 surrounding \"tiles\" are empty.", TreeAssetManager.getOrangeSapling()),
     PEACH_SAPLING("Peach Sapling", () -> TreeCreator.PEACH_TREE.createInstance(), Season.ALL, 6000, 0, "Takes 28 days to produce a mature Peach tree. Bears fruit in the summer. Only grows if the 8 surrounding \"tiles\" are empty.", TreeAssetManager.getPeachSapling()),
-    APPLE_SAPLING("Apple Sappling", () -> TreeCreator.APPLE_TREE.createInstance(), Season.ALL, 4000, 0, "Takes 28 days to produce a mature Apple tree. Bears fruit in the fall. Only grows if the 8 surrounding \"tiles\" are empty.", TreeAssetManager.getAppleSapling()),
-    POMEGRANATE_SAPLING("Pomegranate Sapling", () -> TreeCreator.POMEGRANATE_TREE.createInstance(), Season.ALL, 0, 0, "...", TreeAssetManager.getPomegranateSapling()),
-    OAK_SAPLING("Acorns", () -> TreeCreator.OAK_TREE.createInstance(), Season.ALL, 0, 0, "", TreeAssetManager.getOakSapling()),
-    MAPLE_SAPLING("Maple Seeds", () -> TreeCreator.MAPLE_TREE.createInstance(), Season.ALL, 0, 0, "", TreeAssetManager.getMapleSapling()),
-    PINE_SAPLING("Pine Cones", () -> TreeCreator.PINE_TREE.createInstance(), Season.ALL, 0, 0, "", TreeAssetManager.getPineSapling()),
-    MAHOGANY_SAPLING("Mahogany Seeds", () -> TreeCreator.MAHOGANY_TREE.createInstance(), Season.ALL, 0, 0, "", TreeAssetManager.getMahoganySapling()),
-    MUSHROOM_SAPLING("Mushroom Tree Seeds", () -> TreeCreator.MUSHROOM_TREE.createInstance(), Season.ALL, 0, 0, "", TreeAssetManager.getMushroomSapling()),
-    MYSTIC_SAPLING("Mystic Tree Seeds", () -> TreeCreator.MYSTIC_TREE.createInstance(), Season.ALL, 0, 0, "", TreeAssetManager.getMysticSapling());
+    APPLE_SAPLING("Apple Sapling", () -> TreeCreator.APPLE_TREE.createInstance(), Season.ALL, 4000, 0, "Takes 28 days to produce a mature Apple tree. Bears fruit in the fall. Only grows if the 8 surrounding \"tiles\" are empty.", TreeAssetManager.getAppleSapling()),
+    POMEGRANATE_SAPLING("Pomegranate Sapling", () -> TreeCreator.POMEGRANATE_TREE.createInstance(), Season.ALL, 4000, 0, "...", TreeAssetManager.getPomegranateSapling()),
+    OAK_SAPLING("Acorns", () -> TreeCreator.OAK_TREE.createInstance(), Season.ALL, 4000, 0, "", TreeAssetManager.getOakSapling()),
+    MAPLE_SAPLING("Maple Seeds", () -> TreeCreator.MAPLE_TREE.createInstance(), Season.ALL, 4000, 0, "", TreeAssetManager.getMapleSapling()),
+    PINE_SAPLING("Pine Cones", () -> TreeCreator.PINE_TREE.createInstance(), Season.ALL, 4000, 0, "", TreeAssetManager.getPineSapling()),
+    MAHOGANY_SAPLING("Mahogany Seeds", () -> TreeCreator.MAHOGANY_TREE.createInstance(), Season.ALL, 4000, 0, "", TreeAssetManager.getMahoganySapling()),
+    MUSHROOM_SAPLING("Mushroom Tree Seeds", () -> TreeCreator.MUSHROOM_TREE.createInstance(), Season.ALL, 4000, 0, "", TreeAssetManager.getMushroomSapling()),
+    MYSTIC_SAPLING("Mystic Tree Seeds", () -> TreeCreator.MYSTIC_TREE.createInstance(), Season.ALL, 4000, 0, "", TreeAssetManager.getMysticSapling());
 
     private final String name;
     private final Supplier<PlantAble> factory;

@@ -1,7 +1,9 @@
 package org.Group34.model.entities.buildings.shops;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.buildings.shops.products.UpgradeTools;
 import org.Group34.model.enums.Color;
+import org.Group34.model.gameAssetManagers.BuildingsAssetManager;
 import org.Group34.model.items.Fertilizer;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.PlantingSource;
@@ -517,5 +519,10 @@ public class PierreGeneralStore extends Shop {
     @Override
     public String toString() {
         return Color.YELLOW + "P" + Color.RESET;
+    }
+
+    @Override
+    public Texture getTexture() {
+        return BuildingsAssetManager.pierreShop;
     }
 }
