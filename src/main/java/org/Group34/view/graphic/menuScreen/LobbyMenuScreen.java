@@ -20,6 +20,7 @@ import org.Group34.model.User;
 import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GraphicAppView;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -57,7 +58,6 @@ public class LobbyMenuScreen extends ScreenAdapter {
         lockTexture = new Texture(Gdx.files.internal("menuIcons/lockIcon.png")); // Load lock icon
         Gdx.input.setInputProcessor(stage);
         createUI();
-
         // Send current user to server if not already sent
         if (currentUser != null) {
             client.sendUser(currentUser);
@@ -149,6 +149,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
         statusLabel = new Label("", skin);
         statusLabel.setFontScale(1.1f);
         statusLabel.setColor(Color.RED);
+        mainTable.add(statusLabel).colspan(2).padTop(15);
 
         // Add everything to stage
         stage.addActor(backgroundImage);
@@ -288,6 +289,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
         // Populate with current lobby list
         updateLobbyList();
+
         return lobbyListTable;
     }
 
@@ -317,6 +319,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
         // Populate with joined lobbies
         updateJoinedLobbiesList();
+
         return joinedLobbiesTable;
     }
 
@@ -589,6 +592,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
             } else if (message.startsWith("JOINED_LOBBY:")) {
                 String lobbyId = message.substring("JOINED_LOBBY:".length());
                 showStatus(new Result(true, "Joined lobby: " + lobbyId));
+
                 // Find the lobby in the lobby list
                 for (LobbyInfo lobby : lobbyList) {
                     if (lobby.id.equals(lobbyId)) {
@@ -598,11 +602,13 @@ public class LobbyMenuScreen extends ScreenAdapter {
                                 lobby.id, lobby.name, lobby.players, lobby.maxPlayers,
                                 lobby.isPrivate, lobby.isVisible, lobby.adminUsername, isAdmin
                         );
+
                         // Add to joined lobbies if not already there
                         if (!joinedLobbyIds.contains(lobbyId)) {
                             joinedLobbies.add(joinedLobby);
                             joinedLobbyIds.add(lobbyId);
                         }
+
                         updateJoinedLobbiesList();
                         updateLobbyList();
                         break;
@@ -625,16 +631,14 @@ public class LobbyMenuScreen extends ScreenAdapter {
             } else if (message.startsWith("LOBBY_CREATED:")) {
                 String lobbyId = message.substring("LOBBY_CREATED:".length());
                 showStatus(new Result(true, "Lobby created with ID: " + lobbyId));
-                boolean isAdmin = true;
-                LobbyInfo newLobby = new LobbyInfo(
-                        lobbyId, "New Lobby", 1, 4,
-                        false, true, currentUser.getUsername(), isAdmin
-                );
+
+                // Don't create a hardcoded "New Lobby" entry
+                // Instead, just add the lobby ID to joined lobbies and refresh
                 if (!joinedLobbyIds.contains(lobbyId)) {
-                    joinedLobbies.add(newLobby);
                     joinedLobbyIds.add(lobbyId);
                 }
-                updateJoinedLobbiesList();
+
+                // Request updated lobby list from server
                 client.send("GET_LOBBIES");
             } else if (message.startsWith("GAME_STARTED:")) {
                 String lobbyId = message.substring("GAME_STARTED:".length());
@@ -676,10 +680,82 @@ public class LobbyMenuScreen extends ScreenAdapter {
                 boolean isPrivate = Boolean.parseBoolean(parts[4]);
                 boolean isVisible = Boolean.parseBoolean(parts[5]);
                 String adminUsername = parts[6];
-                lobbyList.add(new LobbyInfo(id, name, currentPlayers, maxPlayers, isPrivate, isVisible, adminUsername));
+                // Create lobby info
+                LobbyInfo lobbyInfo = new LobbyInfo(id, name, currentPlayers, maxPlayers, isPrivate, isVisible, adminUsername);
+                lobbyList.add(lobbyInfo);
+                // If this lobby is in joinedLobbyIds, update or add it to joinedLobbies
+                if (joinedLobbyIds.contains(id)) {
+                    boolean isAdmin = currentUser != null && currentUser.getUsername().equals(adminUsername);
+                    // Check if lobby already exists in joinedLobbies
+                    boolean found = false;
+                    for (LobbyInfo joinedLobby : joinedLobbies) {
+                        if (joinedLobby.id.equals(id)) {
+                            // Update existing lobby
+                            joinedLobby.name = name;
+                            joinedLobby.players = currentPlayers;
+                            joinedLobby.maxPlayers = maxPlayers;
+                            joinedLobby.isPrivate = isPrivate;
+                            joinedLobby.isVisible = isVisible;
+                            joinedLobby.adminUsername = adminUsername;
+                            joinedLobby.isAdmin = isAdmin;
+                            found = true;
+                            break;
+                        }
+                    }
+                    // If not found, add new entry
+                    if (!found) {
+                        joinedLobbies.add(new LobbyInfo(id, name, currentPlayers, maxPlayers, isPrivate, isVisible, adminUsername, isAdmin));
+                    }
+                }
             }
         }
+
+        // Remove lobbies from joinedLobbies that are no longer in the server lobby list
+        // This handles the case where the server has removed a lobby (e.g., single-player inactive lobby)
+        Iterator<LobbyInfo> iterator = joinedLobbies.iterator();
+        while (iterator.hasNext()) {
+            LobbyInfo joinedLobby = iterator.next();
+            boolean foundInServerList = false;
+            for (LobbyInfo serverLobby : lobbyList) {
+                if (joinedLobby.id.equals(serverLobby.id)) {
+                    foundInServerList = true;
+                    break;
+                }
+            }
+            if (!foundInServerList) {
+                // Remove from joinedLobbyIds as well
+                joinedLobbyIds.remove(joinedLobby.id);
+                iterator.remove();
+            }
+        }
+
+        // Also remove any lobbies that have 0 players or only 1 player (for safety)
+        checkForEmptyLobbies();
+
         updateLobbyList();
+        updateJoinedLobbiesList();
+    }
+
+    private void checkForEmptyLobbies() {
+        // Check for empty lobbies in joinedLobbies (only remove if 0 players)
+        Iterator<LobbyInfo> iterator = joinedLobbies.iterator();
+        while (iterator.hasNext()) {
+            LobbyInfo lobby = iterator.next();
+            if (lobby.players <= 0) {  // Only remove if no players
+                // Remove from joinedLobbyIds as well
+                joinedLobbyIds.remove(lobby.id);
+                iterator.remove();
+            }
+        }
+
+        // Check for empty lobbies in lobbyList (only remove if 0 players)
+        iterator = lobbyList.iterator();
+        while (iterator.hasNext()) {
+            LobbyInfo lobby = iterator.next();
+            if (lobby.players <= 0) {  // Only remove if no players
+                iterator.remove();
+            }
+        }
     }
 
     private void startAutoRefresh() {
@@ -734,13 +810,13 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
     private static class LobbyInfo {
         final String id;
-        final String name;
-        final int players;
-        final int maxPlayers;
-        final boolean isPrivate;
-        final boolean isVisible;
-        final String adminUsername;
-        final boolean isAdmin;
+        String name;
+        int players;
+        int maxPlayers;
+        boolean isPrivate;
+        boolean isVisible;
+        String adminUsername;
+        boolean isAdmin;
 
         // Constructor for lobbies from server
         LobbyInfo(String id, String name, int players, int maxPlayers, boolean isPrivate, boolean isVisible, String adminUsername) {
