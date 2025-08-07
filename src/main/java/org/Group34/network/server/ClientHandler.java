@@ -41,16 +41,16 @@ public class ClientHandler extends Thread {
                     System.out.println("ClientHandler #" + handlerId + " sending response: " + response);
                     out.writeObject(response);
                 } else if (input instanceof User) {
-                    // Handle user object
                     currentUser = (User) input;
+                    String response = lobbyManager.connectUser(currentUser);
                     System.out.println("ClientHandler #" + handlerId + " set user to: " + currentUser.getUsername());
-                    out.writeObject("USER_SET:" + currentUser.getUsername());
+                    out.writeObject(response);
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("ClientHandler #" + handlerId + " disconnected: " + socket.getInetAddress());
             if (currentUser != null) {
-                System.out.println("ClientHandler #" + handlerId + " removing user " + currentUser.getUsername() + " from lobby");
+                lobbyManager.disconnectUser(currentUser);
                 lobbyManager.leaveLobby(currentUser);
             }
         }
@@ -61,8 +61,10 @@ public class ClientHandler extends Thread {
             switch (command) {
                 case "GET_LOBBIES":
                     return lobbyManager.getLobbies();
+
                 case "SEARCH_LOBBY":
                     return lobbyManager.searchLobby(param1);
+
                 case "CREATE_LOBBY":
                     String lobbyName = param1;
                     boolean isPrivate = Boolean.parseBoolean(param2);
@@ -73,6 +75,7 @@ public class ClientHandler extends Thread {
                     }
                     String lobbyId = lobbyManager.createLobby(lobbyName, isPrivate, isVisible, password, currentUser);
                     return "LOBBY_CREATED:" + lobbyId;
+
                 case "JOIN_LOBBY":
                     String lobbyIdToJoin = param1;
                     String joinPassword = param2.isEmpty() ? "" : param2;
@@ -80,21 +83,28 @@ public class ClientHandler extends Thread {
                         return "ERROR:User not set";
                     }
                     return lobbyManager.joinLobby(currentUser, lobbyIdToJoin, joinPassword);
+
                 case "START_GAME":
                     String lobbyIdToStart = param1;
                     if (currentUser == null) {
                         return "ERROR:User not set";
                     }
                     return lobbyManager.startGame(lobbyIdToStart, currentUser);
+
                 case "GET_PLAYERS":
                     String lobbyIdForPlayers = param1;
                     return lobbyManager.getPlayers(lobbyIdForPlayers);
+
                 case "LEAVE_LOBBY":
                     String lobbyIdToLeave = param1;
                     if (currentUser == null) {
                         return "ERROR:User not set";
                     }
                     return lobbyManager.leaveLobby(currentUser, lobbyIdToLeave);
+
+                case "GET_ALL_PLAYERS":
+                    return lobbyManager.getAllPlayers();
+
                 default:
                     System.out.println("ClientHandler #" + handlerId + " unknown command: " + command);
                     return "UNKNOWN_COMMAND";

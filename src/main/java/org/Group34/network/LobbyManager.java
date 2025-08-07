@@ -9,6 +9,7 @@ public class LobbyManager {
     private final Map<User, String> userLobbyMap = new ConcurrentHashMap<>();
     private final Random random = new Random();
     private final Timer cleanupTimer = new Timer();
+    private final Set<User> connectedUsers = Collections.synchronizedSet(new HashSet<>());
 
     public LobbyManager() {
         cleanupTimer.schedule(new TimerTask() {
@@ -17,6 +18,16 @@ public class LobbyManager {
                 cleanupInactiveLobbies();
             }
         }, 60000, 60000);
+    }
+
+    public synchronized String connectUser(User user) {
+        connectedUsers.add(user);
+        return "USER_CONNECTED:" + user.getUsername();
+    }
+
+    public synchronized String disconnectUser(User user) {
+        connectedUsers.remove(user);
+        return "USER_DISCONNECTED:" + user.getUsername();
     }
 
     public synchronized String createLobby(String name, boolean isPrivate, boolean isVisible, String password, User creator) {
@@ -210,6 +221,16 @@ public class LobbyManager {
                 System.out.println("Removed inactive empty lobby: " + lobby.id + " (" + lobby.name + ")");
             }
         }
+    }
+
+    public synchronized String getAllPlayers() {
+        StringBuilder sb = new StringBuilder("ALL_PLAYERS:");
+        // Add all connected users first
+        for (User user : connectedUsers) {
+            String lobbyId = userLobbyMap.getOrDefault(user, "Not in lobby");
+            sb.append(user.getUsername()).append(",").append(lobbyId).append("|");
+        }
+        return sb.toString();
     }
 
     private static class Lobby {

@@ -17,11 +17,9 @@ import org.Group34.model.Result;
 import org.Group34.model.User;
 import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GraphicAppView;
-import java.util.ArrayList;
-import java.util.Iterator;
+
+import java.util.*;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class LobbyMenuScreen extends ScreenAdapter {
     private final Stage stage;
@@ -41,7 +39,8 @@ public class LobbyMenuScreen extends ScreenAdapter {
     private Timer refreshTimer;
     private User currentUser;
     private Texture lockTexture;
-    private Dialog playerListDialog; // For player list dialog
+    private Dialog playerListDialog;
+    private Dialog allPlayersDialog;
 
     public LobbyMenuScreen(Skin skin, GraphicAppView app, GameClient client, Game game) {
         this.skin = skin;
@@ -109,11 +108,18 @@ public class LobbyMenuScreen extends ScreenAdapter {
         scrollPane.setScrollingDisabled(true, false); // Allow vertical scrolling only
         leftSection.add(scrollPane).grow().row();
 
-        // Only refresh button in left section now
+        // Refresh button in left section now
         Table buttonsRow = new Table();
         TextButton refreshButton = new TextButton("Refresh", skin);
         refreshButton.pad(0, 15, 8, 15);
         buttonsRow.add(refreshButton).width(250);
+        leftSection.add(buttonsRow).padTop(15).row();
+
+        // Add Player's List button
+        TextButton playersListButton = new TextButton("Player's List", skin);
+        playersListButton.pad(0, 15, 8, 15);
+        buttonsRow.add(playersListButton).width(120);
+
         leftSection.add(buttonsRow).padTop(15).row();
 
         // Right section - Joined Lobbies
@@ -167,6 +173,13 @@ public class LobbyMenuScreen extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 client.send("GET_LOBBIES");
                 showStatus(new Result(true, "Lobby list refreshed"));
+            }
+        });
+
+        playersListButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                client.send("GET_ALL_PLAYERS");
             }
         });
 
@@ -591,11 +604,82 @@ public class LobbyMenuScreen extends ScreenAdapter {
         playerListDialog.show(stage);
     }
 
+    private void showAllPlayersDialog(Map<String, String> playerLobbyMap) {
+        if (allPlayersDialog != null) {
+            allPlayersDialog.hide();
+        }
+
+        allPlayersDialog = new Dialog("All Online Players", skin);
+        allPlayersDialog.pad(20);
+
+        // Create table for player list
+        Table playerTable = new Table();
+        playerTable.top();
+
+        // Header row
+        playerTable.add(new Label("Player Name", skin)).width(200).pad(5);
+        playerTable.add(new Label("Status", skin)).width(200).pad(5);
+        playerTable.row();
+
+        // Add separator
+        playerTable.add(new Label("----------------", skin)).width(200).pad(5);
+        playerTable.add(new Label("----------------", skin)).width(200).pad(5);
+        playerTable.row();
+
+        // Add players
+        for (Map.Entry<String, String> entry : playerLobbyMap.entrySet()) {
+            String playerName = entry.getKey();
+            String lobbyId = entry.getValue();
+
+            playerTable.add(new Label(playerName, skin)).left().pad(5);
+
+            // Show lobby name if in a lobby, otherwise show "Not in lobby"
+            String status = "Not in lobby";
+            if (!lobbyId.equals("Not in lobby")) {
+                // Find lobby name
+                for (LobbyInfo lobby : lobbyList) {
+                    if (lobby.id.equals(lobbyId)) {
+                        status = "In lobby: " + lobby.name;
+                        break;
+                    }
+                }
+                // Also check joined lobbies in case it's not in the main list
+                for (LobbyInfo lobby : joinedLobbies) {
+                    if (lobby.id.equals(lobbyId)) {
+                        status = "In lobby: " + lobby.name;
+                        break;
+                    }
+                }
+            }
+
+            playerTable.add(new Label(status, skin)).left().pad(5);
+            playerTable.row();
+        }
+
+        ScrollPane scrollPane = new ScrollPane(playerTable, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        allPlayersDialog.getContentTable().add(scrollPane).width(420).maxHeight(300);
+
+        TextButton closeButton = new TextButton("Close", skin);
+        closeButton.pad(10, 20, 10, 20);
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                allPlayersDialog.hide();
+            }
+        });
+
+        allPlayersDialog.getButtonTable().add(closeButton).padTop(10);
+        allPlayersDialog.show(stage);
+    }
+
     public void handleServerMessage(String message) {
         Gdx.app.postRunnable(() -> {
             if (message.startsWith("LOBBY_LIST:")) {
                 updateLobbyListFromServer(message.substring("LOBBY_LIST:".length()));
-            } else if (message.startsWith("JOINED_LOBBY:")) {
+            }
+            else if (message.startsWith("JOINED_LOBBY:")) {
                 String lobbyId = message.substring("JOINED_LOBBY:".length());
                 showStatus(new Result(true, "Joined lobby: " + lobbyId));
 
@@ -620,7 +704,8 @@ public class LobbyMenuScreen extends ScreenAdapter {
                         break;
                     }
                 }
-            } else if (message.startsWith("LEFT_LOBBY:")) {
+            }
+            else if (message.startsWith("LEFT_LOBBY:")) {
                 String lobbyId = message.substring("LEFT_LOBBY:".length());
                 showStatus(new Result(true, "Left lobby: " + lobbyId));
 
@@ -634,7 +719,8 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
                 // Refresh lobby list from server to get updated admin info
                 client.send("GET_LOBBIES");
-            } else if (message.startsWith("LOBBY_CREATED:")) {
+            }
+            else if (message.startsWith("LOBBY_CREATED:")) {
                 String lobbyId = message.substring("LOBBY_CREATED:".length());
                 showStatus(new Result(true, "Lobby created with ID: " + lobbyId));
 
@@ -646,11 +732,13 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
                 // Request updated lobby list from server
                 client.send("GET_LOBBIES");
-            } else if (message.startsWith("GAME_STARTED:")) {
+            }
+            else if (message.startsWith("GAME_STARTED:")) {
                 String lobbyId = message.substring("GAME_STARTED:".length());
                 showStatus(new Result(true, "Game starting in lobby: " + lobbyId));
                 game.setScreen(new GameMenuScreen(skin, game, app, client));
-            } else if (message.startsWith("PLAYER_LIST:")) {
+            }
+            else if (message.startsWith("PLAYER_LIST:")) {
                 String[] parts = message.split(":", 3);
                 if (parts.length >= 3) {
                     String lobbyId = parts[1];
@@ -665,7 +753,25 @@ public class LobbyMenuScreen extends ScreenAdapter {
                         showPlayerListDialog(lobbyId, adminUsername, players);
                     }
                 }
-            } else if (message.startsWith("ERROR:")) {
+            }
+            else if (message.startsWith("ALL_PLAYERS:")) {
+                // Handle the all players response
+                String playersData = message.substring("ALL_PLAYERS:".length());
+                if (!playersData.isEmpty()) {
+                    Map<String, String> playerLobbyMap = new LinkedHashMap<>();
+                    String[] playerEntries = playersData.split("\\|");
+                    for (String entry : playerEntries) {
+                        String[] parts = entry.split(",");
+                        if (parts.length == 2) {
+                            playerLobbyMap.put(parts[0], parts[1]);
+                        }
+                    }
+                    showAllPlayersDialog(playerLobbyMap);
+                } else {
+                    showStatus(new Result(false, "No players online"));
+                }
+            }
+            else if (message.startsWith("ERROR:")) {
                 String errorMsg = message.substring("ERROR:".length());
                 showStatus(new Result(false, errorMsg));
             }
