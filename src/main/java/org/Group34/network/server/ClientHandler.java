@@ -79,6 +79,15 @@ public class ClientHandler extends Thread {
                         return "ERROR:User not set";
                     }
                     return lobbyManager.joinLobby(currentUser, lobbyIdToJoin, joinPassword);
+                case "START_GAME":
+                    String lobbyIdToStart = param1;
+                    if (currentUser == null) {
+                        return "ERROR:User not set";
+                    }
+                    return lobbyManager.startGame(lobbyIdToStart, currentUser);
+                case "GET_PLAYERS":
+                    String lobbyIdForPlayers = param1;
+                    return lobbyManager.getPlayers(lobbyIdForPlayers);
                 default:
                     System.out.println("ClientHandler #" + handlerId + " unknown command: " + command);
                     return "UNKNOWN_COMMAND";

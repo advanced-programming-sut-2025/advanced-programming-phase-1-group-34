@@ -75,7 +75,8 @@ public class LobbyManager {
                     .append(lobby.players.size()).append(",")
                     .append(lobby.maxPlayers).append(",")
                     .append(lobby.isPrivate).append(",")
-                    .append(lobby.isVisible).append("|"); // Added visibility flag
+                    .append(lobby.isVisible).append(",")
+                    .append(lobby.admin.getUsername()).append("|"); // Add admin username
         }
         return sb.toString();
     }
@@ -91,11 +92,43 @@ public class LobbyManager {
                         .append(lobby.players.size()).append(",")
                         .append(lobby.maxPlayers).append(",")
                         .append(lobby.isPrivate).append(",")
-                        .append(lobby.isVisible).append("|"); // Added visibility flag
+                        .append(lobby.isVisible).append(",")
+                        .append(lobby.admin.getUsername()).append("|"); // Add admin username
                 found = true;
             }
         }
         return found ? sb.toString() : "LOBBY_LIST:";
+    }
+
+    public synchronized String startGame(String lobbyId, User user) {
+        Lobby lobby = lobbies.get(lobbyId);
+        if (lobby == null) {
+            return "ERROR:Lobby not found";
+        }
+        if (!lobby.admin.equals(user)) {
+            return "ERROR:Only the lobby admin can start the game";
+        }
+        // Here you would implement the game start logic
+        // For now, just return success
+        return "GAME_STARTED:" + lobbyId;
+    }
+
+    public synchronized String getPlayers(String lobbyId) {
+        Lobby lobby = lobbies.get(lobbyId);
+        if (lobby == null) {
+            return "ERROR:Lobby not found";
+        }
+        StringBuilder sb = new StringBuilder("PLAYER_LIST:");
+        sb.append(lobbyId).append(":");
+        // First, add the admin
+        sb.append(lobby.admin.getUsername());
+        // Then add other players (excluding the admin)
+        for (User player : lobby.players) {
+            if (!player.equals(lobby.admin)) {
+                sb.append(",").append(player.getUsername());
+            }
+        }
+        return sb.toString();
     }
 
     private String generateLobbyId() {

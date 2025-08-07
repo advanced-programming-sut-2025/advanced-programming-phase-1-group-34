@@ -5,11 +5,14 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.model.App;
 import org.Group34.model.Result;
@@ -31,16 +34,16 @@ public class LobbyMenuScreen extends ScreenAdapter {
     private final GraphicAppView app;
     private GameClient client;
     private Table lobbyListTable;
+    private Table joinedLobbiesTable;
     private TextField searchField;
-    private TextField lobbyNameField;
-    private TextField passwordField;
-    private CheckBox privateCheckBox;
-    private CheckBox visibleCheckBox;
     private final List<LobbyInfo> lobbyList = new ArrayList<>();
+    private final List<LobbyInfo> joinedLobbies = new ArrayList<>();
+    private final List<String> joinedLobbyIds = new ArrayList<>(); // Track joined lobby IDs
     private Timer refreshTimer;
-    private User currentUser; // Store current user
+    private User currentUser;
+    private Texture lockTexture;
+    private Dialog playerListDialog; // For player list dialog
 
-    // In the constructor of LobbyMenuScreen
     public LobbyMenuScreen(Skin skin, GraphicAppView app, GameClient client, Game game) {
         this.skin = skin;
         this.app = app;
@@ -51,7 +54,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
         backgroundImage.setFillParent(true);
         this.client = client;
         this.currentUser = App.getCurrentUser();
-
+        lockTexture = new Texture(Gdx.files.internal("menuIcons/lockIcon.png")); // Load lock icon
         Gdx.input.setInputProcessor(stage);
         createUI();
 
@@ -59,102 +62,100 @@ public class LobbyMenuScreen extends ScreenAdapter {
         if (currentUser != null) {
             client.sendUser(currentUser);
         }
-
         startAutoRefresh();
     }
 
     private void createUI() {
         Table mainTable = new Table();
         mainTable.setFillParent(true);
+        mainTable.pad(20); // Add padding to the main table
 
         // Left section - Search and Join Lobbies
         Table leftSection = new Table();
-        leftSection.pad(20);
+        leftSection.pad(15);
+
+        // Search section (without search button)
         Label searchLabel = new Label("Search Lobbies:", skin);
+        searchLabel.setFontScale(1.1f);
         searchField = new TextField("", skin);
         searchField.setMessageText("Enter lobby ID or name...");
-        TextButton searchButton = new TextButton("Search", skin);
-        TextButton refreshButton = new TextButton("Refresh", skin);
+
+        // Add enter key listener to search field
+        searchField.setTextFieldListener(new TextField.TextFieldListener() {
+            @Override
+            public void keyTyped(TextField textField, char c) {
+                if (c == '\r' || c == '\n') { // Enter key
+                    String searchTerm = searchField.getText().trim();
+                    if (!searchTerm.isEmpty()) {
+                        client.send("SEARCH_LOBBY " + searchTerm);
+                    } else {
+                        client.send("GET_LOBBIES");
+                    }
+                }
+            }
+        });
+
         Table searchRow = new Table();
         searchRow.add(searchLabel).padRight(10);
-        searchRow.add(searchField).width(200).padRight(10);
-        searchRow.add(searchButton).padRight(10);
-        searchRow.add(refreshButton);
-        leftSection.add(searchRow).padBottom(20).row();
+        searchRow.add(searchField).width(300).growX(); // Make search field wider
+        leftSection.add(searchRow).padBottom(15).row();
+
+        // Lobby list title
+        Label lobbyListLabel = new Label("Available Lobbies", skin);
+        lobbyListLabel.setFontScale(1.2f);
+        leftSection.add(lobbyListLabel).left().padBottom(10).row();
 
         // Lobby list
-        Label lobbyListLabel = new Label("Available Lobbies:", skin);
-        leftSection.add(lobbyListLabel).left().padBottom(10).row();
         ScrollPane scrollPane = new ScrollPane(createLobbyListTable(), skin);
         scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false); // Allow vertical scrolling only
         leftSection.add(scrollPane).grow().row();
 
-        // Right section - Create New Lobby
-        Table rightSection = new Table();
-        rightSection.pad(20);
-        Label createLabel = new Label("Create New Lobby", skin);
-        createLabel.setFontScale(1.2f);
-        rightSection.add(createLabel).padBottom(20).row();
-
-        Label nameLabel = new Label("Lobby Name:", skin);
-        lobbyNameField = new TextField("", skin);
-        lobbyNameField.setMessageText("Enter lobby name");
-        Table nameRow = new Table();
-        nameRow.add(nameLabel).padRight(10);
-        nameRow.add(lobbyNameField).width(250);
-        rightSection.add(nameRow).padBottom(15).row();
-
-        privateCheckBox = new CheckBox("Private Lobby", skin);
-        rightSection.add(privateCheckBox).left().padBottom(10).row();
-
-        visibleCheckBox = new CheckBox("Visible Lobby", skin);
-        visibleCheckBox.setChecked(true);
-        rightSection.add(visibleCheckBox).left().padBottom(10).row();
-
-        Label passwordLabel = new Label("Password:", skin);
-        passwordField = new TextField("", skin);
-        passwordField.setMessageText("Enter password");
-        passwordField.setPasswordCharacter('*');
-        passwordField.setPasswordMode(true);
-        passwordField.setVisible(false);
-        Table passwordRow = new Table();
-        passwordRow.add(passwordLabel).padRight(10);
-        passwordRow.add(passwordField).width(250);
-        rightSection.add(passwordRow).padBottom(20).row();
-
-        TextButton createButton = new TextButton("Create Lobby", skin);
-        rightSection.add(createButton).width(150).padBottom(20).row();
-
-        // Back button
+        // Buttons below lobby list
+        Table buttonsRow = new Table();
         TextButton backButton = new TextButton("Back to Main Menu", skin);
-        rightSection.add(backButton).padTop(50);
+        backButton.pad(8, 15, 8, 15);
+        buttonsRow.add(backButton).width(180).padRight(10);
+        TextButton refreshButton = new TextButton("Refresh", skin);
+        refreshButton.pad(8, 15, 8, 15);
+        buttonsRow.add(refreshButton).width(120);
+        leftSection.add(buttonsRow).padTop(15).row();
 
-        // Add sections to main table
-        mainTable.add(leftSection).width(Gdx.graphics.getWidth() * 0.6f).height(Gdx.graphics.getHeight() * 0.8f);
+        // Right section - Joined Lobbies
+        Table rightSection = new Table();
+        rightSection.pad(15);
+
+        // Create Lobby Button
+        TextButton createLobbyButton = new TextButton("Create New Lobby", skin);
+        createLobbyButton.pad(8, 15, 8, 15);
+        rightSection.add(createLobbyButton).width(180).padBottom(15).row();
+
+        // Joined Lobbies title
+        Label joinedLobbiesLabel = new Label("Your Lobbies", skin);
+        joinedLobbiesLabel.setFontScale(1.2f);
+        rightSection.add(joinedLobbiesLabel).left().padBottom(10).row();
+
+        // Joined Lobbies list
+        ScrollPane joinedScrollPane = new ScrollPane(createJoinedLobbiesTable(), skin);
+        joinedScrollPane.setFadeScrollBars(false);
+        joinedScrollPane.setScrollingDisabled(true, false); // Allow vertical scrolling only
+        rightSection.add(joinedScrollPane).grow().row();
+
+        // Add sections to main table with spacing
+        mainTable.add(leftSection).width(Gdx.graphics.getWidth() * 0.6f).height(Gdx.graphics.getHeight() * 0.8f).padRight(15);
         mainTable.add(rightSection).width(Gdx.graphics.getWidth() * 0.4f).height(Gdx.graphics.getHeight() * 0.8f);
 
         // Status label
         statusLabel = new Label("", skin);
+        statusLabel.setFontScale(1.1f);
         statusLabel.setColor(Color.RED);
-        mainTable.add(statusLabel).colspan(2).padTop(20);
+        mainTable.add(statusLabel).colspan(2).padTop(15);
 
         // Add everything to stage
         stage.addActor(backgroundImage);
         stage.addActor(mainTable);
 
         // Button listeners
-        searchButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                String searchTerm = searchField.getText().trim();
-                if (!searchTerm.isEmpty()) {
-                    client.send("SEARCH_LOBBY " + searchTerm);
-                } else {
-                    client.send("GET_LOBBIES");
-                }
-            }
-        });
-
         refreshButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -163,34 +164,10 @@ public class LobbyMenuScreen extends ScreenAdapter {
             }
         });
 
-        privateCheckBox.addListener(new ClickListener() {
+        createLobbyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                passwordField.setVisible(privateCheckBox.isChecked());
-            }
-        });
-
-        createButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (currentUser == null) {
-                    showStatus(new Result(false, "User not logged in"));
-                    return;
-                }
-
-                String lobbyName = lobbyNameField.getText().trim();
-                if (lobbyName.isEmpty()) {
-                    showStatus(new Result(false, "Please enter a lobby name"));
-                    return;
-                }
-                boolean isPrivate = privateCheckBox.isChecked();
-                boolean isVisible = visibleCheckBox.isChecked();
-                String password = isPrivate ? passwordField.getText().trim() : "";
-                if (isPrivate && password.isEmpty()) {
-                    showStatus(new Result(false, "Please enter a password for private lobby"));
-                    return;
-                }
-                client.send("CREATE_LOBBY " + lobbyName + " " + isPrivate + " " + isVisible + " " + password);
+                showCreateLobbyDialog();
             }
         });
 
@@ -203,37 +180,152 @@ public class LobbyMenuScreen extends ScreenAdapter {
         });
     }
 
+    private void showCreateLobbyDialog() {
+        Dialog createDialog = new Dialog("Create New Lobby", skin);
+        createDialog.pad(20);
+
+        // Lobby Name
+        Label nameLabel = new Label("Lobby Name:", skin);
+        nameLabel.setFontScale(1.1f);
+        TextField nameField = new TextField("", skin);
+        nameField.setMessageText("Enter lobby name");
+        Table nameRow = new Table();
+        nameRow.add(nameLabel).padRight(15);
+        nameRow.add(nameField).width(250);
+        createDialog.getContentTable().add(nameRow).pad(15).row();
+
+        // Private Lobby
+        CheckBox privateField = new CheckBox("Private Lobby", skin);
+        privateField.getImageCell().padRight(8);
+        createDialog.getContentTable().add(privateField).left().pad(10).row();
+
+        // Visible Lobby
+        CheckBox visibleField = new CheckBox("Visible Lobby", skin);
+        visibleField.setChecked(true);
+        visibleField.getImageCell().padRight(8);
+        createDialog.getContentTable().add(visibleField).left().pad(10).row();
+
+        // Password (initially hidden)
+        Label passwordLabel = new Label("Password:", skin);
+        passwordLabel.setFontScale(1.1f);
+        TextField passwordField = new TextField("", skin);
+        passwordField.setPasswordCharacter('*');
+        passwordField.setPasswordMode(true);
+        passwordField.setVisible(false);
+        Table passwordRow = new Table();
+        passwordRow.add(passwordLabel).padRight(15);
+        passwordRow.add(passwordField).width(250);
+        createDialog.getContentTable().add(passwordRow).pad(15).row();
+
+        // Show/hide password field based on private checkbox
+        privateField.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                passwordField.setVisible(privateField.isChecked());
+            }
+        });
+
+        // Buttons
+        TextButton createButton = new TextButton("Create", skin);
+        createButton.pad(10, 20, 10, 20);
+        TextButton cancelButton = new TextButton("Cancel", skin);
+        cancelButton.pad(10, 20, 10, 20);
+
+        createButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String lobbyName = nameField.getText().trim();
+                if (lobbyName.isEmpty()) {
+                    showStatus(new Result(false, "Please enter a lobby name"));
+                    return;
+                }
+                boolean isPrivate = privateField.isChecked();
+                boolean isVisible = visibleField.isChecked();
+                String password = isPrivate ? passwordField.getText().trim() : "";
+                if (isPrivate && password.isEmpty()) {
+                    showStatus(new Result(false, "Please enter a password for private lobby"));
+                    return;
+                }
+                client.send("CREATE_LOBBY " + lobbyName + " " + isPrivate + " " + isVisible + " " + password);
+                createDialog.hide();
+            }
+        });
+
+        cancelButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                createDialog.hide();
+            }
+        });
+
+        createDialog.getButtonTable().add(cancelButton).padRight(15);
+        createDialog.getButtonTable().add(createButton);
+        createDialog.show(stage);
+    }
+
     private Table createLobbyListTable() {
         lobbyListTable = new Table();
         lobbyListTable.top();
-        // Header row
-        lobbyListTable.add(new Label("ID", skin)).width(80).pad(5);
-        lobbyListTable.add(new Label("Name", skin)).width(150).pad(5);
-        lobbyListTable.add(new Label("Players", skin)).width(100).pad(5);
-        lobbyListTable.add(new Label("Type", skin)).width(100).pad(5);
-        lobbyListTable.add(new Label("Visibility", skin)).width(100).pad(5);
-        lobbyListTable.add(new Label("Action", skin)).width(100).pad(5);
+
+        // Header row with lock icon
+        lobbyListTable.add().width(25); // Space for lock icon
+        lobbyListTable.add(new Label("ID", skin)).width(70).pad(5);
+        lobbyListTable.add(new Label("Name", skin)).width(220).pad(5);
+        lobbyListTable.add(new Label("Players", skin)).width(90).pad(5);
+        lobbyListTable.add(new Label("Action", skin)).width(110).pad(5);
         lobbyListTable.row();
-        // Add separator
-        lobbyListTable.add(new Label("----------", skin)).width(80).pad(5);
-        lobbyListTable.add(new Label("----------------", skin)).width(150).pad(5);
-        lobbyListTable.add(new Label("----------", skin)).width(100).pad(5);
-        lobbyListTable.add(new Label("----------", skin)).width(100).pad(5);
-        lobbyListTable.add(new Label("----------", skin)).width(100).pad(5);
-        lobbyListTable.add(new Label("----------", skin)).width(100).pad(5);
+
+        // Add separator with better styling
+        lobbyListTable.add(new Label("", skin)).width(25).pad(5);
+        lobbyListTable.add(new Label("---", skin)).width(70).pad(5);
+        lobbyListTable.add(new Label("------------------------", skin)).width(220).pad(5);
+        lobbyListTable.add(new Label("---------", skin)).width(90).pad(5);
+        lobbyListTable.add(new Label("-----------", skin)).width(110).pad(5);
         lobbyListTable.row();
+
+        // Add some space after header
+        lobbyListTable.add().colspan(5).height(10);
+        lobbyListTable.row();
+
         // Populate with current lobby list
         updateLobbyList();
         return lobbyListTable;
     }
 
+    private Table createJoinedLobbiesTable() {
+        joinedLobbiesTable = new Table();
+        joinedLobbiesTable.top();
+
+        // Header row with lock icon
+        joinedLobbiesTable.add().width(25); // Space for lock icon
+        joinedLobbiesTable.add(new Label("ID", skin)).width(70).pad(5);
+        joinedLobbiesTable.add(new Label("Name", skin)).width(160).pad(5);
+        joinedLobbiesTable.add(new Label("Players", skin)).width(90).pad(5);
+        joinedLobbiesTable.add(new Label("Action", skin)).width(90).pad(5);
+        joinedLobbiesTable.row();
+
+        // Add separator with better styling
+        joinedLobbiesTable.add(new Label("", skin)).width(25).pad(5);
+        joinedLobbiesTable.add(new Label("---", skin)).width(70).pad(5);
+        joinedLobbiesTable.add(new Label("----------------", skin)).width(160).pad(5);
+        joinedLobbiesTable.add(new Label("---------", skin)).width(90).pad(5);
+        joinedLobbiesTable.add(new Label("--------", skin)).width(90).pad(5);
+        joinedLobbiesTable.row();
+
+        // Add some space after header
+        joinedLobbiesTable.add().colspan(5).height(10);
+        joinedLobbiesTable.row();
+
+        // Populate with joined lobbies
+        updateJoinedLobbiesList();
+        return joinedLobbiesTable;
+    }
+
     private void updateLobbyList() {
-        // Clear existing cells (except header)
-        if (lobbyListTable.getCells().size > 12) {
-            for (int i = lobbyListTable.getCells().size - 1; i >= 12; i--) {
-                lobbyListTable.removeActor(lobbyListTable.getCells().get(i).getActor());
-                lobbyListTable.getCells().removeIndex(i);
-            }
+        // Clear all cells except the header (first 3 rows)
+        for (int i = lobbyListTable.getCells().size - 1; i >= 15; i--) {
+            lobbyListTable.removeActor(lobbyListTable.getCells().get(i).getActor());
+            lobbyListTable.getCells().removeIndex(i);
         }
 
         // Check if we're in search mode
@@ -242,6 +334,11 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
         // Add lobby rows
         for (LobbyInfo lobby : lobbyList) {
+            // Skip lobbies that the user has already joined
+//            if (joinedLobbyIds.contains(lobby.id)) {
+//                continue;
+//            }
+
             // Only show visible lobbies OR invisible lobbies with exact name match
             if (!lobby.isVisible && !isSearchMode) {
                 continue; // Skip invisible lobbies when not searching
@@ -250,17 +347,45 @@ public class LobbyMenuScreen extends ScreenAdapter {
                 continue; // Skip invisible lobbies that don't match search term exactly
             }
 
-            lobbyListTable.add(new Label(lobby.id, skin)).width(80).pad(5);
-            lobbyListTable.add(new Label(lobby.name, skin)).width(150).pad(5);
-            lobbyListTable.add(new Label(lobby.players + "/" + lobby.maxPlayers, skin)).width(100).pad(5);
-            lobbyListTable.add(new Label(lobby.isPrivate ? "Private" : "Public", skin)).width(100).pad(5);
+            // Add some space between rows
+            lobbyListTable.add().colspan(5).height(5);
+            lobbyListTable.row();
 
-            // Add visibility status with color coding
-            Label visibilityLabel = new Label(lobby.isVisible ? "Visible" : "Invisible", skin);
-            visibilityLabel.setColor(lobby.isVisible ? Color.GREEN : Color.RED);
-            lobbyListTable.add(visibilityLabel).width(100).pad(5);
+            // Lock icon for private lobbies
+            if (lobby.isPrivate) {
+                Image lockImage = new Image(lockTexture);
+                lockImage.setScaling(Scaling.fit);
+                lobbyListTable.add(lockImage).size(18, 18).padRight(5);
+            } else {
+                lobbyListTable.add().width(25); // Empty space for alignment
+            }
 
+            // ID with better styling
+            Label idLabel = new Label(lobby.id, skin);
+            idLabel.setFontScale(0.95f);
+            lobbyListTable.add(idLabel).width(70).pad(5);
+
+            // Lobby name with color based on visibility
+            Label nameLabel = new Label(lobby.name, skin);
+            nameLabel.setFontScale(1.0f);
+            nameLabel.setColor(lobby.isVisible ? Color.WHITE : Color.RED);
+            lobbyListTable.add(nameLabel).width(220).pad(5);
+
+            // Player count button
+            TextButton playerButton = new TextButton(lobby.players + "/" + lobby.maxPlayers, skin);
+            playerButton.pad(8, 15, 8, 15);
+            playerButton.setUserObject(lobby.id); // Store lobby ID for later use
+            playerButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    client.send("GET_PLAYERS " + lobby.id);
+                }
+            });
+            lobbyListTable.add(playerButton).width(90).pad(5);
+
+            // Join button (only for lobbies user hasn't joined)
             TextButton joinButton = new TextButton("Join", skin);
+            joinButton.pad(8, 15, 8, 15);
             final String lobbyId = lobby.id;
             joinButton.addListener(new ClickListener() {
                 @Override
@@ -269,7 +394,6 @@ public class LobbyMenuScreen extends ScreenAdapter {
                         showStatus(new Result(false, "User not logged in"));
                         return;
                     }
-
                     if (lobby.isPrivate) {
                         showPasswordDialog(lobbyId);
                     } else {
@@ -277,19 +401,96 @@ public class LobbyMenuScreen extends ScreenAdapter {
                     }
                 }
             });
-            lobbyListTable.add(joinButton).width(100).pad(5);
+            lobbyListTable.add(joinButton).width(110).pad(5);
             lobbyListTable.row();
+        }
+    }
+
+    private void updateJoinedLobbiesList() {
+        // Clear all cells except the header (first 3 rows)
+        for (int i = joinedLobbiesTable.getCells().size - 1; i >= 15; i--) {
+            joinedLobbiesTable.removeActor(joinedLobbiesTable.getCells().get(i).getActor());
+            joinedLobbiesTable.getCells().removeIndex(i);
+        }
+
+        // Add joined lobby rows
+        for (LobbyInfo lobby : joinedLobbies) {
+            // Add some space between rows
+            joinedLobbiesTable.add().colspan(5).height(5);
+            joinedLobbiesTable.row();
+
+            // Lock icon for private lobbies
+            if (lobby.isPrivate) {
+                Image lockImage = new Image(lockTexture);
+                lockImage.setScaling(Scaling.fit);
+                joinedLobbiesTable.add(lockImage).size(18, 18).padRight(5);
+            } else {
+                joinedLobbiesTable.add().width(25); // Empty space for alignment
+            }
+
+            // ID with better styling
+            Label idLabel = new Label(lobby.id, skin);
+            idLabel.setFontScale(0.95f);
+            joinedLobbiesTable.add(idLabel).width(70).pad(5);
+
+            // Lobby name with color based on visibility
+            Label nameLabel = new Label(lobby.name, skin);
+            nameLabel.setFontScale(1.0f);
+            nameLabel.setColor(lobby.isVisible ? Color.WHITE : Color.RED);
+            joinedLobbiesTable.add(nameLabel).width(160).pad(5);
+
+            // Player count button
+            TextButton playerButton = new TextButton(lobby.players + "/" + lobby.maxPlayers, skin);
+            playerButton.pad(8, 15, 8, 15);
+            playerButton.setUserObject(lobby.id); // Store lobby ID for later use
+            playerButton.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    client.send("GET_PLAYERS " + lobby.id);
+                }
+            });
+            joinedLobbiesTable.add(playerButton).width(90).pad(5);
+
+            // Start button for creator, Leave button for others
+            if (lobby.isAdmin) {
+                TextButton startButton = new TextButton("Start", skin);
+                startButton.pad(8, 15, 8, 15);
+                startButton.setColor(Color.GREEN); // Make start button green
+                final String lobbyId = lobby.id;
+                startButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        client.send("START_GAME " + lobbyId);
+                    }
+                });
+                joinedLobbiesTable.add(startButton).width(90).pad(5);
+            } else {
+                TextButton leaveButton = new TextButton("Leave", skin);
+                leaveButton.pad(8, 15, 8, 15);
+                final String lobbyId = lobby.id;
+                leaveButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        client.send("LEAVE_LOBBY " + lobbyId);
+                    }
+                });
+                joinedLobbiesTable.add(leaveButton).width(90).pad(5);
+            }
+            joinedLobbiesTable.row();
         }
     }
 
     private void showPasswordDialog(String lobbyId) {
         Dialog passwordDialog = new Dialog("Enter Password", skin);
+        passwordDialog.pad(20);
+
         TextField passwordInput = new TextField("", skin);
         passwordInput.setPasswordCharacter('*');
         passwordInput.setPasswordMode(true);
-        passwordDialog.getContentTable().add(passwordInput).width(200).pad(20);
+        passwordDialog.getContentTable().add(passwordInput).width(250).pad(20);
 
         TextButton submitButton = new TextButton("Join", skin);
+        submitButton.pad(10, 20, 10, 20);
         submitButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -302,6 +503,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
         });
 
         TextButton cancelButton = new TextButton("Cancel", skin);
+        cancelButton.pad(10, 20, 10, 20);
         cancelButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -309,24 +511,128 @@ public class LobbyMenuScreen extends ScreenAdapter {
             }
         });
 
-        passwordDialog.getButtonTable().add(cancelButton).padRight(10);
+        passwordDialog.getButtonTable().add(cancelButton).padRight(15);
         passwordDialog.getButtonTable().add(submitButton);
         passwordDialog.show(stage);
+    }
+
+    private void showPlayerListDialog(String lobbyId, String adminUsername, List<String> players) {
+        // Close existing dialog if open
+        if (playerListDialog != null) {
+            playerListDialog.hide();
+        }
+
+        playerListDialog = new Dialog("Players in Lobby " + lobbyId, skin);
+        playerListDialog.pad(20);
+
+        // Create table for player list
+        Table playerTable = new Table();
+        playerTable.top();
+
+        // Get the default font from the skin instead of trying to get a specific named font
+        Label.LabelStyle adminStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+        adminStyle.fontColor = Color.YELLOW; // Highlight admin
+
+        // Add admin at the top with special style
+        Label adminLabel = new Label(adminUsername + " (Admin)", adminStyle);
+        playerTable.add(adminLabel).left().pad(5).row();
+
+        // Add separator
+        playerTable.add(new Label("------------------------", skin)).left().pad(5).row();
+
+        // Add other players
+        for (String player : players) {
+            if (!player.equals(adminUsername)) { // Skip admin since already added
+                Label playerLabel = new Label(player, skin);
+                playerTable.add(playerLabel).left().pad(5).row();
+            }
+        }
+
+        ScrollPane scrollPane = new ScrollPane(playerTable, skin);
+        scrollPane.setFadeScrollBars(false);
+        scrollPane.setScrollingDisabled(true, false);
+        playerListDialog.getContentTable().add(scrollPane).width(300).maxHeight(200);
+
+        TextButton closeButton = new TextButton("Close", skin);
+        closeButton.pad(10, 20, 10, 20);
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                playerListDialog.hide();
+            }
+        });
+
+        playerListDialog.getButtonTable().add(closeButton).padTop(10);
+        playerListDialog.show(stage);
     }
 
     public void handleServerMessage(String message) {
         Gdx.app.postRunnable(() -> {
             if (message.startsWith("LOBBY_LIST:")) {
                 updateLobbyListFromServer(message.substring("LOBBY_LIST:".length()));
-            } else if (message.startsWith("LOBBY_CREATED:")) {
-                String lobbyId = message.substring("LOBBY_CREATED:".length());
-                showStatus(new Result(true, "Lobby created with ID: " + lobbyId));
-                // Automatically join the created lobby
-                client.send("JOIN_LOBBY " + lobbyId);
             } else if (message.startsWith("JOINED_LOBBY:")) {
                 String lobbyId = message.substring("JOINED_LOBBY:".length());
                 showStatus(new Result(true, "Joined lobby: " + lobbyId));
-                // Transition to game lobby screen would go here
+                // Add to joined lobbies list
+                for (LobbyInfo lobby : lobbyList) {
+                    if (lobby.id.equals(lobbyId)) {
+                        // Check if current user is the creator
+                        boolean isAdmin = currentUser != null && currentUser.getUsername().equals(lobby.adminUsername);
+                        LobbyInfo joinedLobby = new LobbyInfo(
+                                lobby.id, lobby.name, lobby.players, lobby.maxPlayers,
+                                lobby.isPrivate, lobby.isVisible, lobby.adminUsername, isAdmin
+                        );
+                        joinedLobbies.add(joinedLobby);
+                        joinedLobbyIds.add(lobbyId);
+                        updateJoinedLobbiesList();
+                        updateLobbyList(); // Update to remove from available lobbies
+                        break;
+                    }
+                }
+            } else if (message.startsWith("LEFT_LOBBY:")) {
+                String lobbyId = message.substring("LEFT_LOBBY:".length());
+                showStatus(new Result(true, "Left lobby: " + lobbyId));
+                // Remove from joined lobbies list
+                joinedLobbies.removeIf(lobby -> lobby.id.equals(lobbyId));
+                joinedLobbyIds.remove(lobbyId);
+                updateJoinedLobbiesList();
+                updateLobbyList(); // Update to show in available lobbies again
+            } else if (message.startsWith("LOBBY_CREATED:")) {
+                String lobbyId = message.substring("LOBBY_CREATED:".length());
+                showStatus(new Result(true, "Lobby created with ID: " + lobbyId));
+                // Automatically add the created lobby to joined lobbies since creator is automatically joined
+                // Create a new LobbyInfo object with admin flag set to true
+                boolean isAdmin = true; // Creator is always admin
+                LobbyInfo newLobby = new LobbyInfo(
+                        lobbyId, "", 1, 4, // We don't have full info yet, but we know creator is in it
+                        false, true, currentUser.getUsername(), isAdmin
+                );
+                joinedLobbies.add(newLobby);
+                joinedLobbyIds.add(lobbyId);
+                updateJoinedLobbiesList();
+                // Refresh the lobby list to get the full information
+                client.send("GET_LOBBIES");
+            } else if (message.startsWith("GAME_STARTED:")) {
+                String lobbyId = message.substring("GAME_STARTED:".length());
+                showStatus(new Result(true, "Game starting in lobby: " + lobbyId));
+                // Transition to GameMenuScreen for all players in the lobby
+                game.setScreen(new GameMenuScreen(skin, game, app, client));
+            } else if (message.startsWith("PLAYER_LIST:")) {
+                // Format: PLAYER_LIST:lobbyId:adminUsername,player1,player2,...
+                String[] parts = message.split(":", 3);
+                if (parts.length >= 3) {
+                    String lobbyId = parts[1];
+                    String playerData = parts[2];
+                    String[] playerArray = playerData.split(",");
+                    if (playerArray.length > 0) {
+                        String adminUsername = playerArray[0];
+                        List<String> players = new ArrayList<>();
+                        for (int i = 1; i < playerArray.length; i++) {
+                            players.add(playerArray[i]);
+                        }
+                        showPlayerListDialog(lobbyId, adminUsername, players);
+                    }
+                }
             } else if (message.startsWith("ERROR:")) {
                 String errorMsg = message.substring("ERROR:".length());
                 showStatus(new Result(false, errorMsg));
@@ -340,14 +646,15 @@ public class LobbyMenuScreen extends ScreenAdapter {
         for (String lobby : lobbies) {
             if (lobby.isEmpty()) continue;
             String[] parts = lobby.split(",");
-            if (parts.length >= 6) { // Ensure we have all 6 parts including visibility
+            if (parts.length >= 7) { // Now includes admin username
                 String id = parts[0];
                 String name = parts[1];
                 int currentPlayers = Integer.parseInt(parts[2]);
                 int maxPlayers = Integer.parseInt(parts[3]);
                 boolean isPrivate = Boolean.parseBoolean(parts[4]);
-                boolean isVisible = Boolean.parseBoolean(parts[5]); // Parse visibility
-                lobbyList.add(new LobbyInfo(id, name, currentPlayers, maxPlayers, isPrivate, isVisible));
+                boolean isVisible = Boolean.parseBoolean(parts[5]);
+                String adminUsername = parts[6];
+                lobbyList.add(new LobbyInfo(id, name, currentPlayers, maxPlayers, isPrivate, isVisible, adminUsername));
             }
         }
         updateLobbyList();
@@ -396,6 +703,9 @@ public class LobbyMenuScreen extends ScreenAdapter {
         if (client != null) {
             client.close();
         }
+        if (lockTexture != null) {
+            lockTexture.dispose();
+        }
         stage.dispose();
         backgroundTexture.dispose();
     }
@@ -407,14 +717,31 @@ public class LobbyMenuScreen extends ScreenAdapter {
         final int maxPlayers;
         final boolean isPrivate;
         final boolean isVisible;
+        final String adminUsername;
+        final boolean isAdmin;
 
-        LobbyInfo(String id, String name, int players, int maxPlayers, boolean isPrivate, boolean isVisible) {
+        // Constructor for lobbies from server
+        LobbyInfo(String id, String name, int players, int maxPlayers, boolean isPrivate, boolean isVisible, String adminUsername) {
             this.id = id;
             this.name = name;
             this.players = players;
             this.maxPlayers = maxPlayers;
             this.isPrivate = isPrivate;
             this.isVisible = isVisible;
+            this.adminUsername = adminUsername;
+            this.isAdmin = false; // Will be set when adding to joined lobbies
+        }
+
+        // Constructor for joined lobbies
+        LobbyInfo(String id, String name, int players, int maxPlayers, boolean isPrivate, boolean isVisible, String adminUsername, boolean isAdmin) {
+            this.id = id;
+            this.name = name;
+            this.players = players;
+            this.maxPlayers = maxPlayers;
+            this.isPrivate = isPrivate;
+            this.isVisible = isVisible;
+            this.adminUsername = adminUsername;
+            this.isAdmin = isAdmin;
         }
     }
 }

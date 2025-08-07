@@ -255,7 +255,7 @@ public class GameMenuScreen extends ScreenAdapter {
         // Horizontal layout for maps
         Table mapsTable = new Table();
         for (int i = 0; i < selectedPlayers.length; i++) {
-            Texture mapTexture = new Texture(Gdx.files.internal("mapIcons/map" + playerMapChoices.get(i) + ".png"));
+            Texture mapTexture = new Texture(Gdx.files.internal("menuIcons/map" + playerMapChoices.get(i) + "Icon.png"));
             Image mapImage = new Image(mapTexture);
 
             // Smaller map previews (150x150) arranged horizontally
