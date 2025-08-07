@@ -149,7 +149,6 @@ public class LobbyMenuScreen extends ScreenAdapter {
         statusLabel = new Label("", skin);
         statusLabel.setFontScale(1.1f);
         statusLabel.setColor(Color.RED);
-        mainTable.add(statusLabel).colspan(2).padTop(15);
 
         // Add everything to stage
         stage.addActor(backgroundImage);
@@ -334,11 +333,6 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
         // Add lobby rows
         for (LobbyInfo lobby : lobbyList) {
-            // Skip lobbies that the user has already joined
-//            if (joinedLobbyIds.contains(lobby.id)) {
-//                continue;
-//            }
-
             // Only show visible lobbies OR invisible lobbies with exact name match
             if (!lobby.isVisible && !isSearchMode) {
                 continue; // Skip invisible lobbies when not searching
@@ -383,25 +377,46 @@ public class LobbyMenuScreen extends ScreenAdapter {
             });
             lobbyListTable.add(playerButton).width(90).pad(5);
 
-            // Join button (only for lobbies user hasn't joined)
-            TextButton joinButton = new TextButton("Join", skin);
-            joinButton.pad(8, 15, 8, 15);
+            // Action button - Join or Leave based on whether user is in lobby
             final String lobbyId = lobby.id;
-            joinButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    if (currentUser == null) {
-                        showStatus(new Result(false, "User not logged in"));
-                        return;
+            boolean isJoined = joinedLobbyIds.contains(lobbyId);
+
+            if (isJoined) {
+                // User is in this lobby - show Leave button
+                TextButton leaveButton = new TextButton("Leave", skin);
+                leaveButton.pad(8, 15, 8, 15);
+                leaveButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        if (currentUser == null) {
+                            showStatus(new Result(false, "User not logged in"));
+                            return;
+                        }
+                        client.send("LEAVE_LOBBY " + lobbyId);
                     }
-                    if (lobby.isPrivate) {
-                        showPasswordDialog(lobbyId);
-                    } else {
-                        client.send("JOIN_LOBBY " + lobbyId);
+                });
+                lobbyListTable.add(leaveButton).width(110).pad(5);
+            } else {
+                // User is not in this lobby - show Join button
+                TextButton joinButton = new TextButton("Join", skin);
+                joinButton.pad(8, 15, 8, 15);
+                joinButton.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        if (currentUser == null) {
+                            showStatus(new Result(false, "User not logged in"));
+                            return;
+                        }
+                        if (lobby.isPrivate) {
+                            showPasswordDialog(lobbyId);
+                        } else {
+                            client.send("JOIN_LOBBY " + lobbyId);
+                        }
                     }
-                }
-            });
-            lobbyListTable.add(joinButton).width(110).pad(5);
+                });
+                lobbyListTable.add(joinButton).width(110).pad(5);
+            }
+
             lobbyListTable.row();
         }
     }
@@ -451,7 +466,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
             });
             joinedLobbiesTable.add(playerButton).width(90).pad(5);
 
-            // Start button for creator, Leave button for others
+            // Start button for admin, Leave button for others
             if (lobby.isAdmin) {
                 TextButton startButton = new TextButton("Start", skin);
                 startButton.pad(8, 15, 8, 15);
@@ -476,6 +491,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
                 });
                 joinedLobbiesTable.add(leaveButton).width(90).pad(5);
             }
+
             joinedLobbiesTable.row();
         }
     }
@@ -573,7 +589,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
             } else if (message.startsWith("JOINED_LOBBY:")) {
                 String lobbyId = message.substring("JOINED_LOBBY:".length());
                 showStatus(new Result(true, "Joined lobby: " + lobbyId));
-                // Add to joined lobbies list
+                // Find the lobby in the lobby list
                 for (LobbyInfo lobby : lobbyList) {
                     if (lobby.id.equals(lobbyId)) {
                         // Check if current user is the creator
@@ -582,43 +598,49 @@ public class LobbyMenuScreen extends ScreenAdapter {
                                 lobby.id, lobby.name, lobby.players, lobby.maxPlayers,
                                 lobby.isPrivate, lobby.isVisible, lobby.adminUsername, isAdmin
                         );
-                        joinedLobbies.add(joinedLobby);
-                        joinedLobbyIds.add(lobbyId);
+                        // Add to joined lobbies if not already there
+                        if (!joinedLobbyIds.contains(lobbyId)) {
+                            joinedLobbies.add(joinedLobby);
+                            joinedLobbyIds.add(lobbyId);
+                        }
                         updateJoinedLobbiesList();
-                        updateLobbyList(); // Update to remove from available lobbies
+                        updateLobbyList();
                         break;
                     }
                 }
             } else if (message.startsWith("LEFT_LOBBY:")) {
                 String lobbyId = message.substring("LEFT_LOBBY:".length());
                 showStatus(new Result(true, "Left lobby: " + lobbyId));
-                // Remove from joined lobbies list
+
+                // Remove from joined lobbies
                 joinedLobbies.removeIf(lobby -> lobby.id.equals(lobbyId));
                 joinedLobbyIds.remove(lobbyId);
+
+                // Update both lists
                 updateJoinedLobbiesList();
-                updateLobbyList(); // Update to show in available lobbies again
+                updateLobbyList();
+
+                // Refresh lobby list from server to get updated admin info
+                client.send("GET_LOBBIES");
             } else if (message.startsWith("LOBBY_CREATED:")) {
                 String lobbyId = message.substring("LOBBY_CREATED:".length());
                 showStatus(new Result(true, "Lobby created with ID: " + lobbyId));
-                // Automatically add the created lobby to joined lobbies since creator is automatically joined
-                // Create a new LobbyInfo object with admin flag set to true
-                boolean isAdmin = true; // Creator is always admin
+                boolean isAdmin = true;
                 LobbyInfo newLobby = new LobbyInfo(
-                        lobbyId, "", 1, 4, // We don't have full info yet, but we know creator is in it
+                        lobbyId, "New Lobby", 1, 4,
                         false, true, currentUser.getUsername(), isAdmin
                 );
-                joinedLobbies.add(newLobby);
-                joinedLobbyIds.add(lobbyId);
+                if (!joinedLobbyIds.contains(lobbyId)) {
+                    joinedLobbies.add(newLobby);
+                    joinedLobbyIds.add(lobbyId);
+                }
                 updateJoinedLobbiesList();
-                // Refresh the lobby list to get the full information
                 client.send("GET_LOBBIES");
             } else if (message.startsWith("GAME_STARTED:")) {
                 String lobbyId = message.substring("GAME_STARTED:".length());
                 showStatus(new Result(true, "Game starting in lobby: " + lobbyId));
-                // Transition to GameMenuScreen for all players in the lobby
                 game.setScreen(new GameMenuScreen(skin, game, app, client));
             } else if (message.startsWith("PLAYER_LIST:")) {
-                // Format: PLAYER_LIST:lobbyId:adminUsername,player1,player2,...
                 String[] parts = message.split(":", 3);
                 if (parts.length >= 3) {
                     String lobbyId = parts[1];

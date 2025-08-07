@@ -1,4 +1,5 @@
 package org.Group34.network.server;
+
 import org.Group34.model.User;
 import org.Group34.network.LobbyManager;
 import java.io.*;
@@ -88,6 +89,12 @@ public class ClientHandler extends Thread {
                 case "GET_PLAYERS":
                     String lobbyIdForPlayers = param1;
                     return lobbyManager.getPlayers(lobbyIdForPlayers);
+                case "LEAVE_LOBBY":
+                    String lobbyIdToLeave = param1;
+                    if (currentUser == null) {
+                        return "ERROR:User not set";
+                    }
+                    return lobbyManager.leaveLobby(currentUser, lobbyIdToLeave);
                 default:
                     System.out.println("ClientHandler #" + handlerId + " unknown command: " + command);
                     return "UNKNOWN_COMMAND";
