@@ -170,10 +170,12 @@ public class LobbyManager {
         if (!lobby.admin.equals(user)) {
             return "ERROR:Only the lobby admin can start the game";
         }
-        // Check if there are at least 2 players
         if (lobby.players.size() < 2) {
             return "ERROR:Need at least 2 players to start the game";
         }
+
+        lobby.gameStarted = true;
+
         return "GAME_STARTED:" + lobbyId;
     }
 
@@ -233,16 +235,31 @@ public class LobbyManager {
         return sb.toString();
     }
 
+    public synchronized String checkGameStatus(String lobbyId, User user) {
+        Lobby lobby = lobbies.get(lobbyId);
+        if (lobby == null) {
+            return "GAME_STATUS:" + lobbyId + ":false";
+        }
+
+        if (!lobby.players.contains(user)) {
+            return "GAME_STATUS:" + lobbyId + ":false";
+        }
+
+        return "GAME_STATUS:" + lobbyId + ":" + lobby.gameStarted;
+    }
+
     private static class Lobby {
         final String id;
         final String name;
         final boolean isPrivate;
         final String password;
-        final List<User> players = new ArrayList<>(); // Now stores User objects
-        User admin; // Now a User object
+        final List<User> players = new ArrayList<>();
+        User admin;
         final int maxPlayers = 4;
         boolean isVisible;
         long lastActivityTime;
+
+        boolean gameStarted = false;
 
         Lobby(String id, String name, boolean isPrivate, boolean isVisible, String password) {
             this.id = id;
@@ -250,8 +267,9 @@ public class LobbyManager {
             this.isPrivate = isPrivate;
             this.isVisible = isVisible;
             this.password = password;
-            this.admin = null; // Will be set when first player joins
+            this.admin = null;
             this.lastActivityTime = System.currentTimeMillis();
+            this.gameStarted = false; // مقداردهی اولیه
         }
     }
 }

@@ -105,6 +105,13 @@ public class ClientHandler extends Thread {
                 case "GET_ALL_PLAYERS":
                     return lobbyManager.getAllPlayers();
 
+                case "CHECK_GAME_STATUS":
+                    String lobbyIdToCheck = param1;
+                    if (currentUser == null) {
+                        return "ERROR:User not set";
+                    }
+                    return lobbyManager.checkGameStatus(lobbyIdToCheck, currentUser);
+
                 default:
                     System.out.println("ClientHandler #" + handlerId + " unknown command: " + command);
                     return "UNKNOWN_COMMAND";

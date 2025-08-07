@@ -41,6 +41,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
     private Texture lockTexture;
     private Dialog playerListDialog;
     private Dialog allPlayersDialog;
+    private Timer gameStatusCheckTimer;
 
     public LobbyMenuScreen(Skin skin, GraphicAppView app, GameClient client, Game game) {
         this.skin = skin;
@@ -60,6 +61,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
             client.sendUser(currentUser);
         }
         startAutoRefresh();
+        startGameStatusCheck();
     }
 
     private void createUI() {
@@ -771,6 +773,19 @@ public class LobbyMenuScreen extends ScreenAdapter {
                     showStatus(new Result(false, "No players online"));
                 }
             }
+
+            else if (message.startsWith("GAME_STATUS:")) {
+                String[] parts = message.split(":", 3);
+                if (parts.length >= 3) {
+                    String lobbyId = parts[1];
+                    boolean gameStarted = Boolean.parseBoolean(parts[2]);
+                    if (gameStarted) {
+                        showStatus(new Result(true, "Game starting in lobby: " + lobbyId));
+                        game.setScreen(new GameMenuScreen(skin, game, app, client));
+                    }
+                }
+            }
+
             else if (message.startsWith("ERROR:")) {
                 String errorMsg = message.substring("ERROR:".length());
                 showStatus(new Result(false, errorMsg));
@@ -892,6 +907,20 @@ public class LobbyMenuScreen extends ScreenAdapter {
         ));
     }
 
+    private void startGameStatusCheck() {
+        gameStatusCheckTimer = new Timer();
+        gameStatusCheckTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (client != null && !joinedLobbyIds.isEmpty()) {
+                    for (String lobbyId : joinedLobbyIds) {
+                        client.send("CHECK_GAME_STATUS " + lobbyId);
+                    }
+                }
+            }
+        }, 5000, 5000);
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.1f, 0.1f, 0.1f, 1);
@@ -915,6 +944,9 @@ public class LobbyMenuScreen extends ScreenAdapter {
         }
         if (lockTexture != null) {
             lockTexture.dispose();
+        }
+        if (gameStatusCheckTimer != null) {
+            gameStatusCheckTimer.cancel();
         }
         stage.dispose();
         backgroundTexture.dispose();
