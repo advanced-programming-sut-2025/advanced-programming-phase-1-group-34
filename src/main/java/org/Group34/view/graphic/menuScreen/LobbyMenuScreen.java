@@ -113,12 +113,12 @@ public class LobbyMenuScreen extends ScreenAdapter {
         TextButton refreshButton = new TextButton("Refresh", skin);
         refreshButton.pad(0, 15, 8, 15);
         buttonsRow.add(refreshButton).width(250);
-        leftSection.add(buttonsRow).padTop(15).row();
+        leftSection.add(buttonsRow).padTop(15).padRight(15).row();
 
         // Add Player's List button
         TextButton playersListButton = new TextButton("Player's List", skin);
         playersListButton.pad(0, 15, 8, 15);
-        buttonsRow.add(playersListButton).width(120);
+        buttonsRow.add(playersListButton).width(350);
 
         leftSection.add(buttonsRow).padTop(15).row();
 
