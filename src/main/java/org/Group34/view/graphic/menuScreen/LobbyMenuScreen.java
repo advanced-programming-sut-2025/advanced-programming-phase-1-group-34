@@ -5,13 +5,11 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.model.App;
@@ -111,14 +109,11 @@ public class LobbyMenuScreen extends ScreenAdapter {
         scrollPane.setScrollingDisabled(true, false); // Allow vertical scrolling only
         leftSection.add(scrollPane).grow().row();
 
-        // Buttons below lobby list
+        // Only refresh button in left section now
         Table buttonsRow = new Table();
-        TextButton backButton = new TextButton("Back to Main Menu", skin);
-        backButton.pad(8, 15, 8, 15);
-        buttonsRow.add(backButton).width(180).padRight(10);
         TextButton refreshButton = new TextButton("Refresh", skin);
-        refreshButton.pad(8, 15, 8, 15);
-        buttonsRow.add(refreshButton).width(120);
+        refreshButton.pad(0, 15, 8, 15);
+        buttonsRow.add(refreshButton).width(250);
         leftSection.add(buttonsRow).padTop(15).row();
 
         // Right section - Joined Lobbies
@@ -127,8 +122,8 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
         // Create Lobby Button
         TextButton createLobbyButton = new TextButton("Create New Lobby", skin);
-        createLobbyButton.pad(8, 15, 8, 15);
-        rightSection.add(createLobbyButton).width(180).padBottom(15).row();
+        createLobbyButton.pad(0, 15, 10, 15);
+        rightSection.add(createLobbyButton).width(500).padBottom(15).row();
 
         // Joined Lobbies title
         Label joinedLobbiesLabel = new Label("Your Lobbies", skin);
@@ -141,19 +136,30 @@ public class LobbyMenuScreen extends ScreenAdapter {
         joinedScrollPane.setScrollingDisabled(true, false); // Allow vertical scrolling only
         rightSection.add(joinedScrollPane).grow().row();
 
+        // Back to Main Menu button - moved here
+        TextButton backButton = new TextButton("Back to Main Menu", skin);
+        backButton.pad(0, 15, 8, 15);
+        rightSection.add(backButton).width(500).padTop(15);
+
         // Add sections to main table with spacing
         mainTable.add(leftSection).width(Gdx.graphics.getWidth() * 0.6f).height(Gdx.graphics.getHeight() * 0.8f).padRight(15);
         mainTable.add(rightSection).width(Gdx.graphics.getWidth() * 0.4f).height(Gdx.graphics.getHeight() * 0.8f);
 
-        // Status label
-        statusLabel = new Label("", skin);
-        statusLabel.setFontScale(1.1f);
-        statusLabel.setColor(Color.RED);
-        mainTable.add(statusLabel).colspan(2).padTop(15);
-
         // Add everything to stage
         stage.addActor(backgroundImage);
         stage.addActor(mainTable);
+
+        // Status label - positioned at the bottom center of the screen
+        Table statusTable = new Table();
+        statusTable.setFillParent(true);
+        statusLabel = new Label("", skin);
+        statusLabel.setFontScale(1.1f);
+        statusLabel.setColor(Color.RED);
+        statusTable.add().expand().row();
+        statusTable.add(statusLabel).padBottom(20);
+
+        // Add status table separately to ensure it's on top
+        stage.addActor(statusTable);
 
         // Button listeners
         refreshButton.addListener(new ClickListener() {
@@ -196,6 +202,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
         // Private Lobby
         CheckBox privateField = new CheckBox("Private Lobby", skin);
+        privateField.setChecked(false);
         privateField.getImageCell().padRight(8);
         createDialog.getContentTable().add(privateField).left().pad(10).row();
 
@@ -269,18 +276,18 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
         // Header row with lock icon
         lobbyListTable.add().width(25); // Space for lock icon
-        lobbyListTable.add(new Label("ID", skin)).width(70).pad(5);
+        lobbyListTable.add(new Label("ID", skin)).width(125).pad(10);
         lobbyListTable.add(new Label("Name", skin)).width(220).pad(5);
-        lobbyListTable.add(new Label("Players", skin)).width(90).pad(5);
-        lobbyListTable.add(new Label("Action", skin)).width(110).pad(5);
+        lobbyListTable.add(new Label("Players", skin)).width(150).pad(5);
+        lobbyListTable.add(new Label("Action", skin)).width(200).pad(5);
         lobbyListTable.row();
 
         // Add separator with better styling
         lobbyListTable.add(new Label("", skin)).width(25).pad(5);
-        lobbyListTable.add(new Label("---", skin)).width(70).pad(5);
-        lobbyListTable.add(new Label("------------------------", skin)).width(220).pad(5);
-        lobbyListTable.add(new Label("---------", skin)).width(90).pad(5);
-        lobbyListTable.add(new Label("-----------", skin)).width(110).pad(5);
+        lobbyListTable.add(new Label("------", skin)).width(125).pad(10);
+        lobbyListTable.add(new Label("----------------", skin)).width(220).pad(5);
+        lobbyListTable.add(new Label("---------", skin)).width(150).pad(5);
+        lobbyListTable.add(new Label("-----------", skin)).width(200).pad(5);
         lobbyListTable.row();
 
         // Add some space after header
@@ -299,18 +306,18 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
         // Header row with lock icon
         joinedLobbiesTable.add().width(25); // Space for lock icon
-        joinedLobbiesTable.add(new Label("ID", skin)).width(70).pad(5);
+        joinedLobbiesTable.add(new Label("ID", skin)).width(100).pad(5);
         joinedLobbiesTable.add(new Label("Name", skin)).width(160).pad(5);
-        joinedLobbiesTable.add(new Label("Players", skin)).width(90).pad(5);
-        joinedLobbiesTable.add(new Label("Action", skin)).width(90).pad(5);
+        joinedLobbiesTable.add(new Label("Players", skin)).width(100).pad(5);
+        joinedLobbiesTable.add(new Label("Action", skin)).width(120).pad(5);
         joinedLobbiesTable.row();
 
         // Add separator with better styling
         joinedLobbiesTable.add(new Label("", skin)).width(25).pad(5);
         joinedLobbiesTable.add(new Label("---", skin)).width(70).pad(5);
-        joinedLobbiesTable.add(new Label("----------------", skin)).width(160).pad(5);
-        joinedLobbiesTable.add(new Label("---------", skin)).width(90).pad(5);
-        joinedLobbiesTable.add(new Label("--------", skin)).width(90).pad(5);
+        joinedLobbiesTable.add(new Label("-------------", skin)).width(160).pad(5);
+        joinedLobbiesTable.add(new Label("---------", skin)).width(100).pad(5);
+        joinedLobbiesTable.add(new Label("--------", skin)).width(120).pad(5);
         joinedLobbiesTable.row();
 
         // Add some space after header
@@ -319,7 +326,6 @@ public class LobbyMenuScreen extends ScreenAdapter {
 
         // Populate with joined lobbies
         updateJoinedLobbiesList();
-
         return joinedLobbiesTable;
     }
 
@@ -360,7 +366,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
             // ID with better styling
             Label idLabel = new Label(lobby.id, skin);
             idLabel.setFontScale(0.95f);
-            lobbyListTable.add(idLabel).width(70).pad(5);
+            lobbyListTable.add(idLabel).width(125).pad(10);
 
             // Lobby name with color based on visibility
             Label nameLabel = new Label(lobby.name, skin);
@@ -378,7 +384,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
                     client.send("GET_PLAYERS " + lobby.id);
                 }
             });
-            lobbyListTable.add(playerButton).width(90).pad(5);
+            lobbyListTable.add(playerButton).width(120).pad(5);
 
             // Action button - Join or Leave based on whether user is in lobby
             final String lobbyId = lobby.id;
@@ -398,7 +404,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
                         client.send("LEAVE_LOBBY " + lobbyId);
                     }
                 });
-                lobbyListTable.add(leaveButton).width(110).pad(5);
+                lobbyListTable.add(leaveButton).width(170).pad(5);
             } else {
                 // User is not in this lobby - show Join button
                 TextButton joinButton = new TextButton("Join", skin);
@@ -449,7 +455,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
             // ID with better styling
             Label idLabel = new Label(lobby.id, skin);
             idLabel.setFontScale(0.95f);
-            joinedLobbiesTable.add(idLabel).width(70).pad(5);
+            joinedLobbiesTable.add(idLabel).width(70).pad(5); // Adjusted width
 
             // Lobby name with color based on visibility
             Label nameLabel = new Label(lobby.name, skin);
@@ -481,7 +487,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
                         client.send("START_GAME " + lobbyId);
                     }
                 });
-                joinedLobbiesTable.add(startButton).width(90).pad(5);
+                joinedLobbiesTable.add(startButton).width(150).pad(5); // Adjusted width
             } else {
                 TextButton leaveButton = new TextButton("Leave", skin);
                 leaveButton.pad(8, 15, 8, 15);
@@ -492,7 +498,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
                         client.send("LEAVE_LOBBY " + lobbyId);
                     }
                 });
-                joinedLobbiesTable.add(leaveButton).width(90).pad(5);
+                joinedLobbiesTable.add(leaveButton).width(150).pad(5); // Adjusted width
             }
 
             joinedLobbiesTable.row();
