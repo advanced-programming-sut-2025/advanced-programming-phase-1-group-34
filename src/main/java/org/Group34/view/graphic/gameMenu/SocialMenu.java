@@ -134,7 +134,7 @@ public class SocialMenu {
         font.setColor(Color.BLACK);
         font.draw(batch, "Talking:", x + 25, y + 190);
 
-        font.draw(batch, gameController.showFriendships(player).message(), x + 25, y + 170);
+        font.draw(batch, gameController.showFriendships(player).message() , x + 25, y + 170);
     }
 
     private static void giftBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
