@@ -39,14 +39,14 @@ public class StartANewDayController {
       to perform tasks to start a new day
      * */
     public void ManageAllTasks(Player player) {
-        currentMyGame.getWeatherSystem().advanceWeather(currentMyGame.getTime());
+        currentMyGame.weatherSystem().advanceWeather(currentMyGame.time());
         iterateWholeMap(player);
         resetPlayersEnergy();
     }
 
 
     private void resetPlayersEnergy() {
-        for (Player player: currentMyGame.getPlayers().values()){
+        for (Player player: currentMyGame.players().values()){
             if (player.isPassedOut()){
                 player.setEnergy(MAX_ENERGY * 3 /4);
                 player.setPassedOut(false);
@@ -93,7 +93,7 @@ public class StartANewDayController {
     }
 
     private void lightningStrike(Space space) {
-        WeatherSystem weather = currentMyGame.getWeatherSystem();
+        WeatherSystem weather = currentMyGame.weatherSystem();
         Entity[][] entities = space.entities();
 
         for (int[] coordinate: weather.generateLightningStrikes()){
