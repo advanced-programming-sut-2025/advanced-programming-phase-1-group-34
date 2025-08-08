@@ -36,17 +36,17 @@ public class StartANewDayController {
 
     /**
      * This function calls all the functions necessary
-      to perform tasks to start a new day
+     to perform tasks to start a new day
      * */
     public void ManageAllTasks(Player player) {
-        currentMyGame.weatherSystem().advanceWeather(currentMyGame.time());
+        currentMyGame.getWeatherSystem().advanceWeather(currentMyGame.getTime());
         iterateWholeMap(player);
         resetPlayersEnergy();
     }
 
 
     private void resetPlayersEnergy() {
-        for (Player player: currentMyGame.players().values()){
+        for (Player player: currentMyGame.getPlayers().values()){
             if (player.isPassedOut()){
                 player.setEnergy(MAX_ENERGY * 3 /4);
                 player.setPassedOut(false);
@@ -59,7 +59,7 @@ public class StartANewDayController {
 
     /**
      * Some functionalities need to iterate throw map
-      and if there is a specific Entity do a certain function
+     and if there is a specific Entity do a certain function
      * */
     private void iterateWholeMap(Player player) {
         HashSet<int[]> plantsOnFarm = new HashSet<>();
@@ -93,7 +93,7 @@ public class StartANewDayController {
     }
 
     private void lightningStrike(Space space) {
-        WeatherSystem weather = currentMyGame.weatherSystem();
+        WeatherSystem weather = currentMyGame.getWeatherSystem();
         Entity[][] entities = space.entities();
 
         for (int[] coordinate: weather.generateLightningStrikes()){

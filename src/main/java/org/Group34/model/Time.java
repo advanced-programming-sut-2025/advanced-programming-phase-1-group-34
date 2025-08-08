@@ -82,13 +82,13 @@ public class Time implements  Comparable<Time> {
     }
 
     public Result cheatAdvanceDate(Integer d, MyGame myGame, Player player) {
-        StartANewDayController startANewDayController = new StartANewDayController(myGame, myGame.map().getSpaces(), myGame.time());
+        StartANewDayController startANewDayController = new StartANewDayController(myGame, myGame.getMap().getSpaces(), myGame.getTime());
         startANewDayController.ManageAllTasks(player);
         try {
             if (d == null) return new Result(false, "you should give a number as days argument");
             this.addDays(d);
-            myGame.weatherSystem().initializeWeather(this);
-            myGame.weatherSystem().advanceWeather(this);
+            myGame.getWeatherSystem().initializeWeather(this);
+            myGame.getWeatherSystem().advanceWeather(this);
             return new Result(true, "Cheat Code Activated: (" + this + ")");
         }
         catch (Exception IllegalArgumentException){

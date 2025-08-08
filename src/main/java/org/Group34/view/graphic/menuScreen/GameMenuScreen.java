@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.Result;
-import org.Group34.model.User;
 import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GraphicAppView;
 import org.Group34.view.graphic.mapScreen.GameScreen;

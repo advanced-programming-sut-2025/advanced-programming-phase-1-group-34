@@ -1,64 +1,64 @@
-package org.Group34.view.graphic;
-
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import org.Group34.network.client.GameClient;
-import org.Group34.view.graphic.menuScreen.LobbyMenuScreen;
-import org.Group34.view.graphic.menuScreen.RegisterScreen;
-
-import java.io.IOException;
-
-public class GraphicAppView extends Game {
-    private GameClient client;
-
-    @Override
-    public void create() {
-        System.out.println("Graphic view started.");
-
-        Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
-
-        // Initialize network client
-        try {
-            client = new GameClient("localhost", 12345, this::handleNetworkMessage);
-        } catch (IOException e) {
-            System.err.println("Failed to connect to server: " + e.getMessage());
-            Gdx.app.postRunnable(() -> {
-                Gdx.app.exit();
-            });
-            return;
-        }
-
-        this.setScreen(new RegisterScreen(skin, this, this, client));
-    }
-
-    private void handleNetworkMessage(String message) {
-        Gdx.app.postRunnable(() -> {
-            System.out.println("Received: " + message);
-            // Handle network messages in the main thread
-            if (getScreen() instanceof LobbyMenuScreen) {
-                ((LobbyMenuScreen) getScreen()).handleServerMessage(message);
-            }
-        });
-    }
-
-    @Override
-    public void render() {
-        super.render();
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-            Gdx.app.exit();
-        }
-    }
-
-    @Override
-    public void dispose() {
-        System.out.println("Graphic view closed.");
-        super.dispose();
-    }
-}
+//package org.Group34.view.graphic;
+//
+//import com.badlogic.gdx.Game;
+//import com.badlogic.gdx.Gdx;
+//import com.badlogic.gdx.Input;
+//import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+//import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+//import org.Group34.network.client.GameClient;
+//import org.Group34.view.graphic.menuScreen.LobbyMenuScreen;
+//import org.Group34.view.graphic.menuScreen.RegisterScreen;
+//
+//import java.io.IOException;
+//
+//public class GraphicAppView extends Game {
+//    private GameClient client;
+//
+//    @Override
+//    public void create() {
+//        System.out.println("Graphic view started.");
+//
+//        Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
+//
+//        // Initialize network client
+//        try {
+//            client = new GameClient("localhost", 12345, this::handleNetworkMessage);
+//        } catch (IOException e) {
+//            System.err.println("Failed to connect to server: " + e.getMessage());
+//            Gdx.app.postRunnable(() -> {
+//                Gdx.app.exit();
+//            });
+//            return;
+//        }
+//
+//        this.setScreen(new RegisterScreen(skin, this, this, client));
+//    }
+//
+//    private void handleNetworkMessage(String message) {
+//        Gdx.app.postRunnable(() -> {
+//            System.out.println("Received: " + message);
+//            // Handle network messages in the main thread
+//            if (getScreen() instanceof LobbyMenuScreen) {
+//                ((LobbyMenuScreen) getScreen()).handleServerMessage(message);
+//            }
+//        });
+//    }
+//
+//    @Override
+//    public void render() {
+//        super.render();
+//
+//        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+//            Gdx.app.exit();
+//        }
+//    }
+//
+//    @Override
+//    public void dispose() {
+//        System.out.println("Graphic view closed.");
+//        super.dispose();
+//    }
+//}
 
 // ---------------------------------------------------------------------------------------------------------------------
 
@@ -156,109 +156,109 @@ public class GraphicAppView extends Game {
 
 // ---------------------------------------------------------------------------------------------------------------------
 
-//package org.Group34.view.graphic;
-//
-//import com.badlogic.gdx.Game;
-//import com.badlogic.gdx.Gdx;
-//import com.badlogic.gdx.Input;
-//import com.badlogic.gdx.graphics.g2d.BitmapFont;
-//import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-//import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-//import org.Group34.model.App;
-//import org.Group34.model.User;
-//import org.Group34.network.client.GameClient;
-//import org.Group34.view.graphic.menuScreen.LobbyMenuScreen;
-//import org.Group34.view.graphic.menuScreen.RegisterScreen;
-//
-//import java.io.IOException;
-//
-//public class GraphicAppView extends Game {
-//    private Skin skin;
-//    private GameClient client;
-//    private SpriteBatch batch;
-//    private BitmapFont font;
-//
-//    @Override
-//    public void create() {
-//        System.out.println("Graphic view started.");
-//
-//        batch = new SpriteBatch();
-//        font = new BitmapFont();
-//
-//        // Load the skin
-//        skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
-//
-//        // Initialize network client
-//        try {
-//            client = new GameClient("localhost", 12345, this::handleNetworkMessage);
-//        } catch (IOException e) {
-//            System.err.println("Failed to connect to server: " + e.getMessage());
-//            Gdx.app.postRunnable(() -> {
-//                Gdx.app.exit();
-//            });
-//            return;
-//        }
-//
-//        // Start with register screen
-//        setScreen(new RegisterScreen(skin, this, this, client));
-//        User currentUser = App.getCurrentUser();
-//        if (currentUser != null) {
-//            client.sendUser(currentUser);
-//        }
-//        //setScreen(new LobbyMenuScreen(skin, this, client,this));
-//    }
-//
-//    public void switchToLobbyMenu() {
-//        setScreen(new LobbyMenuScreen(skin, this, client, this));
-//    }
-//
-//    private void handleNetworkMessage(String message) {
-//        Gdx.app.postRunnable(() -> {
-//            System.out.println("Received: " + message);
-//            // Handle network messages in the main thread
-//            if (getScreen() instanceof LobbyMenuScreen) {
-//                ((LobbyMenuScreen) getScreen()).handleServerMessage(message);
-//            }
-//        });
-//    }
-//
-//    @Override
-//    public void render() {
-//        super.render();
-//        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-//            Gdx.app.exit();
-//        }
-//    }
-//
-//    @Override
-//    public void dispose() {
-//        System.out.println("Graphic view closed.");
-//        if (client != null) {
-//            client.close();
-//        }
-//        if (skin != null) {
-//            skin.dispose();
-//        }
-//        if (batch != null) {
-//            batch.dispose();
-//        }
-//        if (font != null) {
-//            font.dispose();
-//        }
-//        super.dispose();
-//    }
-//
-//    // Getters for batch and font
-//    public SpriteBatch getBatch() {
-//        return batch;
-//    }
-//
-//    public BitmapFont getFont() {
-//        return font;
-//    }
-//
-//    // Getter for skin
-//    public Skin getSkin() {
-//        return skin;
-//    }
-//}
+package org.Group34.view.graphic;
+
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import org.Group34.model.App;
+import org.Group34.model.User;
+import org.Group34.network.client.GameClient;
+import org.Group34.view.graphic.menuScreen.LobbyMenuScreen;
+import org.Group34.view.graphic.menuScreen.RegisterScreen;
+
+import java.io.IOException;
+
+public class GraphicAppView extends Game {
+    private Skin skin;
+    private GameClient client;
+    private SpriteBatch batch;
+    private BitmapFont font;
+
+    @Override
+    public void create() {
+        System.out.println("Graphic view started.");
+
+        batch = new SpriteBatch();
+        font = new BitmapFont();
+
+        // Load the skin
+        skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
+
+        // Initialize network client
+        try {
+            client = new GameClient("localhost", 12345, this::handleNetworkMessage);
+        } catch (IOException e) {
+            System.err.println("Failed to connect to server: " + e.getMessage());
+            Gdx.app.postRunnable(() -> {
+                Gdx.app.exit();
+            });
+            return;
+        }
+
+        // Start with register screen
+        setScreen(new RegisterScreen(skin, this, this, client));
+        User currentUser = App.getCurrentUser();
+        if (currentUser != null) {
+            client.sendUser(currentUser);
+        }
+        //setScreen(new LobbyMenuScreen(skin, this, client,this));
+    }
+
+    public void switchToLobbyMenu() {
+        setScreen(new LobbyMenuScreen(skin, this, client, this));
+    }
+
+    private void handleNetworkMessage(String message) {
+        Gdx.app.postRunnable(() -> {
+            System.out.println("Received: " + message);
+            // Handle network messages in the main thread
+            if (getScreen() instanceof LobbyMenuScreen) {
+                ((LobbyMenuScreen) getScreen()).handleServerMessage(message);
+            }
+        });
+    }
+
+    @Override
+    public void render() {
+        super.render();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+            Gdx.app.exit();
+        }
+    }
+
+    @Override
+    public void dispose() {
+        System.out.println("Graphic view closed.");
+        if (client != null) {
+            client.close();
+        }
+        if (skin != null) {
+            skin.dispose();
+        }
+        if (batch != null) {
+            batch.dispose();
+        }
+        if (font != null) {
+            font.dispose();
+        }
+        super.dispose();
+    }
+
+    // Getters for batch and font
+    public SpriteBatch getBatch() {
+        return batch;
+    }
+
+    public BitmapFont getFont() {
+        return font;
+    }
+
+    // Getter for skin
+    public Skin getSkin() {
+        return skin;
+    }
+}

@@ -64,8 +64,8 @@ public class MainMenuScreen extends ScreenAdapter {
                 if (currentUser != null) {
                     client.sendUser(currentUser);
                 }
-                game.setScreen(new GameMenuScreen(skin, game, app, client));
-                //game.setScreen(new LobbyMenuScreen(skin, app, client, game));
+                //game.setScreen(new GameMenuScreen(skin, game, app, client));
+                game.setScreen(new LobbyMenuScreen(skin, app, client, game));
             }
         });
 
