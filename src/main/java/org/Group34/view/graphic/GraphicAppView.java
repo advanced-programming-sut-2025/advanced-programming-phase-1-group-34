@@ -4,7 +4,11 @@
 //import com.badlogic.gdx.Gdx;
 //import com.badlogic.gdx.Input;
 //import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+//import org.Group34.network.client.GameClient;
+//import org.Group34.view.graphic.menuScreen.LobbyMenuScreen;
 //import org.Group34.view.graphic.menuScreen.RegisterScreen;
+//
+//import java.io.IOException;
 //
 //public class GraphicAppView extends Game {
 //
@@ -14,7 +18,21 @@
 //
 //        Skin skin = new Skin(Gdx.files.internal("skin/pixthulhu-ui.json"));
 //
-//        this.setScreen(new RegisterScreen(skin, this, this));
+//        try {
+//            this.setScreen(new RegisterScreen(skin, this, this, new GameClient("localhost", 12345, this::handleNetworkMessage)));
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+//
+//    private void handleNetworkMessage(String message) {
+//        Gdx.app.postRunnable(() -> {
+//            System.out.println("Received: " + message);
+//            // Handle network messages in the main thread
+//            if (getScreen() instanceof LobbyMenuScreen) {
+//                ((LobbyMenuScreen) getScreen()).handleServerMessage(message);
+//            }
+//        });
 //    }
 //
 //    @Override

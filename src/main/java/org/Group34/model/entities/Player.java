@@ -100,7 +100,6 @@ public class  Player implements Entity {
         inventory.put(Fertilizer.DELUXE_RETAINING_SOIL, 10);
     }
 
-
     public static int passedOutUsers(){
         return Player.passedOutUsers;
     }
@@ -376,5 +375,9 @@ public class  Player implements Entity {
 
     public void setCurrentItem(Item currentItem) {
         this.currentItem = currentItem;
+    }
+
+    public HashMap<Player, Interaction> getInteractions() {
+        return interactions;
     }
 }

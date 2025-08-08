@@ -106,9 +106,6 @@ public class GameMenuController {
     private MyGame generateGame(){
         HashMap<User, Player> players = new HashMap<>();
 
-        users.add(new User("player2", "player2", "player2", "player2", "player2"));
-
-
         for (User user: users)
             players.put(user, new Player(PLAYER_INITIAL_LOCATION));
 
