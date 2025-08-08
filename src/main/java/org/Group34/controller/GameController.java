@@ -673,8 +673,9 @@ public class GameController {
     }
 
     // ----- Interaction -----
-    public Result showFriendships() {
-        return new Result(true, getPlayer().showFriendships());
+    public Result showFriendships(Player player) {
+//        return new Result(true, getPlayer().showFriendships());
+        return new Result(true, player.showFriendships());
     }
     public Result talk(String username, String message) {
         return interactionController.talk(username, message, getPlayer());

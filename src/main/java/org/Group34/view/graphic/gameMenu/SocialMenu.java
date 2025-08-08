@@ -2,16 +2,19 @@ package org.Group34.view.graphic.gameMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.Group34.controller.GameController;
 import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
 
 public class SocialMenu {
     private final static Sprite chest = new Sprite(GameMenuAssetManager.getChest());
-    private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getBigBoard());
+    private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getLinedBoard());
     private final static Sprite smallBoard = new Sprite(GameMenuAssetManager.getSmallBoard());
     private final static Sprite inventorySymbol = new Sprite(ToolAssetManager.getBasicBackpack());
     private final static Sprite skillSymbol = new Sprite(GameMenuAssetManager.getFaceIcon());
@@ -35,10 +38,12 @@ public class SocialMenu {
         animalIcon.setSize((float) (animalIcon.getWidth() * 0.5), (float) (animalIcon.getHeight() * 0.5));
     }
 
-    public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera) {
+    public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera, GameController gameController) {
         float x = camera.position.x - chest.getWidth() / 2;
         float y = camera.position.y - 30;
         drawBoard(batch, x, y);
+
+        fullTheBoard(batch, player, x, y, gameController);
 
         handleInput(player);
     }
@@ -93,7 +98,7 @@ public class SocialMenu {
         animalIcon.draw(batch);
     }
 
-    public static void handleInput(Player player) {
+    private static void handleInput(Player player) {
         int x = Gdx.input.getX();
         int y = Gdx.input.getY();
 
@@ -112,6 +117,46 @@ public class SocialMenu {
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);
         }
+    }
+
+    private static void fullTheBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
+        talkBoard(batch, player, x, y, gameController);
+        giftBoard(batch, player, x, y, gameController);
+        hugBoard(batch, player, x, y, gameController);
+        loveBoard(batch, player, x, y, gameController);
+        otherBoard(batch, player, x, y, gameController);
+
+
+    }
+
+    private static void talkBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
+        BitmapFont font = new BitmapFont();
+        font.setColor(Color.BLACK);
+        font.draw(batch, "Talking:", x + 25, y + 190);
+
+        font.draw(batch, gameController.showFriendships(player).message(), x + 25, y + 170);
+    }
+
+    private static void giftBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
+        BitmapFont font = new BitmapFont();
+        font.setColor(Color.BLACK);
+        font.draw(batch, "Giving gift:", x + 330, y + 190);
+    }
+
+    private static void hugBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
+        BitmapFont font = new BitmapFont();
+        font.setColor(Color.BLACK);
+        font.draw(batch, "Hugging:", x + 25, y - 5);
+    }
+
+    private static void loveBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
+        BitmapFont font = new BitmapFont();
+        font.setColor(Color.BLACK);
+        font.draw(batch, "Love:", x + 330, y - 5);
+    }
+
+    private static void otherBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
+
     }
 }
 

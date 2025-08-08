@@ -79,6 +79,7 @@ public class StartANewDayController {
             for (int i = 0; i < space.width(); i++)
                 for (int j = 0; j < space.height(); j++) {
                     randomPlacementOfForagingCropsAndSeeds(space, i, j);
+                    randomPlacingOfForagingMinerals(space, i, j);
                     sprinklerWatering(space, i, j);
                     addPlant(plantsOnFarm, space, i, j);
                     scareCrow(scareCrowPlants, space, i, j);
@@ -208,6 +209,15 @@ public class StartANewDayController {
             Random rand = new Random();
             int randInt = rand.nextInt(minerals.size());
             quarry.addItem(minerals.get(randInt), 1);
+        }
+    }
+
+    private void randomPlacingOfForagingMinerals(Space space, int i, int j) {
+        Random rand = new Random();
+        if (space.getEntityByLocation(i, j) == null && rand.nextInt(1000) == 0) {
+            ArrayList<Entity> minerals = new ArrayList<>(List.of(Mineral.values()));
+            int randInt = rand.nextInt(minerals.size());
+            space.placingEntity(i, j, minerals.get(randInt));
         }
     }
 

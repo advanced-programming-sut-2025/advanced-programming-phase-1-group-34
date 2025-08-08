@@ -31,6 +31,7 @@ public class GameMenuAssetManager {
     private final static Texture downIcon = new Texture("gameMenu/down.png");
     private final static Texture buyIcon = new Texture("gameMenu/buy.png");
     private final static Texture checkMark = new Texture("gameMenu/check.png");
+    private final static Texture linedBoard = new Texture("gameMenu/linedBoard.png");
 
     // ----- getters -----
 
@@ -144,6 +145,10 @@ public class GameMenuAssetManager {
 
     public static Texture getCheckMark() {
         return checkMark;
+    }
+
+    public static Texture getLinedBoard() {
+        return linedBoard;
     }
 
     // -------------------

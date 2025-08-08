@@ -257,7 +257,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
-            player.setCurrentGameMenu("inventory");
+            player.setCurrentGameMenu("social");
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {

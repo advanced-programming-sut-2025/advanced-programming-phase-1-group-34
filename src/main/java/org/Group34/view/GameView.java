@@ -583,7 +583,8 @@ public class GameView extends AppMenu {
 
             // ----- Interaction -----
             else if (command.matches(GameCommands.FRIENDSHIPS.getRegex())) {
-                Result result = controller.showFriendships();
+//                Result result = controller.showFriendships();
+                Result result = new Result(true, "");
                 showMessage(result.message());
             }
             else if (command.matches(GameCommands.TALK.getRegex())) {

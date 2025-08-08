@@ -37,7 +37,7 @@ public class GameMenuGraphic {
             } else if (menu.equals("skill")) {
                 SkillMenu.draw(batch, player, camera);
             } else if (menu.equals("social")) {
-                SocialMenu.draw(batch, player, camera);
+                SocialMenu.draw(batch, player, camera, gameController);
             } else if (menu.equals("map")) {
                 MapMenu.draw(batch, player, camera);
             } else if (menu.equals("npc")) {
