@@ -307,10 +307,10 @@ public class GameMenuScreen extends ScreenAdapter {
         // Then set all maps at once
         result = controller.gameMap(maps);
         showStatus(result);
+
         if (result.success()) {
-            // Get the created game instance directly from the controller
-            MyGame myGame = controller.getCreatedGame();
-            App.getCurrentUser().setGame(myGame);
+            // Get the created game instance
+            MyGame myGame = App.getCurrentUser().getGame();
             if (myGame != null) {
                 // Transition to the actual game screen
                 game.setScreen(new GameScreen(skin, game, myGame, new GameController(myGame), app, client));
