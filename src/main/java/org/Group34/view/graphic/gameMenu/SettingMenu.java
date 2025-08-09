@@ -23,6 +23,9 @@ public class SettingMenu {
     private final static Sprite settingSymbol = new Sprite(GameMenuAssetManager.getSettingIcon());
     private final static Sprite exitIcon = new Sprite(GameMenuAssetManager.getExitIcon());
     private final static Sprite animalIcon = new Sprite(GameMenuAssetManager.getAnimalIcon());
+    private final static Sprite craftingIcon = new Sprite(GameMenuAssetManager.getCraftingIcon());
+    private final static Sprite cookingIcon = new Sprite(GameMenuAssetManager.getCookingIcon());
+    private final static Sprite fridgeIcon = new Sprite(GameMenuAssetManager.getFridgeIcon());
 
     // Added new sprites for exit game and delete player options
     private final static Sprite exitGameIcon = new Sprite(GameMenuAssetManager.getExitGameIcon());
@@ -42,6 +45,9 @@ public class SettingMenu {
         settingSymbol.setSize((float) (settingSymbol.getWidth() * 0.05), (float) (settingSymbol.getHeight() * 0.05));
         exitIcon.setSize((float) (exitIcon.getWidth() * 0.2), (float) (exitIcon.getHeight() * 0.2));
         animalIcon.setSize((float) (animalIcon.getWidth() * 0.5), (float) (animalIcon.getHeight() * 0.5));
+        craftingIcon.setSize((float) (craftingIcon.getWidth() * 0.5), (float) (craftingIcon.getHeight() * 0.5));
+        cookingIcon.setSize((float) (cookingIcon.getWidth() * 0.5), (float) (cookingIcon.getHeight() * 0.5));
+        fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
 
         // Set sizes for new icons
         exitGameIcon.setSize((float) (exitGameIcon.getWidth() * 0.15), (float) (exitGameIcon.getHeight() * 0.15));
@@ -78,6 +84,12 @@ public class SettingMenu {
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 294, y + 210);
         smallBoard.draw(batch);
+        smallBoard.setPosition(x + 338, y + 210);
+        smallBoard.draw(batch);
+        smallBoard.setPosition(x + 382, y + 210);
+        smallBoard.draw(batch);
+        smallBoard.setPosition(x + 426, y + 210);
+        smallBoard.draw(batch);
 
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
@@ -91,12 +103,16 @@ public class SettingMenu {
         NPCSymbol.draw(batch);
         settingSymbol.setPosition(x + 250 + 13, y + 203 + 8);
         settingSymbol.draw(batch);
-
         exitIcon.setPosition(x + 608, y + 190);
         exitIcon.draw(batch);
-
         animalIcon.setPosition(x + 294 + 10, y + 210 + 5);
         animalIcon.draw(batch);
+        craftingIcon.setPosition(x + 338 + 10, y + 210 + 5);
+        craftingIcon.draw(batch);
+        cookingIcon.setPosition(x + 382 + 10, y + 210 + 5);
+        cookingIcon.draw(batch);
+        fridgeIcon.setPosition(x + 426 + 15, y + 210 + 3);
+        fridgeIcon.draw(batch);
 
         // New options with text labels
         // Save and Exit option
@@ -136,6 +152,12 @@ public class SettingMenu {
             player.setCurrentGameMenu("npc");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 761 && x < 832 && y < 110 && y > 30) {
             player.setCurrentGameMenu("animal");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 834 && x < 905 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("crafting");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 907 && x < 978 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("cooking");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 980 && x < 1051 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("fridge");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);
         }

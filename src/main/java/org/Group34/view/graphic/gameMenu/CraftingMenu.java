@@ -5,11 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.Group34.controller.GameController;
 import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
 
-public class MapMenu {
+public class CraftingMenu {
     private final static Sprite chest = new Sprite(GameMenuAssetManager.getChest());
     private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getBigBoard());
     private final static Sprite smallBoard = new Sprite(GameMenuAssetManager.getSmallBoard());
@@ -41,7 +42,7 @@ public class MapMenu {
         fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
     }
 
-    public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera) {
+    public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera, GameController gameController) {
         float x = camera.position.x - chest.getWidth() / 2;
         float y = camera.position.y - 30;
         drawBoard(batch, x, y);
@@ -62,7 +63,7 @@ public class MapMenu {
         smallBoard.setPosition(x + 118, y + 210);
         smallBoard.draw(batch);
 
-        smallBoard.setPosition(x + 162, y + 203);
+        smallBoard.setPosition(x + 162, y + 210);
         smallBoard.draw(batch);
 
         smallBoard.setPosition(x + 206, y + 210);
@@ -74,7 +75,7 @@ public class MapMenu {
         smallBoard.setPosition(x + 294, y + 210);
         smallBoard.draw(batch);
 
-        smallBoard.setPosition(x + 338, y + 210);
+        smallBoard.setPosition(x + 338, y + 203);
         smallBoard.draw(batch);
 
         smallBoard.setPosition(x + 382, y + 210);
@@ -92,7 +93,7 @@ public class MapMenu {
         socialSymbol.setPosition(x + 118 + 9, y + 210 + 5);
         socialSymbol.draw(batch);
 
-        mapSymbol.setPosition(x + 162 + 11, y + 203 + 3);
+        mapSymbol.setPosition(x + 162 + 11, y + 210 + 3);
         mapSymbol.draw(batch);
 
         NPCSymbol.setPosition(x + 206 + 10, y + 210 + 5);
@@ -107,7 +108,7 @@ public class MapMenu {
         animalIcon.setPosition(x + 294 + 10, y + 210 + 5);
         animalIcon.draw(batch);
 
-        craftingIcon.setPosition(x + 338 + 10, y + 210 + 5);
+        craftingIcon.setPosition(x + 338 + 10, y + 203 + 5);
         craftingIcon.draw(batch);
 
         cookingIcon.setPosition(x + 382 + 10, y + 210 + 5);
@@ -127,7 +128,7 @@ public class MapMenu {
             player.setCurrentGameMenu("skill");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 470 && x < 541 && y < 110 && y > 30) {
             player.setCurrentGameMenu("social");
-        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 542 && x < 613 && y < 110 && y > 30) {
+        }  else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 542 && x < 613 && y < 110 && y > 30) {
             player.setCurrentGameMenu("map");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 688 && x < 759 && y < 110 && y > 30) {
             player.setCurrentGameMenu("setting");
@@ -135,8 +136,6 @@ public class MapMenu {
             player.setCurrentGameMenu("npc");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 761 && x < 832 && y < 110 && y > 30) {
             player.setCurrentGameMenu("animal");
-        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 834 && x < 905 && y < 110 && y > 30) {
-            player.setCurrentGameMenu("crafting");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 907 && x < 978 && y < 110 && y > 30) {
             player.setCurrentGameMenu("cooking");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 980 && x < 1051 && y < 110 && y > 30) {
@@ -146,4 +145,3 @@ public class MapMenu {
         }
     }
 }
-

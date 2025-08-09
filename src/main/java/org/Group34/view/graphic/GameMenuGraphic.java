@@ -56,6 +56,12 @@ public class GameMenuGraphic {
                 BlacksmithMenu.draw(batch, player, camera, gameController);
             } else if (menu.equals("salePlace")) {
                 SalePlaceMenu.draw(batch, player, camera, gameController);
+            } else if (menu.equals("crafting")) {
+                CraftingMenu.draw(batch, player, camera, gameController);
+            } else if (menu.equals("cooking")) {
+                CookingMenu.draw(batch, player, camera, gameController);
+            } else if (menu.equals("fridge")) {
+                FridgeMenu.draw(batch, player, camera, gameController);
             }
         }
     }

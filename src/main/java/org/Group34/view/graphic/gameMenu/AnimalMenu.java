@@ -35,6 +35,9 @@ public class AnimalMenu {
     private final static Sprite rightIcon = new Sprite(GameMenuAssetManager.getRightIcon());
     private final static Sprite leftIcon = new Sprite(GameMenuAssetManager.getLeftIcon());
     private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getBigBoard());
+    private final static Sprite craftingIcon = new Sprite(GameMenuAssetManager.getCraftingIcon());
+    private final static Sprite cookingIcon = new Sprite(GameMenuAssetManager.getCookingIcon());
+    private final static Sprite fridgeIcon = new Sprite(GameMenuAssetManager.getFridgeIcon());
     private static BitmapFont font;
     private static BitmapFont errorFont;
     private static BitmapFont successFont;
@@ -70,6 +73,9 @@ public class AnimalMenu {
         settingSymbol.setSize((float) (settingSymbol.getWidth() * 0.05), (float) (settingSymbol.getHeight() * 0.05));
         exitIcon.setSize((float) (exitIcon.getWidth() * 0.2), (float) (exitIcon.getHeight() * 0.2));
         animalIcon.setSize((float) (animalIcon.getWidth() * 0.5), (float) (animalIcon.getHeight() * 0.5));
+        craftingIcon.setSize((float) (craftingIcon.getWidth() * 0.5), (float) (craftingIcon.getHeight() * 0.5));
+        cookingIcon.setSize((float) (cookingIcon.getWidth() * 0.5), (float) (cookingIcon.getHeight() * 0.5));
+        fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
         greenRect.setSize(45, 45);
         font = new BitmapFont();
         font.setColor(Color.BLACK);
@@ -188,6 +194,12 @@ public class AnimalMenu {
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 294, y + 210);
         smallBoard.draw(batch);
+        smallBoard.setPosition(x + 338, y + 210);
+        smallBoard.draw(batch);
+        smallBoard.setPosition(x + 382, y + 210);
+        smallBoard.draw(batch);
+        smallBoard.setPosition(x + 426, y + 210);
+        smallBoard.draw(batch);
         inventorySymbol.setPosition(x + 30 + 5, y + 203 + 2);
         inventorySymbol.draw(batch);
         skillSymbol.setPosition(x + 74 + 9, y + 210 + 5);
@@ -202,6 +214,12 @@ public class AnimalMenu {
         settingSymbol.draw(batch);
         animalIcon.setPosition(x + 294 + 10, y + 210 + 5);
         animalIcon.draw(batch);
+        craftingIcon.setPosition(x + 338 + 10, y + 210 + 5);
+        craftingIcon.draw(batch);
+        cookingIcon.setPosition(x + 382 + 10, y + 210 + 5);
+        cookingIcon.draw(batch);
+        fridgeIcon.setPosition(x + 426 + 15, y + 210 + 3);
+        fridgeIcon.draw(batch);
         exitIcon.setPosition(x + 608, y + 190);
         exitIcon.draw(batch);
     }
@@ -469,6 +487,12 @@ public class AnimalMenu {
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 688 && x < 759 && y < 110 && y > 30) {
             player.setCurrentGameMenu("setting");
             scrollNumber = 0;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 834 && x < 905 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("crafting");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 907 && x < 978 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("cooking");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 980 && x < 1051 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("fridge");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 761 && x < 832 && y < 110 && y > 30) {
             // Toggle between building and animal menus if not in main menu
             if (currentMenuState != MenuState.MAIN) {

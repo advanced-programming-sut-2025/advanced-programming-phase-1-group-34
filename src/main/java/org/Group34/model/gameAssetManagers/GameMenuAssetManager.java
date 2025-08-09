@@ -32,6 +32,10 @@ public class GameMenuAssetManager {
     private final static Texture buyIcon = new Texture("gameMenu/buy.png");
     private final static Texture checkMark = new Texture("gameMenu/check.png");
     private final static Texture linedBoard = new Texture("gameMenu/linedBoard.png");
+    private final static Texture craftingIcon = new Texture("gameMenu/Blacksmith_Icon.png");
+    private final static Texture cookingIcon = new Texture("gameMenu/Survival_Burger.png");
+    private final static Texture fridgeIcon = new Texture("gameMenu/Mini-Fridge.png");
+
 
     // ----- getters -----
 
@@ -149,6 +153,18 @@ public class GameMenuAssetManager {
 
     public static Texture getLinedBoard() {
         return linedBoard;
+    }
+
+    public static Texture getCraftingIcon() {
+        return craftingIcon;
+    }
+
+    public static Texture getCookingIcon() {
+        return cookingIcon;
+    }
+
+    public static Texture getFridgeIcon() {
+        return fridgeIcon;
     }
 
     // -------------------
