@@ -677,32 +677,41 @@ public class GameController {
 //        return new Result(true, getPlayer().showFriendships());
         return new Result(true, player.showFriendships());
     }
-    public Result talk(String username, String message) {
-        return interactionController.talk(username, message, getPlayer());
+    public Result talk(String username, String message, Player player) {
+//        return interactionController.talk(username, message, getPlayer());
+        return interactionController.talk(username, message, player);
     }
-    public Result talkHistory(String username) {
-        return interactionController.talkHistory(username, getPlayer());
+    public Result talkHistory(String username, Player player) {
+//        return interactionController.talkHistory(username, getPlayer());
+        return interactionController.talkHistory(username, player);
     }
-    public Result gift(String username, String item, int amount) {
-        return interactionController.gift(username, item, amount, getPlayer());
+    public Result gift(String username, String item, int amount, Player player) {
+//        return interactionController.gift(username, item, amount, getPlayer());
+        return interactionController.gift(username, item, amount, player);
     }
-    public Result giftList() {
-        return interactionController.giftList(getPlayer());
+    public Result giftList(Player player) {
+//        return interactionController.giftList(getPlayer());
+        return interactionController.giftList(player);
     }
-    public Result giftRate(int giftNumber, int rate) {
-        return interactionController.giftRate(giftNumber, rate, getPlayer());
+    public Result giftRate(int giftNumber, int rate, Player player) {
+//        return interactionController.giftRate(giftNumber, rate, getPlayer());
+        return interactionController.giftRate(giftNumber, rate, player);
     }
-    public Result giftHistory(String username) {
-        return interactionController.giftHistory(username, getPlayer());
+    public Result giftHistory(String username, Player player) {
+//        return interactionController.giftHistory(username, getPlayer());
+        return interactionController.giftHistory(username, player);
     }
-    public Result hug(String username) {
-        return interactionController.hug(username, getPlayer());
+    public Result hug(String username, Player player) {
+//        return interactionController.hug(username, getPlayer());
+        return interactionController.hug(username, player);
     }
-    public Result flower(String username) {
-        return interactionController.flower(username, getPlayer());
+    public Result flower(String username, Player player) {
+//        return interactionController.flower(username, getPlayer());
+        return interactionController.flower(username, player);
     }
-    public Result askMarriage(String username, String ring) {
-        return interactionController.askMarriage(username, ring, getPlayer());
+    public Result askMarriage(String username, String ring, Player player) {
+//        return interactionController.askMarriage(username, ring, getPlayer());
+        return interactionController.askMarriage(username, ring, player);
     }
 
 

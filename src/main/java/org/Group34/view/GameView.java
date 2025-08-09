@@ -595,7 +595,8 @@ public class GameView extends AppMenu {
                     String username = matcher.group("username").trim();
                     String message = matcher.group("message").trim();
 
-                    Result result = controller.talk(username, message);
+//                    Result result = controller.talk(username, message);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }
@@ -606,7 +607,8 @@ public class GameView extends AppMenu {
                 if (matcher.find()) {
                     String username = matcher.group("username").trim();
 
-                    Result result = controller.talkHistory(username);
+//                    Result result = controller.talkHistory(username);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }
@@ -619,12 +621,14 @@ public class GameView extends AppMenu {
                     String item = matcher.group("item").trim();
                     int amount = Integer.parseInt(matcher.group("amount").trim());
 
-                    Result result = controller.gift(username, item, amount);
+//                    Result result = controller.gift(username, item, amount);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }
             else if (command.matches(GameCommands.GIFT_RATE.getRegex())) {
-                Result result = controller.giftList();
+//                Result result = controller.giftList();
+                Result result = new Result(true, "");
                 showMessage(result.message());
             }
             else if (command.matches(GameCommands.GIFT_RATE.getRegex())) {
@@ -635,7 +639,8 @@ public class GameView extends AppMenu {
                     int giftNumber = Integer.parseInt(matcher.group("giftNumber").trim());
                     int rate = Integer.parseInt(matcher.group("amount").trim());
 
-                    Result result = controller.giftRate(giftNumber, rate);
+//                    Result result = controller.giftRate(giftNumber, rate);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }
@@ -646,7 +651,8 @@ public class GameView extends AppMenu {
                 if (matcher.find()) {
                     String username = matcher.group("username").trim();
 
-                    Result result = controller.giftHistory(username);
+//                    Result result = controller.giftHistory(username);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }
@@ -657,7 +663,8 @@ public class GameView extends AppMenu {
                 if (matcher.find()) {
                     String username = matcher.group("username").trim();
 
-                    Result result = controller.hug(username);
+//                    Result result = controller.hug(username);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }
@@ -668,7 +675,8 @@ public class GameView extends AppMenu {
                 if (matcher.find()) {
                     String username = matcher.group("username").trim();
 
-                    Result result = controller.flower(username);
+//                    Result result = controller.flower(username);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }
@@ -680,7 +688,8 @@ public class GameView extends AppMenu {
                     String username = matcher.group("username").trim();
                     String ring = matcher.group("ring").trim();
 
-                    Result result = controller.askMarriage(username, ring);
+//                    Result result = controller.askMarriage(username, ring);
+                    Result result = new Result(true, "");
                     showMessage(result.message());
                 }
             }

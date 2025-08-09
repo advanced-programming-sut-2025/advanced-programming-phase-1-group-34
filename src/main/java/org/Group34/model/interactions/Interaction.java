@@ -59,6 +59,10 @@ public class Interaction {
 
     public void increaseXp(int amount) {
         xp += amount;
+        if (xp >= (level + 1) * 100 && level != maxLevel) {
+            level++;
+            xp -= level * 100;
+        }
     }
 
     public String giftHistory() {
@@ -67,7 +71,7 @@ public class Interaction {
         result.append(" ===== Gift History =====\n");
         for (Gift gift : gifts) {
             result
-                    .append("Item: " + gift.getItem() + "\n")
+                    .append("Item: " + gift.getItem().getName() + "\n")
                     .append("Amount: " + gift.getAmount() + "\n")
                     .append("Is Received: " + gift.isReceived() + "\n\n");
         }

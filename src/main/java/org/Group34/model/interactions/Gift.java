@@ -53,6 +53,10 @@ public class Gift {
         this.number = number;
     }
 
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
     public Player getPlayer() {
         return player;
     }
