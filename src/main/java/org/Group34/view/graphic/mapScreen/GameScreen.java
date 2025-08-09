@@ -1,5 +1,4 @@
 package org.Group34.view.graphic.mapScreen;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -26,6 +25,7 @@ import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.NPCOnMap;
 import org.Group34.model.entities.Player;
 import org.Group34.model.entities.WalkAble;
+import org.Group34.model.entities.buildings.AnimalsBuilding;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.entities.buildings.shops.*;
 import org.Group34.model.entities.npcs.NPC;
@@ -81,7 +81,6 @@ public class GameScreen extends ScreenAdapter {
     private boolean hidePlayerDuringRender = false;
     private final GraphicAppView app;
     private GameClient client;
-
     private final AnimalController animalController;
     private final AnimalBuildingController buildingController;
     private Space currentSpace;
@@ -103,14 +102,10 @@ public class GameScreen extends ScreenAdapter {
         } else {
             this.player = myGame.getPlayers().values().iterator().next();
         }
-
         this.buildingController = new AnimalBuildingController();
         this.animalController = new AnimalController(buildingController, gameMap.getCurrentPlayerFarm(player));
-
         this.currentSpace = gameMap.getCurrentPlayerFarm(player);
-
         AnimalMenu.initialize(animalController, buildingController, currentSpace);
-
         toolsGraphic = new ItemsGraphic(batch, player, gameController);
         gameMenuGraphic = new GameMenuGraphic(batch, player, gameController);
         this.uiManager = new UIManager(skin, game, stage);
@@ -130,15 +125,18 @@ public class GameScreen extends ScreenAdapter {
         if (!isPassingOut) {
             handleInput(delta);
         }
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         // Only update camera if not in the middle of passout animation
         if (!isPassingOut || passoutCompleted) {
             updateCamera();
         }
+
         environmentManager.update();
         uiManager.update(environmentManager, player);
+
         if (!NPCsInitialized) {
-            // به‌روزرسانی فضای فعلی بازیکن
             currentSpace = gameMap.getCurrentPlayerFarm(player);
             environmentManager.initializeNPCs(currentSpace);
             for (NPCOnMap npcOnMap : environmentManager.getNpcManager().getNpcOnMaps()) {
@@ -146,10 +144,27 @@ public class GameScreen extends ScreenAdapter {
             }
             NPCsInitialized = true;
         }
+
+        // Update animal buildings in the current space
+        if (buildingController != null) {
+            for (AnimalsBuilding building : buildingController.getBuildings()) {
+                // Check if the building is within the current space boundaries
+                if (building.getX() >= 0 && building.getX() < currentSpace.width() &&
+                        building.getY() >= 0 && building.getY() < currentSpace.height()) {
+                    // Make sure the building is placed on the map
+                    if (currentSpace.getEntityByLocation(building.getX(), building.getY()) != building) {
+                        currentSpace.placingEntity(building.getX(), building.getY(), building);
+                    }
+                }
+            }
+        }
+
         int[] playerPos = player.getLocation();
         npcDialogueManager.update(delta, environmentManager.getNpcManager().getNpcOnMaps(), playerPos);
+
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+
         // Temporarily hide player from the map during passout animation
         if (isPassingOut) {
             int[] originalLocation = player.getLocation();
@@ -161,28 +176,34 @@ public class GameScreen extends ScreenAdapter {
         } else {
             mapRenderer.render(batch, camera, environmentManager, npcDialogueManager);
         }
+
         renderPlayer();
         renderOtherItems();
         batch.end();
+
         if (environmentManager.isWeatherActive()) {
             batch.begin();
             weatherRenderer.render(batch, delta, environmentManager);
             batch.end();
         }
+
         if (messageTimer > 0) {
             messageTimer -= delta;
             batch.begin();
             messageFont.draw(batch, currentMessage, 10, Gdx.graphics.getHeight() - 20);
             batch.end();
         }
+
         stage.act(delta);
         stage.draw();
+
         if (showMapOverview) {
             batch.setProjectionMatrix(stage.getCamera().combined);
             batch.begin();
             batch.draw(mapOverviewTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             batch.end();
         }
+
         if (isPassingOut) {
             passoutTimer += delta;
             currentRotation = (passoutTimer / PASSOUT_DURATION) * PASSOUT_ROTATION;
@@ -205,7 +226,6 @@ public class GameScreen extends ScreenAdapter {
             passoutCompleted = false;
         }
 
-
         if ("animal".equals(player.getCurrentGameMenu())) {
             batch.begin();
             AnimalMenu.draw(batch, player, camera);
@@ -218,6 +238,7 @@ public class GameScreen extends ScreenAdapter {
         boolean keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             myGame.getTime().cheatAdvanceTime(1);
         }
@@ -256,12 +277,14 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
             showMapOverview = !showMapOverview;
         }
+
         if (AnimalMenu.isPlacingBuilding()) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
                 AnimalMenu.cancelPlacingBuilding();
             }
             return;
         }
+
         if (keyUp || keyDown || keyLeft || keyRight) {
             moveTimer += delta;
             if (moveTimer < 0) {
@@ -280,13 +303,16 @@ public class GameScreen extends ScreenAdapter {
         int[] playerLocation = player.getLocation();
         int newX = playerLocation[0];
         int newY = playerLocation[1];
+
         if (keyUp) newY++;
         else if (keyDown) newY--;
         else if (keyLeft) newX--;
         else if (keyRight) newX++;
+
         if (AnimalMenu.isPlacingBuilding()) {
             return;
         }
+
         if (newX >= 0 && newX < gameMap.getCurrentPlayerFarm(player).width() &&
                 newY >= 0 && newY < gameMap.getCurrentPlayerFarm(player).height()) {
             Entity entity = gameMap.getCurrentPlayerFarm(player).getEntityByLocation(newX, newY);
@@ -320,6 +346,7 @@ public class GameScreen extends ScreenAdapter {
     private void handleGreenhouseInteraction() {
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
         GreenHouse greenhouse = null;
+
         for (int x = 0; x < currentSpace.width(); x++) {
             for (int y = 0; y < currentSpace.height(); y++) {
                 Entity entity = currentSpace.getEntityByLocation(x, y);
@@ -330,6 +357,7 @@ public class GameScreen extends ScreenAdapter {
             }
             if (greenhouse != null) break;
         }
+
         if (greenhouse != null) {
             if (!greenhouse.isRepaired()) {
                 GreenhouseRepairDialog dialog = new GreenhouseRepairDialog(
@@ -370,9 +398,11 @@ public class GameScreen extends ScreenAdapter {
         int[] playerPos = player.getLocation();
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
         int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
         for (int[] dir : directions) {
             int checkX = playerPos[0] + dir[0];
             int checkY = playerPos[1] + dir[1];
+
             if (checkX >= 0 && checkX < currentSpace.width() &&
                     checkY >= 0 && checkY < currentSpace.height()) {
                 Entity entity = currentSpace.getEntityByLocation(checkX, checkY);
@@ -415,6 +445,7 @@ public class GameScreen extends ScreenAdapter {
             // Use current player location
             pos = player.getLocation();
         }
+
         Texture playerTexture = PlayerAvatarManager.female_player1;
         if (isPassingOut) {
             batch.draw(playerTexture,
@@ -448,7 +479,7 @@ public class GameScreen extends ScreenAdapter {
         mapRenderer.dispose();
         weatherRenderer.dispose();
         npcDialogueManager.dispose();
-        AnimalMenu.dispose(); // اضافه کردن dispose برای AnimalMenu
+        AnimalMenu.dispose();
         stage.dispose();
         batch.dispose();
         messageFont.dispose();

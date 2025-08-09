@@ -352,17 +352,17 @@ public class AnimalMenu {
             font.getData().setScale(0.8f);
             if (selectedBuildingType != null) {
                 font.draw(batch, selectedBuildingType.getName(), x + 240, y - 47);
-                font.getData().setScale(0.5f);
+                font.getData().setScale(0.8f);
                 font.draw(batch, "Capacity: " + selectedBuildingType.getCapacity(), x + 240, y - 65);
                 font.draw(batch, "Price: " + selectedBuildingType.getPrice() + "g", x + 240, y - 80);
                 font.draw(batch, "Wood: " + selectedBuildingType.getWoodCost(), x + 240, y - 95);
                 font.draw(batch, "Stone: " + selectedBuildingType.getStoneCost(), x + 240, y - 110);
                 // Draw buy button
-                if (player.getMoney() >= selectedBuildingType.getPrice() &&
-                        player.getAmountOfItem(org.Group34.model.items.crafting.Ingredient.WOOD) >= selectedBuildingType.getWoodCost() &&
-                        player.getAmountOfItem(org.Group34.model.items.crafting.Ingredient.STONE) >= selectedBuildingType.getStoneCost()) {
-                    smallBoard.setPosition(x + 240, y - 140);
-                    smallBoard.draw(batch);
+                if (true) {
+                    Sprite optionBoard = new Sprite(GameMenuAssetManager.getSmallBoard());
+                    optionBoard.setSize(50, 20);
+                    optionBoard.setPosition(x + 240, y - 145);
+                    optionBoard.draw(batch);
                     font.draw(batch, "Build", x + 255, y - 135);
                 } else {
                     font.setColor(Color.RED);
@@ -387,7 +387,7 @@ public class AnimalMenu {
             font.getData().setScale(0.8f);
             if (selectedAnimalType != null) {
                 font.draw(batch, selectedAnimalType.getName(), x + 240, y - 47);
-                font.getData().setScale(0.5f);
+                font.getData().setScale(0.8f);
                 font.draw(batch, "Price: " + selectedAnimalType.getPrice() + "g", x + 240, y - 65);
                 font.draw(batch, "Required: " + selectedAnimalType.getRequiredBuilding().getName(), x + 240, y - 80);
                 // Check if player has required building
@@ -401,10 +401,12 @@ public class AnimalMenu {
                         }
                     }
                 }
-                if (hasBuilding && player.getMoney() >= selectedAnimalType.getPrice()) {
+                if (true) {
                     // Draw buy button
-                    smallBoard.setPosition(x + 240, y - 140);
-                    smallBoard.draw(batch);
+                    Sprite optionBoard = new Sprite(GameMenuAssetManager.getSmallBoard());
+                    optionBoard.setSize(50, 20);
+                    optionBoard.setPosition(x + 240, y - 145);
+                    optionBoard.draw(batch);
                     font.draw(batch, "Buy", x + 255, y - 135);
                 } else {
                     font.setColor(Color.RED);
@@ -428,7 +430,6 @@ public class AnimalMenu {
         BitmapFont font = new BitmapFont();
         font.setColor(Color.BLACK);
         font.getData().setScale(0.8f);
-        font.draw(batch, "Back", x + 465, y - 100);
     }
 
     public static void handleInput(Player player, OrthographicCamera camera) {
@@ -541,8 +542,8 @@ public class AnimalMenu {
         float centerY = Gdx.graphics.getHeight() / 2;
 
         // Build Animal Building button (left side)
-        float buildLeft = centerX - 150;
-        float buildRight = centerX + 50;
+        float buildLeft = centerX - 300;
+        float buildRight = centerX + 100;
         float buildTop = centerY + 100;
         float buildBottom = centerY - 100;
 
@@ -619,15 +620,13 @@ public class AnimalMenu {
         float baseY = Gdx.graphics.getHeight() / 2 + 300;
         if (currentMenuState == MenuState.BUILDING_SELECT && selectedBuildingType != null) {
             // Check if player can afford this building
-            boolean canAfford = player.getMoney() >= selectedBuildingType.getPrice() &&
-                    player.getAmountOfItem(org.Group34.model.items.crafting.Ingredient.WOOD) >= selectedBuildingType.getWoodCost() &&
-                    player.getAmountOfItem(org.Group34.model.items.crafting.Ingredient.STONE) >= selectedBuildingType.getStoneCost();
-            if (canAfford) {
+            boolean canAfford = player.getMoney() >= selectedBuildingType.getPrice();
+            if (true) {
                 float buttonX = baseX + 240;
                 float buttonY = baseY - 440;
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
-                        x > buttonX && x < buttonX + 70 &&
-                        y > buttonY && y < buttonY + 25) {
+                        x > buttonX + 300 && x < buttonX + 500 &&
+                        y > buttonY + 400 && y < buttonY + 500) {
                     selectedBuildingType = selectedBuildingType;
                     isPlacingBuilding = true;
                     successMessage = "Click on the map to place " + selectedBuildingType.getName();
@@ -636,7 +635,7 @@ public class AnimalMenu {
             }
         } else if (currentMenuState == MenuState.ANIMAL_SELECT && selectedAnimalType != null) {
             // Check if player has required building and can afford
-            boolean hasBuilding = false;
+            boolean hasBuilding = true;
             if (buildingController != null) {
                 for (AnimalsBuilding building : buildingController.getBuildings()) {
                     if (BarnType.valueOf(building.type) == selectedAnimalType.getRequiredBuilding() &&
@@ -647,7 +646,7 @@ public class AnimalMenu {
                 }
             }
             boolean canAfford = player.getMoney() >= selectedAnimalType.getPrice();
-            if (hasBuilding && canAfford) {
+            if (true) {
                 float buttonX = baseX + 240;
                 float buttonY = baseY - 440;
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
@@ -665,9 +664,7 @@ public class AnimalMenu {
         // Back button position (same as trash can in inventory)
         float backButtonX = baseX + 440;
         float backButtonY = baseY - 440;
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
-                x > backButtonX && x < backButtonX + 100 &&
-                y > backButtonY && y < backButtonY + 100) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 900 && x < 1100 && y > 600 && y < 700) {
             // Go back to main menu
             currentMenuState = MenuState.MAIN;
             selectedBuildingType = null;
@@ -688,6 +685,7 @@ public class AnimalMenu {
             isPlacingBuilding = false;
             return;
         }
+
         // Try to build the building
         Result result = buildingController.buildBuilding(
                 selectedBuildingType.name(),
@@ -696,12 +694,17 @@ public class AnimalMenu {
                 player,
                 currentSpace
         );
+
         if (result.success()) {
             successMessage = result.message();
             messageTimer = MESSAGE_DURATION;
+
             // Reset state
             isPlacingBuilding = false;
             selectedBuildingType = null;
+
+            // Force map refresh by going back to main menu
+            currentMenuState = MenuState.MAIN;
         } else {
             errorMessage = result.message();
             messageTimer = MESSAGE_DURATION;

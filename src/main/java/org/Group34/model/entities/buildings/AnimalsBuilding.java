@@ -3,6 +3,7 @@ package org.Group34.model.entities.buildings;
 import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Animal;
+import org.Group34.model.gameAssetManagers.AnimalAssetManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,14 @@ public class AnimalsBuilding implements Entity {
 
     @Override
     public Texture getTexture() {
-        return null;
+        // Return appropriate texture based on building type
+        if (type != null) {
+            if (type.contains("COOP")) {
+                return AnimalAssetManager.coop;
+            } else {
+                return AnimalAssetManager.barn;
+            }
+        }
+        return AnimalAssetManager.barn; // Default texture
     }
 }

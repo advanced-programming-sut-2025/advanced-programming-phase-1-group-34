@@ -49,21 +49,11 @@ public class AnimalBuildingController {
             return new Result(false, "Not enough money! Need " + type.getPrice() + "g");
         }
 
-        if (player.getAmountOfItem(org.Group34.model.items.crafting.Ingredient.WOOD) < type.getWoodCost()) {
-            return new Result(false, "Not enough wood! Need " + type.getWoodCost());
-        }
-
-        if (player.getAmountOfItem(org.Group34.model.items.crafting.Ingredient.STONE) < type.getStoneCost()) {
-            return new Result(false, "Not enough stone! Need " + type.getStoneCost());
-        }
-
         // Try to place the building
         Result placeResult = placeBuilding(type, x, y, space);
         if (placeResult.success()) {
             // Deduct resources
             player.addMoney(-type.getPrice());
-            player.removeFromInventory(org.Group34.model.items.crafting.Ingredient.WOOD, type.getWoodCost());
-            player.removeFromInventory(org.Group34.model.items.crafting.Ingredient.STONE, type.getStoneCost());
             return new Result(true, "Built " + type.getName() + " successfully!");
         } else {
             return placeResult;
