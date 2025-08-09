@@ -16,13 +16,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GameView extends AppMenu {
-    private final GameController controller;
+    private GameController controller;
     FarmingController farmingController;
     ToolsController toolsController;
     ShopController shopController;
 
     public GameView(MyGame myGame) {
-        this.controller = new GameController(myGame);
+        //this.controller = new GameController(myGame);
         this.farmingController =  controller.getFarmingController();
         this.toolsController = controller.getToolsController();
         this.shopController = controller.getShopController();
