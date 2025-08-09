@@ -264,19 +264,6 @@ public class AnimalMenu {
         List<AnimalType> animals = new ArrayList<>(java.util.Arrays.asList(AnimalType.values()));
         while (index + (12 * scrollNumber) < animals.size() && index < 36) {
             AnimalType animalType = animals.get(index + (12 * scrollNumber));
-            // Check if player has required building
-            boolean hasBuilding = false;
-            if (buildingController != null) {
-                for (AnimalsBuilding building : buildingController.getBuildings()) {
-                    if (BarnType.valueOf(building.type) == animalType.getRequiredBuilding() &&
-                            building.getAnimalCount() < building.capacity) {
-                        hasBuilding = true;
-                        break;
-                    }
-                }
-            }
-            // Check if player can afford this animal
-            boolean canAfford = player.getMoney() >= animalType.getPrice();
             // Draw animal
             Sprite animalSprite = getAnimalSprite(animalType);
             animalSprite.setPosition(x + 37 + (48 * index), y + 137 - (index / 12 * 50));
@@ -649,7 +636,7 @@ public class AnimalMenu {
         if (currentMenuState == MenuState.BUILDING_SELECT && selectedBuildingType != null) {
             // Check if player can afford this building
             boolean canAfford = player.getMoney() >= selectedBuildingType.getPrice();
-            if (true) {
+            if (canAfford) {
                 float buttonX = baseX + 240;
                 float buttonY = baseY - 440;
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
@@ -662,10 +649,14 @@ public class AnimalMenu {
                     // Close the menu so player can see the entire map
                     player.setCurrentGameMenu(null);
                 }
+                else {
+                    errorMessage = "Not enough money";
+                    messageTimer = MESSAGE_DURATION;
+                }
             }
         } else if (currentMenuState == MenuState.ANIMAL_SELECT && selectedAnimalType != null) {
             // Check if player has required building and can afford
-            boolean hasBuilding = true;
+            boolean hasBuilding = false;
             if (buildingController != null) {
                 for (AnimalsBuilding building : buildingController.getBuildings()) {
                     if (BarnType.valueOf(building.type) == selectedAnimalType.getRequiredBuilding() &&
@@ -676,7 +667,7 @@ public class AnimalMenu {
                 }
             }
             boolean canAfford = player.getMoney() >= selectedAnimalType.getPrice();
-            if (true) {
+            if (hasBuilding && canAfford) {
                 float buttonX = baseX + 240;
                 float buttonY = baseY - 440;
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
@@ -684,6 +675,14 @@ public class AnimalMenu {
                         y > buttonY + 400 && y < buttonY + 500) {
                     buyAnimal(player, selectedAnimalType, camera);
                 }
+            }
+            else if (!hasBuilding && canAfford) {
+                errorMessage = "There's no barn/coop on map";
+                messageTimer = MESSAGE_DURATION;
+            }
+            else {
+                errorMessage = "Not enough money";
+                messageTimer = MESSAGE_DURATION;
             }
         }
     }
