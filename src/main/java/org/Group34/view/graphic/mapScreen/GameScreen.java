@@ -21,10 +21,7 @@ import org.Group34.controller.AnimalBuildingController;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.User;
-import org.Group34.model.entities.Entity;
-import org.Group34.model.entities.NPCOnMap;
-import org.Group34.model.entities.Player;
-import org.Group34.model.entities.WalkAble;
+import org.Group34.model.entities.*;
 import org.Group34.model.entities.buildings.AnimalsBuilding;
 import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.entities.buildings.shops.*;
@@ -159,6 +156,20 @@ public class GameScreen extends ScreenAdapter {
             }
         }
 
+        // Update animals in the current space
+        if (animalController != null) {
+            for (Animal animal : animalController.getAllAnimals()) {
+                // Check if the animal is within the current space boundaries
+                if (animal.getX() >= 0 && animal.getX() < currentSpace.width() &&
+                        animal.getY() >= 0 && animal.getY() < currentSpace.height()) {
+                    // Make sure the animal is placed on the map
+                    if (currentSpace.getEntityByLocation(animal.getX(), animal.getY()) != animal) {
+                        currentSpace.placingEntity(animal.getX(), animal.getY(), animal);
+                    }
+                }
+            }
+        }
+
         int[] playerPos = player.getLocation();
         npcDialogueManager.update(delta, environmentManager.getNpcManager().getNpcOnMaps(), playerPos);
 
@@ -178,6 +189,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         renderPlayer();
+        renderAnimals(); // Add this line to render animals
         renderOtherItems();
         batch.end();
 
@@ -480,6 +492,26 @@ public class GameScreen extends ScreenAdapter {
                     false);
         } else {
             batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        }
+    }
+
+    private void renderAnimals() {
+        if (animalController != null) {
+            for (Animal animal : animalController.getAllAnimals()) {
+                // Check if the animal is within the current space boundaries
+                if (animal.getX() >= 0 && animal.getX() < currentSpace.width() &&
+                        animal.getY() >= 0 && animal.getY() < currentSpace.height()) {
+                    // Render the animal at its position
+                    Texture animalTexture = animal.getTexture();
+                    if (animalTexture != null) {
+                        batch.draw(animalTexture,
+                                animal.getX() * TILE_SIZE,
+                                animal.getY() * TILE_SIZE,
+                                TILE_SIZE,
+                                TILE_SIZE);
+                    }
+                }
+            }
         }
     }
 

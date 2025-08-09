@@ -3,6 +3,7 @@ package org.Group34.model.entities;
 import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.enums.animals.AnimalType;
 import org.Group34.model.enums.animals.Product;
+import org.Group34.model.gameAssetManagers.AnimalAssetManager;
 
 import java.util.List;
 
@@ -153,6 +154,26 @@ public class Animal implements Entity {
 
     @Override
     public Texture getTexture() {
-        return null;
+        // Return appropriate texture based on animal type
+        switch (type) {
+            case CHICKEN:
+                return AnimalAssetManager.chicken;
+            case DUCK:
+                return AnimalAssetManager.duck;
+            case RABBIT:
+                return AnimalAssetManager.rabbit;
+            case DINOSAUR:
+                return AnimalAssetManager.dinosaur;
+            case COW:
+                return AnimalAssetManager.cow;
+            case GOAT:
+                return AnimalAssetManager.goat;
+            case SHEEP:
+                return AnimalAssetManager.sheep;
+            case PIG:
+                return AnimalAssetManager.pig;
+            default:
+                return AnimalAssetManager.chicken;
+        }
     }
 }

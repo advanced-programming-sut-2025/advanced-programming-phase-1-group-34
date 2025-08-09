@@ -680,8 +680,8 @@ public class AnimalMenu {
                 float buttonX = baseX + 240;
                 float buttonY = baseY - 440;
                 if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&
-                        x > buttonX && x < buttonX + 70 &&
-                        y > buttonY && y < buttonY + 25) {
+                        x > buttonX + 300 && x < buttonX + 500 &&
+                        y > buttonY + 400 && y < buttonY + 500) {
                     buyAnimal(player, selectedAnimalType, camera);
                 }
             }
@@ -762,25 +762,58 @@ public class AnimalMenu {
             player.addMoney(-animalType.getPrice());
             successMessage = "Bought " + animalType.getName() + " for " + animalType.getPrice() + "g!";
             messageTimer = MESSAGE_DURATION;
-            // Place animal near player
+
+            // Get the newly created animal
             Animal newAnimal = animalController.getAnimal(animalName);
             if (newAnimal != null) {
-                // Place animal near player's current position
-                int playerX = (int) camera.position.x;
-                int playerY = (int) camera.position.y;
-                // Find a suitable nearby position
+                // Get player's current position
+                int[] playerPos = player.getLocation();
+
+                // Find a suitable nearby position for the animal
+                boolean placed = false;
                 for (int dx = -2; dx <= 2; dx++) {
                     for (int dy = -2; dy <= 2; dy++) {
                         if (dx == 0 && dy == 0) continue; // Skip player's position
-                        int newX = playerX + dx * 50;
-                        int newY = playerY + dy * 50;
-                        // Set animal position
-                        newAnimal.setX(newX);
-                        newAnimal.setY(newY);
-                        // Place animal on map (assuming space is accessible)
-                        // This would require access to the game's space system
-                        // For now, we'll just set the coordinates
-                        break;
+
+                        int newX = playerPos[0] + dx;
+                        int newY = playerPos[1] + dy;
+
+                        // Check if the position is valid and empty
+                        if (newX >= 0 && newX < currentSpace.width() &&
+                                newY >= 0 && newY < currentSpace.height() &&
+                                currentSpace.getEntityByLocation(newX, newY) == null) {
+
+                            // Set animal position
+                            newAnimal.setX(newX);
+                            newAnimal.setY(newY);
+
+                            // Place animal on map
+                            currentSpace.placingEntity(newX, newY, newAnimal);
+
+                            placed = true;
+                            break;
+                        }
+                    }
+                    if (placed) break;
+                }
+
+                // If we couldn't place the animal near the player, try to place it anywhere
+                if (!placed) {
+                    for (int x = 0; x < currentSpace.width(); x++) {
+                        for (int y = 0; y < currentSpace.height(); y++) {
+                            if (currentSpace.getEntityByLocation(x, y) == null) {
+                                // Set animal position
+                                newAnimal.setX(x);
+                                newAnimal.setY(y);
+
+                                // Place animal on map
+                                currentSpace.placingEntity(x, y, newAnimal);
+
+                                placed = true;
+                                break;
+                            }
+                        }
+                        if (placed) break;
                     }
                 }
             }

@@ -33,28 +33,7 @@ public class AnimalController {
 
         Animal animal = new Animal(name, type);
         animals.put(name, animal);
-
-        // Find appropriate building
-        BarnType requiredType = type.getRequiredBuilding();
-        for (AnimalsBuilding building : buildingController.getBuildings()) {
-            if (BarnType.valueOf(building.type) == requiredType &&
-                    building.getAnimalCount() < building.capacity) {
-
-                // Add to building
-                building.addAnimal(animal);
-
-                // Place animal in building (at building's position)
-                animal.setX(building.getX());
-                animal.setY(building.getY());
-                space.placingEntity(animal.getX(), animal.getY(), animal);
-
-                return true;
-            }
-        }
-
-        // No suitable building found
-        animals.remove(name);
-        return false;
+        return true;
     }
 
     public Animal getAnimal(String name) {
