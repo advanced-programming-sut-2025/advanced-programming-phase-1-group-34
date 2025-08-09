@@ -312,7 +312,7 @@ public class GameMenuScreen extends ScreenAdapter {
             MyGame myGame = App.getCurrentUser().getGame();
             if (myGame != null) {
                 // Transition to the actual game screen
-                game.setScreen(new GameScreen(skin, game, myGame, new GameController(myGame), app, client));
+                game.setScreen(new GameScreen(skin, game, myGame, new GameController(myGame, client), app, client));
                 dispose();
             } else {
                 showStatus(new Result(false, "Failed to start game"));
