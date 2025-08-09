@@ -18,8 +18,8 @@ import org.Group34.controller.AnimalBuildingController;
 import org.Group34.model.map.Space;
 import java.util.ArrayList;
 import java.util.List;
-
 public class AnimalMenu {
+    private static final int TILE_SIZE = 32;
     private final static Sprite chest = new Sprite(GameMenuAssetManager.getChest());
     private final static Sprite board = new Sprite(GameMenuAssetManager.getBoard());
     private final static Sprite smallBoard = new Sprite(GameMenuAssetManager.getSmallBoard());
@@ -89,6 +89,41 @@ public class AnimalMenu {
     }
 
     public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera) {
+        // If we're in building placement mode, show the placement hint and building preview
+        if (isPlacingBuilding) {
+            font.setColor(Color.YELLOW);
+            font.draw(batch, "Click on the map to place the building", camera.position.x - 150, camera.position.y + 50);
+            font.draw(batch, "Press ESC to cancel", camera.position.x - 150, camera.position.y + 30);
+            font.setColor(Color.BLACK);
+
+            // Show building preview at mouse position
+            int mouseX = Gdx.input.getX();
+            int mouseY = Gdx.input.getY();
+
+            // Convert screen coordinates to world coordinates
+            int worldX = (int) (camera.position.x - Gdx.graphics.getWidth() / 2 + mouseX);
+            int worldY = (int) (camera.position.y - Gdx.graphics.getHeight() / 2 + (Gdx.graphics.getHeight() - mouseY));
+
+            // Convert world coordinates to tile coordinates
+            int tileX = worldX / TILE_SIZE;
+            int tileY = worldY / TILE_SIZE;
+
+            // Draw preview of the building
+            if (selectedBuildingType != null) {
+                Sprite buildingSprite;
+                if (selectedBuildingType.name().contains("COOP")) {
+                    buildingSprite = new Sprite(AnimalAssetManager.coop);
+                } else {
+                    buildingSprite = new Sprite(AnimalAssetManager.barn);
+                }
+                buildingSprite.setPosition(tileX * TILE_SIZE, tileY * TILE_SIZE);
+                buildingSprite.setSize(TILE_SIZE * 2, TILE_SIZE * 2); // Buildings are 2x2 tiles
+                buildingSprite.draw(batch);
+            }
+
+            return;
+        }
+
         float x = camera.position.x - chest.getWidth() / 2;
         float y = camera.position.y - 30;
         drawBoard(batch, x, y);
@@ -120,13 +155,6 @@ public class AnimalMenu {
                 errorMessage = "";
                 successMessage = "";
             }
-        }
-        // Show placement hint if in building placement mode
-        if (isPlacingBuilding) {
-            font.setColor(Color.YELLOW);
-            font.draw(batch, "Click on the map to place the building", camera.position.x - 150, camera.position.y + 50);
-            font.draw(batch, "Press ESC to cancel", camera.position.x - 150, camera.position.y + 30);
-            font.setColor(Color.BLACK);
         }
     }
 
@@ -631,6 +659,8 @@ public class AnimalMenu {
                     isPlacingBuilding = true;
                     successMessage = "Click on the map to place " + selectedBuildingType.getName();
                     messageTimer = MESSAGE_DURATION;
+                    // Close the menu so player can see the entire map
+                    player.setCurrentGameMenu(null);
                 }
             }
         } else if (currentMenuState == MenuState.ANIMAL_SELECT && selectedAnimalType != null) {
@@ -672,7 +702,7 @@ public class AnimalMenu {
         }
     }
 
-    private static void placeBuilding(Player player, int tileX, int tileY) {
+    public static void handleBuildingPlacement(Player player, int tileX, int tileY) {
         if (buildingController == null || currentSpace == null) {
             errorMessage = "Building controller or space not initialized!";
             messageTimer = MESSAGE_DURATION;
@@ -698,18 +728,19 @@ public class AnimalMenu {
         if (result.success()) {
             successMessage = result.message();
             messageTimer = MESSAGE_DURATION;
-
             // Reset state
             isPlacingBuilding = false;
             selectedBuildingType = null;
-
-            // Force map refresh by going back to main menu
-            currentMenuState = MenuState.MAIN;
+            resetMenuState();
         } else {
             errorMessage = result.message();
             messageTimer = MESSAGE_DURATION;
-            isPlacingBuilding = false;
+            // Don't reset placement mode on failure, let the player try again
         }
+    }
+
+    private static void placeBuilding(Player player, int tileX, int tileY) {
+        handleBuildingPlacement(player, tileX, tileY);
     }
 
     private static void buyAnimal(Player player, AnimalType animalType, OrthographicCamera camera) {

@@ -278,11 +278,25 @@ public class GameScreen extends ScreenAdapter {
             showMapOverview = !showMapOverview;
         }
 
+        // Handle building placement
         if (AnimalMenu.isPlacingBuilding()) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
                 AnimalMenu.cancelPlacingBuilding();
             }
-            return;
+
+            // Handle mouse click for building placement
+            if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                // Convert screen coordinates to world coordinates
+                int worldX = (int) (camera.position.x - Gdx.graphics.getWidth() / 2 + Gdx.input.getX());
+                int worldY = (int) (camera.position.y - Gdx.graphics.getHeight() / 2 + (Gdx.graphics.getHeight() - Gdx.input.getY()));
+                // Convert world coordinates to tile coordinates
+                int tileX = worldX / TILE_SIZE;
+                int tileY = worldY / TILE_SIZE;
+
+                // Try to place the building
+                AnimalMenu.handleBuildingPlacement(player, tileX, tileY);
+            }
+            return; // Skip normal movement when in building placement mode
         }
 
         if (keyUp || keyDown || keyLeft || keyRight) {
