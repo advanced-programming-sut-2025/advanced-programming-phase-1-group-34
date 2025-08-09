@@ -35,6 +35,7 @@ import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GameMenuGraphic;
 import org.Group34.view.graphic.GraphicAppView;
 import org.Group34.view.graphic.ItemsGraphic;
+import org.Group34.view.graphic.dialogs.AnimalInteractionMenu;
 import org.Group34.view.graphic.dialogs.GreenhouseRepairDialog;
 import org.Group34.view.graphic.gameMenu.AnimalMenu;
 import org.Group34.view.graphic.menuScreen.MainMenuScreen;
@@ -81,6 +82,7 @@ public class GameScreen extends ScreenAdapter {
     private final AnimalController animalController;
     private final AnimalBuildingController buildingController;
     private Space currentSpace;
+    private AnimalInteractionMenu animalInteractionMenu;
 
     public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController, GraphicAppView app, GameClient client) {
         this.skin = skin;
@@ -209,6 +211,18 @@ public class GameScreen extends ScreenAdapter {
         stage.act(delta);
         stage.draw();
 
+        if (animalInteractionMenu != null) {
+            animalInteractionMenu.handleInput();
+            animalInteractionMenu.render();
+
+            // Only dispose when both menu is inactive AND there are no active icons
+            if (!animalInteractionMenu.isActive() &&
+                    (animalInteractionMenu.getActiveIcon() == null || animalInteractionMenu.getIconTimer() <= 0)) {
+                animalInteractionMenu.dispose();
+                animalInteractionMenu = null;
+            }
+        }
+
         if (showMapOverview) {
             batch.setProjectionMatrix(stage.getCamera().combined);
             batch.begin();
@@ -309,6 +323,27 @@ public class GameScreen extends ScreenAdapter {
                 AnimalMenu.handleBuildingPlacement(player, tileX, tileY);
             }
             return; // Skip normal movement when in building placement mode
+        }
+
+        // Handle right-click on animals
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+            // Convert screen coordinates to world coordinates
+            int worldX = (int) (camera.position.x - Gdx.graphics.getWidth() / 2 + Gdx.input.getX());
+            int worldY = (int) (camera.position.y - Gdx.graphics.getHeight() / 2 + (Gdx.graphics.getHeight() - Gdx.input.getY()));
+
+            // Convert world coordinates to tile coordinates
+            int tileX = worldX / TILE_SIZE;
+            int tileY = worldY / TILE_SIZE;
+
+            // Check if there's an animal at this tile
+            Entity entity = currentSpace.getEntityByLocation(tileX, tileY);
+            if (entity instanceof Animal) {
+                Animal animal = (Animal) entity;
+                // Create and show the animal interaction menu
+                animalInteractionMenu = new AnimalInteractionMenu(
+                        animal, skin, batch, camera, animalController, currentSpace, player, stage
+                );
+            }
         }
 
         if (keyUp || keyDown || keyLeft || keyRight) {
@@ -531,6 +566,9 @@ public class GameScreen extends ScreenAdapter {
         messageFont.dispose();
         if (mapOverviewTexture != null) {
             mapOverviewTexture.dispose();
+        }
+        if (animalInteractionMenu != null) {
+            animalInteractionMenu.dispose();
         }
     }
 
