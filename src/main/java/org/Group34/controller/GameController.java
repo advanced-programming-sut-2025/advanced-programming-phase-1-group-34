@@ -19,6 +19,7 @@ import org.Group34.model.items.crafting.ProcessorCraft;
 import org.Group34.model.items.foods.*;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
+import org.Group34.network.client.GameClient;
 import org.Group34.view.menu.GameMenu;
 import org.Group34.view.menu.MainMenu;
 
@@ -46,6 +47,7 @@ public class GameController {
     private final HouseMenuController houseMenuController = new HouseMenuController();
     private final ArtisanController artisanController = new ArtisanController();
     private final InteractionController interactionController = new InteractionController();
+    private GameClient client;
 
     public boolean isThirdLevel = false;
     public boolean flag = false;
@@ -62,10 +64,15 @@ public class GameController {
         return shopController;
     }
 
-    public GameController(MyGame myGame){
+    public GameClient getClient() {
+        return client;
+    }
+
+    public GameController(MyGame myGame, GameClient client){
         this.myGame = myGame;
         this.startANewDayController = new StartANewDayController(myGame, myGame.getMap().getSpaces(), myGame.getTime());
         this.animalController = new AnimalController(new AnimalBuildingController(), myGame.getMap().getSpaces().get(mainUser));
+        this.client = client;
         setOrderOfPlay();
         myGame.getWeatherSystem().initializeWeather(myGame.getTime());
     }

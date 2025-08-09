@@ -2,9 +2,10 @@ package org.Group34.network.server;
 
 import org.Group34.model.User;
 import org.Group34.network.LobbyManager;
+import org.Group34.model.TestObject;
+
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClientHandler extends Thread {
@@ -31,15 +32,20 @@ public class ClientHandler extends Thread {
             while (true) {
                 Object input = in.readObject();
                 if (input instanceof String command) {
-                    System.out.println("ClientHandler #" + handlerId + " received command: " + command);
-                    String[] parts = command.split(" ", 5);
-                    String response = processCommand(parts[0],
-                            parts.length > 1 ? parts[1] : "",
-                            parts.length > 2 ? parts[2] : "",
-                            parts.length > 3 ? parts[3] : "",
-                            parts.length > 4 ? parts[4] : "");
-                    System.out.println("ClientHandler #" + handlerId + " sending response: " + response);
-                    out.writeObject(response);
+                    if (command.startsWith("SOCIAL")) {
+                        Object response = processSocialCommand(command);
+                        out.writeObject(response);
+                    } else {
+                        System.out.println("ClientHandler #" + handlerId + " received command: " + command);
+                        String[] parts = command.split(" ", 5);
+                        String response = processCommand(parts[0],
+                                parts.length > 1 ? parts[1] : "",
+                                parts.length > 2 ? parts[2] : "",
+                                parts.length > 3 ? parts[3] : "",
+                                parts.length > 4 ? parts[4] : "");
+                        System.out.println("ClientHandler #" + handlerId + " sending response: " + response);
+                        out.writeObject(response);
+                    }
                 } else if (input instanceof User) {
                     currentUser = (User) input;
                     String response = lobbyManager.connectUser(currentUser);
@@ -112,6 +118,9 @@ public class ClientHandler extends Thread {
                     }
                     return lobbyManager.checkGameStatus(lobbyIdToCheck, currentUser);
 
+//                case "SOCIAL_GET_PLAYERS":
+//                    return "test is ok";
+
                 default:
                     System.out.println("ClientHandler #" + handlerId + " unknown command: " + command);
                     return "UNKNOWN_COMMAND";
@@ -120,5 +129,17 @@ public class ClientHandler extends Thread {
             System.err.println("ClientHandler #" + handlerId + " error processing command: " + e.getMessage());
             return "ERROR:" + e.getMessage();
         }
+    }
+
+    private Object processSocialCommand(String command) {
+        try {
+            if (command.equals("SOCIAL_GET_PLAYERS")) {
+                return new TestObject("hello", 13);
+            }
+            System.out.println("send success");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 }

@@ -29,8 +29,10 @@ import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.enums.Season;
 import org.Group34.model.gameAssetManagers.NPCDialogueManager;
 import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
+import org.Group34.model.interactions.Interaction;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
+import org.Group34.model.TestObject;
 import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GameMenuGraphic;
 import org.Group34.view.graphic.GraphicAppView;
@@ -575,5 +577,13 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+    }
+
+    public void handleServerInputs(Object object) {
+        if (object instanceof TestObject test) {
+            this.player.testObject = test;
+            System.out.println(test.name);
+            System.out.println(test.number);
+        }
     }
 }

@@ -104,7 +104,11 @@ public class SocialMenu {
             player2.getInteractionByPlayer(player).setLevel(4);
             gameController.gift(player.getName(), "Apple Sapling", 5, player2);
 //            string = gameController.giftRate(1, 3, player).message();
+            gameController.getClient().send("SOCIAL_GET_PLAYERS");
         }
+
+
+        string = player.testObject.name + " - " + player.testObject.number;
 
         float x = camera.position.x - chest.getWidth() / 2;
         float y = camera.position.y - 30;

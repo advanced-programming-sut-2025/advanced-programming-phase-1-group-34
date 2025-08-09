@@ -269,7 +269,7 @@ public class LobbyManager {
             this.password = password;
             this.admin = null;
             this.lastActivityTime = System.currentTimeMillis();
-            this.gameStarted = false; // مقداردهی اولیه
+            this.gameStarted = false;
         }
     }
 }

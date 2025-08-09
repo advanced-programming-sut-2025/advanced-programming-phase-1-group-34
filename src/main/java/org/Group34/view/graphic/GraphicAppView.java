@@ -166,6 +166,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import org.Group34.model.App;
 import org.Group34.model.User;
 import org.Group34.network.client.GameClient;
+import org.Group34.view.graphic.mapScreen.GameScreen;
 import org.Group34.view.graphic.menuScreen.LobbyMenuScreen;
 import org.Group34.view.graphic.menuScreen.RegisterScreen;
 
@@ -211,12 +212,15 @@ public class GraphicAppView extends Game {
         setScreen(new LobbyMenuScreen(skin, this, client, this));
     }
 
-    private void handleNetworkMessage(String message) {
+    private void handleNetworkMessage(Object message) {
         Gdx.app.postRunnable(() -> {
-            System.out.println("Received: " + message);
+            System.out.println("Received: " + message.toString());
             // Handle network messages in the main thread
             if (getScreen() instanceof LobbyMenuScreen) {
-                ((LobbyMenuScreen) getScreen()).handleServerMessage(message);
+                ((LobbyMenuScreen) getScreen()).handleServerMessage((String) message);
+            }
+            else if (getScreen() instanceof GameScreen screen) {
+                screen.handleServerInputs(message);
             }
         });
     }

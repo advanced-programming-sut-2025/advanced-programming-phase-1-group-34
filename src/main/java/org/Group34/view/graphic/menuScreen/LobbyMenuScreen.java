@@ -890,7 +890,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
         refreshTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (client != null) {
+                if (client != null && app.getScreen() instanceof LobbyMenuScreen) {
                     client.send("GET_LOBBIES");
                 }
             }
@@ -912,7 +912,7 @@ public class LobbyMenuScreen extends ScreenAdapter {
         gameStatusCheckTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (client != null && !joinedLobbyIds.isEmpty()) {
+                if (client != null && !joinedLobbyIds.isEmpty() && app.getScreen() instanceof LobbyMenuScreen) {
                     for (String lobbyId : joinedLobbyIds) {
                         client.send("CHECK_GAME_STATUS " + lobbyId);
                     }

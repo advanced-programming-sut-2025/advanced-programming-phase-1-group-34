@@ -1,5 +1,7 @@
 package org.Group34.network.client;
+import org.Group34.model.TestObject;
 import org.Group34.model.User;
+import org.Group34.model.entities.Player;
 
 import java.io.*;
 import java.net.Socket;
@@ -8,10 +10,10 @@ import java.util.function.Consumer;
 public class GameClient {
     private final Socket socket;
     private final ObjectOutputStream out;
-    private final Consumer<String> messageHandler;
+    private final Consumer<Object> messageHandler;
     private final Thread receiveThread;
 
-    public GameClient(String host, int port, Consumer<String> messageHandler) throws IOException {
+    public GameClient(String host, int port, Consumer<Object> messageHandler) throws IOException {
         this.socket = new Socket(host, port);
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.messageHandler = messageHandler;
@@ -22,7 +24,9 @@ public class GameClient {
                 while (true) {
                     Object received = in.readObject();
                     if (received instanceof String) {
-                        messageHandler.accept((String) received);
+                        messageHandler.accept(received);
+                    } else if (received instanceof TestObject testObject) {
+                        messageHandler.accept(received);
                     }
                 }
             } catch (IOException | ClassNotFoundException e) {

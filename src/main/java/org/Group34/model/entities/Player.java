@@ -1,6 +1,7 @@
 package org.Group34.model.entities;
 
 import com.badlogic.gdx.graphics.Texture;
+import org.Group34.model.TestObject;
 import org.Group34.model.User;
 import org.Group34.model.entities.buildings.shops.products.ShippingBin;
 import org.Group34.model.enums.LevelType;
@@ -17,10 +18,13 @@ import org.Group34.model.items.foods.Vegetable;
 import org.Group34.model.items.tools.*;
 import org.Group34.model.map.Space;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class  Player implements Entity {
+public class Player implements Entity, Serializable {
+    private static final long serialVersionUID = 1L;
+
     private static int passedOutUsers = 0;
 
     private String name;
@@ -39,6 +43,9 @@ public class  Player implements Entity {
     private Item currentTool = null;
     private String currentGameMenu = null;
     private Item currentItem = null;
+
+    public String test = "test is not check";
+    public TestObject testObject = new TestObject("fail", 0);
 
     {
         inventory.put(new Hoe(ToolType.BASIC_HOE), 1);
