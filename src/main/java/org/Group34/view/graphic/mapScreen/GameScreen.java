@@ -1,4 +1,5 @@
 package org.Group34.view.graphic.mapScreen;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.GameController;
+import org.Group34.controller.AnimalController;
+import org.Group34.controller.AnimalBuildingController;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.User;
@@ -36,6 +39,7 @@ import org.Group34.view.graphic.GameMenuGraphic;
 import org.Group34.view.graphic.GraphicAppView;
 import org.Group34.view.graphic.ItemsGraphic;
 import org.Group34.view.graphic.dialogs.GreenhouseRepairDialog;
+import org.Group34.view.graphic.gameMenu.AnimalMenu;
 import org.Group34.view.graphic.menuScreen.MainMenuScreen;
 
 public class GameScreen extends ScreenAdapter {
@@ -46,7 +50,6 @@ public class GameScreen extends ScreenAdapter {
     private static final float MESSAGE_DURATION = 3f;
     private static final float PASSOUT_DURATION = 3f;
     private static final float PASSOUT_ROTATION = 90f;
-
     private final Stage stage;
     private final Skin skin;
     private final Game game;
@@ -76,9 +79,12 @@ public class GameScreen extends ScreenAdapter {
     private int[] passoutStartLocation;
     private boolean passoutCompleted = false;
     private boolean hidePlayerDuringRender = false;
-
     private final GraphicAppView app;
     private GameClient client;
+
+    private final AnimalController animalController;
+    private final AnimalBuildingController buildingController;
+    private Space currentSpace;
 
     public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController, GraphicAppView app, GameClient client) {
         this.skin = skin;
@@ -89,16 +95,22 @@ public class GameScreen extends ScreenAdapter {
         this.batch = new SpriteBatch();
         this.camera = new OrthographicCamera();
         this.stage = new Stage(new ScreenViewport());
-
         this.app = app;
         this.client = client;
-
         User currentUser = App.getCurrentUser();
         if (currentUser != null) {
             this.player = myGame.getPlayers().get(currentUser);
         } else {
             this.player = myGame.getPlayers().values().iterator().next();
         }
+
+        this.buildingController = new AnimalBuildingController();
+        this.animalController = new AnimalController(buildingController, gameMap.getCurrentPlayerFarm(player));
+
+        this.currentSpace = gameMap.getCurrentPlayerFarm(player);
+
+        AnimalMenu.initialize(animalController, buildingController, currentSpace);
+
         toolsGraphic = new ItemsGraphic(batch, player, gameController);
         gameMenuGraphic = new GameMenuGraphic(batch, player, gameController);
         this.uiManager = new UIManager(skin, game, stage);
@@ -118,32 +130,26 @@ public class GameScreen extends ScreenAdapter {
         if (!isPassingOut) {
             handleInput(delta);
         }
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         // Only update camera if not in the middle of passout animation
         if (!isPassingOut || passoutCompleted) {
             updateCamera();
         }
-
         environmentManager.update();
         uiManager.update(environmentManager, player);
-
         if (!NPCsInitialized) {
-            Space currentSpace = gameMap.getCurrentPlayerFarm(player);
+            // به‌روزرسانی فضای فعلی بازیکن
+            currentSpace = gameMap.getCurrentPlayerFarm(player);
             environmentManager.initializeNPCs(currentSpace);
             for (NPCOnMap npcOnMap : environmentManager.getNpcManager().getNpcOnMaps()) {
                 currentSpace.placingEntity(npcOnMap.getX(), npcOnMap.getY(), npcOnMap);
             }
             NPCsInitialized = true;
         }
-
         int[] playerPos = player.getLocation();
         npcDialogueManager.update(delta, environmentManager.getNpcManager().getNpcOnMaps(), playerPos);
-
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-
         // Temporarily hide player from the map during passout animation
         if (isPassingOut) {
             int[] originalLocation = player.getLocation();
@@ -155,57 +161,55 @@ public class GameScreen extends ScreenAdapter {
         } else {
             mapRenderer.render(batch, camera, environmentManager, npcDialogueManager);
         }
-
         renderPlayer();
         renderOtherItems();
         batch.end();
-
         if (environmentManager.isWeatherActive()) {
             batch.begin();
             weatherRenderer.render(batch, delta, environmentManager);
             batch.end();
         }
-
         if (messageTimer > 0) {
             messageTimer -= delta;
             batch.begin();
             messageFont.draw(batch, currentMessage, 10, Gdx.graphics.getHeight() - 20);
             batch.end();
         }
-
         stage.act(delta);
         stage.draw();
-
         if (showMapOverview) {
             batch.setProjectionMatrix(stage.getCamera().combined);
             batch.begin();
             batch.draw(mapOverviewTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             batch.end();
         }
-
         if (isPassingOut) {
             passoutTimer += delta;
             currentRotation = (passoutTimer / PASSOUT_DURATION) * PASSOUT_ROTATION;
-
             if (passoutTimer >= PASSOUT_DURATION) {
                 // Move player to initial location
                 int[] initialLocation = {72, 10};
                 gameMap.movePlayer(player, initialLocation[0], initialLocation[1]);
                 gameController.cheatAdvanceDate("1");
                 player.setEnergy(500);
-
                 // Reset passout state
                 isPassingOut = false;
                 passoutTimer = 0;
                 currentRotation = 0;
                 passoutCompleted = true;
-
                 // Force camera update to new position
                 updateCamera();
             }
         } else if (passoutCompleted) {
             // Reset the flag after rendering is complete
             passoutCompleted = false;
+        }
+
+
+        if ("animal".equals(player.getCurrentGameMenu())) {
+            batch.begin();
+            AnimalMenu.draw(batch, player, camera);
+            batch.end();
         }
     }
 
@@ -214,56 +218,50 @@ public class GameScreen extends ScreenAdapter {
         boolean keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             myGame.getTime().cheatAdvanceTime(1);
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
             myGame.getTime().cheatAdvanceDate(1, myGame, player);
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
             player.addMoney(1000);
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
             player.setEnergy(player.getEnergy() + 100);
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F6)) {
             player.setEnergy(player.getEnergy() - 100);
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F4)) {
             handleGreenhouseInteraction();
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F7)) {
             //gameController.nextTurn();
             currentMessage = "Next turn started!";
             messageTimer = MESSAGE_DURATION;
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F8)) {
             gameController.exitGame();
             currentMessage = "Game saved successfully!";
             messageTimer = MESSAGE_DURATION;
             game.setScreen(new MainMenuScreen(skin, game, app, client));
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
             handleNPCDialogue();
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F)) {
             player.setCurrentGameMenu("inventory");
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
             showMapOverview = !showMapOverview;
         }
-
+        if (AnimalMenu.isPlacingBuilding()) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+                AnimalMenu.cancelPlacingBuilding();
+            }
+            return;
+        }
         if (keyUp || keyDown || keyLeft || keyRight) {
             moveTimer += delta;
             if (moveTimer < 0) {
@@ -282,12 +280,13 @@ public class GameScreen extends ScreenAdapter {
         int[] playerLocation = player.getLocation();
         int newX = playerLocation[0];
         int newY = playerLocation[1];
-
         if (keyUp) newY++;
         else if (keyDown) newY--;
         else if (keyLeft) newX--;
         else if (keyRight) newX++;
-
+        if (AnimalMenu.isPlacingBuilding()) {
+            return;
+        }
         if (newX >= 0 && newX < gameMap.getCurrentPlayerFarm(player).width() &&
                 newY >= 0 && newY < gameMap.getCurrentPlayerFarm(player).height()) {
             Entity entity = gameMap.getCurrentPlayerFarm(player).getEntityByLocation(newX, newY);
@@ -310,20 +309,17 @@ public class GameScreen extends ScreenAdapter {
 
     private void handleGoToShop(Entity entity, Player player) {
         String menu = null;
-
         if (entity instanceof Blacksmith) {
             menu = "blacksmith";
         } else if (entity instanceof SalePlace) {
             menu = "salePlace";
         }
-
         player.setCurrentGameMenu(menu);
     }
 
     private void handleGreenhouseInteraction() {
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
         GreenHouse greenhouse = null;
-
         for (int x = 0; x < currentSpace.width(); x++) {
             for (int y = 0; y < currentSpace.height(); y++) {
                 Entity entity = currentSpace.getEntityByLocation(x, y);
@@ -334,7 +330,6 @@ public class GameScreen extends ScreenAdapter {
             }
             if (greenhouse != null) break;
         }
-
         if (greenhouse != null) {
             if (!greenhouse.isRepaired()) {
                 GreenhouseRepairDialog dialog = new GreenhouseRepairDialog(
@@ -375,11 +370,9 @@ public class GameScreen extends ScreenAdapter {
         int[] playerPos = player.getLocation();
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
         int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
         for (int[] dir : directions) {
             int checkX = playerPos[0] + dir[0];
             int checkY = playerPos[1] + dir[1];
-
             if (checkX >= 0 && checkX < currentSpace.width() &&
                     checkY >= 0 && checkY < currentSpace.height()) {
                 Entity entity = currentSpace.getEntityByLocation(checkX, checkY);
@@ -415,7 +408,6 @@ public class GameScreen extends ScreenAdapter {
 
     private void renderPlayer() {
         int[] pos;
-
         if (isPassingOut) {
             // Use the passout start location during animation
             pos = passoutStartLocation;
@@ -423,9 +415,7 @@ public class GameScreen extends ScreenAdapter {
             // Use current player location
             pos = player.getLocation();
         }
-
         Texture playerTexture = PlayerAvatarManager.female_player1;
-
         if (isPassingOut) {
             batch.draw(playerTexture,
                     pos[0] * TILE_SIZE,
@@ -458,6 +448,7 @@ public class GameScreen extends ScreenAdapter {
         mapRenderer.dispose();
         weatherRenderer.dispose();
         npcDialogueManager.dispose();
+        AnimalMenu.dispose(); // اضافه کردن dispose برای AnimalMenu
         stage.dispose();
         batch.dispose();
         messageFont.dispose();

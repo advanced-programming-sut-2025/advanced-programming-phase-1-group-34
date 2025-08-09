@@ -1,6 +1,7 @@
 package org.Group34.controller;
 
 import org.Group34.model.Result;
+import org.Group34.model.entities.Player;
 import org.Group34.model.entities.buildings.AnimalsBuilding;
 import org.Group34.model.entities.buildings.Barn;
 import org.Group34.model.entities.buildings.Coop;
@@ -17,7 +18,6 @@ public class AnimalBuildingController {
         if (!canPlaceBuilding(type, x, y, space)) {
             return new Result(false, "Cannot place building here");
         }
-
         // Create appropriate building
         AnimalsBuilding building;
         if (type.name().contains("COOP")) {
@@ -25,24 +25,56 @@ public class AnimalBuildingController {
         } else {
             building = new Barn(type);
         }
-
         // Place building on map
         for (int i = 0; i < type.getSizeX(); i++) {
             for (int j = 0; j < type.getSizeY(); j++) {
                 space.placingEntity(x + i, y + j, building);
             }
         }
-
         buildings.add(building);
         return new Result(true, "Building placed successfully");
     }
 
-    private boolean canPlaceBuilding(BarnType type, int x, int y, Space space) {
-        // Check boundaries
-        if (x < 0 || y < 0 || x + type.getSizeX() > 100 || y + type.getSizeY() > 100) {
-            return false;
+    // New method to build building with player resource check
+    public Result buildBuilding(String buildingTypeName, int x, int y, Player player, Space space) {
+        BarnType type;
+        try {
+            type = BarnType.valueOf(buildingTypeName);
+        } catch (IllegalArgumentException e) {
+            return new Result(false, "Invalid building type");
         }
 
+        // Check if player can afford this building
+        if (player.getMoney() < type.getPrice()) {
+            return new Result(false, "Not enough money! Need " + type.getPrice() + "g");
+        }
+
+        if (player.getAmountOfItem(org.Group34.model.items.crafting.Ingredient.WOOD) < type.getWoodCost()) {
+            return new Result(false, "Not enough wood! Need " + type.getWoodCost());
+        }
+
+        if (player.getAmountOfItem(org.Group34.model.items.crafting.Ingredient.STONE) < type.getStoneCost()) {
+            return new Result(false, "Not enough stone! Need " + type.getStoneCost());
+        }
+
+        // Try to place the building
+        Result placeResult = placeBuilding(type, x, y, space);
+        if (placeResult.success()) {
+            // Deduct resources
+            player.addMoney(-type.getPrice());
+            player.removeFromInventory(org.Group34.model.items.crafting.Ingredient.WOOD, type.getWoodCost());
+            player.removeFromInventory(org.Group34.model.items.crafting.Ingredient.STONE, type.getStoneCost());
+            return new Result(true, "Built " + type.getName() + " successfully!");
+        } else {
+            return placeResult;
+        }
+    }
+
+    private boolean canPlaceBuilding(BarnType type, int x, int y, Space space) {
+        // Check boundaries
+        if (x < 0 || y < 0 || x + type.getSizeX() > space.width() || y + type.getSizeY() > space.height()) {
+            return false;
+        }
         // Check if area is clear
         for (int i = 0; i < type.getSizeX(); i++) {
             for (int j = 0; j < type.getSizeY(); j++) {
