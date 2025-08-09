@@ -37,7 +37,7 @@ public class  Player implements Entity {
     private HashMap<Player, Interaction> interactions = new HashMap<>();
 
     private Item currentTool = null;
-    private String currentGameMenu = "social";
+    private String currentGameMenu = null;
     private Item currentItem = null;
 
     {
