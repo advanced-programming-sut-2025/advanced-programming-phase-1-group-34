@@ -1,7 +1,5 @@
 package org.Group34.network.client;
-import org.Group34.model.TestObject;
 import org.Group34.model.User;
-import org.Group34.model.entities.Player;
 
 import java.io.*;
 import java.net.Socket;
@@ -18,16 +16,11 @@ public class GameClient {
         this.out = new ObjectOutputStream(socket.getOutputStream());
         this.messageHandler = messageHandler;
 
-        // Start receiving thread
         this.receiveThread = new Thread(() -> {
             try (ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
                 while (true) {
                     Object received = in.readObject();
-                    if (received instanceof String) {
-                        messageHandler.accept(received);
-                    } else if (received instanceof TestObject testObject) {
-                        messageHandler.accept(received);
-                    }
+                    messageHandler.accept(received);
                 }
             } catch (IOException | ClassNotFoundException e) {
                 System.err.println("Connection closed: " + e.getMessage());
@@ -48,6 +41,15 @@ public class GameClient {
     public void sendUser(User user) {
         try {
             out.writeObject(user);
+            out.flush();
+        } catch (IOException e) {
+            System.err.println("Failed to send user: " + e.getMessage());
+        }
+    }
+
+    public void sendObject(Object object) {
+        try {
+            out.writeObject(object);
             out.flush();
         } catch (IOException e) {
             System.err.println("Failed to send user: " + e.getMessage());

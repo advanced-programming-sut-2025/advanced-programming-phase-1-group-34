@@ -10,6 +10,7 @@ public class LobbyManager {
     private final Random random = new Random();
     private final Timer cleanupTimer = new Timer();
     private final Set<User> connectedUsers = Collections.synchronizedSet(new HashSet<>());
+    private static Lobby lastLobby = null;
 
     public LobbyManager() {
         cleanupTimer.schedule(new TimerTask() {
@@ -35,6 +36,7 @@ public class LobbyManager {
         Lobby lobby = new Lobby(lobbyId, name, isPrivate, isVisible, password);
         lobby.players.add(creator);
         lobby.admin = creator;
+        lastLobby = lobby;
         userLobbyMap.put(creator, lobbyId);
         lobbies.put(lobbyId, lobby);
         return lobbyId;
@@ -246,6 +248,18 @@ public class LobbyManager {
         }
 
         return "GAME_STATUS:" + lobbyId + ":" + lobby.gameStarted;
+    }
+
+    public synchronized Lobby getLastLobby() {
+        return lastLobby;
+    }
+
+    public synchronized ArrayList<String> getLobbyPlayers() {
+        ArrayList<String> players = new ArrayList<>();
+        for (User user : lastLobby.players) {
+            players.add(user.getUsername());
+        }
+        return players;
     }
 
     private static class Lobby {

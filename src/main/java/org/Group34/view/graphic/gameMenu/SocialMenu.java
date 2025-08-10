@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.controller.GameController;
+import org.Group34.model.NetworkObjects.NetworkInteraction;
 import org.Group34.model.Result;
 import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
@@ -109,12 +110,7 @@ public class SocialMenu {
             gameController.talk(player.getName(), "Hello", player1);
             player2.getInteractionByPlayer(player).setLevel(4);
             gameController.gift(player.getName(), "Apple Sapling", 5, player2);
-//            string = gameController.giftRate(1, 3, player).message();
-            gameController.getClient().send("SOCIAL_GET_PLAYERS");
         }
-
-
-        //string = player.testObject.name + " - " + player.testObject.number;
 
         float x = camera.position.x - chest.getWidth() / 2;
         float y = camera.position.y - 30;
@@ -389,14 +385,14 @@ public class SocialMenu {
     }
 
     private static void fullTheBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
-        talkBoard(batch, player, x, y, gameController);
-        giftBoard(batch, player, x, y, gameController);
-        hugBoard(batch, player, x, y, gameController);
-        loveBoard(batch, player, x, y, gameController);
+        talkBoard(batch, player, x, y);
+        giftBoard(batch, player, x, y);
+        hugBoard(batch, player, x, y);
+        loveBoard(batch, player, x, y);
         otherBoard(batch, player, x, y, gameController);
     }
 
-    private static void talkBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
+    private static void talkBoard(SpriteBatch batch, Player player, float x, float y) {
         BitmapFont font = new BitmapFont();
         font.setColor(Color.BROWN);
         font.draw(batch, "Talking:", x + 25, y + 190);
@@ -445,7 +441,7 @@ public class SocialMenu {
         }
     }
 
-    private static void giftBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
+    private static void giftBoard(SpriteBatch batch, Player player, float x, float y) {
         BitmapFont font = new BitmapFont();
         font.setColor(Color.BROWN);
         font.draw(batch, "Giving gift:", x + 330, y + 190);
@@ -539,7 +535,7 @@ public class SocialMenu {
         }
     }
 
-    private static void hugBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
+    private static void hugBoard(SpriteBatch batch, Player player, float x, float y) {
         BitmapFont font = new BitmapFont();
         font.setColor(Color.BROWN);
         font.draw(batch, "Hugging:", x + 25, y - 5);
@@ -572,7 +568,7 @@ public class SocialMenu {
         font.getData().setScale(1f);
     }
 
-    private static void loveBoard(SpriteBatch batch, Player player, float x, float y, GameController gameController) {
+    private static void loveBoard(SpriteBatch batch, Player player, float x, float y) {
         BitmapFont font = new BitmapFont();
         font.setColor(Color.BROWN);
         font.draw(batch, "Love:", x + 330, y - 5);
@@ -771,6 +767,8 @@ public class SocialMenu {
 
     private static void hug(Player player, GameController gameController) {
         hugError = gameController.hug(new ArrayList<>(player.getInteractions().keySet()).get(hugScroller).getName(), player).message();
+        NetworkInteraction networkInteraction = new NetworkInteraction(player.getName(), new ArrayList<>(player.getInteractions().keySet()).get(hugScroller).getName(), "hug", "", 0);
+        gameController.getClient().sendObject(networkInteraction);
     }
 
     private static void flower(Player player, GameController gameController) {

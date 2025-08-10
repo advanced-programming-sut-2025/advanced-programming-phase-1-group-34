@@ -24,6 +24,7 @@ import org.Group34.controller.AnimalController;
 import org.Group34.controller.AnimalBuildingController;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
+import org.Group34.model.NetworkObjects.NetworkInteraction;
 import org.Group34.model.User;
 import org.Group34.model.entities.*;
 import org.Group34.model.entities.buildings.AnimalsBuilding;
@@ -46,7 +47,13 @@ import org.Group34.view.graphic.ItemsGraphic;
 import org.Group34.view.graphic.dialogs.AnimalInteractionMenu;
 import org.Group34.view.graphic.dialogs.GreenhouseRepairDialog;
 import org.Group34.view.graphic.gameMenu.AnimalMenu;
+import org.Group34.view.graphic.menuScreen.LobbyMenuScreen;
 import org.Group34.view.graphic.menuScreen.MainMenuScreen;
+
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class GameScreen extends ScreenAdapter {
     private static final int TILE_SIZE = 32;
     private static final int VIEWPORT_WIDTH = 30;
@@ -140,6 +147,9 @@ public class GameScreen extends ScreenAdapter {
         buffIconTexture = GameMenuAssetManager.getBuff();
         camera.setToOrtho(false, VIEWPORT_WIDTH * TILE_SIZE, VIEWPORT_HEIGHT * TILE_SIZE);
         Gdx.input.setInputProcessor(stage);
+
+        client.send("socialGetPlayers");
+        startAutoRefresh();
 
         // Create message label
         messageLabelStyle = new Label.LabelStyle();
@@ -641,11 +651,43 @@ public class GameScreen extends ScreenAdapter {
         // Update message label position
         messageLabel.setPosition(width / 2f, height / 2f);
     }
+
+    private void startAutoRefresh() {
+        Timer refreshTimer = new Timer();
+        refreshTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (client != null && app.getScreen() instanceof GameScreen) {
+                    client.send("socialGetLastInteraction");
+                }
+            }
+        }, 10000, 10000);
+    }
+
     public void handleServerInputs(Object object) {
         if (object instanceof TestObject test) {
             this.player.testObject = test;
             System.out.println(test.name);
             System.out.println(test.number);
+        } else if (object instanceof ArrayList<?> list) {
+            for (Object o : list) {
+                if (o instanceof String s) {
+                    if (!player.getName().equals(s)) {
+                        Player player1 = new Player(new int[]{1, 1});
+                        player1.setName(s);
+                        player.getInteractions().put(player1, new Interaction());
+                        player1.getInteractions().put(player, new Interaction());
+                    }
+                }
+            }
+        } else if (object instanceof NetworkInteraction interaction) {
+            if (interaction.getPlayer2().equals(player.getName())) {
+                Player friend = player.getOtherPlayerByName(interaction.getPlayer1());
+                if (interaction.getWork().equals("hug")) {
+                    gameController.hug(player.getName(), friend);
+                    client.send("socialReadLastInteraction");
+                }
+            }
         }
     }
 }

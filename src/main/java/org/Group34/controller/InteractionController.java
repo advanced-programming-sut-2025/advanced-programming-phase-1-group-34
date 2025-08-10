@@ -1,9 +1,11 @@
 package org.Group34.controller;
 
+import org.Group34.model.NetworkObjects.NetworkInteraction;
 import org.Group34.model.Result;
 import org.Group34.model.entities.Player;
 import org.Group34.model.interactions.Gift;
 import org.Group34.model.items.Item;
+import org.Group34.network.client.GameClient;
 
 import java.util.Objects;
 
@@ -42,11 +44,9 @@ public class InteractionController {
 
         if (desiredPlayer == null) {
             return new Result(false, "This user does not exist.");
-        }
-        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 1) {
+        } else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 1) {
             return new Result(false, "the level of friendship is not enough.");
-        }
-        else if (!haveEnoughItem(item, player, amount)) {
+        } else if (!haveEnoughItem(item, player, amount)) {
             return new Result(false, "You do not have enough of this item.");
         }
 
@@ -60,14 +60,15 @@ public class InteractionController {
 
         return new Result(true, "Your gift has been sent.");
     }
+
     public Result giftList(Player player) {
         return new Result(true, player.getGiftList());
     }
+
     public Result giftRate(int giftNumber, int rate, Player player) {
         if (!isRateValid(rate)) {
             return new Result(false, "The score must be between 0 and 5.");
-        }
-        else if (player.getGiftByNumber(giftNumber) == null) {
+        } else if (player.getGiftByNumber(giftNumber) == null) {
             return new Result(false, "This gift does not exist.");
         }
         Gift gift = player.getGiftByNumber(giftNumber);
@@ -81,6 +82,7 @@ public class InteractionController {
 
         return new Result(true, "The desired gift has been rated.");
     }
+
     public Result giftHistory(String username, Player player) {
         Player desiredPlayer = player.getOtherPlayerByName(username);
 
@@ -90,15 +92,16 @@ public class InteractionController {
 
         return new Result(true, player.getInteractionByPlayer(desiredPlayer).giftHistory());
     }
+
     public Result hug(String username, Player player) {
         Player desiredPlayer = player.getOtherPlayerByName(username);
 
         if (desiredPlayer == null) {
             return new Result(false, "This user does not exist.");
         }
-        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 2) {
-            return new Result(false, "the level of friendship is not enough.");
-        }
+//        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 2) {
+//            return new Result(false, "the level of friendship is not enough.");
+//        }
 
 
         player.getInteractionByPlayer(desiredPlayer).increaseXp(60);
@@ -106,13 +109,13 @@ public class InteractionController {
 
         return new Result(true, "The desired player has been hugged.");
     }
+
     public Result flower(String username, Player player) {
         Player desiredPlayer = player.getOtherPlayerByName(username);
 
         if (desiredPlayer == null) {
             return new Result(false, "This user does not exist.");
-        }
-        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 2) {
+        } else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 2) {
             return new Result(false, "the level of friendship is not enough.");
         }
 
@@ -125,13 +128,13 @@ public class InteractionController {
 
         return new Result(true, "The flower was given to the desired player.");
     }
+
     public Result askMarriage(String username, String ring, Player player) {
         Player desiredPlayer = player.getOtherPlayerByName(username);
 
         if (desiredPlayer == null) {
             return new Result(false, "This user does not exist.");
-        }
-        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 3) {
+        } else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 3) {
             return new Result(false, "the level of friendship is not enough.");
         }
         //        else if (!She Accepted) {}
@@ -141,10 +144,6 @@ public class InteractionController {
 
         return new Result(true, "The marriage proposal was given.");
     }
-
-
-
-
 
 
     private boolean haveEnoughItem(String item, Player player, int amount) {
@@ -159,6 +158,7 @@ public class InteractionController {
 
         return true;
     }
+
     private boolean isRateValid(int rate) {
         if (rate > 5 || rate <= 0) {
             return false;
