@@ -1,6 +1,7 @@
 package org.Group34.model.gameAssetManagers;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class GameMenuAssetManager {
     private final static Texture chest = new Texture("gameMenu/Empty-Chest.jpg");
@@ -38,6 +39,7 @@ public class GameMenuAssetManager {
     private final static Texture lockIcon = new Texture("menuIcons/lockIcon.png");
     private final static Texture learnIcon = new Texture("foragingPlants/Lost_Book.png");
     private final static Texture cookIcon = new Texture("recipe/Cooking.png");
+    private final static Texture craftIcon = new Texture("gameMenu/CraftIcon.png");
 
 
     // ----- getters -----
@@ -180,6 +182,10 @@ public class GameMenuAssetManager {
 
     public static Texture getCookIcon() {
         return cookIcon;
+    }
+
+    public static Texture getCraftIcon() {
+        return craftIcon;
     }
 
     // -------------------

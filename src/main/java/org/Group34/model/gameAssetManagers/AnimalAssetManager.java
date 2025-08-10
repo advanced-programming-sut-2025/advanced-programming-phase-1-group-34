@@ -29,4 +29,6 @@ public class AnimalAssetManager {
     public static final Texture largeGoatMilk = new Texture("animals/Milk.png");
     public static final Texture sheepWool = new Texture("animals/Wool.png");
     public static final Texture truffle = new Texture("animals/Truffle.png");
+
+    public static final Texture fish = new Texture("animals/Sunfish.png");
 }
