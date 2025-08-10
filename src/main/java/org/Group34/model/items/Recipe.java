@@ -2,6 +2,7 @@ package org.Group34.model.items;
 
 import com.badlogic.gdx.graphics.Texture;
 import org.Group34.model.gameAssetManagers.CookingAssetManager;
+import org.Group34.model.gameAssetManagers.ProcessorAssetManager;
 import org.Group34.model.items.crafting.Craft;
 import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.items.crafting.ProcessorCraft;
@@ -160,6 +161,18 @@ public enum Recipe implements Item {
             case DISH_O_THE_SEA -> CookingAssetManager.dishOTheSea;
             case SEAFOAM_PUDDING -> CookingAssetManager.seafoamPudding;
             case MINERS_TREAT -> CookingAssetManager.minersTreat;
+
+            case CHARCOAL_KILN -> ProcessorAssetManager.charcoalKiln;
+            case FURNACE -> ProcessorAssetManager.furnace;
+            case BEE_HOUSE -> ProcessorAssetManager.beeHouse;
+            case CHEESE_PRESS -> ProcessorAssetManager.cheesePress;
+            case KEG -> ProcessorAssetManager.keg;
+            case LOOM -> ProcessorAssetManager.loom;
+            case MAYONNAISE_MACHINE -> ProcessorAssetManager.mayonnaiseMachine;
+            case OIL_MAKER -> ProcessorAssetManager.oilMaker;
+            case PRESERVES_JAR -> ProcessorAssetManager.preservesJar;
+            case DEHYDRATOR -> ProcessorAssetManager.dehydrator;
+            case FISH_SMOKER -> ProcessorAssetManager.fishSmoker;
 
             // For other recipes, return null or a default texture
             default -> null;
