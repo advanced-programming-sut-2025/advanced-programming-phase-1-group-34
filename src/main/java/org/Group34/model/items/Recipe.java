@@ -1,6 +1,7 @@
 package org.Group34.model.items;
 
 import com.badlogic.gdx.graphics.Texture;
+import org.Group34.model.gameAssetManagers.CookingAssetManager;
 import org.Group34.model.items.crafting.Craft;
 import org.Group34.model.items.crafting.PlacingCraft;
 import org.Group34.model.items.crafting.ProcessorCraft;
@@ -134,6 +135,34 @@ public enum Recipe implements Item {
 
     @Override
     public Texture getTexture() {
-        return null;
+        return switch (this) {
+            // Cooked food recipes
+            case FRIED_EGG -> CookingAssetManager.friedEgg;
+            case BAKED_FISH -> CookingAssetManager.bakedFish;
+            case SALAD -> CookingAssetManager.salad;
+            case OMELET -> CookingAssetManager.omelet;
+            case PUMPKIN_PIE -> CookingAssetManager.pumpkinPie;
+            case SPAGHETTI -> CookingAssetManager.spaghetti;
+            case PIZZA -> CookingAssetManager.pizza;
+            case TORTILLA -> CookingAssetManager.tortilla;
+            case MAKI_ROLL -> CookingAssetManager.makiRoll;
+            case TRIPLE_SHOT_ESPRESSO -> CookingAssetManager.tripleShotEspresso;
+            case COOKIE -> CookingAssetManager.cookie;
+            case HASH_BROWNS -> CookingAssetManager.hashBrowns;
+            case PANCAKES -> CookingAssetManager.pancakes;
+            case FRUIT_SALAD -> CookingAssetManager.fruitSalad;
+            case RED_PLATE -> CookingAssetManager.redPlate;
+            case BREAD -> CookingAssetManager.bread;
+            case SALMON_DINNER -> CookingAssetManager.salmonDinner;
+            case VEGETABLE_MEDLEY -> CookingAssetManager.vegetableMedley;
+            case FARMERS_LUNCH -> CookingAssetManager.farmersLunch;
+            case SURVIVAL_BURGER -> CookingAssetManager.survivalBurger;
+            case DISH_O_THE_SEA -> CookingAssetManager.dishOTheSea;
+            case SEAFOAM_PUDDING -> CookingAssetManager.seafoamPudding;
+            case MINERS_TREAT -> CookingAssetManager.minersTreat;
+
+            // For other recipes, return null or a default texture
+            default -> null;
+        };
     }
 }

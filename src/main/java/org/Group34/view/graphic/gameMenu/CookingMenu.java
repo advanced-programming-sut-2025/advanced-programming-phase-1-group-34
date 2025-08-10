@@ -42,6 +42,9 @@ public class CookingMenu {
     private static CookedFood currentRecipe = null;
     private static boolean[] unlockedRecipes;
     private static final int UNLOCK_COST = 1000;
+    private static String statusMessage = null;
+    private static float statusMessageTimer = 0;
+    private static BitmapFont statusFont = new BitmapFont();
 
     static {
         // Initialize unlocked recipes array (first two recipes unlocked by default)
@@ -66,6 +69,9 @@ public class CookingMenu {
         greenRect.setSize(45, 45);
         lockIcon.setSize(30, 30);
         unlockIcon.setSize(30, 30);
+
+        statusFont.setColor(Color.RED);
+        statusFont.getData().setScale(1.0f);
     }
 
     public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera, GameController gameController) {
@@ -90,7 +96,6 @@ public class CookingMenu {
                 greenRect.draw(batch);
             }
             font.getData().setScale(0.5f);
-
             // Check if recipe is unlocked
             int recipeIndex = index + (12 * scrollNumber);
             if (unlockedRecipes[recipeIndex]) {
@@ -106,7 +111,6 @@ public class CookingMenu {
                 sprite.setSize(35, 33);
                 sprite.draw(batch);
                 sprite.setColor(Color.WHITE);
-
                 // Draw lock icon
                 lockIcon.setPosition(sprite.getX() + 5, sprite.getY() + 5);
                 lockIcon.draw(batch);
@@ -115,6 +119,15 @@ public class CookingMenu {
         }
         fullBoard(player, recipes, x, y, batch, gameController);
         handleInput(player, recipes);
+
+        // Draw status message if active
+        if (statusMessage != null && statusMessageTimer > 0) {
+            statusFont.draw(batch, statusMessage, x + chest.getWidth()/2 - statusFont.getRegion().getRegionWidth()/2, y + 50);
+            statusMessageTimer -= Gdx.graphics.getDeltaTime();
+            if (statusMessageTimer <= 0) {
+                statusMessage = null;
+            }
+        }
     }
 
     private static void drawBoard(SpriteBatch batch, float x, float y) {
@@ -174,40 +187,49 @@ public class CookingMenu {
             player.setCurrentGameMenu("skill");
             scrollNumber = 0;
             currentRecipe = null;
+            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 470 && x < 541 && y < 110 && y > 30) {
             player.setCurrentGameMenu("social");
             scrollNumber = 0;
             currentRecipe = null;
+            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 542 && x < 613 && y < 110 && y > 30) {
             player.setCurrentGameMenu("map");
             scrollNumber = 0;
             currentRecipe = null;
+            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 615 && x < 686 && y < 110 && y > 30) {
             player.setCurrentGameMenu("npc");
             scrollNumber = 0;
             currentRecipe = null;
+            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 688 && x < 759 && y < 110 && y > 30) {
             player.setCurrentGameMenu("setting");
             scrollNumber = 0;
             currentRecipe = null;
+            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 761 && x < 832 && y < 110 && y > 30) {
             player.setCurrentGameMenu("animal");
             scrollNumber = 0;
             currentRecipe = null;
+            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 834 && x < 905 && y < 110 && y > 30) {
             player.setCurrentGameMenu("crafting");
             scrollNumber = 0;
             currentRecipe = null;
+            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 907 && x < 978 && y < 110 && y > 30) {
             // Already in cooking menu
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 980 && x < 1051 && y < 110 && y > 30) {
             player.setCurrentGameMenu("fridge");
             scrollNumber = 0;
             currentRecipe = null;
+            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);
             scrollNumber = 0;
             currentRecipe = null;
+            statusMessage = null;
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
@@ -226,28 +248,53 @@ public class CookingMenu {
                         break;
                     }
                 }
-
                 if (recipeIndex != -1) {
                     if (!unlockedRecipes[recipeIndex]) {
                         // Unlock the recipe
                         if (player.getMoney() >= UNLOCK_COST) {
                             player.setMoney(player.getMoney() - UNLOCK_COST);
                             unlockedRecipes[recipeIndex] = true;
+                        } else {
+                            statusMessage = "Not enough money to learn this recipe!";
+                            statusMessageTimer = 3.0f;
                         }
                     } else {
                         // Cook the recipe
                         boolean canCook = true;
+                        StringBuilder missingIngredients = new StringBuilder();
+
                         for (Map.Entry<org.Group34.model.items.Item, Integer> entry : currentRecipe.getIngredients().entrySet()) {
-                            if (player.getAmountOfItem(entry.getKey()) < entry.getValue()) {
+                            int required = entry.getValue();
+                            int available = player.getAmountOfItem(entry.getKey());
+
+                            if (entry.getKey().getName() == null) {
+                                canCook = true;
+                            }
+                            else if (available < required) {
                                 canCook = false;
-                                break;
+                                missingIngredients.append(entry.getKey().getName())
+                                        .append(" (need ")
+                                        .append(required)
+                                        .append(", have ")
+                                        .append(available)
+                                        .append("), ");
                             }
                         }
+
                         if (canCook) {
                             for (Map.Entry<org.Group34.model.items.Item, Integer> entry : currentRecipe.getIngredients().entrySet()) {
                                 player.removeFromInventory(entry.getKey(), entry.getValue());
                             }
                             player.addToInventory(currentRecipe, 1);
+                            statusMessage = "Cooked!";
+                            statusMessageTimer = 3.0f;
+                        } else {
+                            // Remove the last comma and space
+                            if (missingIngredients.length() > 0) {
+                                missingIngredients.setLength(missingIngredients.length() - 2);
+                            }
+                            statusMessage = "Missing ingredients: " + missingIngredients.toString();
+                            statusMessageTimer = 3.0f;
                         }
                     }
                 }
@@ -299,14 +346,13 @@ public class CookingMenu {
 
         if (recipeIndex != -1 && !unlockedRecipes[recipeIndex]) {
             // Draw unlock button
-            unlockIcon.setPosition(x + 440, y - 145);
-            unlockIcon.setSize(100, 100);
+            unlockIcon.setPosition(x + 450, y - 130);
+            unlockIcon.setSize(75, 75);
             unlockIcon.draw(batch);
-
             BitmapFont font = new BitmapFont();
             font.setColor(Color.BLACK);
             font.getData().setScale(0.8f);
-            font.draw(batch, "Learn: " + UNLOCK_COST, x + 450, y - 155);
+            font.draw(batch, "Learn: " + UNLOCK_COST, x + 460, y - 155);
         } else {
             // Draw cook button
             cookIcon.setPosition(x + 440, y - 145);
@@ -385,9 +431,21 @@ public class CookingMenu {
                 for (Map.Entry<org.Group34.model.items.Item, Integer> entry : currentRecipe.getIngredients().entrySet()) {
                     String ingredientName = entry.getKey().getName();
                     int amount = entry.getValue();
-                    font.draw(batch, "- " + ingredientName + " x" + amount, x + 240, yPos);
+                    int available = player.getAmountOfItem(entry.getKey());
+
+                    // Check if player has enough of this ingredient
+                    if (available >= amount) {
+                        font.setColor(Color.BLACK);
+                    } else {
+                        font.setColor(Color.RED);
+                    }
+
+                    font.draw(batch, "- " + ingredientName + " x" + amount + " (have " + available + ")", x + 240, yPos);
                     yPos -= 15;
                 }
+
+                // Reset color
+                font.setColor(Color.BLACK);
 
                 // Draw energy and price
                 yPos -= 5;
