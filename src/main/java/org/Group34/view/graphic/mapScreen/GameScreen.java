@@ -8,13 +8,16 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import org.Group34.controller.GameController;
 import org.Group34.controller.AnimalController;
@@ -93,11 +96,15 @@ public class GameScreen extends ScreenAdapter {
     private boolean showFoodIcon = false;
     private float foodIconTimer = 0;
     private static final float FOOD_ICON_DURATION = 2.0f;
-
     // Buff related variables
     private boolean isBuffActive = false;
     private float buffTimer = 0;
     private Texture buffIconTexture;
+    private final GlyphLayout glyphLayout = new GlyphLayout();
+
+    // Message label
+    private Label messageLabel;
+    private Label.LabelStyle messageLabelStyle;
 
     public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController, GraphicAppView app, GameClient client) {
         this.skin = skin;
@@ -133,6 +140,16 @@ public class GameScreen extends ScreenAdapter {
         buffIconTexture = GameMenuAssetManager.getBuff();
         camera.setToOrtho(false, VIEWPORT_WIDTH * TILE_SIZE, VIEWPORT_HEIGHT * TILE_SIZE);
         Gdx.input.setInputProcessor(stage);
+
+        // Create message label
+        messageLabelStyle = new Label.LabelStyle();
+        messageLabelStyle.font = messageFont;
+        messageLabelStyle.fontColor = Color.WHITE;
+        messageLabel = new Label("", messageLabelStyle);
+        messageLabel.setAlignment(Align.center);
+        messageLabel.setPosition(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
+        messageLabel.setVisible(false);
+        stage.addActor(messageLabel);
     }
     @Override
     public void render(float delta) {
@@ -204,12 +221,15 @@ public class GameScreen extends ScreenAdapter {
             weatherRenderer.render(batch, delta, environmentManager);
             batch.end();
         }
+
+        // Update message timer and label
         if (messageTimer > 0) {
             messageTimer -= delta;
-            batch.begin();
-            messageFont.draw(batch, currentMessage, 10, Gdx.graphics.getHeight() - 20);
-            batch.end();
+            if (messageTimer <= 0) {
+                messageLabel.setVisible(false);
+            }
         }
+
         stage.act(delta);
         stage.draw();
         if (animalInteractionMenu != null) {
@@ -254,14 +274,12 @@ public class GameScreen extends ScreenAdapter {
             AnimalMenu.draw(batch, player, camera);
             batch.end();
         }
-
         // Update buff timer
         if (isBuffActive) {
             buffTimer -= delta;
             if (buffTimer <= 0) {
                 isBuffActive = false;
-                currentMessage = "Speed boost expired!";
-                messageTimer = MESSAGE_DURATION;
+                showMessage("Speed boost expired!");
             }
         }
     }
@@ -270,7 +288,6 @@ public class GameScreen extends ScreenAdapter {
         boolean keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-
         if (animalInteractionMenu != null && animalInteractionMenu.isActive()) {
             return;
         }
@@ -294,13 +311,11 @@ public class GameScreen extends ScreenAdapter {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F7)) {
             //gameController.nextTurn();
-            currentMessage = "Next turn started!";
-            messageTimer = MESSAGE_DURATION;
+            showMessage("Next turn started!");
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.F8)) {
             gameController.exitGame();
-            currentMessage = "Game saved successfully!";
-            messageTimer = MESSAGE_DURATION;
+            showMessage("Game saved successfully!");
             game.setScreen(new MainMenuScreen(skin, game, app, client));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
@@ -321,17 +336,14 @@ public class GameScreen extends ScreenAdapter {
                 foodIconTimer = FOOD_ICON_DURATION;
                 player.removeFromInventory(food, 1);
                 player.setCurrentItem(null);
-                currentMessage = "You ate food! Energy +10";
-                messageTimer = MESSAGE_DURATION;
-
+                showMessage("You ate food! Energy +10");
                 // Activate speed buff
                 isBuffActive = true;
                 buffTimer = BUFF_DURATION;
-                currentMessage += " Speed boost activated!";
+                showMessage("Speed boost activated!");
             }
             else {
-                currentMessage = "You only can eat foods!";
-                messageTimer = MESSAGE_DURATION;
+                showMessage("You only can eat foods!");
             }
         }
         // Handle building placement
@@ -557,7 +569,6 @@ public class GameScreen extends ScreenAdapter {
                 showFoodIcon = false;
             }
         }
-
         // Render buff icon if active
         if (isBuffActive) {
             float iconX = pos[0] * TILE_SIZE + TILE_SIZE / 2f - 16;
@@ -593,6 +604,15 @@ public class GameScreen extends ScreenAdapter {
         toolsGraphic.update(TILE_SIZE);
         gameMenuGraphic.update(camera, environmentManager);
     }
+
+    // Helper method to show messages
+    private void showMessage(String message) {
+        currentMessage = message;
+        messageTimer = MESSAGE_DURATION;
+        messageLabel.setText(message);
+        messageLabel.setVisible(true);
+    }
+
     @Override
     public void dispose() {
         mapRenderer.dispose();
@@ -618,6 +638,8 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+        // Update message label position
+        messageLabel.setPosition(width / 2f, height / 2f);
     }
     public void handleServerInputs(Object object) {
         if (object instanceof TestObject test) {
