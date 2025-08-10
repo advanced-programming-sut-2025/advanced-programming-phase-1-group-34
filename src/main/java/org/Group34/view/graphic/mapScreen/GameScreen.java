@@ -1,4 +1,5 @@
 package org.Group34.view.graphic.mapScreen;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -35,6 +36,7 @@ import org.Group34.model.enums.Season;
 import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.NPCDialogueManager;
 import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
+import org.Group34.model.gameAssetManagers.ReactionAssetManager;
 import org.Group34.model.interactions.Interaction;
 import org.Group34.model.items.foods.CookedFood;
 import org.Group34.model.map.Map;
@@ -161,6 +163,7 @@ public class GameScreen extends ScreenAdapter {
         messageLabel.setVisible(false);
         stage.addActor(messageLabel);
     }
+
     @Override
     public void render(float delta) {
         if (!isPassingOut) {
@@ -293,6 +296,7 @@ public class GameScreen extends ScreenAdapter {
             }
         }
     }
+
     private void handleInput(float delta) {
         boolean keyUp = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
@@ -351,8 +355,7 @@ public class GameScreen extends ScreenAdapter {
                 isBuffActive = true;
                 buffTimer = BUFF_DURATION;
                 showMessage("Speed boost activated!");
-            }
-            else {
+            } else {
                 showMessage("You only can eat foods!");
             }
         }
@@ -405,9 +408,10 @@ public class GameScreen extends ScreenAdapter {
                 moveTimer = 0;
             }
         } else {
-            moveTimer = - (isBuffActive ? BUFFED_MOVE_INTERVAL : MOVE_INTERVAL);
+            moveTimer = -(isBuffActive ? BUFFED_MOVE_INTERVAL : MOVE_INTERVAL);
         }
     }
+
     private void attemptMove(boolean keyUp, boolean keyDown, boolean keyLeft, boolean keyRight) {
         int[] playerLocation = player.getLocation();
         int newX = playerLocation[0];
@@ -438,6 +442,7 @@ public class GameScreen extends ScreenAdapter {
             handleGoToShop(entity, player);
         }
     }
+
     private void handleGoToShop(Entity entity, Player player) {
         String menu = null;
         if (entity instanceof Blacksmith) {
@@ -447,6 +452,7 @@ public class GameScreen extends ScreenAdapter {
         }
         player.setCurrentGameMenu(menu);
     }
+
     private void handleGreenhouseInteraction() {
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
         GreenHouse greenhouse = null;
@@ -495,6 +501,7 @@ public class GameScreen extends ScreenAdapter {
             infoDialog.show(stage);
         }
     }
+
     private void handleNPCDialogue() {
         int[] playerPos = player.getLocation();
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
@@ -524,6 +531,7 @@ public class GameScreen extends ScreenAdapter {
             }
         }
     }
+
     private void updateCamera() {
         int[] playerPos = player.getLocation();
         camera.position.set(
@@ -533,6 +541,7 @@ public class GameScreen extends ScreenAdapter {
         );
         camera.update();
     }
+
     private void renderPlayer() {
         int[] pos;
         if (isPassingOut) {
@@ -562,7 +571,12 @@ public class GameScreen extends ScreenAdapter {
                     false);
         } else {
             batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            if (player.getReactionTime() < 5f && player.getReaction() != null) {
+                batch.draw(player.getReaction(), pos[0] * TILE_SIZE + 25, pos[1] * TILE_SIZE + 25, TILE_SIZE / 2, TILE_SIZE / 2);
+            }
         }
+        player.setReactionTime(player.getReactionTime() + Gdx.graphics.getDeltaTime());
+
         if (showFoodIcon && foodIconTimer > 0) {
             float iconX = pos[0] * TILE_SIZE + TILE_SIZE / 2f - 16;
             float iconY = pos[1] * TILE_SIZE + TILE_SIZE + 10;
@@ -585,12 +599,13 @@ public class GameScreen extends ScreenAdapter {
             float iconY = pos[1] * TILE_SIZE + TILE_SIZE + 40; // Above the food icon
             float floatAmount = (BUFF_DURATION - buffTimer) * 5; // Slower floating effect
             iconY += floatAmount;
-            float alpha = 0.8f + 0.2f * (float)Math.sin(buffTimer * 5); // Pulsing effect
+            float alpha = 0.8f + 0.2f * (float) Math.sin(buffTimer * 5); // Pulsing effect
             batch.setColor(1, 1, 1, alpha);
             batch.draw(buffIconTexture, iconX, iconY, 32, 32);
             batch.setColor(1, 1, 1, 1);
         }
     }
+
     private void renderAnimals() {
         if (animalController != null) {
             for (Animal animal : animalController.getAllAnimals()) {
@@ -610,6 +625,7 @@ public class GameScreen extends ScreenAdapter {
             }
         }
     }
+
     private void renderOtherItems() {
         toolsGraphic.update(TILE_SIZE);
         gameMenuGraphic.update(camera, environmentManager);
@@ -645,6 +661,7 @@ public class GameScreen extends ScreenAdapter {
             buffIconTexture.dispose();
         }
     }
+
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
@@ -665,29 +682,49 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void handleServerInputs(Object object) {
-        if (object instanceof TestObject test) {
-            this.player.testObject = test;
-            System.out.println(test.name);
-            System.out.println(test.number);
-        } else if (object instanceof ArrayList<?> list) {
-            for (Object o : list) {
-                if (o instanceof String s) {
-                    if (!player.getName().equals(s)) {
-                        Player player1 = new Player(new int[]{1, 1});
-                        player1.setName(s);
-                        player.getInteractions().put(player1, new Interaction());
-                        player1.getInteractions().put(player, new Interaction());
-                    }
-                }
-            }
+        if (object instanceof ArrayList<?> list) {
+            handlePlayerList(list);
         } else if (object instanceof NetworkInteraction interaction) {
-            if (interaction.getPlayer2().equals(player.getName())) {
-                Player friend = player.getOtherPlayerByName(interaction.getPlayer1());
-                if (interaction.getWork().equals("hug")) {
-                    gameController.hug(player.getName(), friend);
-                    client.send("socialReadLastInteraction");
+            handleInteractions(interaction);
+        }
+    }
+
+    private void handlePlayerList(ArrayList<?> list) {
+        for (Object o : list) {
+            if (o instanceof String s) {
+                if (!player.getName().equals(s)) {
+                    Player player1 = new Player(new int[]{1, 1});
+                    player1.setName(s);
+                    player.getInteractions().put(player1, new Interaction());
+                    player1.getInteractions().put(player, new Interaction());
                 }
             }
+        }
+    }
+
+    private void handleInteractions(NetworkInteraction interaction) {
+        if (interaction.getPlayer2().equals(player.getName())) {
+            Player friend = player.getOtherPlayerByName(interaction.getPlayer1());
+            if (interaction.getWork().equals("talk")) {
+                gameController.talk(player.getName(), interaction.getText(), friend);
+                client.send("socialReadLastInteraction");
+            } else if (interaction.getWork().equals("gift")) {
+                gameController.gift(player.getName(), interaction.getText(), interaction.getAmount(), friend);
+                client.send("socialReadLastInteraction");
+            } else if (interaction.getWork().equals("hug")) {
+                gameController.hug(player.getName(), friend);
+                client.send("socialReadLastInteraction");
+            } else if (interaction.getWork().equals("flower")) {
+                gameController.flower(player.getName(), friend);
+                client.send("socialReadLastInteraction");
+            } else if (interaction.getWork().equals("marriage")) {
+                gameController.askMarriage(player.getName(), "", friend);
+                client.send("socialReadLastInteraction");
+            }
+        } else if (interaction.getPlayer2().equals("all") && interaction.getWork().equals("talk") && !interaction.getPlayer1().equals(player.getName())) {
+            Player friend = player.getOtherPlayerByName(interaction.getPlayer1());
+            gameController.talk(player.getName(), interaction.getText(), friend);
+            client.send("socialReadLastInteraction");
         }
     }
 }

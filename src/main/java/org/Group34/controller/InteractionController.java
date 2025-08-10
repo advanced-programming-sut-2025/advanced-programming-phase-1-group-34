@@ -3,7 +3,9 @@ package org.Group34.controller;
 import org.Group34.model.NetworkObjects.NetworkInteraction;
 import org.Group34.model.Result;
 import org.Group34.model.entities.Player;
+import org.Group34.model.gameAssetManagers.ReactionAssetManager;
 import org.Group34.model.interactions.Gift;
+import org.Group34.model.interactions.Interaction;
 import org.Group34.model.items.Item;
 import org.Group34.network.client.GameClient;
 
@@ -12,6 +14,18 @@ import java.util.Objects;
 
 public class InteractionController {
     public Result talk(String username, String message, Player player) {
+        if (username.startsWith("all")) {
+            for (Interaction value : player.getInteractions().values()) {
+                value.addMessage(message, false, false);
+                value.increaseXp(20);
+            }
+            for (Player player1 : player.getInteractions().keySet()) {
+                player1.getInteractionByPlayer(player).addMessage(message, true, true);
+                player1.getInteractionByPlayer(player).increaseXp(20);
+            }
+            return new Result(true, "Your message has been sent to all players");
+        }
+
         Player desiredPlayer = player.getOtherPlayerByName(username);
 
         if (desiredPlayer == null) {
@@ -44,9 +58,11 @@ public class InteractionController {
 
         if (desiredPlayer == null) {
             return new Result(false, "This user does not exist.");
-        } else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 1) {
-            return new Result(false, "the level of friendship is not enough.");
-        } else if (!haveEnoughItem(item, player, amount)) {
+        }
+//        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 1) {
+//            return new Result(false, "the level of friendship is not enough.");
+//        }
+        else if (!haveEnoughItem(item, player, amount)) {
             return new Result(false, "You do not have enough of this item.");
         }
 
@@ -57,6 +73,9 @@ public class InteractionController {
 
         player.getInteractionByPlayer(desiredPlayer).addGift(desiredItem, amount, false, false, desiredPlayer);
         desiredPlayer.getInteractionByPlayer(player).addGift(desiredItem, amount, true, true, desiredPlayer);
+
+        player.setReaction(ReactionAssetManager.gifting);
+        desiredPlayer.setReaction(ReactionAssetManager.gifting);
 
         return new Result(true, "Your gift has been sent.");
     }
@@ -103,9 +122,11 @@ public class InteractionController {
 //            return new Result(false, "the level of friendship is not enough.");
 //        }
 
-
         player.getInteractionByPlayer(desiredPlayer).increaseXp(60);
         desiredPlayer.getInteractionByPlayer(player).increaseXp(60);
+
+        player.setReaction(ReactionAssetManager.hugging);
+        desiredPlayer.setReaction(ReactionAssetManager.hugging);
 
         return new Result(true, "The desired player has been hugged.");
     }
@@ -115,16 +136,17 @@ public class InteractionController {
 
         if (desiredPlayer == null) {
             return new Result(false, "This user does not exist.");
-        } else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 2) {
-            return new Result(false, "the level of friendship is not enough.");
         }
+//        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 2) {
+//            return new Result(false, "the level of friendship is not enough.");
+//        }
 
 
         player.getInteractionByPlayer(desiredPlayer).setLevel(3);
         desiredPlayer.getInteractionByPlayer(player).setLevel(3);
 
-        player.removeFromInventory(player.getItemFromInventoryByName("Flower"), 1);
-        desiredPlayer.addToInventory(player.getItemFromInventoryByName("Flower"), 1);
+        player.setReaction(ReactionAssetManager.flowering);
+        desiredPlayer.setReaction(ReactionAssetManager.flowering);
 
         return new Result(true, "The flower was given to the desired player.");
     }
@@ -134,13 +156,17 @@ public class InteractionController {
 
         if (desiredPlayer == null) {
             return new Result(false, "This user does not exist.");
-        } else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 3) {
-            return new Result(false, "the level of friendship is not enough.");
         }
+//        else if (player.getInteractionByPlayer(desiredPlayer).getLevel() < 3) {
+//            return new Result(false, "the level of friendship is not enough.");
+//        }
         //        else if (!She Accepted) {}
 
         player.getInteractionByPlayer(desiredPlayer).setLevel(4);
         desiredPlayer.getInteractionByPlayer(player).setLevel(4);
+
+        player.setReaction(ReactionAssetManager.marriage);
+        desiredPlayer.setReaction(ReactionAssetManager.marriage);
 
         return new Result(true, "The marriage proposal was given.");
     }

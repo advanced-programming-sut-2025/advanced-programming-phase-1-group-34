@@ -5,7 +5,9 @@ import org.Group34.model.TestObject;
 import org.Group34.model.User;
 import org.Group34.model.entities.buildings.shops.products.ShippingBin;
 import org.Group34.model.enums.LevelType;
+import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
+import org.Group34.model.gameAssetManagers.ReactionAssetManager;
 import org.Group34.model.interactions.Gift;
 import org.Group34.model.interactions.Interaction;
 import org.Group34.model.items.Fertilizer;
@@ -41,8 +43,10 @@ public class Player implements Entity, Serializable {
     private HashMap<Player, Interaction> interactions = new HashMap<>();
 
     private Item currentTool = null;
-    private String currentGameMenu = "inventory";
+    private String currentGameMenu = null;
     private Item currentItem = null;
+    private Texture reaction = null;
+    private float reactionTime = 0f;
 
     public String test = "test is not check";
     public TestObject testObject = new TestObject("fail", 0);
@@ -386,5 +390,22 @@ public class Player implements Entity, Serializable {
 
     public HashMap<Player, Interaction> getInteractions() {
         return interactions;
+    }
+
+    public Texture getReaction() {
+        return reaction;
+    }
+
+    public void setReaction(Texture reaction) {
+        reactionTime = 0f;
+        this.reaction = reaction;
+    }
+
+    public float getReactionTime() {
+        return reactionTime;
+    }
+
+    public void setReactionTime(float reactionTime) {
+        this.reactionTime = reactionTime;
     }
 }

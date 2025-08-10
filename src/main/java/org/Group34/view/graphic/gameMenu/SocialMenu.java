@@ -237,11 +237,11 @@ public class SocialMenu {
             if (x > 671 && x < 703 && y < 263 && y > 225) {
                 talkScroller--;
                 if (talkScroller == -1) {
-                    talkScroller = player.getInteractions().size() - 1;
+                    talkScroller = player.getInteractions().size();
                 }
             } else if (x > 712 && x < 744 && y < 264 && y > 226) {
                 talkScroller++;
-                talkScroller %= player.getInteractions().size();
+                talkScroller %= player.getInteractions().size() + 1;
             } else if (x > 738 && x < 770 && y > 394 && y < 429) {
                 talk(player, gameController);
             } else if (x > 687 && x < 773 && y > 150 && y < 185) {
@@ -418,15 +418,19 @@ public class SocialMenu {
         font.draw(batch, talkError, x + 20, y + 30);
         font.setColor(Color.BLACK);
 
-        HashMap<Player, Interaction> interactions = player.getInteractions();
-        Player friend = new ArrayList<>(interactions.keySet()).get(talkScroller);
-        Interaction interaction = new ArrayList<>(interactions.values()).get(talkScroller);
-        StringBuilder result = new StringBuilder();
-        font.draw(batch, friend.getName(), x + 70, y + 143);
-        font.getData().setScale(0.7f);
-        result.append("(XP : ").append(interaction.getXp()).append(") (Level : ").append(interaction.getLevel()).append(")");
-        font.draw(batch, result, x + 135, y + 140);
-        font.getData().setScale(1f);
+        if (talkScroller == player.getInteractions().size()) {
+            font.draw(batch, "All", x + 70, y + 143);
+        } else {
+            HashMap<Player, Interaction> interactions = player.getInteractions();
+            Player friend = new ArrayList<>(interactions.keySet()).get(talkScroller);
+            Interaction interaction = new ArrayList<>(interactions.values()).get(talkScroller);
+            StringBuilder result = new StringBuilder();
+            font.draw(batch, friend.getName(), x + 70, y + 143);
+            font.getData().setScale(0.7f);
+            result.append("(XP : ").append(interaction.getXp()).append(") (Level : ").append(interaction.getLevel()).append(")");
+            font.draw(batch, result, x + 135, y + 140);
+            font.getData().setScale(1f);
+        }
 
         font.draw(batch, message, x + 70, y + 60);
 
@@ -741,10 +745,22 @@ public class SocialMenu {
     }
 
     private static void talk(Player player, GameController gameController) {
-        Result result = gameController.talk(new ArrayList<>(player.getInteractions().keySet()).get(talkScroller).getName(), message.toString(), player);
-        talkError = result.message();
-        if (result.success()) {
-            message.delete(0, message.length());
+        if (talkScroller == player.getInteractions().size()) {
+            Result result = gameController.talk("all", message.toString(), player);
+            NetworkInteraction networkInteraction = new NetworkInteraction(player.getName(), "all", "talk", message.toString(), 0);
+            gameController.getClient().sendObject(networkInteraction);
+            talkError = result.message();
+            if (result.success()) {
+                message.delete(0, message.length());
+            }
+        } else {
+            Result result = gameController.talk(new ArrayList<>(player.getInteractions().keySet()).get(talkScroller).getName(), message.toString(), player);
+            NetworkInteraction networkInteraction = new NetworkInteraction(player.getName(), new ArrayList<>(player.getInteractions().keySet()).get(talkScroller).getName(), "talk", message.toString(), 0);
+            gameController.getClient().sendObject(networkInteraction);
+            talkError = result.message();
+            if (result.success()) {
+                message.delete(0, message.length());
+            }
         }
     }
 
@@ -759,6 +775,8 @@ public class SocialMenu {
         inventory.removeAll(delete);
 
         Result result = gameController.gift(new ArrayList<>(player.getInteractions().keySet()).get(talkScroller).getName(), inventory.get(inventoryScroller).getName(), giftAmount, player);
+        NetworkInteraction networkInteraction = new NetworkInteraction(player.getName(), new ArrayList<>(player.getInteractions().keySet()).get(talkScroller).getName(), "gift", inventory.get(inventoryScroller).getName(), giftAmount);
+        gameController.getClient().sendObject(networkInteraction);
         giftError = result.message();
         if (result.success()) {
             giftAmount = 0;
@@ -773,10 +791,14 @@ public class SocialMenu {
 
     private static void flower(Player player, GameController gameController) {
         loveError = gameController.flower(new ArrayList<>(player.getInteractions().keySet()).get(loveScroller).getName(), player).message();
+        NetworkInteraction networkInteraction = new NetworkInteraction(player.getName(), new ArrayList<>(player.getInteractions().keySet()).get(loveScroller).getName(), "flower", "", 0);
+        gameController.getClient().sendObject(networkInteraction);
     }
 
     private static void marriage(Player player, GameController gameController) {
         loveError = gameController.askMarriage(new ArrayList<>(player.getInteractions().keySet()).get(loveScroller).getName(), "", player).message();
+        NetworkInteraction networkInteraction = new NetworkInteraction(player.getName(), new ArrayList<>(player.getInteractions().keySet()).get(loveScroller).getName(), "marriage", "", 0);
+        gameController.getClient().sendObject(networkInteraction);
     }
 
     private static void handleOtherBoard(Player player) {
