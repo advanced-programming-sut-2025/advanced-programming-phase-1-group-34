@@ -71,47 +71,30 @@ public class Animal implements Entity {
     public void setY(int y) { this.y = y; }
 
     public Product collectProduct() {
-        if (!isFed) return null;
-        if (daysSinceLastProduce < type.getRequiredDays()) return null;
-        if (type == AnimalType.PIG && !isOutside) return null;
-
-        isFed = false;
-        daysSinceLastProduce = 0;
-
-        Product selectedProduct = null;
-        for (Product product : possibleProducts) {
-            if (friendship >= product.getRequiredFriendship()) {
-                if (selectedProduct == null || product.getRequiredFriendship() > selectedProduct.getRequiredFriendship()) {
-                    selectedProduct = product;
-                }
-            }
+        if (this.getAnimalType() == AnimalType.SHEEP) {
+            return Product.SHEEP_WOOL;
         }
-
-        if (selectedProduct == null) return null;
-        double randomFactor = 0.5 + Math.random();
-        if (selectedProduct.getRequiredFriendship() > 0) {
-            double probability = (randomFactor + (150 * randomFactor)) / 1500;
-
-            if (probability < 0.6) {
-                Product lowerProduct = null;
-                for (Product product : possibleProducts) {
-                    if (product.getRequiredFriendship() < selectedProduct.getRequiredFriendship()) {
-                        if (lowerProduct == null || product.getRequiredFriendship() < lowerProduct.getRequiredFriendship()) {
-                            lowerProduct = product;
-                        }
-                    }
-                }
-                if (lowerProduct != null) {
-                    selectedProduct = lowerProduct;
-                }
-            }
+        else if (this.getAnimalType() == AnimalType.CHICKEN) {
+            return Product.EGG;
         }
-        double Q = (randomFactor * 0.5) + (0.5 * (randomFactor / 1000));
-        int quality = determineQuality(Q);
-        int price = selectedProduct.getPrice() * quality;
-        selectedProduct.setPrice(price);
-
-        return selectedProduct;
+        else if (this.getAnimalType() == AnimalType.COW) {
+            return Product.MILK;
+        }
+        else if (this.getAnimalType() == AnimalType.GOAT) {
+            return Product.MILK;
+        }
+        else if (this.getAnimalType() == AnimalType.RABBIT) {
+            return Product.RABBIT_FOOT;
+        }
+        else if (this.getAnimalType() == AnimalType.PIG) {
+            return Product.TRUFFLE;
+        }
+        else if (this.getAnimalType() == AnimalType.DUCK) {
+            return Product.DUCK_FEATHER;
+        }
+        else {
+            return Product.EGG;
+        }
     }
 
     public boolean setOutside() {

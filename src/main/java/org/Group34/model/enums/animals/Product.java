@@ -1,6 +1,8 @@
 package org.Group34.model.enums.animals;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import org.Group34.model.gameAssetManagers.AnimalAssetManager;
 import org.Group34.model.items.Item;
 
 public enum Product implements Item {
@@ -59,7 +61,36 @@ public enum Product implements Item {
 
     @Override
     public String getName() {
-        return null;
+        switch (this) {
+            case EGG:
+                return "Egg";
+            case LARGE_EGG:
+                return "Large Egg";
+            case DUCK_EGG:
+                return "Duck Egg";
+            case DUCK_FEATHER:
+                return "Duck Feather";
+            case RABBIT_WOOL:
+                return "Rabbit Wool";
+            case RABBIT_FOOT:
+                return "Rabbit Foot";
+            case DINOSAUR_EGG:
+                return "Dinosaur Egg";
+            case MILK:
+                return "Milk";
+            case LARGE_MILK:
+                return "Large Milk";
+            case GOAT_MILK:
+                return "Goat Milk";
+            case LARGE_GOAT_MILK:
+                return "Large Goat Milk";
+            case SHEEP_WOOL:
+                return "Sheep Wool";
+            case TRUFFLE:
+                return "Truffle";
+            default:
+                return "Meow";
+        }
     }
 
     public void setPrice(int price) {
@@ -68,6 +99,35 @@ public enum Product implements Item {
 
     @Override
     public Texture getTexture() {
-        return null;
+        switch (this) {
+            case EGG:
+                return AnimalAssetManager.egg;
+            case LARGE_EGG:
+                return AnimalAssetManager.largeEgg;
+            case DUCK_EGG:
+                return AnimalAssetManager.duckEgg;
+            case DUCK_FEATHER:
+                return AnimalAssetManager.duckFeather;
+            case RABBIT_WOOL:
+                return AnimalAssetManager.rabbitWool;
+            case RABBIT_FOOT:
+                return AnimalAssetManager.rabbitFoot;
+            case DINOSAUR_EGG:
+                return AnimalAssetManager.dinosaurEgg;
+            case MILK:
+                return AnimalAssetManager.milk;
+            case LARGE_MILK:
+                return AnimalAssetManager.largeMilk;
+            case GOAT_MILK:
+                return AnimalAssetManager.goatMilk;
+            case LARGE_GOAT_MILK:
+                return AnimalAssetManager.largeGoatMilk;
+            case SHEEP_WOOL:
+                return AnimalAssetManager.sheepWool;
+            case TRUFFLE:
+                return AnimalAssetManager.truffle;
+            default:
+                return new Texture(Gdx.files.internal("gameMenu/coin.png"));
+        }
     }
 }

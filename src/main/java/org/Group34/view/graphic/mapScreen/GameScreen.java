@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -87,7 +88,6 @@ public class GameScreen extends ScreenAdapter {
     private final AnimalBuildingController buildingController;
     private Space currentSpace;
     private AnimalInteractionMenu animalInteractionMenu;
-
     private Texture currentFoodTexture;
     private boolean showFoodIcon = false;
     private float foodIconTimer = 0;
@@ -202,6 +202,7 @@ public class GameScreen extends ScreenAdapter {
         renderPlayer();
         renderAnimals(); // Add this line to render animals
         renderOtherItems();
+
         batch.end();
 
         if (environmentManager.isWeatherActive()) {
@@ -266,8 +267,6 @@ public class GameScreen extends ScreenAdapter {
             AnimalMenu.draw(batch, player, camera);
             batch.end();
         }
-
-
     }
 
     private void handleInput(float delta) {
@@ -275,6 +274,12 @@ public class GameScreen extends ScreenAdapter {
         boolean keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+
+        // اگر منوی تعامل با حیوانات فعال است، از حرکت بازیکن جلوگیری کن
+        if (animalInteractionMenu != null && animalInteractionMenu.isActive()) {
+            // فقط ورودی‌های منو را پردازش کن
+            return;
+        }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             myGame.getTime().cheatAdvanceTime(1);
@@ -317,16 +322,12 @@ public class GameScreen extends ScreenAdapter {
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             if (player.getCurrentItem() instanceof CookedFood) {
                 CookedFood food = (CookedFood) player.getCurrentItem();
-
                 currentFoodTexture = food.getTexture();
-
                 player.setEnergy(player.getEnergy() + 10);
                 showFoodIcon = true;
                 foodIconTimer = FOOD_ICON_DURATION;
-
                 player.removeFromInventory(food, 1);
                 player.setCurrentItem(null);
-
                 currentMessage = "You ate food! Energy +10";
                 messageTimer = MESSAGE_DURATION;
             }
@@ -337,7 +338,6 @@ public class GameScreen extends ScreenAdapter {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
                 AnimalMenu.cancelPlacingBuilding();
             }
-
             // Handle mouse click for building placement
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 // Convert screen coordinates to world coordinates
@@ -346,7 +346,6 @@ public class GameScreen extends ScreenAdapter {
                 // Convert world coordinates to tile coordinates
                 int tileX = worldX / TILE_SIZE;
                 int tileY = worldY / TILE_SIZE;
-
                 // Try to place the building
                 AnimalMenu.handleBuildingPlacement(player, tileX, tileY);
             }
@@ -356,13 +355,11 @@ public class GameScreen extends ScreenAdapter {
         // Handle right-click on animals
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             // Convert screen coordinates to world coordinates
-            int worldX = (int) (camera.position.x - Gdx.graphics.getWidth() / 2 + Gdx.input.getX());
-            int worldY = (int) (camera.position.y - Gdx.graphics.getHeight() / 2 + (Gdx.graphics.getHeight() - Gdx.input.getY()));
-
+            Vector3 mousePos3D = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(mousePos3D);
             // Convert world coordinates to tile coordinates
-            int tileX = worldX / TILE_SIZE;
-            int tileY = worldY / TILE_SIZE;
-
+            int tileX = (int) (mousePos3D.x / TILE_SIZE);
+            int tileY = (int) (mousePos3D.y / TILE_SIZE);
             // Check if there's an animal at this tile
             Entity entity = currentSpace.getEntityByLocation(tileX, tileY);
             if (entity instanceof Animal) {
@@ -371,6 +368,8 @@ public class GameScreen extends ScreenAdapter {
                 animalInteractionMenu = new AnimalInteractionMenu(
                         animal, skin, batch, camera, animalController, currentSpace, player, stage
                 );
+                // Debug message
+                System.out.println("Animal interaction menu created for animal at: " + tileX + ", " + tileY);
             }
         }
 
@@ -435,7 +434,6 @@ public class GameScreen extends ScreenAdapter {
     private void handleGreenhouseInteraction() {
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
         GreenHouse greenhouse = null;
-
         for (int x = 0; x < currentSpace.width(); x++) {
             for (int y = 0; y < currentSpace.height(); y++) {
                 Entity entity = currentSpace.getEntityByLocation(x, y);
@@ -446,7 +444,6 @@ public class GameScreen extends ScreenAdapter {
             }
             if (greenhouse != null) break;
         }
-
         if (greenhouse != null) {
             if (!greenhouse.isRepaired()) {
                 GreenhouseRepairDialog dialog = new GreenhouseRepairDialog(
@@ -487,11 +484,9 @@ public class GameScreen extends ScreenAdapter {
         int[] playerPos = player.getLocation();
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
         int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-
         for (int[] dir : directions) {
             int checkX = playerPos[0] + dir[0];
             int checkY = playerPos[1] + dir[1];
-
             if (checkX >= 0 && checkX < currentSpace.width() &&
                     checkY >= 0 && checkY < currentSpace.height()) {
                 Entity entity = currentSpace.getEntityByLocation(checkX, checkY);
@@ -534,7 +529,6 @@ public class GameScreen extends ScreenAdapter {
             // Use current player location
             pos = player.getLocation();
         }
-
         Texture playerTexture = PlayerAvatarManager.female_player1;
         if (isPassingOut) {
             batch.draw(playerTexture,
@@ -558,22 +552,16 @@ public class GameScreen extends ScreenAdapter {
         }
 
         if (showFoodIcon && foodIconTimer > 0) {
-            int[] playerPos = player.getLocation();
-            float iconX = playerPos[0] * TILE_SIZE + TILE_SIZE / 2f - 16;
-            float iconY = playerPos[1] * TILE_SIZE + TILE_SIZE + 10;
-
+            float iconX = pos[0] * TILE_SIZE + TILE_SIZE / 2f - 16;
+            float iconY = pos[1] * TILE_SIZE + TILE_SIZE + 10;
             float floatAmount = (FOOD_ICON_DURATION - foodIconTimer) * 15;
             iconY += floatAmount;
-
             float alpha = Math.min(1.0f, foodIconTimer);
             batch.setColor(1, 1, 1, alpha);
-
             if (currentFoodTexture != null) {
                 batch.draw(currentFoodTexture, iconX, iconY, 32, 32);
             }
-
             batch.setColor(1, 1, 1, 1);
-
             foodIconTimer -= Gdx.graphics.getDeltaTime();
             if (foodIconTimer <= 0) {
                 showFoodIcon = false;
