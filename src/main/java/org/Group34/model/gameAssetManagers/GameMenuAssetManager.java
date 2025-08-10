@@ -40,7 +40,7 @@ public class GameMenuAssetManager {
     private final static Texture learnIcon = new Texture("foragingPlants/Lost_Book.png");
     private final static Texture cookIcon = new Texture("recipe/Cooking.png");
     private final static Texture craftIcon = new Texture("gameMenu/CraftIcon.png");
-
+    private final static Texture buff = new Texture("gameMenu/Buff.png");
 
     // ----- getters -----
 
@@ -186,6 +186,10 @@ public class GameMenuAssetManager {
 
     public static Texture getCraftIcon() {
         return craftIcon;
+    }
+
+    public static Texture getBuff() {
+        return buff;
     }
 
     // -------------------

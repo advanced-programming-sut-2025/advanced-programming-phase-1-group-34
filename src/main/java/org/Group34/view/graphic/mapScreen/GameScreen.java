@@ -44,15 +44,16 @@ import org.Group34.view.graphic.dialogs.AnimalInteractionMenu;
 import org.Group34.view.graphic.dialogs.GreenhouseRepairDialog;
 import org.Group34.view.graphic.gameMenu.AnimalMenu;
 import org.Group34.view.graphic.menuScreen.MainMenuScreen;
-
 public class GameScreen extends ScreenAdapter {
     private static final int TILE_SIZE = 32;
     private static final int VIEWPORT_WIDTH = 30;
     private static final int VIEWPORT_HEIGHT = 15;
     private static final float MOVE_INTERVAL = 0.13f;
+    private static final float BUFFED_MOVE_INTERVAL = 0.08f; // Faster movement during buff
     private static final float MESSAGE_DURATION = 3f;
     private static final float PASSOUT_DURATION = 3f;
     private static final float PASSOUT_ROTATION = 90f;
+    private static final float BUFF_DURATION = 15f; // 15 seconds for buff
     private final Stage stage;
     private final Skin skin;
     private final Game game;
@@ -93,6 +94,11 @@ public class GameScreen extends ScreenAdapter {
     private float foodIconTimer = 0;
     private static final float FOOD_ICON_DURATION = 2.0f;
 
+    // Buff related variables
+    private boolean isBuffActive = false;
+    private float buffTimer = 0;
+    private Texture buffIconTexture;
+
     public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController, GraphicAppView app, GameClient client) {
         this.skin = skin;
         this.game = game;
@@ -124,26 +130,22 @@ public class GameScreen extends ScreenAdapter {
         messageFont = new BitmapFont();
         messageFont.setColor(Color.WHITE);
         mapOverviewTexture = new Texture(Gdx.files.internal("gameMenu/mapOverView.png"));
+        buffIconTexture = GameMenuAssetManager.getBuff();
         camera.setToOrtho(false, VIEWPORT_WIDTH * TILE_SIZE, VIEWPORT_HEIGHT * TILE_SIZE);
         Gdx.input.setInputProcessor(stage);
     }
-
     @Override
     public void render(float delta) {
         if (!isPassingOut) {
             handleInput(delta);
         }
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         // Only update camera if not in the middle of passout animation
         if (!isPassingOut || passoutCompleted) {
             updateCamera();
         }
-
         environmentManager.update();
         uiManager.update(environmentManager, player);
-
         if (!NPCsInitialized) {
             currentSpace = gameMap.getCurrentPlayerFarm(player);
             environmentManager.initializeNPCs(currentSpace);
@@ -152,7 +154,6 @@ public class GameScreen extends ScreenAdapter {
             }
             NPCsInitialized = true;
         }
-
         // Update animal buildings in the current space
         if (buildingController != null) {
             for (AnimalsBuilding building : buildingController.getBuildings()) {
@@ -166,7 +167,6 @@ public class GameScreen extends ScreenAdapter {
                 }
             }
         }
-
         // Update animals in the current space
         if (animalController != null) {
             for (Animal animal : animalController.getAllAnimals()) {
@@ -180,13 +180,10 @@ public class GameScreen extends ScreenAdapter {
                 }
             }
         }
-
         int[] playerPos = player.getLocation();
         npcDialogueManager.update(delta, environmentManager.getNpcManager().getNpcOnMaps(), playerPos);
-
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-
         // Temporarily hide player from the map during passout animation
         if (isPassingOut) {
             int[] originalLocation = player.getLocation();
@@ -198,33 +195,26 @@ public class GameScreen extends ScreenAdapter {
         } else {
             mapRenderer.render(batch, camera, environmentManager, npcDialogueManager);
         }
-
         renderPlayer();
         renderAnimals(); // Add this line to render animals
         renderOtherItems();
-
         batch.end();
-
         if (environmentManager.isWeatherActive()) {
             batch.begin();
             weatherRenderer.render(batch, delta, environmentManager);
             batch.end();
         }
-
         if (messageTimer > 0) {
             messageTimer -= delta;
             batch.begin();
             messageFont.draw(batch, currentMessage, 10, Gdx.graphics.getHeight() - 20);
             batch.end();
         }
-
         stage.act(delta);
         stage.draw();
-
         if (animalInteractionMenu != null) {
             animalInteractionMenu.handleInput();
             animalInteractionMenu.render();
-
             // Only dispose when both menu is inactive AND there are no active icons
             if (!animalInteractionMenu.isActive() &&
                     (animalInteractionMenu.getActiveIcon() == null || animalInteractionMenu.getIconTimer() <= 0)) {
@@ -232,14 +222,12 @@ public class GameScreen extends ScreenAdapter {
                 animalInteractionMenu = null;
             }
         }
-
         if (showMapOverview) {
             batch.setProjectionMatrix(stage.getCamera().combined);
             batch.begin();
             batch.draw(mapOverviewTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             batch.end();
         }
-
         if (isPassingOut) {
             passoutTimer += delta;
             currentRotation = (passoutTimer / PASSOUT_DURATION) * PASSOUT_ROTATION;
@@ -261,26 +249,31 @@ public class GameScreen extends ScreenAdapter {
             // Reset the flag after rendering is complete
             passoutCompleted = false;
         }
-
         if ("animal".equals(player.getCurrentGameMenu())) {
             batch.begin();
             AnimalMenu.draw(batch, player, camera);
             batch.end();
         }
-    }
 
+        // Update buff timer
+        if (isBuffActive) {
+            buffTimer -= delta;
+            if (buffTimer <= 0) {
+                isBuffActive = false;
+                currentMessage = "Speed boost expired!";
+                messageTimer = MESSAGE_DURATION;
+            }
+        }
+    }
     private void handleInput(float delta) {
         boolean keyUp = Gdx.input.isKeyPressed(Input.Keys.UP);
         boolean keyDown = Gdx.input.isKeyPressed(Input.Keys.DOWN);
         boolean keyLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean keyRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
 
-        // اگر منوی تعامل با حیوانات فعال است، از حرکت بازیکن جلوگیری کن
         if (animalInteractionMenu != null && animalInteractionMenu.isActive()) {
-            // فقط ورودی‌های منو را پردازش کن
             return;
         }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
             myGame.getTime().cheatAdvanceTime(1);
         }
@@ -330,9 +323,17 @@ public class GameScreen extends ScreenAdapter {
                 player.setCurrentItem(null);
                 currentMessage = "You ate food! Energy +10";
                 messageTimer = MESSAGE_DURATION;
+
+                // Activate speed buff
+                isBuffActive = true;
+                buffTimer = BUFF_DURATION;
+                currentMessage += " Speed boost activated!";
+            }
+            else {
+                currentMessage = "You only can eat foods!";
+                messageTimer = MESSAGE_DURATION;
             }
         }
-
         // Handle building placement
         if (AnimalMenu.isPlacingBuilding()) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
@@ -351,7 +352,6 @@ public class GameScreen extends ScreenAdapter {
             }
             return; // Skip normal movement when in building placement mode
         }
-
         // Handle right-click on animals
         if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
             // Convert screen coordinates to world coordinates
@@ -372,35 +372,31 @@ public class GameScreen extends ScreenAdapter {
                 System.out.println("Animal interaction menu created for animal at: " + tileX + ", " + tileY);
             }
         }
-
         if (keyUp || keyDown || keyLeft || keyRight) {
             moveTimer += delta;
+            float currentMoveInterval = isBuffActive ? BUFFED_MOVE_INTERVAL : MOVE_INTERVAL;
             if (moveTimer < 0) {
                 attemptMove(keyUp, keyDown, keyLeft, keyRight);
                 moveTimer = 0;
-            } else if (moveTimer >= MOVE_INTERVAL) {
+            } else if (moveTimer >= currentMoveInterval) {
                 attemptMove(keyUp, keyDown, keyLeft, keyRight);
                 moveTimer = 0;
             }
         } else {
-            moveTimer = -MOVE_INTERVAL;
+            moveTimer = - (isBuffActive ? BUFFED_MOVE_INTERVAL : MOVE_INTERVAL);
         }
     }
-
     private void attemptMove(boolean keyUp, boolean keyDown, boolean keyLeft, boolean keyRight) {
         int[] playerLocation = player.getLocation();
         int newX = playerLocation[0];
         int newY = playerLocation[1];
-
         if (keyUp) newY++;
         else if (keyDown) newY--;
         else if (keyLeft) newX--;
         else if (keyRight) newX++;
-
         if (AnimalMenu.isPlacingBuilding()) {
             return;
         }
-
         if (newX >= 0 && newX < gameMap.getCurrentPlayerFarm(player).width() &&
                 newY >= 0 && newY < gameMap.getCurrentPlayerFarm(player).height()) {
             Entity entity = gameMap.getCurrentPlayerFarm(player).getEntityByLocation(newX, newY);
@@ -420,7 +416,6 @@ public class GameScreen extends ScreenAdapter {
             handleGoToShop(entity, player);
         }
     }
-
     private void handleGoToShop(Entity entity, Player player) {
         String menu = null;
         if (entity instanceof Blacksmith) {
@@ -430,7 +425,6 @@ public class GameScreen extends ScreenAdapter {
         }
         player.setCurrentGameMenu(menu);
     }
-
     private void handleGreenhouseInteraction() {
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
         GreenHouse greenhouse = null;
@@ -479,7 +473,6 @@ public class GameScreen extends ScreenAdapter {
             infoDialog.show(stage);
         }
     }
-
     private void handleNPCDialogue() {
         int[] playerPos = player.getLocation();
         Space currentSpace = gameMap.getCurrentPlayerFarm(player);
@@ -509,7 +502,6 @@ public class GameScreen extends ScreenAdapter {
             }
         }
     }
-
     private void updateCamera() {
         int[] playerPos = player.getLocation();
         camera.position.set(
@@ -519,7 +511,6 @@ public class GameScreen extends ScreenAdapter {
         );
         camera.update();
     }
-
     private void renderPlayer() {
         int[] pos;
         if (isPassingOut) {
@@ -550,7 +541,6 @@ public class GameScreen extends ScreenAdapter {
         } else {
             batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         }
-
         if (showFoodIcon && foodIconTimer > 0) {
             float iconX = pos[0] * TILE_SIZE + TILE_SIZE / 2f - 16;
             float iconY = pos[1] * TILE_SIZE + TILE_SIZE + 10;
@@ -567,8 +557,19 @@ public class GameScreen extends ScreenAdapter {
                 showFoodIcon = false;
             }
         }
-    }
 
+        // Render buff icon if active
+        if (isBuffActive) {
+            float iconX = pos[0] * TILE_SIZE + TILE_SIZE / 2f - 16;
+            float iconY = pos[1] * TILE_SIZE + TILE_SIZE + 40; // Above the food icon
+            float floatAmount = (BUFF_DURATION - buffTimer) * 5; // Slower floating effect
+            iconY += floatAmount;
+            float alpha = 0.8f + 0.2f * (float)Math.sin(buffTimer * 5); // Pulsing effect
+            batch.setColor(1, 1, 1, alpha);
+            batch.draw(buffIconTexture, iconX, iconY, 32, 32);
+            batch.setColor(1, 1, 1, 1);
+        }
+    }
     private void renderAnimals() {
         if (animalController != null) {
             for (Animal animal : animalController.getAllAnimals()) {
@@ -588,12 +589,10 @@ public class GameScreen extends ScreenAdapter {
             }
         }
     }
-
     private void renderOtherItems() {
         toolsGraphic.update(TILE_SIZE);
         gameMenuGraphic.update(camera, environmentManager);
     }
-
     @Override
     public void dispose() {
         mapRenderer.dispose();
@@ -612,13 +611,14 @@ public class GameScreen extends ScreenAdapter {
         if (currentFoodTexture != null) {
             currentFoodTexture.dispose();
         }
+        if (buffIconTexture != null) {
+            buffIconTexture.dispose();
+        }
     }
-
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
-
     public void handleServerInputs(Object object) {
         if (object instanceof TestObject test) {
             this.player.testObject = test;
