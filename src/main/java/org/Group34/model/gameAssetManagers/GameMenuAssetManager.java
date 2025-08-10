@@ -35,6 +35,9 @@ public class GameMenuAssetManager {
     private final static Texture craftingIcon = new Texture("gameMenu/Blacksmith_Icon.png");
     private final static Texture cookingIcon = new Texture("gameMenu/Survival_Burger.png");
     private final static Texture fridgeIcon = new Texture("gameMenu/Mini-Fridge.png");
+    private final static Texture lockIcon = new Texture("menuIcons/lockIcon.png");
+    private final static Texture learnIcon = new Texture("foragingPlants/Lost_Book.png");
+    private final static Texture cookIcon = new Texture("recipe/Cooking.png");
 
 
     // ----- getters -----
@@ -165,6 +168,18 @@ public class GameMenuAssetManager {
 
     public static Texture getFridgeIcon() {
         return fridgeIcon;
+    }
+
+    public static Texture getLockIcon() {
+        return lockIcon;
+    }
+
+    public static Texture getLearnIcon() {
+        return learnIcon;
+    }
+
+    public static Texture getCookIcon() {
+        return cookIcon;
     }
 
     // -------------------
