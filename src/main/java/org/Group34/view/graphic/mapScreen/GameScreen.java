@@ -27,9 +27,11 @@ import org.Group34.model.entities.buildings.GreenHouse;
 import org.Group34.model.entities.buildings.shops.*;
 import org.Group34.model.entities.npcs.NPC;
 import org.Group34.model.enums.Season;
+import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.NPCDialogueManager;
 import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
 import org.Group34.model.interactions.Interaction;
+import org.Group34.model.items.foods.CookedFood;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
 import org.Group34.model.TestObject;
@@ -85,6 +87,11 @@ public class GameScreen extends ScreenAdapter {
     private final AnimalBuildingController buildingController;
     private Space currentSpace;
     private AnimalInteractionMenu animalInteractionMenu;
+
+    private Texture currentFoodTexture;
+    private boolean showFoodIcon = false;
+    private float foodIconTimer = 0;
+    private static final float FOOD_ICON_DURATION = 2.0f;
 
     public GameScreen(Skin skin, Game game, MyGame myGame, GameController gameController, GraphicAppView app, GameClient client) {
         this.skin = skin;
@@ -259,6 +266,8 @@ public class GameScreen extends ScreenAdapter {
             AnimalMenu.draw(batch, player, camera);
             batch.end();
         }
+
+
     }
 
     private void handleInput(float delta) {
@@ -304,6 +313,23 @@ public class GameScreen extends ScreenAdapter {
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.O)) {
             showMapOverview = !showMapOverview;
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if (player.getCurrentItem() instanceof CookedFood) {
+                CookedFood food = (CookedFood) player.getCurrentItem();
+
+                currentFoodTexture = food.getTexture();
+
+                player.setEnergy(player.getEnergy() + 10);
+                showFoodIcon = true;
+                foodIconTimer = FOOD_ICON_DURATION;
+
+                player.removeFromInventory(food, 1);
+                player.setCurrentItem(null);
+
+                currentMessage = "You ate food! Energy +10";
+                messageTimer = MESSAGE_DURATION;
+            }
         }
 
         // Handle building placement
@@ -530,6 +556,29 @@ public class GameScreen extends ScreenAdapter {
         } else {
             batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         }
+
+        if (showFoodIcon && foodIconTimer > 0) {
+            int[] playerPos = player.getLocation();
+            float iconX = playerPos[0] * TILE_SIZE + TILE_SIZE / 2f - 16;
+            float iconY = playerPos[1] * TILE_SIZE + TILE_SIZE + 10;
+
+            float floatAmount = (FOOD_ICON_DURATION - foodIconTimer) * 15;
+            iconY += floatAmount;
+
+            float alpha = Math.min(1.0f, foodIconTimer);
+            batch.setColor(1, 1, 1, alpha);
+
+            if (currentFoodTexture != null) {
+                batch.draw(currentFoodTexture, iconX, iconY, 32, 32);
+            }
+
+            batch.setColor(1, 1, 1, 1);
+
+            foodIconTimer -= Gdx.graphics.getDeltaTime();
+            if (foodIconTimer <= 0) {
+                showFoodIcon = false;
+            }
+        }
     }
 
     private void renderAnimals() {
@@ -571,6 +620,9 @@ public class GameScreen extends ScreenAdapter {
         }
         if (animalInteractionMenu != null) {
             animalInteractionMenu.dispose();
+        }
+        if (currentFoodTexture != null) {
+            currentFoodTexture.dispose();
         }
     }
 
