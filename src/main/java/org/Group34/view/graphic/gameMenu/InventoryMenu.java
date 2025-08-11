@@ -40,6 +40,8 @@ public class InventoryMenu {
     private static int scrollNumber = 0;
     private static int infoNumber = 0;
 
+    private static String errorMessage = null;
+
     static {
         board.setSize(chest.getWidth(), chest.getHeight());
         smallBoard.setSize((float) (smallBoard.getWidth() * 0.7), (float) (smallBoard.getHeight() * 0.7));
@@ -68,6 +70,17 @@ public class InventoryMenu {
         int index = 0;
 
         BitmapFont font = new BitmapFont();
+
+        font.setColor(Color.BLUE);
+        font.getData().setScale(1.0f);
+        font.draw(batch, "Press ENTER to transfer selected item to fridge", x + 100, y + 300);
+
+        if (errorMessage != null) {
+            font.setColor(Color.RED);
+            font.getData().setScale(1.0f);
+            font.draw(batch, errorMessage, x + 30, y - 150);
+        }
+
         while (index + (12 * scrollNumber) < inventory.size() && index < 36) {
             Item item = inventory.get(index + (12 * scrollNumber));
             Sprite sprite = new Sprite(item.getTexture());
@@ -205,7 +218,37 @@ public class InventoryMenu {
             player.setCurrentGameMenu(null);
             scrollNumber = 0;
         }
+        // Handle Enter key for transfer to fridge
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (player.getCurrentItem() != null) {
+                if (player.getCurrentItem() instanceof Tool) {
+                    errorMessage = "Cannot transfer tools to fridge!";
+                } else {
+                    // Transfer the current item to fridge
+                    Item itemToTransfer = player.getCurrentItem();
+                    int amount = player.getAmountOfItem(itemToTransfer);
 
+                    // Add to fridge
+                    player.addToFridge(itemToTransfer, amount);
+
+                    // Remove from inventory
+                    player.removeFromInventory(itemToTransfer, amount);
+
+                    // Clear selection
+                    player.setCurrentItem(null);
+
+                    // Clear error message
+                    errorMessage = null;
+
+                    // Show success message
+                    System.out.println("Item transferred to fridge successfully!");
+                }
+            } else if (player.getCurrentTool() != null) {
+                errorMessage = "Cannot transfer tools to fridge!";
+            } else {
+                errorMessage = "No item selected for transfer!";
+            }
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
             scrollNumber = Math.max(0, scrollNumber - 1);
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
@@ -247,6 +290,8 @@ public class InventoryMenu {
             } else {
                 player.setCurrentItem(newSelect);
             }
+            // Clear error message when selecting a new item
+            errorMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 520 && x < 570 && y > 702 && y < 759) {
             newSelect = inventory.get((current + 1) % inventory.size());
 
@@ -258,6 +303,8 @@ public class InventoryMenu {
             } else {
                 player.setCurrentItem(newSelect);
             }
+            // Clear error message when selecting a new item
+            errorMessage = null;
         }
 
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 855 && x < 888 && y > 543 && y < 580) {

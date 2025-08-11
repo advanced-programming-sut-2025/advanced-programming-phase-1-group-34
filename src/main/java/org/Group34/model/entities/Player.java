@@ -48,6 +48,10 @@ public class Player implements Entity, Serializable {
     private Texture reaction = null;
     private float reactionTime = 0f;
 
+    private final HashMap<Item, Integer> fridge = new HashMap<>();
+    private boolean transferMode = false;
+    private Item currentFridgeItem = null;
+
     public String test = "test is not check";
     public TestObject testObject = new TestObject("fail", 0);
 
@@ -407,5 +411,54 @@ public class Player implements Entity, Serializable {
 
     public void setReactionTime(float reactionTime) {
         this.reactionTime = reactionTime;
+    }
+
+    public HashMap<Item, Integer> getFridge() {
+        return fridge;
+    }
+
+    public boolean isInTransferMode() {
+        return transferMode;
+    }
+
+    public void setTransferMode(boolean transferMode) {
+        this.transferMode = transferMode;
+    }
+
+    public Item getCurrentFridgeItem() {
+        return currentFridgeItem;
+    }
+
+    public void setCurrentFridgeItem(Item currentFridgeItem) {
+        this.currentFridgeItem = currentFridgeItem;
+    }
+
+    public void addToFridge(Item item, int amount) {
+        if (fridge.containsKey(item)) {
+            int beforeAmount = fridge.get(item);
+            fridge.put(item, amount + beforeAmount);
+        } else {
+            fridge.put(item, amount);
+        }
+    }
+
+    public boolean removeFromFridge(Item item, int amount) {
+        if (fridge.containsKey(item)) {
+            int beforeAmount = fridge.get(item);
+            fridge.put(item, beforeAmount - amount);
+            if (beforeAmount - amount <= 0) {
+                fridge.remove(item);
+                if (item.equals(currentFridgeItem)) {
+                    currentFridgeItem = null;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public int getAmountInFridge(Item item) {
+        Integer amount = fridge.get(item);
+        return amount != null ? amount : 0;
     }
 }
