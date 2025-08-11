@@ -578,6 +578,9 @@ public class GameScreen extends ScreenAdapter {
             }
         }
         player.setReactionTime(player.getReactionTime() + Gdx.graphics.getDeltaTime());
+        for (Player player1 : player.getInteractions().keySet()) {
+            player1.setReactionTime(player1.getReactionTime() + Gdx.graphics.getDeltaTime());
+        }
 
         if (showFoodIcon && foodIconTimer > 0) {
             float iconX = pos[0] * TILE_SIZE + TILE_SIZE / 2f - 16;
@@ -632,7 +635,12 @@ public class GameScreen extends ScreenAdapter {
         toolsGraphic.update(TILE_SIZE);
         gameMenuGraphic.update(camera, environmentManager);
         for (Player player1 : player.getInteractions().keySet()) {
-            batch.draw(player1.getTexture(), player1.getLocation()[0] * TILE_SIZE, player1.getLocation()[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            if (player.getCurrentGameMenu() == null) {
+                batch.draw(player1.getTexture(), player1.getLocation()[0] * TILE_SIZE, player1.getLocation()[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                if (player1.getReactionTime() < 5f && player1.getReaction() != null) {
+                    batch.draw(player1.getReaction(), player1.getLocation()[0] * TILE_SIZE + 25, player1.getLocation()[1] * TILE_SIZE + 25, TILE_SIZE / 2, TILE_SIZE / 2);
+                }
+            }
         }
     }
 
