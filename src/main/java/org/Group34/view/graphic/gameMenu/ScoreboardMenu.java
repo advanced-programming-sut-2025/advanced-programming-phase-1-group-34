@@ -2,14 +2,20 @@ package org.Group34.view.graphic.gameMenu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.Group34.controller.GameController;
 import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
 
-public class MapMenu {
+import java.util.ArrayList;
+import java.util.Comparator;
+
+public class ScoreboardMenu {
     private final static Sprite chest = new Sprite(GameMenuAssetManager.getChest());
     private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getBigBoard());
     private final static Sprite smallBoard = new Sprite(GameMenuAssetManager.getSmallBoard());
@@ -26,6 +32,12 @@ public class MapMenu {
     private final static Sprite fridgeIcon = new Sprite(GameMenuAssetManager.getFridgeIcon());
     private final static Sprite reactionIcon = new Sprite(GameMenuAssetManager.getReactionIcon());
     private final static Sprite scoreboardIcon = new Sprite(GameMenuAssetManager.getScoreboardIcon());
+    private final static Sprite selectBoard = new Sprite(GameMenuAssetManager.getBoard());
+
+    private final static Sprite rightIcon = new Sprite(GameMenuAssetManager.getRightIcon());
+    private final static Sprite line = new Sprite(GameMenuAssetManager.getLine());
+    private static ArrayList<String> sort = new ArrayList<>();
+    private static int scroller = 0;
 
     static {
         bigBoard.setSize(chest.getWidth(), 413);
@@ -43,12 +55,19 @@ public class MapMenu {
         fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
         reactionIcon.setSize((float) (reactionIcon.getWidth() * 0.3), (float) (reactionIcon.getHeight() * 0.3));
         scoreboardIcon.setSize((float) (scoreboardIcon.getWidth() * 0.5), (float) (scoreboardIcon.getHeight() * 0.5));
+
+        rightIcon.setSize(20, 20);
+        sort.add("Money");
+        sort.add("Quest");
+        sort.add("Skill");
     }
 
-    public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera) {
+    public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera, GameController gameController) {
         float x = camera.position.x - chest.getWidth() / 2;
         float y = camera.position.y - 30;
         drawBoard(batch, x, y);
+
+        fullBoard(batch, player, x, y);
 
         handleInput(player);
     }
@@ -66,7 +85,7 @@ public class MapMenu {
         smallBoard.setPosition(x + 118, y + 210);
         smallBoard.draw(batch);
 
-        smallBoard.setPosition(x + 162, y + 203);
+        smallBoard.setPosition(x + 162, y + 210);
         smallBoard.draw(batch);
 
         smallBoard.setPosition(x + 206, y + 210);
@@ -90,7 +109,7 @@ public class MapMenu {
         smallBoard.setPosition(x + 470, y + 210);
         smallBoard.draw(batch);
 
-        smallBoard.setPosition(x + 514, y + 210);
+        smallBoard.setPosition(x + 514, y + 203);
         smallBoard.draw(batch);
 
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
@@ -102,7 +121,7 @@ public class MapMenu {
         socialSymbol.setPosition(x + 118 + 9, y + 210 + 5);
         socialSymbol.draw(batch);
 
-        mapSymbol.setPosition(x + 162 + 11, y + 203 + 3);
+        mapSymbol.setPosition(x + 162 + 11, y + 210 + 3);
         mapSymbol.draw(batch);
 
         NPCSymbol.setPosition(x + 206 + 10, y + 210 + 5);
@@ -129,11 +148,11 @@ public class MapMenu {
         reactionIcon.setPosition(x + 470 + 13, y + 210 + 7);
         reactionIcon.draw(batch);
 
-        scoreboardIcon.setPosition(x + 514 + 10, y + 210 + 5);
+        scoreboardIcon.setPosition(x + 514 + 10, y + 203 + 5);
         scoreboardIcon.draw(batch);
     }
 
-    public static void handleInput(Player player) {
+    private static void handleInput(Player player) {
         int x = Gdx.input.getX();
         int y = Gdx.input.getY();
 
@@ -164,6 +183,48 @@ public class MapMenu {
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);
         }
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            if (x > 937 && x < 972 && y < 280 && y > 242) {
+                scroller++;
+                scroller %= sort.size();
+            }
+        }
+    }
+
+    private static void fullBoard(SpriteBatch batch, Player player, float x, float y) {
+        BitmapFont font = new BitmapFont();
+        font.setColor(Color.BLACK);
+        font.draw(batch, "Sorted by:", x + 170, y + 170);
+        selectBoard.setSize(120, 25);
+        selectBoard.setPosition(x + 270, y + 120);
+        selectBoard.draw(batch);
+        rightIcon.setPosition(x + 400, y + 120);
+        rightIcon.draw(batch);
+        font.draw(batch, sort.get(scroller), x + 280, y + 138);
+        line.setPosition(x + 15, y + 80);
+        line.setSize(600, 10);
+        line.draw(batch);
+
+        font.draw(batch, "Rank" , x + 130, y + 50);
+        font.draw(batch, "Player", x + 280, y + 50);
+        font.draw(batch, "Score", x + 430, y + 50);
+
+        ArrayList<Player> players = new ArrayList<>(player.getInteractions().keySet());
+        players.add(player);
+
+        if (sort.get(scroller).equals("Money")) {
+            players.sort(Comparator.comparing(Player::getMoney));
+            for (int i = 0; i < players.size(); i++) {
+                font.draw(batch, String.valueOf(i + 1), x + 140, y + 20 - i * 30);
+                //font.draw(batch, player.getName(), x + 290, y + 20 - i * 30);
+//                font.draw(batch, String.valueOf(player.getMoney()), x + 440, y + 20 - i * 30);
+            }
+        }
+        else if (sort.get(scroller).equals("Skill")) {
+            players.sort(Comparator.comparing(Player::getSumOfSkills));
+        }
+
+
     }
 }
-

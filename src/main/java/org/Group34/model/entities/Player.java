@@ -45,7 +45,7 @@ public class Player implements Entity, Serializable {
     private HashMap<Player, Interaction> interactions = new HashMap<>();
 
     private Item currentTool = null;
-    private String currentGameMenu = "reaction";
+    private String currentGameMenu = "inventory";
     private Item currentItem = null;
     private Texture reaction = null;
     private float reactionTime = 0f;
@@ -518,5 +518,9 @@ public class Player implements Entity, Serializable {
 
     public void setNetworkReactions(ArrayList<NetworkReaction> networkReactions) {
         this.networkReactions = networkReactions;
+    }
+
+    public int getSumOfSkills() {
+        return level.get(LevelType.FARMING_LEVEL) + level.get(LevelType.FORAGING_LEVEL) + level.get(LevelType.MINING_LEVEL) + level.get(LevelType.FISHING_LEVEL);
     }
 }

@@ -43,6 +43,7 @@ public class GameMenuAssetManager {
     private final static Texture buff = new Texture("gameMenu/Buff.png");
     private final static Texture reactionIcon = new Texture("gameMenu/Emojis006.png");
     private final static Texture line = new Texture("gameMenu/line.png");
+    private final static Texture scoreboardIcon = new Texture("gameMenu/Desperado.png");
 
     // ----- getters -----
 
@@ -200,6 +201,10 @@ public class GameMenuAssetManager {
 
     public static Texture getLine() {
         return line;
+    }
+
+    public static Texture getScoreboardIcon() {
+        return scoreboardIcon;
     }
 
     // -------------------
