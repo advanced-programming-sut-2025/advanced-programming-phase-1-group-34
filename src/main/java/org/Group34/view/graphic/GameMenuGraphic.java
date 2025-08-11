@@ -1,16 +1,11 @@
 package org.Group34.view.graphic;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.controller.GameController;
 import org.Group34.model.entities.NPCOnMap;
 import org.Group34.model.entities.Player;
-import org.Group34.model.entities.buildings.shops.*;
 import org.Group34.model.entities.npcs.NPC;
-import org.Group34.model.gameAssetManagers.TreeAssetManager;
 import org.Group34.view.graphic.gameMenu.*;
 import org.Group34.view.graphic.mapScreen.EnvironmentManager;
 
@@ -35,7 +30,7 @@ public class GameMenuGraphic {
             if (menu.equals("inventory")) {
                 InventoryMenu.draw(batch, player, camera, gameController);
             } else if (menu.equals("skill")) {
-                SkillMenu.draw(batch, player, camera, gameController);
+                SkillMenu.draw(batch, player, camera);
             } else if (menu.equals("social")) {
                 SocialMenu.draw(batch, player, camera, gameController);
             } else if (menu.equals("map")) {

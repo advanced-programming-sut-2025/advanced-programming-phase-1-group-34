@@ -180,7 +180,7 @@ public class AnimalMenu {
         }
 
         // Draw top menu icons
-        smallBoard.setPosition(x + 30, y + 203);
+        smallBoard.setPosition(x + 30, y + 210);
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 74, y + 210);
         smallBoard.draw(batch);
@@ -188,11 +188,11 @@ public class AnimalMenu {
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 162, y + 210);
         smallBoard.draw(batch);
-        smallBoard.setPosition(x + 206, y + 203);
+        smallBoard.setPosition(x + 206, y + 210);
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 250, y + 210);
         smallBoard.draw(batch);
-        smallBoard.setPosition(x + 294, y + 210);
+        smallBoard.setPosition(x + 294, y + 203);
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 338, y + 210);
         smallBoard.draw(batch);
@@ -200,7 +200,7 @@ public class AnimalMenu {
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 426, y + 210);
         smallBoard.draw(batch);
-        inventorySymbol.setPosition(x + 30 + 5, y + 203 + 2);
+        inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
         skillSymbol.setPosition(x + 74 + 9, y + 210 + 5);
         skillSymbol.draw(batch);
@@ -208,11 +208,11 @@ public class AnimalMenu {
         socialSymbol.draw(batch);
         mapSymbol.setPosition(x + 162 + 11, y + 210 + 3);
         mapSymbol.draw(batch);
-        NPCSymbol.setPosition(x + 206 + 10, y + 203 + 5);
+        NPCSymbol.setPosition(x + 206 + 10, y + 210 + 5);
         NPCSymbol.draw(batch);
         settingSymbol.setPosition(x + 250 + 13, y + 210 + 8);
         settingSymbol.draw(batch);
-        animalIcon.setPosition(x + 294 + 10, y + 210 + 5);
+        animalIcon.setPosition(x + 294 + 10, y + 203 + 5);
         animalIcon.draw(batch);
         craftingIcon.setPosition(x + 338 + 10, y + 210 + 5);
         craftingIcon.draw(batch);
@@ -494,17 +494,8 @@ public class AnimalMenu {
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 980 && x < 1051 && y < 110 && y > 30) {
             player.setCurrentGameMenu("fridge");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 761 && x < 832 && y < 110 && y > 30) {
-            // Toggle between building and animal menus if not in main menu
-            if (currentMenuState != MenuState.MAIN) {
-                if (currentMenuState == MenuState.BUILDING_SELECT) {
-                    currentMenuState = MenuState.ANIMAL_SELECT;
-                } else {
-                    currentMenuState = MenuState.BUILDING_SELECT;
-                }
-                selectedBuildingType = null;
-                selectedAnimalType = null;
-                scrollNumber = 0;
-            }
+            resetMenuState();
+            scrollNumber = 0;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);
             resetMenuState();

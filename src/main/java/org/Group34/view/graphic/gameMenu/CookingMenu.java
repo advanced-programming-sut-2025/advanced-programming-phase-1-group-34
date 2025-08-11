@@ -136,7 +136,7 @@ public class CookingMenu {
         board.setSize(chest.getWidth(), chest.getHeight());
         board.setPosition(x, y - 200);
         board.draw(batch);
-        smallBoard.setPosition(x + 30, y + 203);
+        smallBoard.setPosition(x + 30, y + 210);
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 74, y + 210);
         smallBoard.draw(batch);
@@ -152,11 +152,11 @@ public class CookingMenu {
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 338, y + 210);
         smallBoard.draw(batch);
-        smallBoard.setPosition(x + 382, y + 210);
+        smallBoard.setPosition(x + 382, y + 203);
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 426, y + 210);
         smallBoard.draw(batch);
-        inventorySymbol.setPosition(x + 30 + 5, y + 203 + 2);
+        inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
         skillSymbol.setPosition(x + 74 + 9, y + 210 + 5);
         skillSymbol.draw(batch);
@@ -172,7 +172,7 @@ public class CookingMenu {
         animalIcon.draw(batch);
         craftingIcon.setPosition(x + 338 + 10, y + 210 + 5);
         craftingIcon.draw(batch);
-        cookingIcon.setPosition(x + 382 + 10, y + 210 + 5);
+        cookingIcon.setPosition(x + 382 + 10, y + 203 + 5);
         cookingIcon.draw(batch);
         fridgeIcon.setPosition(x + 426 + 15, y + 210 + 3);
         fridgeIcon.draw(batch);
@@ -183,7 +183,14 @@ public class CookingMenu {
     private static void handleInput(Player player, CookedFood[] recipes) {
         int x = Gdx.input.getX();
         int y = Gdx.input.getY();
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 397 && x < 468 && y < 110 && y > 30) {
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 324 && x < 395 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("inventory");
+            scrollNumber = 0;
+            currentRecipe = null;
+            statusMessage = null;
+        }
+        else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 397 && x < 468 && y < 110 && y > 30) {
             player.setCurrentGameMenu("skill");
             scrollNumber = 0;
             currentRecipe = null;

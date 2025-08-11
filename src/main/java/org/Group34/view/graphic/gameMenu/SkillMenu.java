@@ -7,17 +7,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import org.Group34.controller.GameController;
 import org.Group34.model.entities.Player;
+import org.Group34.model.enums.LevelType;
 import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
-import org.Group34.model.gameAssetManagers.ProcessorAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
-import org.Group34.model.items.crafting.ProcessorCraft;
-import java.util.Map;
 
 public class SkillMenu {
     private final static Sprite chest = new Sprite(GameMenuAssetManager.getChest());
-    private final static Sprite board = new Sprite(GameMenuAssetManager.getBoard());
+    private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getBigBoard());
     private final static Sprite smallBoard = new Sprite(GameMenuAssetManager.getSmallBoard());
     private final static Sprite inventorySymbol = new Sprite(ToolAssetManager.getBasicBackpack());
     private final static Sprite skillSymbol = new Sprite(GameMenuAssetManager.getFaceIcon());
@@ -30,29 +27,17 @@ public class SkillMenu {
     private final static Sprite craftingIcon = new Sprite(GameMenuAssetManager.getCraftingIcon());
     private final static Sprite cookingIcon = new Sprite(GameMenuAssetManager.getCookingIcon());
     private final static Sprite fridgeIcon = new Sprite(GameMenuAssetManager.getFridgeIcon());
-    private final static Sprite greenRect = new Sprite(GameMenuAssetManager.getGreenRect());
-    private final static Sprite rightIcon = new Sprite(GameMenuAssetManager.getRightIcon());
-    private final static Sprite leftIcon = new Sprite(GameMenuAssetManager.getLeftIcon());
-    private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getBigBoard());
-    private final static Sprite lockIcon = new Sprite(GameMenuAssetManager.getLockIcon());
-    private final static Sprite unlockIcon = new Sprite(GameMenuAssetManager.getLearnIcon());
-    private final static Sprite createIcon = new Sprite(GameMenuAssetManager.getCraftIcon()); // Changed from cookIcon
-    private static int scrollNumber = 0;
-    private static ProcessorCraft currentProcessor = null; // Changed from currentRecipe
-    private static boolean[] unlockedProcessors; // Changed from unlockedRecipes
-    private static final int UNLOCK_COST = 1000;
-    private static String statusMessage = null;
-    private static float statusMessageTimer = 0;
-    private static BitmapFont statusFont = new BitmapFont();
+
+    private final static Sprite farmingSkillIcon = new Sprite(GameMenuAssetManager.getFarmingSkillIcon());
+    private final static Sprite foragingSkillIcon = new Sprite(GameMenuAssetManager.getForagingSkillIcon());
+    private final static Sprite miningSkillIcon = new Sprite(GameMenuAssetManager.getMiningSkillIcon());
+    private final static Sprite fishingSkillIcon = new Sprite(GameMenuAssetManager.getFishingSkillIcon());
+    private final static Sprite redCircle = new Sprite(GameMenuAssetManager.getRedCircle());
+    private final static Sprite grayCircle = new Sprite(GameMenuAssetManager.getGrayCircle());
+    private final static Sprite board = new Sprite(GameMenuAssetManager.getBigBoard());
 
     static {
-        // Initialize unlocked processors array (first two unlocked by default)
-        ProcessorCraft[] allProcessors = ProcessorCraft.values();
-        unlockedProcessors = new boolean[allProcessors.length];
-        unlockedProcessors[0] = true; // CHARCOAL_KILN
-        unlockedProcessors[1] = true; // FURNACE
-
-        board.setSize(chest.getWidth(), chest.getHeight());
+        bigBoard.setSize(chest.getWidth(), 413);
         smallBoard.setSize((float) (smallBoard.getWidth() * 0.7), (float) (smallBoard.getHeight() * 0.7));
         inventorySymbol.setSize((float) (inventorySymbol.getWidth() * 0.7), (float) (inventorySymbol.getHeight() * 0.7));
         skillSymbol.setSize((float) (skillSymbol.getWidth() * 0.8), (float) (skillSymbol.getHeight() * 0.8));
@@ -65,399 +50,234 @@ public class SkillMenu {
         craftingIcon.setSize((float) (craftingIcon.getWidth() * 0.5), (float) (craftingIcon.getHeight() * 0.5));
         cookingIcon.setSize((float) (cookingIcon.getWidth() * 0.5), (float) (cookingIcon.getHeight() * 0.5));
         fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
-        greenRect.setSize(45, 45);
-        lockIcon.setSize(30, 30);
-        unlockIcon.setSize(30, 30);
-        createIcon.setSize(100, 100); // Changed from cookIcon
-        statusFont.setColor(Color.RED);
-        statusFont.getData().setScale(1.0f);
+
+        farmingSkillIcon.setSize(40, 40);
+        foragingSkillIcon.setSize(40, 40);
+        miningSkillIcon.setSize(40, 40);
+        fishingSkillIcon.setSize(40, 40);
+        grayCircle.setSize(70, 70);
+        redCircle.setSize(70, 70);
+        board.setSize(150, 100);
     }
 
-    public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera, GameController gameController) {
+    public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera) {
         float x = camera.position.x - chest.getWidth() / 2;
         float y = camera.position.y - 30;
         drawBoard(batch, x, y);
-        ProcessorCraft[] processors = ProcessorCraft.values();
-        int index = 0;
-        BitmapFont font = new BitmapFont();
-        while (index + (12 * scrollNumber) < processors.length && index < 36) {
-            ProcessorCraft processor = processors[index + (12 * scrollNumber)];
-            Sprite sprite = new Sprite(getTexture(processor));
-            sprite.setPosition(x + 37 + (48 * index), y + 137 - (index / 12 * 50));
-            font.setColor(Color.BLACK);
-            if (index > 11 && index < 24) {
-                sprite.setPosition(x + 37 + (48 * index) - 576, y + 137 - (index / 12 * 50));
-            } else if (index > 23) {
-                sprite.setPosition(x + 37 + (48 * index) - 1152, y + 137 - (index / 12 * 50));
-            }
-            if (processor.equals(currentProcessor)) {
-                greenRect.setPosition(sprite.getX() - 6, sprite.getY() - 8);
-                greenRect.draw(batch);
-            }
-            font.getData().setScale(0.5f);
-            // Check if processor is unlocked
-            int processorIndex = index + (12 * scrollNumber);
-            if (unlockedProcessors[processorIndex]) {
-                // Draw normally if unlocked
-                font.draw(batch, processor.getName(), sprite.getX() - 5, sprite.getY() - 3);
-                sprite.setSize(35, 33);
-                sprite.draw(batch);
-            } else {
-                // Draw in gray if locked
-                font.setColor(Color.GRAY);
-                font.draw(batch, "???", sprite.getX() - 5, sprite.getY() - 3);
-                sprite.setColor(Color.GRAY);
-                sprite.setSize(35, 33);
-                sprite.draw(batch);
-                sprite.setColor(Color.WHITE);
-                // Draw lock icon
-                lockIcon.setPosition(sprite.getX() + 5, sprite.getY() + 5);
-                lockIcon.draw(batch);
-            }
-            index++;
-        }
-        fullBoard(player, processors, x, y, batch, gameController);
-        handleInput(player, processors);
-        // Draw status message if active
-        if (statusMessage != null && statusMessageTimer > 0) {
-            statusFont.draw(batch, statusMessage, x + chest.getWidth()/2 - statusFont.getRegion().getRegionWidth()/2, y + 50);
-            statusMessageTimer -= Gdx.graphics.getDeltaTime();
-            if (statusMessageTimer <= 0) {
-                statusMessage = null;
-            }
-        }
+
+        fullBoard(batch, player, x, y);
+
+        handleInput(player);
+
+        handleHover(batch, x, y);
     }
 
     private static void drawBoard(SpriteBatch batch, float x, float y) {
-        chest.setPosition(x, y);
-        chest.draw(batch);
-        board.setSize(chest.getWidth(), chest.getHeight());
-        board.setPosition(x, y - 200);
-        board.draw(batch);
-        smallBoard.setPosition(x + 30, y + 203);
+        bigBoard.setPosition(x, y - 200);
+        bigBoard.draw(batch);
+
+        smallBoard.setPosition(x + 30, y + 210);
         smallBoard.draw(batch);
-        smallBoard.setPosition(x + 74, y + 210);
+
+        smallBoard.setPosition(x + 74, y + 203);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 118, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 162, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 206, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 250, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 294, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 338, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 382, y + 210);
         smallBoard.draw(batch);
+
         smallBoard.setPosition(x + 426, y + 210);
         smallBoard.draw(batch);
-        inventorySymbol.setPosition(x + 30 + 5, y + 203 + 2);
+
+        inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
-        skillSymbol.setPosition(x + 74 + 9, y + 210 + 5);
+
+        skillSymbol.setPosition(x + 74 + 9, y + 203 + 5);
         skillSymbol.draw(batch);
+
         socialSymbol.setPosition(x + 118 + 9, y + 210 + 5);
         socialSymbol.draw(batch);
+
         mapSymbol.setPosition(x + 162 + 11, y + 210 + 3);
         mapSymbol.draw(batch);
+
         NPCSymbol.setPosition(x + 206 + 10, y + 210 + 5);
         NPCSymbol.draw(batch);
+
         settingSymbol.setPosition(x + 250 + 13, y + 210 + 8);
         settingSymbol.draw(batch);
-        animalIcon.setPosition(x + 294 + 10, y + 210 + 5);
-        animalIcon.draw(batch);
-        craftingIcon.setPosition(x + 338 + 10, y + 210 + 5);
-        craftingIcon.draw(batch);
-        cookingIcon.setPosition(x + 382 + 10, y + 210 + 5);
-        cookingIcon.draw(batch);
-        fridgeIcon.setPosition(x + 426 + 15, y + 210 + 3);
-        fridgeIcon.draw(batch);
+
         exitIcon.setPosition(x + 608, y + 190);
         exitIcon.draw(batch);
+
+        animalIcon.setPosition(x + 294 + 10, y + 210 + 5);
+        animalIcon.draw(batch);
+
+        craftingIcon.setPosition(x + 338 + 10, y + 210 + 5);
+        craftingIcon.draw(batch);
+
+        cookingIcon.setPosition(x + 382 + 10, y + 210 + 5);
+        cookingIcon.draw(batch);
+
+        fridgeIcon.setPosition(x + 426 + 15, y + 210 + 3);
+        fridgeIcon.draw(batch);
     }
 
-    private static void handleInput(Player player, ProcessorCraft[] processors) {
+    private static void handleInput(Player player) {
         int x = Gdx.input.getX();
         int y = Gdx.input.getY();
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 397 && x < 468 && y < 110 && y > 30) {
-            player.setCurrentGameMenu("skill");
-            scrollNumber = 0;
-            currentProcessor = null;
-            statusMessage = null;
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 324 && x < 395 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("inventory");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 470 && x < 541 && y < 110 && y > 30) {
             player.setCurrentGameMenu("social");
-            scrollNumber = 0;
-            currentProcessor = null;
-            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 542 && x < 613 && y < 110 && y > 30) {
             player.setCurrentGameMenu("map");
-            scrollNumber = 0;
-            currentProcessor = null;
-            statusMessage = null;
-        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 615 && x < 686 && y < 110 && y > 30) {
-            player.setCurrentGameMenu("npc");
-            scrollNumber = 0;
-            currentProcessor = null;
-            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 688 && x < 759 && y < 110 && y > 30) {
             player.setCurrentGameMenu("setting");
-            scrollNumber = 0;
-            currentProcessor = null;
-            statusMessage = null;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 615 && x < 686 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("npc");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 761 && x < 832 && y < 110 && y > 30) {
             player.setCurrentGameMenu("animal");
-            scrollNumber = 0;
-            currentProcessor = null;
-            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 834 && x < 905 && y < 110 && y > 30) {
             player.setCurrentGameMenu("crafting");
-            scrollNumber = 0;
-            currentProcessor = null;
-            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 907 && x < 978 && y < 110 && y > 30) {
             player.setCurrentGameMenu("cooking");
-            scrollNumber = 0;
-            currentProcessor = null;
-            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 980 && x < 1051 && y < 110 && y > 30) {
             player.setCurrentGameMenu("fridge");
-            scrollNumber = 0;
-            currentProcessor = null;
-            statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);
-            scrollNumber = 0;
-            currentProcessor = null;
-            statusMessage = null;
-        }
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
-            scrollNumber = Math.max(0, scrollNumber - 1);
-        } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-            scrollNumber = Math.min(processors.length / 12, scrollNumber + 1);
-        }
-
-        // Handle unlock/create button
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1005 && x < 1170 && y > 588 && y < 780) {
-            if (currentProcessor != null) {
-                int processorIndex = -1;
-                for (int i = 0; i < processors.length; i++) {
-                    if (processors[i] == currentProcessor) {
-                        processorIndex = i;
-                        break;
-                    }
-                }
-                if (processorIndex != -1) {
-                    if (!unlockedProcessors[processorIndex]) {
-                        // Unlock the processor
-                        if (player.getMoney() >= UNLOCK_COST) {
-                            player.setMoney(player.getMoney() - UNLOCK_COST);
-                            unlockedProcessors[processorIndex] = true;
-                        } else {
-                            statusMessage = "Not enough money to learn this processor!";
-                            statusMessageTimer = 3.0f;
-                        }
-                    } else {
-                        // Create the processor
-                        boolean canCreate = true;
-                        StringBuilder missingIngredients = new StringBuilder();
-                        for (Map.Entry<org.Group34.model.items.Item, Integer> entry : currentProcessor.getIngredients().entrySet()) {
-                            int required = entry.getValue();
-                            int available = player.getAmountOfItem(entry.getKey());
-                            if (entry.getKey().getName() == null) {
-                                canCreate = true;
-                            }
-                            else if (available < required) {
-                                canCreate = false;
-                                missingIngredients.append(entry.getKey().getName())
-                                        .append(" (need ")
-                                        .append(required)
-                                        .append(", have ")
-                                        .append(available)
-                                        .append("), ");
-                            }
-                        }
-                        if (canCreate) {
-                            for (Map.Entry<org.Group34.model.items.Item, Integer> entry : currentProcessor.getIngredients().entrySet()) {
-                                player.removeFromInventory(entry.getKey(), entry.getValue());
-                            }
-                            player.addToInventory(currentProcessor, 1);
-                            statusMessage = "Created!";
-                            statusMessageTimer = 3.0f;
-                        } else {
-                            if (missingIngredients.length() > 0) {
-                                missingIngredients.setLength(missingIngredients.length() - 2);
-                            }
-                            statusMessage = "Missing ingredients: " + missingIngredients.toString();
-                            statusMessageTimer = 3.0f;
-                        }
-                    }
-                }
-            }
-        }
-
-        int currentIndex = -1;
-        if (currentProcessor != null) {
-            for (int i = 0; i < processors.length; i++) {
-                if (processors[i] == currentProcessor) {
-                    currentIndex = i;
-                    break;
-                }
-            }
-        }
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 462 && x < 512 && y > 702 && y < 759) {
-            if (currentIndex == -1) {
-                currentProcessor = processors[processors.length - 1];
-            } else {
-                currentProcessor = processors[(currentIndex - 1 + processors.length) % processors.length];
-            }
-        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 520 && x < 570 && y > 702 && y < 759) {
-            if (currentIndex == -1) {
-                currentProcessor = processors[0];
-            } else {
-                currentProcessor = processors[(currentIndex + 1) % processors.length];
-            }
         }
     }
 
-    private static void fullBoard(Player player, ProcessorCraft[] processors, float x, float y, SpriteBatch batch, GameController gameController) {
-        drawCreateButton(x, y, batch, player); // Changed from drawUnlockCookButton
-        drawSelectState(batch, x, y, player);
-        drawProcessorInfoState(batch, x, y, player); // Changed from drawRecipeInfoState
-    }
+    private static void handleHover(SpriteBatch batch, float x2, float y2) {
+        int x = Gdx.input.getX();
+        int y = Gdx.input.getY();
 
-    private static void drawCreateButton(float x, float y, SpriteBatch batch, Player player) { // Changed from drawUnlockCookButton
-        int processorIndex = -1;
-        if (currentProcessor != null) {
-            ProcessorCraft[] processors = ProcessorCraft.values();
-            for (int i = 0; i < processors.length; i++) {
-                if (processors[i] == currentProcessor) {
-                    processorIndex = i;
-                    break;
-                }
-            }
-        }
-        if (processorIndex != -1 && !unlockedProcessors[processorIndex]) {
-            // Draw unlock button
-            unlockIcon.setPosition(x + 450, y - 130);
-            unlockIcon.setSize(75, 75);
-            unlockIcon.draw(batch);
-            BitmapFont font = new BitmapFont();
-            font.setColor(Color.BLACK);
-            font.getData().setScale(0.8f);
-            font.draw(batch, "Learn: " + UNLOCK_COST, x + 460, y - 155);
-        } else {
-            // Draw create button
-            createIcon.setPosition(x + 440, y - 145);
-            createIcon.setSize(100, 100);
-            createIcon.draw(batch);
+        if (x > 353 && x < 422 && y > 186 && y < 261) {
+            handleInfoBoard(batch, "farming", x2, y2);
+        } else if (x > 353 && x < 422 && y > 279 && y < 355) {
+            handleInfoBoard(batch, "foraging", x2, y2);
+        } else if (x > 353 && x < 422 && y > 373 && y < 448) {
+            handleInfoBoard(batch, "mining", x2, y2);
+        } else if (x > 353 && x < 422 && y > 467 && y < 542) {
+            handleInfoBoard(batch, "fishing", x2, y2);
         }
     }
 
-    private static void drawSelectState(SpriteBatch batch, float x, float y, Player player) {
+    private static void fullBoard(SpriteBatch batch, Player player, float x, float y) {
         BitmapFont font = new BitmapFont();
         font.setColor(Color.BLACK);
-        font.draw(batch, "Select Processor", x + 20, y - 20); // Changed text
-        board.setSize(chest.getWidth() / 4, chest.getHeight() / 4);
-        board.setPosition(x + 30, y - 100);
+
+        font.draw(batch, "Farming", x + 110, y + 155);
+        font.draw(batch, "Foraging", x + 110, y + 105);
+        font.draw(batch, "Mining", x + 110, y + 55);
+        font.draw(batch, "Fishing", x + 110, y + 5);
+
+        farmingSkillIcon.setPosition(x + 50, y + 130);
+        farmingSkillIcon.draw(batch);
+
+        foragingSkillIcon.setPosition(x + 50, y + 80);
+        foragingSkillIcon.draw(batch);
+
+        miningSkillIcon.setPosition(x + 50, y + 30);
+        miningSkillIcon.draw(batch);
+
+        fishingSkillIcon.setPosition(x + 50, y - 20);
+        fishingSkillIcon.draw(batch);
+
+        grayCircle.setPosition(x + 200, y + 115);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 250, y + 115);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 300, y + 115);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 350, y + 115);
+        grayCircle.draw(batch);
+
+        grayCircle.setPosition(x + 200, y + 65);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 250, y + 65);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 300, y + 65);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 350, y + 65);
+        grayCircle.draw(batch);
+
+        grayCircle.setPosition(x + 200, y + 15);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 250, y + 15);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 300, y + 15);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 350, y + 15);
+        grayCircle.draw(batch);
+
+        grayCircle.setPosition(x + 200, y - 35);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 250, y - 35);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 300, y - 35);
+        grayCircle.draw(batch);
+        grayCircle.setPosition(x + 350, y - 35);
+        grayCircle.draw(batch);
+
+        fullTheSkills(batch, player, x, y);
+    }
+
+    private static void fullTheSkills(SpriteBatch batch, Player player, float x, float y) {
+        for (int i = 0; i < player.getLevel(LevelType.FARMING_LEVEL); i++) {
+            redCircle.setPosition(x + 200 + (50 * i), y + 115);
+            redCircle.draw(batch);
+        }
+        for (int i = 0; i < player.getLevel(LevelType.FORAGING_LEVEL); i++) {
+            redCircle.setPosition(x + 200 + (50 * i), y + 65);
+            redCircle.draw(batch);
+        }
+        for (int i = 0; i < player.getLevel(LevelType.MINING_LEVEL); i++) {
+            redCircle.setPosition(x + 200 + (50 * i), y + 15);
+            redCircle.draw(batch);
+        }
+        for (int i = 0; i < player.getLevel(LevelType.FISHING_LEVEL); i++) {
+            redCircle.setPosition(x + 200 + (50 * i), y - 35);
+            redCircle.draw(batch);
+        }
+    }
+
+    private static void handleInfoBoard(SpriteBatch batch, String skill, float x, float y) {
+        board.setPosition(x + 200, y + 30);
         board.draw(batch);
+
+        BitmapFont font = new BitmapFont();
+        font.setColor(Color.BLACK);
+        font.draw(batch, skill, x + 245, y + 120);
+
         font.getData().setScale(0.8f);
-        if (currentProcessor != null) {
-            int processorIndex = -1;
-            ProcessorCraft[] processors = ProcessorCraft.values();
-            for (int i = 0; i < processors.length; i++) {
-                if (processors[i] == currentProcessor) {
-                    processorIndex = i;
-                    break;
-                }
-            }
-            if (processorIndex != -1 && unlockedProcessors[processorIndex]) {
-                Sprite sprite = new Sprite(getTexture(currentProcessor));
-                sprite.setSize(48, 48);
-                sprite.setPosition(x + 33, y - 97);
-                sprite.draw(batch);
-                font.draw(batch, currentProcessor.getName(), x + 85, y - 67);
-            } else {
-                font.draw(batch, "???", x + 33, y - 67);
-            }
+        if (skill.equals("farming")) {
+            font.draw(batch, "You can use a hoe\nand watering can with\nless energy.", x + 210, y + 100);
+        } else if (skill.equals("foraging")) {
+            font.draw(batch, "You can use a axe with\nless energy.", x + 210, y + 100);
+        } else if (skill.equals("mining")) {
+            font.draw(batch, "You can use a pickaxe\nwith less energy.", x + 210, y + 100);
+        } else if (skill.equals("fishing")) {
+            font.draw(batch, "You can fish with\nless energy expenditure.", x + 210, y + 100);
         }
-        leftIcon.setPosition(x + 115, y - 135);
-        leftIcon.setSize(30, 30);
-        leftIcon.draw(batch);
-        rightIcon.setPosition(x + 150, y - 135);
-        rightIcon.setSize(30, 30);
-        rightIcon.draw(batch);
-    }
-
-    private static void drawProcessorInfoState(SpriteBatch batch, float x, float y, Player player) { // Changed from drawRecipeInfoState
-        BitmapFont font = new BitmapFont();
-        font.setColor(Color.BLACK);
-        font.draw(batch, "Processor Info", x + 220, y - 20); // Changed text
-        board.setSize(170, 20);
-        board.setPosition(x + 230, y - 65);
-        board.draw(batch);
-        bigBoard.setSize(170, 120);
-        bigBoard.setPosition(x + 230, y - 180);
-        bigBoard.draw(batch);
-        if (currentProcessor != null) {
-            int processorIndex = -1;
-            ProcessorCraft[] processors = ProcessorCraft.values();
-            for (int i = 0; i < processors.length; i++) {
-                if (processors[i] == currentProcessor) {
-                    processorIndex = i;
-                    break;
-                }
-            }
-            font.getData().setScale(0.8f);
-            if (processorIndex != -1 && unlockedProcessors[processorIndex]) {
-                font.draw(batch, currentProcessor.getName(), x + 240, y - 47);
-                font.getData().setScale(0.5f);
-                // Draw ingredients
-                int yPos = (int)(y - 65);
-                font.draw(batch, "Ingredients:", x + 240, yPos);
-                yPos -= 15;
-                for (Map.Entry<org.Group34.model.items.Item, Integer> entry : currentProcessor.getIngredients().entrySet()) {
-                    String ingredientName = entry.getKey().getName();
-                    int amount = entry.getValue();
-                    int available = player.getAmountOfItem(entry.getKey());
-                    // Check if player has enough of this ingredient
-                    if (available >= amount) {
-                        font.setColor(Color.BLACK);
-                    } else {
-                        font.setColor(Color.RED);
-                    }
-                    font.draw(batch, "- " + ingredientName + " x" + amount + " (have " + available + ")", x + 240, yPos);
-                    yPos -= 15;
-                }
-                // Reset color
-                font.setColor(Color.BLACK);
-                // Draw price (processors don't have energy)
-                yPos -= 5;
-                font.draw(batch, "Price: " + currentProcessor.getPrice(), x + 240, yPos);
-            } else {
-                font.draw(batch, "???", x + 240, y - 47);
-                font.getData().setScale(0.5f);
-                font.draw(batch, "Learn this processor to see details", x + 240, y - 65);
-            }
-        }
-    }
-
-    private static com.badlogic.gdx.graphics.Texture getTexture(ProcessorCraft processor) {
-        return switch (processor) {
-            case CHARCOAL_KILN -> ProcessorAssetManager.charcoalKiln;
-            case FURNACE -> ProcessorAssetManager.furnace;
-            case BEE_HOUSE -> ProcessorAssetManager.beeHouse;
-            case CHEESE_PRESS -> ProcessorAssetManager.cheesePress;
-            case KEG -> ProcessorAssetManager.keg;
-            case LOOM -> ProcessorAssetManager.loom;
-            case MAYONNAISE_MACHINE -> ProcessorAssetManager.mayonnaiseMachine;
-            case OIL_MAKER -> ProcessorAssetManager.oilMaker;
-            case PRESERVES_JAR -> ProcessorAssetManager.preservesJar;
-            case DEHYDRATOR -> ProcessorAssetManager.dehydrator;
-            case FISH_SMOKER -> ProcessorAssetManager.fishSmoker;
-            default -> ProcessorAssetManager.cheesePress;
-        };
     }
 }
