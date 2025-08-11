@@ -219,8 +219,7 @@ public class GraphicAppView extends Game {
                 // Handle network messages in the main thread
                 if (getScreen() instanceof LobbyMenuScreen) {
                     ((LobbyMenuScreen) getScreen()).handleServerMessage((String) message);
-                }
-                else if (getScreen() instanceof GameScreen screen) {
+                } else if (getScreen() instanceof GameScreen screen) {
                     screen.handleServerInputs(message);
                 }
             }

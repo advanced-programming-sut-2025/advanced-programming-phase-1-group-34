@@ -57,6 +57,8 @@ public class GameMenuGraphic {
                 CookingMenu.draw(batch, player, camera, gameController);
             } else if (menu.equals("fridge")) {
                 FridgeMenu.draw(batch, player, camera, gameController);
+            } else if (menu.equals("reaction")) {
+                ReactionMenu.draw(batch, player, camera, gameController);
             }
         }
     }

@@ -32,6 +32,7 @@ public class InventoryMenu {
     private final static Sprite craftingIcon = new Sprite(GameMenuAssetManager.getCraftingIcon());
     private final static Sprite cookingIcon = new Sprite(GameMenuAssetManager.getCookingIcon());
     private final static Sprite fridgeIcon = new Sprite(GameMenuAssetManager.getFridgeIcon());
+    private final static Sprite reactionIcon = new Sprite(GameMenuAssetManager.getReactionIcon());
 
     private final static Sprite greenRect = new Sprite(GameMenuAssetManager.getGreenRect());
     private final static Sprite rightIcon = new Sprite(GameMenuAssetManager.getRightIcon());
@@ -56,6 +57,7 @@ public class InventoryMenu {
         craftingIcon.setSize((float) (craftingIcon.getWidth() * 0.5), (float) (craftingIcon.getHeight() * 0.5));
         cookingIcon.setSize((float) (cookingIcon.getWidth() * 0.5), (float) (cookingIcon.getHeight() * 0.5));
         fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
+        reactionIcon.setSize((float) (reactionIcon.getWidth() * 0.3), (float) (reactionIcon.getHeight() * 0.3));
 
         greenRect.setSize(45, 45);
     }
@@ -149,6 +151,9 @@ public class InventoryMenu {
         smallBoard.setPosition(x + 426, y + 210);
         smallBoard.draw(batch);
 
+        smallBoard.setPosition(x + 470, y + 210);
+        smallBoard.draw(batch);
+
         inventorySymbol.setPosition(x + 30 + 5, y + 203 + 2);
         inventorySymbol.draw(batch);
 
@@ -178,6 +183,9 @@ public class InventoryMenu {
 
         fridgeIcon.setPosition(x + 426 + 15, y + 210 + 3);
         fridgeIcon.draw(batch);
+
+        reactionIcon.setPosition(x + 470 + 13, y + 210 + 7);
+        reactionIcon.draw(batch);
 
         exitIcon.setPosition(x + 608, y + 190);
         exitIcon.draw(batch);
@@ -213,6 +221,9 @@ public class InventoryMenu {
             scrollNumber = 0;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 980 && x < 1051 && y < 110 && y > 30) {
             player.setCurrentGameMenu("fridge");
+            scrollNumber = 0;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1053 && x < 1124 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("reaction");
             scrollNumber = 0;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);

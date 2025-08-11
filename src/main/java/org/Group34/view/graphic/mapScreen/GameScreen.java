@@ -27,6 +27,7 @@ import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.NetworkObjects.NetworkInteraction;
 import org.Group34.model.NetworkObjects.NetworkPlayerLocation;
+import org.Group34.model.NetworkObjects.NetworkReaction;
 import org.Group34.model.NetworkObjects.NetworkShopLimit;
 import org.Group34.model.User;
 import org.Group34.model.entities.*;
@@ -38,12 +39,10 @@ import org.Group34.model.enums.Season;
 import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.NPCDialogueManager;
 import org.Group34.model.gameAssetManagers.PlayerAvatarManager;
-import org.Group34.model.gameAssetManagers.ReactionAssetManager;
 import org.Group34.model.interactions.Interaction;
 import org.Group34.model.items.foods.CookedFood;
 import org.Group34.model.map.Map;
 import org.Group34.model.map.Space;
-import org.Group34.model.TestObject;
 import org.Group34.network.client.GameClient;
 import org.Group34.view.graphic.GameMenuGraphic;
 import org.Group34.view.graphic.GraphicAppView;
@@ -51,7 +50,7 @@ import org.Group34.view.graphic.ItemsGraphic;
 import org.Group34.view.graphic.dialogs.AnimalInteractionMenu;
 import org.Group34.view.graphic.dialogs.GreenhouseRepairDialog;
 import org.Group34.view.graphic.gameMenu.AnimalMenu;
-import org.Group34.view.graphic.menuScreen.LobbyMenuScreen;
+import org.Group34.view.graphic.gameMenu.ReactionMenu;
 import org.Group34.view.graphic.menuScreen.MainMenuScreen;
 
 import java.util.ArrayList;
@@ -574,7 +573,11 @@ public class GameScreen extends ScreenAdapter {
         } else {
             batch.draw(playerTexture, pos[0] * TILE_SIZE, pos[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
             if (player.getReactionTime() < 5f && player.getReaction() != null) {
-                batch.draw(player.getReaction(), pos[0] * TILE_SIZE + 25, pos[1] * TILE_SIZE + 25, TILE_SIZE / 2, TILE_SIZE / 2);
+                if (ReactionMenu.getTexts().contains(player.getReaction())) {
+                    batch.draw(player.getReaction(), pos[0] * TILE_SIZE + 20, pos[1] * TILE_SIZE + 30, TILE_SIZE , TILE_SIZE / 3);
+                } else {
+                    batch.draw(player.getReaction(), pos[0] * TILE_SIZE + 25, pos[1] * TILE_SIZE + 25, TILE_SIZE / 2, TILE_SIZE / 2);
+                }
             }
         }
         player.setReactionTime(player.getReactionTime() + Gdx.graphics.getDeltaTime());
@@ -638,7 +641,11 @@ public class GameScreen extends ScreenAdapter {
             if (player.getCurrentGameMenu() == null) {
                 batch.draw(player1.getTexture(), player1.getLocation()[0] * TILE_SIZE, player1.getLocation()[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 if (player1.getReactionTime() < 5f && player1.getReaction() != null) {
-                    batch.draw(player1.getReaction(), player1.getLocation()[0] * TILE_SIZE + 25, player1.getLocation()[1] * TILE_SIZE + 25, TILE_SIZE / 2, TILE_SIZE / 2);
+                    if (ReactionMenu.getTexts().contains(player1.getReaction())) {
+                        batch.draw(player1.getReaction(), player1.getLocation()[0] * TILE_SIZE + 20, player1.getLocation()[1] * TILE_SIZE + 30, TILE_SIZE , TILE_SIZE / 3);
+                    } else {
+                        batch.draw(player1.getReaction(), player1.getLocation()[0] * TILE_SIZE + 25, player1.getLocation()[1] * TILE_SIZE + 25, TILE_SIZE / 2, TILE_SIZE / 2);
+                    }
                 }
             }
         }
@@ -691,6 +698,7 @@ public class GameScreen extends ScreenAdapter {
                     client.send("socialGetLastInteraction");
                     client.send("socialGetLastShopLimit");
                     client.send("socialGetLocations");
+                    client.send("socialGetLastReaction");
                     client.sendObject(new NetworkPlayerLocation(player.getName(), player.getLocation()[0], player.getLocation()[1]));
                 }
             }
@@ -704,8 +712,8 @@ public class GameScreen extends ScreenAdapter {
             handleInteractions(interaction);
         } else if (object instanceof NetworkShopLimit shopLimit) {
             handleShopLimit(shopLimit);
-        } else if (object instanceof NetworkPlayerLocation location) {
-            handlePlayerLocation(location);
+        } else if (object instanceof NetworkReaction reaction) {
+            handleReaction(reaction);
         }
     }
 
@@ -772,7 +780,15 @@ public class GameScreen extends ScreenAdapter {
         }
     }
 
-    private void handlePlayerLocation(NetworkPlayerLocation location) {
+    private void handleReaction(NetworkReaction reaction) {
+        if (!player.getNetworkReactions().contains(reaction)) {
+            player.getNetworkReactions().add(reaction);
 
+            for (Player player1 : player.getInteractions().keySet()) {
+                if (player1.getName().equals(reaction.getPlayer()) && ReactionMenu.getReactionByName(reaction.getTexture()) != null) {
+                    player1.setReaction(ReactionMenu.getReactionByName(reaction.getTexture()));
+                }
+            }
+        }
     }
 }

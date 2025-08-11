@@ -41,6 +41,8 @@ public class GameMenuAssetManager {
     private final static Texture cookIcon = new Texture("recipe/Cooking.png");
     private final static Texture craftIcon = new Texture("gameMenu/CraftIcon.png");
     private final static Texture buff = new Texture("gameMenu/Buff.png");
+    private final static Texture reactionIcon = new Texture("gameMenu/Emojis006.png");
+    private final static Texture line = new Texture("gameMenu/line.png");
 
     // ----- getters -----
 
@@ -190,6 +192,14 @@ public class GameMenuAssetManager {
 
     public static Texture getBuff() {
         return buff;
+    }
+
+    public static Texture getReactionIcon() {
+        return reactionIcon;
+    }
+
+    public static Texture getLine() {
+        return line;
     }
 
     // -------------------

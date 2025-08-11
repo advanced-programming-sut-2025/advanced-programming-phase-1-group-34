@@ -2,6 +2,7 @@ package org.Group34.network.server;
 
 import org.Group34.model.NetworkObjects.NetworkInteraction;
 import org.Group34.model.NetworkObjects.NetworkPlayerLocation;
+import org.Group34.model.NetworkObjects.NetworkReaction;
 import org.Group34.model.NetworkObjects.NetworkShopLimit;
 import org.Group34.model.User;
 import org.Group34.network.InteractionManager;
@@ -73,6 +74,11 @@ public class ClientHandler extends Thread {
                     out.writeObject(response);
                     System.out.println("ClientHandler #" + handlerId + " sending response: " + response);
                 } else if (input instanceof NetworkShopLimit) {
+                    System.out.println("ClientHandler #" + handlerId + " received command: " + input);
+                    String response = processSocialObject(input);
+                    out.writeObject(response);
+                    System.out.println("ClientHandler #" + handlerId + " sending response: " + response);
+                } else if (input instanceof NetworkReaction) {
                     System.out.println("ClientHandler #" + handlerId + " received command: " + input);
                     String response = processSocialObject(input);
                     out.writeObject(response);
@@ -168,6 +174,8 @@ public class ClientHandler extends Thread {
                 return interactionManager.getNetworkShopLimit();
             } else if (command.equals("socialGetLocations")) {
                 return new ArrayList<>(interactionManager.getLocations().values());
+            } else if (command.equals("socialGetLastReaction")) {
+                return interactionManager.getLastReaction();
             }
             else {
                 return "Unknown Message";
@@ -189,6 +197,9 @@ public class ClientHandler extends Thread {
                 interactionManager.getLocations().replace(location.getName(), location);
             }
             return "location set";
+        } else if (object instanceof NetworkReaction reaction) {
+            interactionManager.setLastReaction(reaction);
+            return "last reaction set";
         }
 
         return "Unknown Message";

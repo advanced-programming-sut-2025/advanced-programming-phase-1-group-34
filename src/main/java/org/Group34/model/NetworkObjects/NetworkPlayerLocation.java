@@ -1,5 +1,7 @@
 package org.Group34.model.NetworkObjects;
 
+import com.badlogic.gdx.graphics.Texture;
+
 import java.io.Serializable;
 
 public class NetworkPlayerLocation implements Serializable {

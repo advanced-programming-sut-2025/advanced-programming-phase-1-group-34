@@ -2,6 +2,7 @@ package org.Group34.network;
 
 import org.Group34.model.NetworkObjects.NetworkInteraction;
 import org.Group34.model.NetworkObjects.NetworkPlayerLocation;
+import org.Group34.model.NetworkObjects.NetworkReaction;
 import org.Group34.model.NetworkObjects.NetworkShopLimit;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 public class InteractionManager {
     private NetworkInteraction lastInteraction = null;
     private NetworkShopLimit networkShopLimit = null;
+    private NetworkReaction lastReaction = null;
     private ArrayList<String> players = new ArrayList<>();
     private HashMap<String, NetworkPlayerLocation> locations = new HashMap<>();
 
@@ -46,5 +48,13 @@ public class InteractionManager {
 
     public synchronized void setLocations(HashMap<String, NetworkPlayerLocation> locations) {
         this.locations = locations;
+    }
+
+    public NetworkReaction getLastReaction() {
+        return lastReaction;
+    }
+
+    public void setLastReaction(NetworkReaction lastReaction) {
+        this.lastReaction = lastReaction;
     }
 }

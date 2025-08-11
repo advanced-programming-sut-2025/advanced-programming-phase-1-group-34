@@ -1,6 +1,7 @@
 package org.Group34.model.entities;
 
 import com.badlogic.gdx.graphics.Texture;
+import org.Group34.model.NetworkObjects.NetworkReaction;
 import org.Group34.model.NetworkObjects.NetworkShopLimit;
 import org.Group34.model.TestObject;
 import org.Group34.model.User;
@@ -44,7 +45,7 @@ public class Player implements Entity, Serializable {
     private HashMap<Player, Interaction> interactions = new HashMap<>();
 
     private Item currentTool = null;
-    private String currentGameMenu = null;
+    private String currentGameMenu = "reaction";
     private Item currentItem = null;
     private Texture reaction = null;
     private float reactionTime = 0f;
@@ -54,6 +55,12 @@ public class Player implements Entity, Serializable {
     private Item currentFridgeItem = null;
 
     private ArrayList<NetworkShopLimit> networkShopLimits = new ArrayList<>();
+    private ArrayList<NetworkReaction> networkReactions = new ArrayList<>();
+
+    private Texture giftingTexture = ReactionAssetManager.gifting1;
+    private Texture huggingTexture = ReactionAssetManager.hugging1;
+    private Texture floweringTexture = ReactionAssetManager.flowering1;
+    private Texture marriageTexture = ReactionAssetManager.marriage1;
 
     public String test = "test is not check";
     public TestObject testObject = new TestObject("fail", 0);
@@ -471,5 +478,45 @@ public class Player implements Entity, Serializable {
 
     public void setNetworkShopLimits(ArrayList<NetworkShopLimit> networkShopLimits) {
         this.networkShopLimits = networkShopLimits;
+    }
+
+    public Texture getGiftingTexture() {
+        return giftingTexture;
+    }
+
+    public void setGiftingTexture(Texture giftingTexture) {
+        this.giftingTexture = giftingTexture;
+    }
+
+    public Texture getHuggingTexture() {
+        return huggingTexture;
+    }
+
+    public void setHuggingTexture(Texture huggingTexture) {
+        this.huggingTexture = huggingTexture;
+    }
+
+    public Texture getFloweringTexture() {
+        return floweringTexture;
+    }
+
+    public void setFloweringTexture(Texture floweringTexture) {
+        this.floweringTexture = floweringTexture;
+    }
+
+    public Texture getMarriageTexture() {
+        return marriageTexture;
+    }
+
+    public void setMarriageTexture(Texture marriageTexture) {
+        this.marriageTexture = marriageTexture;
+    }
+
+    public ArrayList<NetworkReaction> getNetworkReactions() {
+        return networkReactions;
+    }
+
+    public void setNetworkReactions(ArrayList<NetworkReaction> networkReactions) {
+        this.networkReactions = networkReactions;
     }
 }

@@ -1,13 +1,11 @@
 package org.Group34.controller;
 
-import org.Group34.model.NetworkObjects.NetworkInteraction;
 import org.Group34.model.Result;
 import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.ReactionAssetManager;
 import org.Group34.model.interactions.Gift;
 import org.Group34.model.interactions.Interaction;
 import org.Group34.model.items.Item;
-import org.Group34.network.client.GameClient;
 
 import java.util.Objects;
 
@@ -74,8 +72,8 @@ public class InteractionController {
         player.getInteractionByPlayer(desiredPlayer).addGift(desiredItem, amount, false, false, desiredPlayer);
         desiredPlayer.getInteractionByPlayer(player).addGift(desiredItem, amount, true, true, desiredPlayer);
 
-        player.setReaction(ReactionAssetManager.gifting);
-        desiredPlayer.setReaction(ReactionAssetManager.gifting);
+        player.setReaction(player.getGiftingTexture());
+        desiredPlayer.setReaction(desiredPlayer.getGiftingTexture());
 
         return new Result(true, "Your gift has been sent.");
     }
@@ -125,8 +123,8 @@ public class InteractionController {
         player.getInteractionByPlayer(desiredPlayer).increaseXp(60);
         desiredPlayer.getInteractionByPlayer(player).increaseXp(60);
 
-        player.setReaction(ReactionAssetManager.hugging);
-        desiredPlayer.setReaction(ReactionAssetManager.hugging);
+        player.setReaction(player.getHuggingTexture());
+        desiredPlayer.setReaction(desiredPlayer.getHuggingTexture());
 
         return new Result(true, "The desired player has been hugged.");
     }
@@ -145,8 +143,8 @@ public class InteractionController {
         player.getInteractionByPlayer(desiredPlayer).setLevel(3);
         desiredPlayer.getInteractionByPlayer(player).setLevel(3);
 
-        player.setReaction(ReactionAssetManager.flowering);
-        desiredPlayer.setReaction(ReactionAssetManager.flowering);
+        player.setReaction(player.getFloweringTexture());
+        desiredPlayer.setReaction(desiredPlayer.getFloweringTexture());
 
         return new Result(true, "The flower was given to the desired player.");
     }
@@ -165,8 +163,8 @@ public class InteractionController {
         player.getInteractionByPlayer(desiredPlayer).setLevel(4);
         desiredPlayer.getInteractionByPlayer(player).setLevel(4);
 
-        player.setReaction(ReactionAssetManager.marriage);
-        desiredPlayer.setReaction(ReactionAssetManager.marriage);
+        player.setReaction(player.getMarriageTexture());
+        desiredPlayer.setReaction(desiredPlayer.getMarriageTexture());
 
         return new Result(true, "The marriage proposal was given.");
     }
