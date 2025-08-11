@@ -1,6 +1,7 @@
 package org.Group34.model.entities;
 
 import com.badlogic.gdx.graphics.Texture;
+import org.Group34.model.NetworkObjects.NetworkShopLimit;
 import org.Group34.model.TestObject;
 import org.Group34.model.User;
 import org.Group34.model.entities.buildings.shops.products.ShippingBin;
@@ -51,6 +52,8 @@ public class Player implements Entity, Serializable {
     private final HashMap<Item, Integer> fridge = new HashMap<>();
     private boolean transferMode = false;
     private Item currentFridgeItem = null;
+
+    private ArrayList<NetworkShopLimit> networkShopLimits = new ArrayList<>();
 
     public String test = "test is not check";
     public TestObject testObject = new TestObject("fail", 0);
@@ -460,5 +463,13 @@ public class Player implements Entity, Serializable {
     public int getAmountInFridge(Item item) {
         Integer amount = fridge.get(item);
         return amount != null ? amount : 0;
+    }
+
+    public ArrayList<NetworkShopLimit> getNetworkShopLimits() {
+        return networkShopLimits;
+    }
+
+    public void setNetworkShopLimits(ArrayList<NetworkShopLimit> networkShopLimits) {
+        this.networkShopLimits = networkShopLimits;
     }
 }

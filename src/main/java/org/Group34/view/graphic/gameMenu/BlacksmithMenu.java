@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.controller.GameController;
+import org.Group34.model.NetworkObjects.NetworkShopLimit;
 import org.Group34.model.Result;
 import org.Group34.model.entities.Entity;
 import org.Group34.model.entities.Player;
@@ -263,6 +264,10 @@ public class BlacksmithMenu {
         if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1082 && x < 1132 && y > 692 && y < 748) {
             Result result = gameController.purchase(product.getName(), buyAmount, player);
             error = result.message();
+            if (result.success()) {
+                NetworkShopLimit networkShopLimit = new NetworkShopLimit(product.getName(), buyAmount);
+                gameController.getClient().sendObject(networkShopLimit);
+            }
         }
     }
 }

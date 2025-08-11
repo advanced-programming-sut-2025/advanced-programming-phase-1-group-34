@@ -1,6 +1,8 @@
 package org.Group34.network.server;
 
 import org.Group34.model.NetworkObjects.NetworkInteraction;
+import org.Group34.model.NetworkObjects.NetworkPlayerLocation;
+import org.Group34.model.NetworkObjects.NetworkShopLimit;
 import org.Group34.model.User;
 import org.Group34.network.InteractionManager;
 import org.Group34.network.LobbyManager;
@@ -8,6 +10,7 @@ import org.Group34.model.TestObject;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ClientHandler extends Thread {
@@ -60,6 +63,16 @@ public class ClientHandler extends Thread {
                     System.out.println("ClientHandler #" + handlerId + " set user to: " + currentUser.getUsername());
                     out.writeObject(response);
                 } else if (input instanceof NetworkInteraction) {
+                    System.out.println("ClientHandler #" + handlerId + " received command: " + input);
+                    String response = processSocialObject(input);
+                    out.writeObject(response);
+                    System.out.println("ClientHandler #" + handlerId + " sending response: " + response);
+                } else if (input instanceof NetworkPlayerLocation) {
+                    System.out.println("ClientHandler #" + handlerId + " received command: " + input);
+                    String response = processSocialObject(input);
+                    out.writeObject(response);
+                    System.out.println("ClientHandler #" + handlerId + " sending response: " + response);
+                } else if (input instanceof NetworkShopLimit) {
                     System.out.println("ClientHandler #" + handlerId + " received command: " + input);
                     String response = processSocialObject(input);
                     out.writeObject(response);
@@ -144,12 +157,17 @@ public class ClientHandler extends Thread {
     private Object processSocialCommand(String command) {
         try {
             if (command.equals("socialGetPlayers")) {
+                interactionManager.setPlayers(lobbyManager.getLobbyPlayers());
                 return lobbyManager.getLobbyPlayers();
             } else if (command.equals("socialGetLastInteraction")) {
                 return interactionManager.getLastInteraction();
             } else if (command.equals("socialReadLastInteraction")) {
                 interactionManager.setLastInteraction(null);
                 return "reset last interaction";
+            } else if (command.equals("socialGetLastShopLimit")) {
+                return interactionManager.getNetworkShopLimit();
+            } else if (command.equals("socialGetLocations")) {
+                return new ArrayList<>(interactionManager.getLocations().values());
             }
             else {
                 return "Unknown Message";
@@ -163,6 +181,14 @@ public class ClientHandler extends Thread {
         if (object instanceof NetworkInteraction interaction) {
             interactionManager.setLastInteraction(interaction);
             return "last interaction set";
+        } else if (object instanceof NetworkShopLimit shopLimit) {
+            interactionManager.setNetworkShopLimit(shopLimit);
+            return "last shop limit set";
+        } else if (object instanceof NetworkPlayerLocation location) {
+            if (interactionManager.getLocations().containsKey(location.getName())) {
+                interactionManager.getLocations().replace(location.getName(), location);
+            }
+            return "location set";
         }
 
         return "Unknown Message";

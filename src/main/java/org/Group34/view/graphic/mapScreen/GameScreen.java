@@ -26,6 +26,8 @@ import org.Group34.controller.AnimalBuildingController;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
 import org.Group34.model.NetworkObjects.NetworkInteraction;
+import org.Group34.model.NetworkObjects.NetworkPlayerLocation;
+import org.Group34.model.NetworkObjects.NetworkShopLimit;
 import org.Group34.model.User;
 import org.Group34.model.entities.*;
 import org.Group34.model.entities.buildings.AnimalsBuilding;
@@ -629,6 +631,9 @@ public class GameScreen extends ScreenAdapter {
     private void renderOtherItems() {
         toolsGraphic.update(TILE_SIZE);
         gameMenuGraphic.update(camera, environmentManager);
+        for (Player player1 : player.getInteractions().keySet()) {
+            batch.draw(player1.getTexture(), player1.getLocation()[0] * TILE_SIZE, player1.getLocation()[1] * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        }
     }
 
     // Helper method to show messages
@@ -676,9 +681,12 @@ public class GameScreen extends ScreenAdapter {
             public void run() {
                 if (client != null && app.getScreen() instanceof GameScreen) {
                     client.send("socialGetLastInteraction");
+                    client.send("socialGetLastShopLimit");
+                    client.send("socialGetLocations");
+                    client.sendObject(new NetworkPlayerLocation(player.getName(), player.getLocation()[0], player.getLocation()[1]));
                 }
             }
-        }, 10000, 10000);
+        }, 100, 100);
     }
 
     public void handleServerInputs(Object object) {
@@ -686,6 +694,10 @@ public class GameScreen extends ScreenAdapter {
             handlePlayerList(list);
         } else if (object instanceof NetworkInteraction interaction) {
             handleInteractions(interaction);
+        } else if (object instanceof NetworkShopLimit shopLimit) {
+            handleShopLimit(shopLimit);
+        } else if (object instanceof NetworkPlayerLocation location) {
+            handlePlayerLocation(location);
         }
     }
 
@@ -697,6 +709,12 @@ public class GameScreen extends ScreenAdapter {
                     player1.setName(s);
                     player.getInteractions().put(player1, new Interaction());
                     player1.getInteractions().put(player, new Interaction());
+                }
+            } else if (o instanceof NetworkPlayerLocation location) {
+                for (Player player1 : player.getInteractions().keySet()) {
+                    if (player1.getName().equals(location.getName())) {
+                        player1.setLocation(new int[]{location.getX(), location.getY()});
+                    }
                 }
             }
         }
@@ -726,5 +744,27 @@ public class GameScreen extends ScreenAdapter {
             gameController.talk(player.getName(), interaction.getText(), friend);
             client.send("socialReadLastInteraction");
         }
+    }
+
+    private void handleShopLimit(NetworkShopLimit shopLimit) {
+        if (!player.getNetworkShopLimits().contains(shopLimit)) {
+            player.getNetworkShopLimits().add(shopLimit);
+
+            Blacksmith shop = new Blacksmith();
+            for (Entity[] entities : player.getCurrentSpace().entities()) {
+                for (Entity entity : entities) {
+                    if (entity instanceof Blacksmith blacksmith) {
+                        shop = blacksmith;
+                        break;
+                    }
+                }
+            }
+
+            shop.buy(shop.getProductByName(shopLimit.getItem()),shopLimit.getAmount());
+        }
+    }
+
+    private void handlePlayerLocation(NetworkPlayerLocation location) {
+
     }
 }
