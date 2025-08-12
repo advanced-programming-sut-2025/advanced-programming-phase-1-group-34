@@ -13,6 +13,7 @@ import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
 import org.Group34.model.items.Item;
 import org.Group34.model.items.tools.Tool;
+
 import java.util.ArrayList;
 
 public class FridgeMenu {
@@ -30,12 +31,15 @@ public class FridgeMenu {
     private final static Sprite craftingIcon = new Sprite(GameMenuAssetManager.getCraftingIcon());
     private final static Sprite cookingIcon = new Sprite(GameMenuAssetManager.getCookingIcon());
     private final static Sprite fridgeIcon = new Sprite(GameMenuAssetManager.getFridgeIcon());
+    private final static Sprite reactionIcon = new Sprite(GameMenuAssetManager.getReactionIcon());
+    private final static Sprite scoreboardIcon = new Sprite(GameMenuAssetManager.getScoreboardIcon());
     private final static Sprite greenRect = new Sprite(GameMenuAssetManager.getGreenRect());
     private final static Sprite rightIcon = new Sprite(GameMenuAssetManager.getRightIcon());
     private final static Sprite leftIcon = new Sprite(GameMenuAssetManager.getLeftIcon());
     private final static Sprite bigBoard = new Sprite(GameMenuAssetManager.getBigBoard());
     private static int scrollNumber = 0;
     private static int infoNumber = 0;
+
     static {
         board.setSize(chest.getWidth(), chest.getHeight());
         smallBoard.setSize((float) (smallBoard.getWidth() * 0.7), (float) (smallBoard.getHeight() * 0.7));
@@ -50,6 +54,8 @@ public class FridgeMenu {
         craftingIcon.setSize((float) (craftingIcon.getWidth() * 0.5), (float) (craftingIcon.getHeight() * 0.5));
         cookingIcon.setSize((float) (cookingIcon.getWidth() * 0.5), (float) (cookingIcon.getHeight() * 0.5));
         fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
+        reactionIcon.setSize((float) (reactionIcon.getWidth() * 0.3), (float) (reactionIcon.getHeight() * 0.3));
+        scoreboardIcon.setSize((float) (scoreboardIcon.getWidth() * 0.5), (float) (scoreboardIcon.getHeight() * 0.5));
         greenRect.setSize(45, 45);
     }
 
@@ -126,6 +132,12 @@ public class FridgeMenu {
         smallBoard.setPosition(x + 426, y + 203);
         smallBoard.draw(batch);
 
+        smallBoard.setPosition(x + 470, y + 210);
+        smallBoard.draw(batch);
+
+        smallBoard.setPosition(x + 514, y + 210);
+        smallBoard.draw(batch);
+
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
 
@@ -158,6 +170,12 @@ public class FridgeMenu {
 
         fridgeIcon.setPosition(x + 426 + 15, y + 203 + 3);
         fridgeIcon.draw(batch);
+
+        reactionIcon.setPosition(x + 470 + 13, y + 210 + 7);
+        reactionIcon.draw(batch);
+
+        scoreboardIcon.setPosition(x + 514 + 10, y + 210 + 5);
+        scoreboardIcon.draw(batch);
 
         exitIcon.setPosition(x + 608, y + 190);
         exitIcon.draw(batch);
@@ -193,6 +211,12 @@ public class FridgeMenu {
             scrollNumber = 0;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && mouseX > 907 && mouseX < 978 && mouseY < 110 && mouseY > 30) {
             player.setCurrentGameMenu("cooking");
+            scrollNumber = 0;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && mouseX > 1053 && mouseX < 1124 && mouseY < 110 && mouseY > 30) {
+            player.setCurrentGameMenu("reaction");
+            scrollNumber = 0;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && mouseX > 1126 && mouseX < 1197 && mouseY < 110 && mouseY > 30) {
+            player.setCurrentGameMenu("scoreboard");
             scrollNumber = 0;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && mouseX > 1283 && mouseX < 1342 && mouseY < 150 && mouseY > 82) {
             player.setCurrentGameMenu(null);
@@ -244,8 +268,7 @@ public class FridgeMenu {
             }
             newSelect = fridgeItems.get(current - 1);
             player.setCurrentFridgeItem(newSelect);
-        }
-        else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && mouseX > 520 && mouseX < 570 && mouseY > 702 && mouseY < 759) {
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && mouseX > 520 && mouseX < 570 && mouseY > 702 && mouseY < 759) {
             newSelect = fridgeItems.get((current + 1) % fridgeItems.size());
             player.setCurrentFridgeItem(newSelect);
         }
@@ -282,8 +305,8 @@ public class FridgeMenu {
             return;
         }
         // Calculate which item was clicked
-        int col = (int)((worldX - gridStartX) / 48);
-        int row = (int)((gridStartY - worldY) / 50);
+        int col = (int) ((worldX - gridStartX) / 48);
+        int row = (int) ((gridStartY - worldY) / 50);
         int indexInPage = row * 12 + col;
         int actualIndex = indexInPage + (12 * scrollNumber);
         if (actualIndex < fridgeItems.size()) {

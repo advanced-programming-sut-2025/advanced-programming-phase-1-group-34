@@ -1,4 +1,5 @@
 package org.Group34.view.graphic.gameMenu;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,6 +15,7 @@ import org.Group34.model.items.crafting.Ingredient;
 import org.Group34.model.items.foods.CookedFood;
 import org.Group34.model.items.foods.CropProduct;
 import org.Group34.model.items.foods.Vegetable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,8 @@ public class NPCMenu {
     private final static Sprite craftingIcon = new Sprite(GameMenuAssetManager.getCraftingIcon());
     private final static Sprite cookingIcon = new Sprite(GameMenuAssetManager.getCookingIcon());
     private final static Sprite fridgeIcon = new Sprite(GameMenuAssetManager.getFridgeIcon());
+    private final static Sprite reactionIcon = new Sprite(GameMenuAssetManager.getReactionIcon());
+    private final static Sprite scoreboardIcon = new Sprite(GameMenuAssetManager.getScoreboardIcon());
 
     private static boolean giftDialogOpen = false;
     private static int selectedNPCIndex = -1;
@@ -67,6 +71,8 @@ public class NPCMenu {
         craftingIcon.setSize((float) (craftingIcon.getWidth() * 0.5), (float) (craftingIcon.getHeight() * 0.5));
         cookingIcon.setSize((float) (cookingIcon.getWidth() * 0.5), (float) (cookingIcon.getHeight() * 0.5));
         fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
+        reactionIcon.setSize((float) (reactionIcon.getWidth() * 0.3), (float) (reactionIcon.getHeight() * 0.3));
+        scoreboardIcon.setSize((float) (scoreboardIcon.getWidth() * 0.5), (float) (scoreboardIcon.getHeight() * 0.5));
 
         font = new BitmapFont();
         font.setColor(Color.BLACK);
@@ -151,6 +157,12 @@ public class NPCMenu {
         smallBoard.setPosition(x + 426, y + 210);
         smallBoard.draw(batch);
 
+        smallBoard.setPosition(x + 470, y + 210);
+        smallBoard.draw(batch);
+
+        smallBoard.setPosition(x + 514, y + 210);
+        smallBoard.draw(batch);
+
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
 
@@ -183,6 +195,12 @@ public class NPCMenu {
 
         fridgeIcon.setPosition(x + 426 + 15, y + 210 + 3);
         fridgeIcon.draw(batch);
+
+        reactionIcon.setPosition(x + 470 + 13, y + 210 + 7);
+        reactionIcon.draw(batch);
+
+        scoreboardIcon.setPosition(x + 514 + 10, y + 210 + 5);
+        scoreboardIcon.draw(batch);
     }
 
     private static void drawNPCInfo(SpriteBatch batch, float x, float y, Player player) {
@@ -406,14 +424,11 @@ public class NPCMenu {
     private static Sprite getGiftIcon(String giftName) {
         if (giftName.equals("Carrot")) {
             return new Sprite(CropAssetManager.getCarrot());
-        }
-        else if (giftName.equals("Flower")) {
+        } else if (giftName.equals("Flower")) {
             return new Sprite(CropAssetManager.getFairyRose());
-        }
-        else if (giftName.equals("1000$")) {
+        } else if (giftName.equals("1000$")) {
             return new Sprite(GameMenuAssetManager.getCoinIcon());
-        }
-        else if (giftName.equals("Wood")) {
+        } else if (giftName.equals("Wood")) {
             return new Sprite(GameMenuAssetManager.getWoodIcon());
         }
         return null;
@@ -464,6 +479,10 @@ public class NPCMenu {
             player.setCurrentGameMenu("cooking");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 980 && x < 1051 && y < 110 && y > 30) {
             player.setCurrentGameMenu("fridge");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1053 && x < 1124 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("reaction");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1126 && x < 1197 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("scoreboard");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);
         }
@@ -498,8 +517,7 @@ public class NPCMenu {
             int giftY;
             if (i == 0) {
                 giftY = 400;
-            }
-            else {
+            } else {
                 giftY = 700;
             }
             if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) &&

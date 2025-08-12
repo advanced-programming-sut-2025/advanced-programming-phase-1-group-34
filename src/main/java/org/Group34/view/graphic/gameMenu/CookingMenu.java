@@ -1,4 +1,5 @@
 package org.Group34.view.graphic.gameMenu;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -12,6 +13,7 @@ import org.Group34.model.gameAssetManagers.CookingAssetManager;
 import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
 import org.Group34.model.items.foods.CookedFood;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -30,6 +32,8 @@ public class CookingMenu {
     private final static Sprite craftingIcon = new Sprite(GameMenuAssetManager.getCraftingIcon());
     private final static Sprite cookingIcon = new Sprite(GameMenuAssetManager.getCookingIcon());
     private final static Sprite fridgeIcon = new Sprite(GameMenuAssetManager.getFridgeIcon());
+    private final static Sprite reactionIcon = new Sprite(GameMenuAssetManager.getReactionIcon());
+    private final static Sprite scoreboardIcon = new Sprite(GameMenuAssetManager.getScoreboardIcon());
     private final static Sprite greenRect = new Sprite(GameMenuAssetManager.getGreenRect());
     private final static Sprite rightIcon = new Sprite(GameMenuAssetManager.getRightIcon());
     private final static Sprite leftIcon = new Sprite(GameMenuAssetManager.getLeftIcon());
@@ -66,6 +70,8 @@ public class CookingMenu {
         craftingIcon.setSize((float) (craftingIcon.getWidth() * 0.5), (float) (craftingIcon.getHeight() * 0.5));
         cookingIcon.setSize((float) (cookingIcon.getWidth() * 0.5), (float) (cookingIcon.getHeight() * 0.5));
         fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
+        reactionIcon.setSize((float) (reactionIcon.getWidth() * 0.3), (float) (reactionIcon.getHeight() * 0.3));
+        scoreboardIcon.setSize((float) (scoreboardIcon.getWidth() * 0.5), (float) (scoreboardIcon.getHeight() * 0.5));
         greenRect.setSize(45, 45);
         lockIcon.setSize(30, 30);
         unlockIcon.setSize(30, 30);
@@ -122,7 +128,7 @@ public class CookingMenu {
 
         // Draw status message if active
         if (statusMessage != null && statusMessageTimer > 0) {
-            statusFont.draw(batch, statusMessage, x + chest.getWidth()/2 - statusFont.getRegion().getRegionWidth()/2, y + 50);
+            statusFont.draw(batch, statusMessage, x + chest.getWidth() / 2 - statusFont.getRegion().getRegionWidth() / 2, y + 50);
             statusMessageTimer -= Gdx.graphics.getDeltaTime();
             if (statusMessageTimer <= 0) {
                 statusMessage = null;
@@ -156,6 +162,10 @@ public class CookingMenu {
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 426, y + 210);
         smallBoard.draw(batch);
+        smallBoard.setPosition(x + 470, y + 210);
+        smallBoard.draw(batch);
+        smallBoard.setPosition(x + 514, y + 210);
+        smallBoard.draw(batch);
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
         skillSymbol.setPosition(x + 74 + 9, y + 210 + 5);
@@ -176,6 +186,10 @@ public class CookingMenu {
         cookingIcon.draw(batch);
         fridgeIcon.setPosition(x + 426 + 15, y + 210 + 3);
         fridgeIcon.draw(batch);
+        reactionIcon.setPosition(x + 470 + 13, y + 210 + 7);
+        reactionIcon.draw(batch);
+        scoreboardIcon.setPosition(x + 514 + 10, y + 210 + 5);
+        scoreboardIcon.draw(batch);
         exitIcon.setPosition(x + 608, y + 190);
         exitIcon.draw(batch);
     }
@@ -189,8 +203,7 @@ public class CookingMenu {
             scrollNumber = 0;
             currentRecipe = null;
             statusMessage = null;
-        }
-        else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 397 && x < 468 && y < 110 && y > 30) {
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 397 && x < 468 && y < 110 && y > 30) {
             player.setCurrentGameMenu("skill");
             scrollNumber = 0;
             currentRecipe = null;
@@ -229,6 +242,16 @@ public class CookingMenu {
             // Already in cooking menu
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 980 && x < 1051 && y < 110 && y > 30) {
             player.setCurrentGameMenu("fridge");
+            scrollNumber = 0;
+            currentRecipe = null;
+            statusMessage = null;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1053 && x < 1124 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("reaction");
+            scrollNumber = 0;
+            currentRecipe = null;
+            statusMessage = null;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1126 && x < 1197 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("scoreboard");
             scrollNumber = 0;
             currentRecipe = null;
             statusMessage = null;
@@ -276,8 +299,7 @@ public class CookingMenu {
 
                             if (entry.getKey().getName() == null) {
                                 canCook = true;
-                            }
-                            else if (available < required) {
+                            } else if (available < required) {
                                 canCook = false;
                                 missingIngredients.append(entry.getKey().getName())
                                         .append(" (need ")
@@ -431,7 +453,7 @@ public class CookingMenu {
                 font.getData().setScale(0.5f);
 
                 // Draw ingredients
-                int yPos = (int)(y - 65);
+                int yPos = (int) (y - 65);
                 font.draw(batch, "Ingredients:", x + 240, yPos);
                 yPos -= 15;
 
@@ -469,30 +491,54 @@ public class CookingMenu {
 
     private static com.badlogic.gdx.graphics.Texture getTexture(CookedFood food) {
         switch (food) {
-            case FRIED_EGG: return CookingAssetManager.friedEgg;
-            case BAKED_FISH: return CookingAssetManager.bakedFish;
-            case SALAD: return CookingAssetManager.salad;
-            case OMELET: return CookingAssetManager.omelet;
-            case PUMPKIN_PIE: return CookingAssetManager.pumpkinPie;
-            case SPAGHETTI: return CookingAssetManager.spaghetti;
-            case PIZZA: return CookingAssetManager.pizza;
-            case TORTILLA: return CookingAssetManager.tortilla;
-            case MAKI_ROLL: return CookingAssetManager.makiRoll;
-            case TRIPLE_SHOT_ESPRESSO: return CookingAssetManager.tripleShotEspresso;
-            case COOKIE: return CookingAssetManager.cookie;
-            case HASH_BROWNS: return CookingAssetManager.hashBrowns;
-            case PANCAKES: return CookingAssetManager.pancakes;
-            case FRUIT_SALAD: return CookingAssetManager.fruitSalad;
-            case RED_PLATE: return CookingAssetManager.redPlate;
-            case BREAD: return CookingAssetManager.bread;
-            case SALMON_DINNER: return CookingAssetManager.salmonDinner;
-            case VEGETABLE_MEDLEY: return CookingAssetManager.vegetableMedley;
-            case FARMERS_LUNCH: return CookingAssetManager.farmersLunch;
-            case SURVIVAL_BURGER: return CookingAssetManager.survivalBurger;
-            case DISH_O_THE_SEA: return CookingAssetManager.dishOTheSea;
-            case SEAFOAM_PUDDING: return CookingAssetManager.seafoamPudding;
-            case MINERS_TREAT: return CookingAssetManager.minersTreat;
-            default: return null;
+            case FRIED_EGG:
+                return CookingAssetManager.friedEgg;
+            case BAKED_FISH:
+                return CookingAssetManager.bakedFish;
+            case SALAD:
+                return CookingAssetManager.salad;
+            case OMELET:
+                return CookingAssetManager.omelet;
+            case PUMPKIN_PIE:
+                return CookingAssetManager.pumpkinPie;
+            case SPAGHETTI:
+                return CookingAssetManager.spaghetti;
+            case PIZZA:
+                return CookingAssetManager.pizza;
+            case TORTILLA:
+                return CookingAssetManager.tortilla;
+            case MAKI_ROLL:
+                return CookingAssetManager.makiRoll;
+            case TRIPLE_SHOT_ESPRESSO:
+                return CookingAssetManager.tripleShotEspresso;
+            case COOKIE:
+                return CookingAssetManager.cookie;
+            case HASH_BROWNS:
+                return CookingAssetManager.hashBrowns;
+            case PANCAKES:
+                return CookingAssetManager.pancakes;
+            case FRUIT_SALAD:
+                return CookingAssetManager.fruitSalad;
+            case RED_PLATE:
+                return CookingAssetManager.redPlate;
+            case BREAD:
+                return CookingAssetManager.bread;
+            case SALMON_DINNER:
+                return CookingAssetManager.salmonDinner;
+            case VEGETABLE_MEDLEY:
+                return CookingAssetManager.vegetableMedley;
+            case FARMERS_LUNCH:
+                return CookingAssetManager.farmersLunch;
+            case SURVIVAL_BURGER:
+                return CookingAssetManager.survivalBurger;
+            case DISH_O_THE_SEA:
+                return CookingAssetManager.dishOTheSea;
+            case SEAFOAM_PUDDING:
+                return CookingAssetManager.seafoamPudding;
+            case MINERS_TREAT:
+                return CookingAssetManager.minersTreat;
+            default:
+                return null;
         }
     }
 }

@@ -11,6 +11,7 @@ import org.Group34.controller.GameController;
 import org.Group34.model.entities.Player;
 import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
+import org.Group34.model.interactions.Interaction;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -63,6 +64,26 @@ public class ScoreboardMenu {
     }
 
     public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera, GameController gameController) {
+        if (player.getInteractions().isEmpty()) {
+            Player player1 = new Player(new int[]{1, 1});
+            Player player2 = new Player(new int[]{2, 2});
+            Player player3 = new Player(new int[]{3, 3});
+            player.setName("Negin");
+            player1.setName("Fateme");
+            player2.setName("Mmd");
+            player3.setName("Amin");
+            player.getInteractions().put(player1, new Interaction());
+            player.getInteractions().put(player2, new Interaction());
+            player.getInteractions().put(player3, new Interaction());
+            player1.getInteractions().put(player, new Interaction());
+            player2.getInteractions().put(player, new Interaction());
+            player3.getInteractions().put(player, new Interaction());
+
+            gameController.talk(player.getName(), "Hello", player1);
+            player2.getInteractionByPlayer(player).setLevel(4);
+            gameController.gift(player.getName(), "Apple Sapling", 5, player2);
+        }
+
         float x = camera.position.x - chest.getWidth() / 2;
         float y = camera.position.y - 30;
         drawBoard(batch, x, y);

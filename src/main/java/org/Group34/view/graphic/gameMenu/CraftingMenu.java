@@ -13,6 +13,7 @@ import org.Group34.model.gameAssetManagers.GameMenuAssetManager;
 import org.Group34.model.gameAssetManagers.ProcessorAssetManager;
 import org.Group34.model.gameAssetManagers.ToolAssetManager;
 import org.Group34.model.items.crafting.ProcessorCraft;
+
 import java.util.Map;
 
 public class CraftingMenu {
@@ -30,6 +31,8 @@ public class CraftingMenu {
     private final static Sprite craftingIcon = new Sprite(GameMenuAssetManager.getCraftingIcon());
     private final static Sprite cookingIcon = new Sprite(GameMenuAssetManager.getCookingIcon());
     private final static Sprite fridgeIcon = new Sprite(GameMenuAssetManager.getFridgeIcon());
+    private final static Sprite reactionIcon = new Sprite(GameMenuAssetManager.getReactionIcon());
+    private final static Sprite scoreboardIcon = new Sprite(GameMenuAssetManager.getScoreboardIcon());
     private final static Sprite greenRect = new Sprite(GameMenuAssetManager.getGreenRect());
     private final static Sprite rightIcon = new Sprite(GameMenuAssetManager.getRightIcon());
     private final static Sprite leftIcon = new Sprite(GameMenuAssetManager.getLeftIcon());
@@ -65,6 +68,8 @@ public class CraftingMenu {
         craftingIcon.setSize((float) (craftingIcon.getWidth() * 0.5), (float) (craftingIcon.getHeight() * 0.5));
         cookingIcon.setSize((float) (cookingIcon.getWidth() * 0.5), (float) (cookingIcon.getHeight() * 0.5));
         fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
+        reactionIcon.setSize((float) (reactionIcon.getWidth() * 0.3), (float) (reactionIcon.getHeight() * 0.3));
+        scoreboardIcon.setSize((float) (scoreboardIcon.getWidth() * 0.5), (float) (scoreboardIcon.getHeight() * 0.5));
         greenRect.setSize(45, 45);
         lockIcon.setSize(30, 30);
         unlockIcon.setSize(30, 30);
@@ -120,7 +125,7 @@ public class CraftingMenu {
         handleInput(player, processors);
         // Draw status message if active
         if (statusMessage != null && statusMessageTimer > 0) {
-            statusFont.draw(batch, statusMessage, x + chest.getWidth()/2 - statusFont.getRegion().getRegionWidth()/2, y + 50);
+            statusFont.draw(batch, statusMessage, x + chest.getWidth() / 2 - statusFont.getRegion().getRegionWidth() / 2, y + 50);
             statusMessageTimer -= Gdx.graphics.getDeltaTime();
             if (statusMessageTimer <= 0) {
                 statusMessage = null;
@@ -154,6 +159,10 @@ public class CraftingMenu {
         smallBoard.draw(batch);
         smallBoard.setPosition(x + 426, y + 210);
         smallBoard.draw(batch);
+        smallBoard.setPosition(x + 470, y + 210);
+        smallBoard.draw(batch);
+        smallBoard.setPosition(x + 514, y + 210);
+        smallBoard.draw(batch);
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
         skillSymbol.setPosition(x + 74 + 9, y + 210 + 5);
@@ -174,6 +183,10 @@ public class CraftingMenu {
         cookingIcon.draw(batch);
         fridgeIcon.setPosition(x + 426 + 15, y + 210 + 3);
         fridgeIcon.draw(batch);
+        reactionIcon.setPosition(x + 470 + 13, y + 210 + 7);
+        reactionIcon.draw(batch);
+        scoreboardIcon.setPosition(x + 514 + 10, y + 210 + 5);
+        scoreboardIcon.draw(batch);
         exitIcon.setPosition(x + 608, y + 190);
         exitIcon.draw(batch);
     }
@@ -181,7 +194,12 @@ public class CraftingMenu {
     private static void handleInput(Player player, ProcessorCraft[] processors) {
         int x = Gdx.input.getX();
         int y = Gdx.input.getY();
-        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 397 && x < 468 && y < 110 && y > 30) {
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 324 && x < 395 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("inventory");
+            scrollNumber = 0;
+            currentProcessor = null;
+            statusMessage = null;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 397 && x < 468 && y < 110 && y > 30) {
             player.setCurrentGameMenu("skill");
             scrollNumber = 0;
             currentProcessor = null;
@@ -223,6 +241,16 @@ public class CraftingMenu {
             statusMessage = null;
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 980 && x < 1051 && y < 110 && y > 30) {
             player.setCurrentGameMenu("fridge");
+            scrollNumber = 0;
+            currentProcessor = null;
+            statusMessage = null;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1053 && x < 1124 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("reaction");
+            scrollNumber = 0;
+            currentProcessor = null;
+            statusMessage = null;
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1126 && x < 1197 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("scoreboard");
             scrollNumber = 0;
             currentProcessor = null;
             statusMessage = null;
@@ -268,8 +296,7 @@ public class CraftingMenu {
                             int available = player.getAmountOfItem(entry.getKey());
                             if (entry.getKey().getName() == null) {
                                 canCreate = true;
-                            }
-                            else if (available < required) {
+                            } else if (available < required) {
                                 canCreate = false;
                                 missingIngredients.append(entry.getKey().getName())
                                         .append(" (need ")
@@ -415,7 +442,7 @@ public class CraftingMenu {
                 font.draw(batch, currentProcessor.getName(), x + 240, y - 47);
                 font.getData().setScale(0.5f);
                 // Draw ingredients
-                int yPos = (int)(y - 65);
+                int yPos = (int) (y - 65);
                 font.draw(batch, "Ingredients:", x + 240, yPos);
                 yPos -= 15;
                 for (Map.Entry<org.Group34.model.items.Item, Integer> entry : currentProcessor.getIngredients().entrySet()) {

@@ -33,6 +33,7 @@ public class ReactionMenu {
     private final static Sprite cookingIcon = new Sprite(GameMenuAssetManager.getCookingIcon());
     private final static Sprite fridgeIcon = new Sprite(GameMenuAssetManager.getFridgeIcon());
     private final static Sprite reactionIcon = new Sprite(GameMenuAssetManager.getReactionIcon());
+    private final static Sprite scoreboardIcon = new Sprite(GameMenuAssetManager.getScoreboardIcon());
 
     private final static Sprite rightIcon = new Sprite(GameMenuAssetManager.getRightIcon());
     private final static Sprite leftIcon = new Sprite(GameMenuAssetManager.getLeftIcon());
@@ -57,6 +58,7 @@ public class ReactionMenu {
         cookingIcon.setSize((float) (cookingIcon.getWidth() * 0.5), (float) (cookingIcon.getHeight() * 0.5));
         fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
         reactionIcon.setSize((float) (reactionIcon.getWidth() * 0.3), (float) (reactionIcon.getHeight() * 0.3));
+        scoreboardIcon.setSize((float) (scoreboardIcon.getWidth() * 0.5), (float) (scoreboardIcon.getHeight() * 0.5));
 
         chekIcon.setSize(20, 20);
     }
@@ -107,6 +109,9 @@ public class ReactionMenu {
         smallBoard.setPosition(x + 470, y + 203);
         smallBoard.draw(batch);
 
+        smallBoard.setPosition(x + 514, y + 210);
+        smallBoard.draw(batch);
+
         inventorySymbol.setPosition(x + 30 + 5, y + 210 + 2);
         inventorySymbol.draw(batch);
 
@@ -142,6 +147,9 @@ public class ReactionMenu {
 
         reactionIcon.setPosition(x + 470 + 13, y + 203 + 7);
         reactionIcon.draw(batch);
+
+        scoreboardIcon.setPosition(x + 514 + 10, y + 210 + 5);
+        scoreboardIcon.draw(batch);
     }
 
     private static void handleInput(Player player, GameController gameController) {
@@ -170,6 +178,8 @@ public class ReactionMenu {
             player.setCurrentGameMenu("fridge");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1053 && x < 1124 && y < 110 && y > 30) {
             player.setCurrentGameMenu("reaction");
+        } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1126 && x < 1197 && y < 110 && y > 30) {
+            player.setCurrentGameMenu("scoreboard");
         } else if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && x > 1283 && x < 1342 && y < 150 && y > 82) {
             player.setCurrentGameMenu(null);
         }

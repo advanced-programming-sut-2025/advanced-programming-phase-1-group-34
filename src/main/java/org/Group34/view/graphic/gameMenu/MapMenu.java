@@ -3,6 +3,7 @@ package org.Group34.view.graphic.gameMenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import org.Group34.model.entities.Player;
@@ -27,6 +28,8 @@ public class MapMenu {
     private final static Sprite reactionIcon = new Sprite(GameMenuAssetManager.getReactionIcon());
     private final static Sprite scoreboardIcon = new Sprite(GameMenuAssetManager.getScoreboardIcon());
 
+    private final static Sprite map = new Sprite(new Texture("gameMenu/map.png"));
+
     static {
         bigBoard.setSize(chest.getWidth(), 413);
         smallBoard.setSize((float) (smallBoard.getWidth() * 0.7), (float) (smallBoard.getHeight() * 0.7));
@@ -43,13 +46,18 @@ public class MapMenu {
         fridgeIcon.setSize((float) (fridgeIcon.getWidth() * 0.3), (float) (fridgeIcon.getHeight() * 0.3));
         reactionIcon.setSize((float) (reactionIcon.getWidth() * 0.3), (float) (reactionIcon.getHeight() * 0.3));
         scoreboardIcon.setSize((float) (scoreboardIcon.getWidth() * 0.5), (float) (scoreboardIcon.getHeight() * 0.5));
+
+        map.setSize(610, 388);
     }
 
     public static void draw(SpriteBatch batch, Player player, OrthographicCamera camera) {
         float x = camera.position.x - chest.getWidth() / 2;
         float y = camera.position.y - 30;
         drawBoard(batch, x, y);
-
+        map.setPosition(x + 11, y - 188);
+        map.draw(batch);
+        exitIcon.setPosition(x + 608, y + 190);
+        exitIcon.draw(batch);
         handleInput(player);
     }
 

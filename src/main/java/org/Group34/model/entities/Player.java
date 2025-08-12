@@ -45,7 +45,7 @@ public class Player implements Entity, Serializable {
     private HashMap<Player, Interaction> interactions = new HashMap<>();
 
     private Item currentTool = null;
-    private String currentGameMenu = "inventory";
+    private String currentGameMenu = null;
     private Item currentItem = null;
     private Texture reaction = null;
     private float reactionTime = 0f;
