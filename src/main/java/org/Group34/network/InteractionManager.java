@@ -1,9 +1,6 @@
 package org.Group34.network;
 
-import org.Group34.model.NetworkObjects.NetworkInteraction;
-import org.Group34.model.NetworkObjects.NetworkPlayerLocation;
-import org.Group34.model.NetworkObjects.NetworkReaction;
-import org.Group34.model.NetworkObjects.NetworkShopLimit;
+import org.Group34.model.NetworkObjects.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +11,7 @@ public class InteractionManager {
     private NetworkReaction lastReaction = null;
     private ArrayList<String> players = new ArrayList<>();
     private HashMap<String, NetworkPlayerLocation> locations = new HashMap<>();
+    private HashMap<String, NetworkScore> scores = new HashMap<>();
 
     public synchronized NetworkInteraction getLastInteraction() {
         return lastInteraction;
@@ -39,6 +37,7 @@ public class InteractionManager {
         this.players = players;
         for (String player : players) {
             locations.put(player, new NetworkPlayerLocation(player, 1, 1));
+            scores.put(player, new NetworkScore(player, 0, 0));
         }
     }
 
@@ -50,11 +49,19 @@ public class InteractionManager {
         this.locations = locations;
     }
 
-    public NetworkReaction getLastReaction() {
+    public synchronized NetworkReaction getLastReaction() {
         return lastReaction;
     }
 
-    public void setLastReaction(NetworkReaction lastReaction) {
+    public synchronized void setLastReaction(NetworkReaction lastReaction) {
         this.lastReaction = lastReaction;
+    }
+
+    public HashMap<String, NetworkScore> getScores() {
+        return scores;
+    }
+
+    public void setScores(HashMap<String, NetworkScore> scores) {
+        this.scores = scores;
     }
 }

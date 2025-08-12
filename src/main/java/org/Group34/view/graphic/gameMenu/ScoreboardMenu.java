@@ -214,17 +214,31 @@ public class ScoreboardMenu {
         players.add(player);
 
         if (sort.get(scroller).equals("Money")) {
-            players.sort(Comparator.comparing(Player::getMoney));
+            players.sort(Comparator.comparing(Player::getMoney).reversed());
             for (int i = 0; i < players.size(); i++) {
                 font.draw(batch, String.valueOf(i + 1), x + 140, y + 20 - i * 30);
-                //font.draw(batch, player.getName(), x + 290, y + 20 - i * 30);
-//                font.draw(batch, String.valueOf(player.getMoney()), x + 440, y + 20 - i * 30);
+                font.draw(batch, players.get(i).getName(), x + 280, y + 20 - i * 30);
+                font.draw(batch, String.valueOf(players.get(i).getMoney()), x + 440, y + 20 - i * 30);
             }
         }
         else if (sort.get(scroller).equals("Skill")) {
-            players.sort(Comparator.comparing(Player::getSumOfSkills));
+            players.sort(Comparator.comparing(Player::getSumOfSkills).reversed());
+            for (int i = 0; i < players.size(); i++) {
+                font.draw(batch, String.valueOf(i + 1), x + 140, y + 20 - i * 30);
+                font.draw(batch, players.get(i).getName(), x + 280, y + 20 - i * 30);
+                if (players.get(i).equals(player)) {
+                    font.draw(batch, String.valueOf(players.get(i).getSumOfSkills()), x + 440, y + 20 - i * 30);
+                } else {
+                    font.draw(batch, String.valueOf(players.get(i).getSkill()), x + 440, y + 20 - i * 30);
+                }
+            }
         }
-
-
+        else {
+            for (int i = 0; i < players.size(); i++) {
+                font.draw(batch, String.valueOf(i + 1), x + 140, y + 20 - i * 30);
+                font.draw(batch, players.get(i).getName(), x + 280, y + 20 - i * 30);
+                font.draw(batch, String.valueOf(0), x + 440, y + 20 - i * 30);
+            }
+        }
     }
 }

@@ -25,10 +25,7 @@ import org.Group34.controller.AnimalController;
 import org.Group34.controller.AnimalBuildingController;
 import org.Group34.model.App;
 import org.Group34.model.MyGame;
-import org.Group34.model.NetworkObjects.NetworkInteraction;
-import org.Group34.model.NetworkObjects.NetworkPlayerLocation;
-import org.Group34.model.NetworkObjects.NetworkReaction;
-import org.Group34.model.NetworkObjects.NetworkShopLimit;
+import org.Group34.model.NetworkObjects.*;
 import org.Group34.model.User;
 import org.Group34.model.entities.*;
 import org.Group34.model.entities.buildings.AnimalsBuilding;
@@ -699,7 +696,9 @@ public class GameScreen extends ScreenAdapter {
                     client.send("socialGetLastShopLimit");
                     client.send("socialGetLocations");
                     client.send("socialGetLastReaction");
+                    client.send("socialGetScore");
                     client.sendObject(new NetworkPlayerLocation(player.getName(), player.getLocation()[0], player.getLocation()[1]));
+                    client.sendObject(new NetworkScore(player.getName(), player.getMoney(), player.getSumOfSkills()));
                 }
             }
         }, 100, 100);
@@ -730,6 +729,13 @@ public class GameScreen extends ScreenAdapter {
                 for (Player player1 : player.getInteractions().keySet()) {
                     if (player1.getName().equals(location.getName())) {
                         player1.setLocation(new int[]{location.getX(), location.getY()});
+                    }
+                }
+            } else if (o instanceof NetworkScore score) {
+                for (Player player1 : player.getInteractions().keySet()) {
+                    if (player1.getName().equals(score.getPlayer())) {
+                        player1.setMoney(score.getMoney());
+                        player1.setSkill(score.getSkill());
                     }
                 }
             }

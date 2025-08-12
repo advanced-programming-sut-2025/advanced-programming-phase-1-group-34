@@ -1,9 +1,6 @@
 package org.Group34.network.server;
 
-import org.Group34.model.NetworkObjects.NetworkInteraction;
-import org.Group34.model.NetworkObjects.NetworkPlayerLocation;
-import org.Group34.model.NetworkObjects.NetworkReaction;
-import org.Group34.model.NetworkObjects.NetworkShopLimit;
+import org.Group34.model.NetworkObjects.*;
 import org.Group34.model.User;
 import org.Group34.network.InteractionManager;
 import org.Group34.network.LobbyManager;
@@ -79,6 +76,11 @@ public class ClientHandler extends Thread {
                     out.writeObject(response);
                     System.out.println("ClientHandler #" + handlerId + " sending response: " + response);
                 } else if (input instanceof NetworkReaction) {
+                    System.out.println("ClientHandler #" + handlerId + " received command: " + input);
+                    String response = processSocialObject(input);
+                    out.writeObject(response);
+                    System.out.println("ClientHandler #" + handlerId + " sending response: " + response);
+                } else if (input instanceof NetworkScore) {
                     System.out.println("ClientHandler #" + handlerId + " received command: " + input);
                     String response = processSocialObject(input);
                     out.writeObject(response);
@@ -176,6 +178,8 @@ public class ClientHandler extends Thread {
                 return new ArrayList<>(interactionManager.getLocations().values());
             } else if (command.equals("socialGetLastReaction")) {
                 return interactionManager.getLastReaction();
+            } else if (command.equals("socialGetScore")) {
+                return new ArrayList<>(interactionManager.getScores().values());
             }
             else {
                 return "Unknown Message";
@@ -200,6 +204,11 @@ public class ClientHandler extends Thread {
         } else if (object instanceof NetworkReaction reaction) {
             interactionManager.setLastReaction(reaction);
             return "last reaction set";
+        } else if (object instanceof NetworkScore score) {
+            if (interactionManager.getScores().containsKey(score.getPlayer())) {
+                interactionManager.getScores().replace(score.getPlayer(), score);
+            }
+            return "Score set";
         }
 
         return "Unknown Message";

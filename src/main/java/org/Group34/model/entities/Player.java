@@ -61,6 +61,7 @@ public class Player implements Entity, Serializable {
     private Texture huggingTexture = ReactionAssetManager.hugging1;
     private Texture floweringTexture = ReactionAssetManager.flowering1;
     private Texture marriageTexture = ReactionAssetManager.marriage1;
+    private int skill = 0;
 
     public String test = "test is not check";
     public TestObject testObject = new TestObject("fail", 0);
@@ -522,5 +523,13 @@ public class Player implements Entity, Serializable {
 
     public int getSumOfSkills() {
         return level.get(LevelType.FARMING_LEVEL) + level.get(LevelType.FORAGING_LEVEL) + level.get(LevelType.MINING_LEVEL) + level.get(LevelType.FISHING_LEVEL);
+    }
+
+    public int getSkill() {
+        return skill;
+    }
+
+    public void setSkill(int skill) {
+        this.skill = skill;
     }
 }
