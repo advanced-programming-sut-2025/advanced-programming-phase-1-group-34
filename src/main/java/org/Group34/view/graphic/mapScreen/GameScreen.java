@@ -782,7 +782,9 @@ public class GameScreen extends ScreenAdapter {
                 }
             }
 
-            shop.buy(shop.getProductByName(shopLimit.getItem()),shopLimit.getAmount());
+            if (shop.getUpgradeToolLimit(shop.getProductByName(shopLimit.getItem())) > 0) {
+                shop.buy(shop.getProductByName(shopLimit.getItem()),shopLimit.getAmount());
+            }
         }
     }
 

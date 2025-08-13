@@ -85,7 +85,7 @@ public class Player implements Entity, Serializable {
 //        inventory.put(Fruit.CRANBERRIES, 20);
 //        inventory.put(Fruit.CHERRY, 20);
 //        inventory.put(Fruit.POWDERMELON, 20);
-//        inventory.put(Fruit.MELON, 20);
+        inventory.put(Fruit.MELON, 20);
 //        inventory.put(Fruit.MANGO, 20);
 //        inventory.put(Fruit.ORANGE, 20);
 //        inventory.put(Fruit.STARFRUIT, 20);
